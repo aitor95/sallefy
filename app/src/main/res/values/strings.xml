@@ -1,0 +1,65 @@
+<resources>
+    <string name="app_name">Sallefy</string>
+
+    <!-- DEFAULT TRACK -->
+    <string name="default_track_title">Título canción</string>
+    <string name="default_track_author">Autor/a</string>
+    <string name="default_username">Usuario</string>
+    <string name="default_usernames">Usuarios</string>
+    <string name="default_playlists">Playlists</string>
+    <string name="default_songs">Canciones</string>
+    <string name="default_genres">Géneros</string>
+
+    <!-- MENU -->
+    <string name="menu_home">Inicio</string>
+    <string name="menu_search">Busqueda</string>
+    <string name="menu_library">Contenido</string>
+
+    <!-- FRAGMENTS (LABELS) -->
+    <string name="fragment_playlists">Playlists</string>
+    <string name="fragment_songs">Songs</string>
+
+    <!-- ACTION -->
+    <string name="action_login">Iniciar sesión</string>
+    <string name="action_logout">Cerrar sesión</string>
+    <string name="action_register">Registrarse</string>
+    <string name="action_accept">Aceptar</string>
+    <string name="action_decline">Cancelar</string>
+    <string name="action_advance_list">Mostrar Tracks (avanzado)</string>
+    <string name="action_list">Mostrar Tracks</string>
+    <string name="action_static_playback">Static URL\nPlayback</string>
+    <string name="action_backend_playback">Backend Playback</string>
+    <string name="action_network_music">Music Service</string>
+    <string name="action_cloudinary">Subir canción</string>
+
+    <!-- ACTIVITY [ Create Song ] -->
+    <string name="create_song_titulo">Título</string>
+    <string name="create_song_genre">Género</string>
+    <string name="create_song_artist">Autor/a</string>
+    <string name="create_song_file">Buscar fichero</string>
+
+
+    <!-- URL -->
+    <string name="url_static">Static URL Playback</string>
+
+
+    <!-- INFO STATE -->
+    <string name="state_wait">Porfavor espere..</string>
+    <string name="state_task_in_progress">Tarea en proceso</string>
+    <string name="state_error_connexion">Error de conexión!</string>
+    <string name="state_success_title">Éxito</string>
+    <string name="state_task_completed">Tarea completada con éxito!</string>
+    <string name="state_error_title">Error</string>
+    <string name="state_connected">Conectado</string>
+    <string name="state_error_default">Algo salió mal!</string>
+    <string name="state_with_connection">Connection with Backend</string>
+    <string name="staitc_without_connection"> Without Connection</string>
+
+
+    <!-- ACTIVITY [ Login ] -->
+    <string name="login_username">Nombre usuario</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_email">Correo electrónico</string>
+    <string name="login_yetIdentified">Todavía no estás registrad@ ?</string>
+    <string name="login_register_here">Regístrate aquí</string>
+</resources>

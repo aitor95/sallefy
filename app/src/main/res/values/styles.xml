@@ -34,9 +34,15 @@
     </style>
 
     <style name="primaryText" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="secondaryText" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">10sp</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@color/colorDarkGrey</item>
     </style>
 
     <style name="TextMenu" parent="TextAppearance.AppCompat">

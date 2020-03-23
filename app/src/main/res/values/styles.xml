@@ -8,43 +8,44 @@
 <!--        <item name="colorAccent">@color/colorAccent</item>-->
         <item name="android:fontFamily">@font/roboto</item>
     </style>
-
+    <!-- Login -> login title.-->
     <style name="TitlesTheme" parent="TextAppearance.AppCompat">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textColor">@color/colorBlack</item>
     </style>
-
+    <!-- PlayerPage -> Headhunterz-->
     <style name="SubTitlesTheme" parent="TextAppearance.AppCompat">
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textColor">@color/colorGrey</item>
     </style>
-
+    <!-- Login -> Username-->
     <style name="formLabel" parent="TextAppearance.AppCompat">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textColor">@color/colorDarkGrey</item>
     </style>
-
+    <!-- Login -> Button text -->
     <style name="buttonText" parent="TextAppearance.AppCompat">
         <item name="android:textSize">18sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">@color/colorWhite</item>
     </style>
 
+    <!-- Home -> Bichiyal-->
     <style name="primaryText" parent="TextAppearance.AppCompat">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">@color/colorBlack</item>
     </style>
-
+    <!-- Social -> menu de arriba-->
     <style name="TextMenu" parent="TextAppearance.AppCompat">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textColor">@color/colorDarkGrey</item>
     </style>
-
+    <!-- Social -> menu de arriba selecionado-->
     <style name="ActiveTextMenu" parent="TextAppearance.AppCompat">
         <item name="android:textSize">24sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>

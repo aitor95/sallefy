@@ -47,7 +47,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/settings_title"
+
                 android:text="@string/login_password"/>
 
             <EditText
@@ -73,7 +73,7 @@
             android:textColor="@color/colorWhite"
             android:textStyle="bold"
             android:textSize="20sp"
-            android:fontFamily="@font/gotham_bold"
+
             android:text="@string/action_login"/>
 
     </LinearLayout>

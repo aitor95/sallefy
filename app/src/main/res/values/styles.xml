@@ -3,72 +3,52 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:fontFamily">@font/gotham</item>
+<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+<!--        <item name="colorPrimaryDark">@color/colorDark</item>-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+        <item name="android:fontFamily">@font/roboto</item>
     </style>
 
     <style name="TitlesTheme" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">30sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">@font/gotham_medium</item>
-        <item name="android:textColor">@color/colorWhite</item>
-    </style>
-
-    <style name="SubtitlesTheme" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">@font/gotham_medium</item>
-        <item name="android:textColor">@color/colorWhite</item>
-    </style>
-
-    <style name="settings_title" parent="TextAppearance.AppCompat">
         <item name="android:textSize">24sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/gotham_book</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">@color/colorBlack</item>
     </style>
 
-    <style name="ItemTitleTheme" parent="TextAppearance.AppCompat">
+    <style name="SubTitlesTheme" parent="TextAppearance.AppCompat">
         <item name="android:textSize">18sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/gotham_book</item>
-    </style>
-
-    <style name="ItemAuthorTheme" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">15sp</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/gotham_book</item>
-    </style>
-
-    <style name="SongArtistTheme" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/nav_text_dimen</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/gotham_narrow_thin</item>
-    </style>
-
-    <style name="fragmentTitle" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">35sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/colorWhite</item>
-        <item name="android:fontFamily">@font/gotham_book</item>
-    </style>
-
-    <style name="genre_item_text" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:fontFamily">@font/gotham_medium</item>
-        <item name="android:textColor">@color/colorWhite</item>
-    </style>
-
-    <style name="MenuOptionsTextTheme" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">@dimen/nav_text_dimen</item>
-        <item name="android:textStyle">bold</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textColor">@color/colorGrey</item>
-        <item name="android:fontFamily">@font/gotham_narrow_thin</item>
+    </style>
+
+    <style name="formLabel" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">@color/colorDarkGrey</item>
+    </style>
+
+    <style name="buttonText" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@color/colorWhite</item>
+    </style>
+
+    <style name="primaryText" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="TextMenu" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">@color/colorDarkGrey</item>
+    </style>
+
+    <style name="ActiveTextMenu" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">24sp</item>
+        <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">@color/colorBlack</item>
     </style>
 
 </resources>

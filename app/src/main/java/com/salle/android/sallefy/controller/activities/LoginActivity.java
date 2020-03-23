@@ -118,6 +118,5 @@ public class LoginActivity extends AppCompatActivity implements UserCallback {
     @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
-
     }
 }

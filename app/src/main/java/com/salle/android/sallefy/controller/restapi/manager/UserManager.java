@@ -33,7 +33,6 @@ public class UserManager {
     private UserService mService;
     private UserTokenService mTokenService;
 
-
     public static UserManager getInstance(Context context) {
         if (sUserManager == null) {
             sUserManager = new UserManager(context);

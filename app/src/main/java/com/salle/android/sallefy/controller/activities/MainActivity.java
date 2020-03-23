@@ -136,6 +136,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Session.getInstance(this).setAudioEnabled(true);
             } else {
+
             }
             return;
         }

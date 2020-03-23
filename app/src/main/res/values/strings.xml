@@ -57,9 +57,9 @@
 
 
     <!-- ACTIVITY [ Login ] -->
-    <string name="login_username">Nombre usuario</string>
-    <string name="login_password">Contraseña</string>
-    <string name="login_email">Correo electrónico</string>
-    <string name="login_yetIdentified">Todavía no estás registrad@ ?</string>
-    <string name="login_register_here">Regístrate aquí</string>
+    <string name="login_username">Username</string>
+    <string name="login_password">Password</string>
+    <string name="login_email">Email</string>
+    <string name="login_yetIdentified">New here? Sign up now!</string>
+    <string name="login_register_here">Register here</string>
 </resources>

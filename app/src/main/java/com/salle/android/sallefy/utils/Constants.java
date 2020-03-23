@@ -25,7 +25,7 @@ public class Constants {
     }
 
     public interface ACTION {
-        public static String STARTFOREGROUND_ACTION = "salle.android.projects.sallefy_heroes_v10.action.startforeground";
+        public static String STARTFOREGROUND_ACTION = "salle.android.sallefy_heroes_v10A.action.startforeground";
         public static String STOPFOREGROUND_ACTION = "salle.android.projects.sallefy_heroes_v10.action.stopforeground";
     }
 

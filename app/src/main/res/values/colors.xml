@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#783FF9</color>
+    <color name="colorSecondary">#783FF9</color>
 <!--    <color name="colorPrimaryLight">#3f3a3a</color>-->
 <!--    <color name="colorPrimaryDark">#000000</color>-->
 
-    <color name="colorSecondary">#BE288A</color>
+    <color name="colorPrimary">#BE288A</color>
 <!--    <color name="colorSecondaryLight">#9edfff</color>-->
 <!--    <color name="colorSecondaryDark">#327eb2</color>-->
 
@@ -14,5 +14,7 @@
     <color name="colorWhite">#FFF</color>
     <color name="colorBlack">#000</color>
     <color name="colorDarkGrey">#828282</color>
+
     <color name="colorGrey">#C4C4C4</color>
+    <color name="colorLoginGrey">#F2F2F2</color>
 </resources>

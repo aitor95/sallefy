@@ -10,13 +10,22 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_sallefy"/>
 
+    <TextView
+        style="@style/TitlesTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:gravity="center|center_horizontal"
+        android:text="@string/action_login" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:layout_marginStart="30dp"
-        android:layout_marginEnd="30dp"
+        android:layout_marginStart="56dp"
+        android:layout_marginEnd="56dp"
         android:orientation="vertical">
+
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,54 +36,83 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/login_username"/>
+                android:text="@string/login_username"
+                style="@style/formLabel"/>
 
             <EditText
                 android:id="@+id/login_user"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
+                android:layout_height="41dp"
                 android:layout_marginTop="14dp"
-                android:background="#F2F2F2"/>
+                android:background="@color/colorLoginGrey"/>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="14dp"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                style="@style/formLabel"
                 android:text="@string/login_password"/>
 
             <EditText
                 android:id="@+id/login_password"
                 android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:ems="10"
-                android:inputType="textPassword"
-                android:background="@drawable/login_edit_text"/>
+                android:layout_height="41dp"
+                android:layout_marginTop="14dp"
+                android:background="@color/colorLoginGrey"/>
 
         </LinearLayout>
 
 
-        <Button
-            android:id="@+id/login_btn_action"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:paddingBottom="20dp"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/login_btn"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold"
-            android:textSize="20sp"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
-            android:text="@string/action_login"/>
+            <Button
+                android:id="@+id/login_btn_action"
+                style="@style/buttonText"
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="37dp"
+                android:background="@drawable/login_btn"
+                android:minWidth="200dp"
+                android:text="@string/action_login"
+                android:textColor="@color/colorWhite" />
+            <LinearLayout
+                android:layout_marginTop="26dp"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:layout_gravity="center">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto"
+                    android:text="@string/SignUpQuestion_start_text"/>
+
+                <Space
+                    android:layout_width="5dp"
+                    android:layout_height="wrap_content" />
+
+                <TextView
+                    android:id="@+id/login_btn_SignUpNow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_bold"
+                    android:textSize="12sp"
+                    android:text="@string/SignUpQuestion_button"/>
+
+            </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

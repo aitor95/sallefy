@@ -20,7 +20,7 @@
     <string name="fragment_songs">Songs</string>
 
     <!-- ACTION -->
-    <string name="action_login">Iniciar sesión</string>
+    <string name="action_login">Login</string>
     <string name="action_logout">Cerrar sesión</string>
     <string name="action_register">Registrarse</string>
     <string name="action_accept">Aceptar</string>
@@ -60,6 +60,8 @@
     <string name="login_username">Username</string>
     <string name="login_password">Password</string>
     <string name="login_email">Email</string>
-    <string name="login_yetIdentified">New here? Sign up now!</string>
+    <string name="login_signUpQuestionButton">New here? Sign up now!</string>
     <string name="login_register_here">Register here</string>
+    <string name="SignUpQuestion_button">Sign up now!</string>
+    <string name="SignUpQuestion_start_text">New here?</string>
 </resources>

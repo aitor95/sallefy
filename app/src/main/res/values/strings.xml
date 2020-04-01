@@ -64,4 +64,5 @@
     <string name="login_register_here">Register here</string>
     <string name="SignUpQuestion_button">Sign up now!</string>
     <string name="SignUpQuestion_start_text">New here?</string>
+    <string name="splashScreen_logging_in">Logging in...</string>
 </resources>

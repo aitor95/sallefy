@@ -24,13 +24,30 @@ public class LoginActivity extends AppCompatActivity implements UserCallback {
     private EditText etLogin;
     private EditText etPassword;
     private Button btnLogin;
+    private boolean inAutomaticLogIn;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        initViews();
-        checkSavedData();
+
+        //Uncomment this line to reset autologin data saved.
+        //PreferenceUtils.resetValues(this);
+
+        if(checkExistingPreferences()){
+            //Show the splashScreen
+            setContentView(R.layout.splash_screen);
+
+            //User and password are available. Try them.
+            doLogin(PreferenceUtils.getUser(this),PreferenceUtils.getPassword(this));
+            inAutomaticLogIn = true;
+        }else{
+            //User credentials not available. Show login.
+            setContentView(R.layout.activity_login);
+
+            //Buttons.
+            initViews();
+            inAutomaticLogIn = false;
+        }
     }
 
     private void initViews() {
@@ -46,15 +63,6 @@ public class LoginActivity extends AppCompatActivity implements UserCallback {
     private void doLogin(String username, String password) {
         UserManager.getInstance(getApplicationContext())
                 .loginAttempt(username, password, LoginActivity.this);
-    }
-
-    private void checkSavedData() {
-        if (checkExistingPreferences()) {
-            etLogin.setText(PreferenceUtils.getUser(this));
-            etPassword.setText(PreferenceUtils.getPassword(this));
-            doLogin(etLogin.getText().toString(),
-                    etPassword.getText().toString());
-        }
     }
 
     private boolean checkExistingPreferences () {
@@ -75,16 +83,30 @@ public class LoginActivity extends AppCompatActivity implements UserCallback {
 
     @Override
     public void onLoginSuccess(UserToken userToken) {
-        Session.getInstance(getApplicationContext())
-                .setUserToken(userToken);
-        PreferenceUtils.saveUser(this, etLogin.getText().toString());
-        PreferenceUtils.savePassword(this, etPassword.getText().toString());
-        UserManager.getInstance(this).getUserData(etLogin.getText().toString(), this);
+        String user;
+        String pass;
+
+        if(inAutomaticLogIn){
+            user = PreferenceUtils.getUser(this);
+            pass = PreferenceUtils.getPassword(this);
+        }else{
+            user = etLogin.getText().toString();
+            pass = etPassword.getText().toString();
+        }
+
+        Session.getInstance(getApplicationContext()).setUserToken(userToken);
+        PreferenceUtils.saveUser(this, user);
+        PreferenceUtils.savePassword(this, pass);
+        UserManager.getInstance(this).getUserData(user, this);
     }
 
     @Override
     public void onLoginFailure(Throwable throwable) {
-        Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_LONG).show();
+        if(inAutomaticLogIn){
+            Toast.makeText(getApplicationContext(), "Automatic login failed", Toast.LENGTH_LONG).show();
+        }else{
+            Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
@@ -101,6 +123,7 @@ public class LoginActivity extends AppCompatActivity implements UserCallback {
     public void onUserInfoReceived(User userData) {
         Session.getInstance(getApplicationContext())
                 .setUser(userData);
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }

@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        style="@style/genre_item_text"
+        style="@style/buttonText"
         android:text="@string/create_song_genre"/>
 
 

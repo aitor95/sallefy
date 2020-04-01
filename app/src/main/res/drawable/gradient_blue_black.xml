@@ -8,7 +8,7 @@
                 android:centerY="-0.033"
                 android:gradientRadius="500dp"
                 android:startColor="@color/colorSecondary"
-                android:endColor="@color/colorPrimaryDark">
+                android:endColor="@color/colorPrimary">
                 </gradient>
         </shape>
     </item>

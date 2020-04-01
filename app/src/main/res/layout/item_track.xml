@@ -35,14 +35,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="textStart"
-                style="@style/ItemTitleTheme"
+                style="@style/TitlesTheme"
                 android:text="@string/default_track_title"/>
 
             <TextView
                 android:id="@+id/track_author"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/SongArtistTheme"
+                style="@style/TitlesTheme"
                 android:text="@string/default_track_author"/>
 
         </LinearLayout>

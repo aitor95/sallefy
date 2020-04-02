@@ -21,8 +21,8 @@
 
     <!-- ACTION -->
     <string name="action_login">Login</string>
-    <string name="action_logout">Cerrar sesión</string>
-    <string name="action_register">Registrarse</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_signUp">Sign Up</string>
     <string name="action_accept">Aceptar</string>
     <string name="action_decline">Cancelar</string>
     <string name="action_advance_list">Mostrar Tracks (avanzado)</string>
@@ -59,10 +59,21 @@
     <!-- ACTIVITY [ Login ] -->
     <string name="login_username">Username</string>
     <string name="login_password">Password</string>
-    <string name="login_email">Email</string>
-    <string name="login_signUpQuestionButton">New here? Sign up now!</string>
-    <string name="login_register_here">Register here</string>
-    <string name="SignUpQuestion_button">Sign up now!</string>
-    <string name="SignUpQuestion_start_text">New here?</string>
+    <!-- <string name="login_email">Email</string> -->
+    <!-- <string name="login_signUpQuestionButton">New here? Sign up now!</string> -->
+    <!-- <string name="login_register_here">Register here</string> -->
+    <string name="LoginQuestion_start_text">New here?</string>
+    <string name="Login_SignUp_Question_button">Sign up now!</string>
     <string name="splashScreen_logging_in">Logging in...</string>
+
+    <!-- ACTIVITY [ Sign Up ] -->
+    <string name="SignUp_username">Username</string>
+    <string name="SignUp_email">Email</string>
+    <string name="SignUp_password">Password</string>
+    <string name="SignUp_repeat_password">Repeat Password</string>
+    <string name="SignUpQuestion_start_text">Already have an account?</string>
+    <string name="SignUp_Login_Question_button">Sign in now!</string>
+
+
+
 </resources>

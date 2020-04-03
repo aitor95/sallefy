@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorWhite">
 
 
     <com.scwang.wave.MultiWaveHeader
@@ -17,8 +17,8 @@
         android:scaleX="2"
         android:scaleY="1.7"
         app:layout_constraintTop_toTopOf="parent"
-        app:mwhCloseColor="@color/colorSecondary"
-        app:mwhStartColor="@color/colorPrimary" />
+        app:mwhCloseColor="@color/colorWhite"
+        app:mwhStartColor="@color/colorWhite" />
 
     <TextView
         android:id="@+id/textView"

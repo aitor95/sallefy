@@ -51,4 +51,8 @@ dependencies {
 
     //MultiWaveHeader
     implementation 'com.scwang.wave:MultiWaveHeader:1.0.0-alpha-1'
+
+    //Rounded corners
+    //implementation 'com.android.support:appcompat-v7:28.+'
+    implementation 'androidx.cardview:cardview:1.0.0'
 }

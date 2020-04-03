@@ -15,10 +15,16 @@
         <item name="android:textColor">@color/colorBlack</item>
     </style>
 
+    <style name="TrackTheme" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">14sp</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
     <style name="SubTitlesTheme" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">11sp</item>
         <item name="android:fontFamily">@font/roboto_light</item>
-        <item name="android:textColor">@color/colorGrey</item>
+        <item name="android:textColor">#FF333333</item>
     </style>
 
     <style name="formLabel" parent="TextAppearance.AppCompat">

@@ -1,5 +1,10 @@
 package com.salle.android.sallefy.controller.activities;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
+import android.os.Bundle;
+import android.view.MenuItem;
+
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -7,11 +12,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Bundle;
-import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.salle.android.sallefy.R;
@@ -52,13 +52,13 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
                     case R.id.action_home:
                         fragment = HomeFragment.getInstance();
                         break;
-                    case R.id.action_songs:
+                    case R.id.action_social:
                         fragment = SongsFragment.getInstance();
                         break;
                     case R.id.action_search:
                         fragment = SearchFragment.getInstance();
                         break;
-                    case R.id.action_content:
+                    case R.id.action_me:
                         fragment = ContentFragment.getInstance();
                         break;
 

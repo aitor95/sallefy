@@ -11,9 +11,11 @@
     <string name="default_genres">Géneros</string>
 
     <!-- MENU -->
-    <string name="menu_home">Inicio</string>
-    <string name="menu_search">Busqueda</string>
-    <string name="menu_library">Contenido</string>
+    <string name="menu_home">Home</string>
+    <string name="menu_search">Search</string>
+    <string name="menu_me">Me</string>
+    <string name="menu_social">Social</string>
+
 
     <!-- FRAGMENTS (LABELS) -->
     <string name="fragment_playlists">Playlists</string>

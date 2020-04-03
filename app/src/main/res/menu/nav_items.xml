@@ -1,15 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/action_home"
-        android:title="@string/menu_home"
-        android:icon="@drawable/ic_home" />
-    <item android:id="@+id/action_songs"
-        android:title="@string/fragment_songs"
-        android:icon="@drawable/ic_audiotrack"/>
+        android:title="@string/menu_home" />
+    <item android:id="@+id/action_social"
+        android:title="@string/menu_social"/>
+    <item android:id="@+id/action_me"
+        android:title="@string/menu_me" />
     <item android:id="@+id/action_search"
-        android:title="@string/menu_search"
-        android:icon="@drawable/ic_search" />
-    <item android:id="@+id/action_content"
-        android:title="@string/menu_library"
-        android:icon="@drawable/ic_library" />
+        android:title="@string/menu_search"/>
 </menu>

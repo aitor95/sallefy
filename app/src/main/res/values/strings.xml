@@ -41,6 +41,23 @@
     <string name="create_song_file">Buscar fichero</string>
 
 
+    <!-- ACTIVITY [ New Playlist ] -->
+    <string name="new_playlist_name">New Playlist</string>
+    <string name="new_playlist_title">Title</string>
+    <string name="new_playlist_description">Description</string>
+    <string name="new_playlist_button">Create Playlist</string>
+    <string name="new_playlist_creation_success">Your playlist has been created!</string>
+    <string name="new_playlist_creation_failure">Something went wrong</string>
+
+    <!-- ACTIVITY [ Edit Playlist ] -->
+    <string name="edit_playlist_name">Edit Playlist</string>
+    <string name="edit_playlist_title">Title</string>
+    <string name="edit_playlist_description">Description</string>
+    <string name="edit_playlist_add">Add Songs</string>
+    <string name="edit_playlist_save">Save</string>
+    <string name="edit_playlist_creation_success">Your changes have been saved!</string>
+    <string name="edit_playlist_creation_failure">Something went wrong</string>
+
     <!-- URL -->
     <string name="url_static">Static URL Playback</string>
 

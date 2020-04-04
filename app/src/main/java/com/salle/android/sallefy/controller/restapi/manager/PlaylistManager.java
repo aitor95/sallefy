@@ -13,6 +13,7 @@ import com.salle.android.sallefy.utils.Session;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -49,6 +50,10 @@ public class PlaylistManager {
 
     }
 
+
+    /**********************
+     * Get playlist by id
+     **********************/
     public synchronized void getPlaylistById(Integer id, final PlaylistCallback playlistCallback) {
         Call<Playlist> call = mService.getPlaylistById(id, "Bearer " + userToken.getIdToken());
         call.enqueue(new Callback<Playlist>() {
@@ -156,5 +161,56 @@ public class PlaylistManager {
     }
 
 
+    /**********************
+     * Update info of a playlist
+     **********************/
+    public synchronized void updatePlaylist(Playlist playlist, final PlaylistCallback playlistCallback){
+        Call<Playlist> call = mService.updatePlaylist(playlist,"Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<Playlist>() {
+            @Override
+            public void onResponse(Call<Playlist> call, Response<Playlist> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    playlistCallback.onPlaylistUpdated();
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Playlist> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+
+    }
+
+    /**********************
+     * Update info of a playlist
+     **********************/
+    public synchronized void createPlaylist(Playlist playlist, final PlaylistCallback playlistCallback){
+        Call<Playlist> call = mService.createPlaylist(playlist,"Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<Playlist>() {
+            @Override
+            public void onResponse(Call<Playlist> call, Response<Playlist> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    playlistCallback.onPlaylistCreated();
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Playlist> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+
+    }
 
 }

@@ -99,6 +99,16 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
     }
 
     @Override
+    public void onPlaylistUpdated() {
+
+    }
+
+    @Override
+    public void onPlaylistCreated() {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_LONG).show();
     }

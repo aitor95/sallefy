@@ -65,15 +65,15 @@
     </style>
 
     <!-- Menu upper main -->
-    <style name="BottomNavigationView" parent="@style/TextAppearance.AppCompat.Caption">
-        <item name="android:textSize">18sp</item>
+    <style name="BottomNavigationView" parent="@style/Widget.AppCompat.Button.Borderless">
+        <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/colorGrey</item>
-        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
     </style>
 
-    <style name="BottomNavigationView.Active" parent="@style/TextAppearance.AppCompat.Caption">
+    <style name="BottomNavigationView.Active" parent="@style/Widget.AppCompat.Button.Borderless">
         <item name="android:textStyle">bold</item>
-        <item name="android:textSize">20sp</item>
+        <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>

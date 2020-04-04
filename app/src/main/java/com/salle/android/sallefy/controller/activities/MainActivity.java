@@ -3,7 +3,9 @@ package com.salle.android.sallefy.controller.activities;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -13,7 +15,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.FragmentCallback;
 import com.salle.android.sallefy.controller.fragments.ContentFragment;
@@ -28,8 +29,6 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
 
-    private BottomNavigationView mNav;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,28 +42,65 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         mFragmentManager = getSupportFragmentManager();
         mTransaction = mFragmentManager.beginTransaction();
 
-        mNav = (BottomNavigationView) findViewById(R.id.bottom_navigation);
-        mNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                Fragment fragment = null;
-                switch (menuItem.getItemId()) {
-                    case R.id.action_home:
-                        fragment = HomeFragment.getInstance();
-                        break;
-                    case R.id.action_social:
-                        fragment = SongsFragment.getInstance();
-                        break;
-                    case R.id.action_search:
-                        fragment = SearchFragment.getInstance();
-                        break;
-                    case R.id.action_me:
-                        fragment = ContentFragment.getInstance();
-                        break;
+        Button home = (Button) findViewById(R.id.action_home);
+        Button social = (Button) findViewById(R.id.action_social);
+        Button me = (Button) findViewById(R.id.action_me);
+        ImageView search = (ImageView) findViewById(R.id.action_search);
 
-                }
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                social.setTextAppearance(R.style.BottomNavigationView);
+                me.setTextAppearance(R.style.BottomNavigationView);
+                home.setTextAppearance(R.style.BottomNavigationView_Active);
+                search.setImageResource(R.drawable.ic_search);
+
+                Fragment fragment = HomeFragment.getInstance();
                 replaceFragment(fragment);
-                return true;
+            }
+        });
+
+        social.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                me.setTextAppearance(R.style.BottomNavigationView);
+                home.setTextAppearance(R.style.BottomNavigationView);
+                social.setTextAppearance(R.style.BottomNavigationView_Active);
+                search.setImageResource(R.drawable.ic_search);
+
+                Fragment fragment = SongsFragment.getInstance();
+                replaceFragment(fragment);
+            }
+        });
+
+        me.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                social.setTextAppearance(R.style.BottomNavigationView);
+                me.setTextAppearance(R.style.BottomNavigationView_Active);
+                home.setTextAppearance(R.style.BottomNavigationView);
+                search.setImageResource(R.drawable.ic_search);
+
+                Fragment fragment = SearchFragment.getInstance();
+                replaceFragment(fragment);
+            }
+        });
+
+
+        search.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                search.setImageResource(R.drawable.ic_search_clicked);
+
+                social.setTextAppearance(R.style.BottomNavigationView);
+                me.setTextAppearance(R.style.BottomNavigationView);
+                home.setTextAppearance(R.style.BottomNavigationView);
+
+                Fragment fragment = ContentFragment.getInstance();
+                replaceFragment(fragment);
             }
         });
     }

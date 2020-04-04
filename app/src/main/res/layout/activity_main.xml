@@ -6,29 +6,100 @@
     android:layout_height="match_parent"
     tools:context=".controller.activities.MainActivity">
 
+    <LinearLayout
+        android:background="@color/colorWhite"
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_gravity="start"
+        android:paddingBottom="30dp"
+        android:paddingTop="30dp">
+
+        <Button
+            android:id="@+id/action_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@null"
+            android:textAllCaps="false"
+            android:textAlignment="center"
+
+            style="@style/BottomNavigationView.Active"
+            android:text="@string/menu_home" />
+        <Button
+            android:id="@+id/action_social"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:background="@null"
+            android:textAllCaps="false"
+            android:text="@string/menu_social"
+            style="@style/BottomNavigationView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/action_me"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:background="@null"
+            android:textAllCaps="false"
+            style="@style/BottomNavigationView"
+            android:text="@string/menu_me"/>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/action_search"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+
+                android:clickable="true"
+                android:src="@drawable/ic_search"
+                tools:ignore="NestedWeights"
+                android:focusable="true" />
+        </LinearLayout>
+    </LinearLayout>
+
     <FrameLayout
         android:id="@+id/fragment_container"
+        android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bottom_navigation">
-
     </FrameLayout>
 
+
+<!--
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:elevation="0dp"
         android:layout_gravity="start"
         android:background="@color/colorWhite"
         android:paddingBottom="28dp"
-        app:itemIconTint="@color/colorBlack"
         app:labelVisibilityMode="labeled"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/nav_items"
+        app:itemIconTint="@color/selector_ic_search"
+        app:menu="@menu/top_navigation_main"
         app:itemTextAppearanceActive="@style/BottomNavigationView.Active"
         app:itemTextAppearanceInactive="@style/BottomNavigationView"
         tools:layout_editor_absoluteX="0dp" />
+-->
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

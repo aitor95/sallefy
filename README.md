@@ -6,3 +6,7 @@
 * Andrés Luengo - andres.luengo - andres.luengo@students.salle.url.edu
 * Míriam López  - miriam.lopez  - miriam.lopez@students.salle.url.edu
 * Miquel Saula  - miquel.saula  - miquel.saula@students.salle.url.edu
+
+## Cuenta Cloudinary
+* Usuario: dpoc4
+* contraseña: Dpodpoc4!

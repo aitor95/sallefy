@@ -97,6 +97,8 @@
     <string name="SignUpQuestion_start_text">Already have an account?</string>
     <string name="SignUp_Login_Question_button">Sign in now!</string>
 
-
+    <!-- FOLLOWING BUTTON -->
+    <string name="ToFollowText">Follow</string>
+    <string name="FollowingText">Following</string>
 
 </resources>

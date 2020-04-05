@@ -42,22 +42,22 @@ public class PlaylistListAdapter extends RecyclerView.Adapter<PlaylistListAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
-        isFollowing = true;
+        isFollowing = false;
 
         followingButton = itemView.findViewById(R.id.playlist_following_button);
         followingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                isFollowing = !isFollowing;
                 if (isFollowing) {
                     ((Button) view).setTextAppearance(R.style.FollowingButton);
                     view.setBackgroundResource(R.drawable.round_corner_light);
-                    ((Button) view).setText("Following");
+                    ((Button) view).setText(R.string.FollowingText);
                 } else {
                     ((Button) view).setTextAppearance(R.style.ToFollowButton);
                     view.setBackgroundResource(R.drawable.round_corner);
-                    ((Button) view).setText("Follow");
+                    ((Button) view).setText(R.string.ToFollowText);
                 }
-                isFollowing = !isFollowing;
                 //TODO: fer la interacció amb la API del following
             }
         });

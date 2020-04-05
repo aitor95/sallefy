@@ -119,7 +119,7 @@
             android:layout_width="80dp"
             android:layout_height="24dp"
             android:layout_margin="9dp"
-            android:text="Follow"
+            android:text="@string/ToFollowText"
             android:textAllCaps="false"
             style="@style/ToFollowButton">
         </Button>

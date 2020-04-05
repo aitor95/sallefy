@@ -101,4 +101,12 @@
     <string name="ToFollowText">Follow</string>
     <string name="FollowingText">Following</string>
 
+    <!-- ADD TO PLAYLIST-->
+    <string name="add_to_playlist_title">Add to playlist</string>
+    <string name="add_to_playlist_button">Add to playlist</string>
+    <string name="content_description_item_add_to_playlist_photo">PlaylistImage</string>
+    <string name="add_to_playlist_lastitem_title">New Playlist</string>
+    <string name="add_to_playlist_lastitem_author">From you</string>
+
+
 </resources>

@@ -33,6 +33,18 @@ public class Playlist implements Serializable {
 
     private boolean followed;
 
+    public Playlist(){
+
+    }
+
+    public Playlist(int i,String title, String author, String thumbnail) {
+        this.id = i;
+        this.name = title;
+        this.user = new User();
+        user.setLogin(author);
+        this.thumbnail = thumbnail;
+    }
+
     public String getCover() {
         return cover;
     }

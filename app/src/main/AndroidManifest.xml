@@ -3,7 +3,7 @@
     package="com.salle.android.sallefy">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name=" android.permission.RECORD_AUDIO"/>
+    <uses-permission android:name=" android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <application
@@ -16,24 +16,22 @@
         android:usesCleartextTraffic="true">
 
         <service
-            android:name="com.salle.android.sallefy.controller.music.MusicService"
+            android:name=".controller.music.MusicService"
             android:enabled="true"
-            android:exported="true">
-        </service>
+            android:exported="true"></service>
 
-        <activity android:name="com.salle.android.sallefy.controller.activities.MainActivity"/>
-        <activity android:name="com.salle.android.sallefy.controller.activities.SignUpActivity"/>
-        <activity android:name="com.salle.android.sallefy.controller.activities.LoginActivity">
+        <activity android:name=".controller.activities.AddToPlaylist"/>
+        <activity android:name=".controller.activities.MainActivity" />
+        <activity android:name=".controller.activities.SignUpActivity" />
+        <activity android:name=".controller.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.salle.android.sallefy.controller.activities.EditPlaylistActivity"/>
-        <activity android:name="com.salle.android.sallefy.controller.activities.NewPlaylistActivity"/>
-
-
+        <activity android:name=".controller.activities.EditPlaylistActivity" />
+        <activity android:name=".controller.activities.NewPlaylistActivity" />
     </application>
 
 </manifest>

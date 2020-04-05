@@ -21,8 +21,6 @@ public class Session {
 
     private Context mContext;
 
-    //private UserRegister mUserRegister;
-
     private User mUser;
     private UserToken mUserToken;
 

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle"
+    android:layout_height="2dp"
+    android:layout_width="2dp">
+
+    <solid android:color="@color/colorPurpleButtons" />
+    <corners
+        android:bottomLeftRadius="100dp"
+        android:bottomRightRadius="100dp"
+        android:topLeftRadius="100dp"
+        android:topRightRadius="100dp" />
+
+</shape>

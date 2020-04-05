@@ -10,12 +10,16 @@
     <string name="default_songs">Canciones</string>
     <string name="default_genres">Géneros</string>
 
-    <!-- MENU -->
+    <!-- MAIN MENU -->
     <string name="menu_home">Home</string>
     <string name="menu_search">Search</string>
     <string name="menu_me">Me</string>
     <string name="menu_social">Social</string>
 
+    <!-- ME MENU -->
+    <string name="me_users">Users</string>
+    <string name="me_songs">Songs</string>
+    <string name="me_playlists">Playlists</string>
 
     <!-- FRAGMENTS (LABELS) -->
     <string name="fragment_playlists">Playlists</string>

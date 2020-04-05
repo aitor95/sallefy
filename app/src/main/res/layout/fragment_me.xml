@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/colorWhite">
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutMeUserImg"
+        android:layout_width="410dp"
+        android:layout_height="130dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/user_img"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="15dp"
+            android:scaleType="fitXY"
+            android:src="@drawable/default_user_image" />
+
+        <ImageButton
+            android:id="@+id/action_change_photo"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignEnd="@+id/user_img"
+            android:layout_alignBottom="@+id/user_img"
+            android:layout_marginEnd="2dp"
+            android:layout_marginBottom="2dp"
+            android:src="@drawable/photo_camera_white_18dp"
+            android:tint="@color/colorWhite"
+            android:background="@drawable/round_corner"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayoutMeUsername"
+        android:layout_width="410dp"
+        android:layout_height="40dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutMeUserImg">
+
+        <TextView
+            android:id="@+id/user_name"
+            android:layout_width="350dp"
+            android:layout_height="40dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="0dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:scaleType="fitXY"
+            android:text="@string/default_username"
+            android:textAppearance="@style/username_me_text"/>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/relativeLayoutMeMenu"
+        android:layout_width="410dp"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutMeUsername">
+
+        <Button
+            android:id="@+id/action_me_users"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:textAllCaps="false"
+            android:textAlignment="center"
+            style="@style/MeNavigationView.Active"
+            android:text="@string/me_users" />
+
+        <Button
+            android:id="@+id/action_me_songs"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:text="@string/me_songs"
+            style="@style/MeNavigationView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <Button
+            android:id="@+id/action_me_playlists"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            style="@style/MeNavigationView"
+            android:text="@string/me_playlists"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/me_fragment_container"
+        android:background="@color/colorWhite"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutMeMenu">
+    </FrameLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

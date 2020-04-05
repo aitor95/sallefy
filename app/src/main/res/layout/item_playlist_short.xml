@@ -98,7 +98,7 @@
 
             <TextView
                 android:id="@+id/item_playlist_title"
-                android:layout_width="190dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:textAlignment="textStart"
                 style="@style/TrackTheme"
@@ -106,7 +106,7 @@
 
             <TextView
                 android:id="@+id/item_playlist_author"
-                android:layout_width="190dp"
+                android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 style="@style/SubTitlesTheme"
@@ -115,14 +115,13 @@
         </LinearLayout>
 
         <Button
-            android:id="@+id/track_like"
-            android:src="@drawable/ic_favorite_black_24dp"
-            android:background="@color/colorSecondary"
-
-            android:layout_width="wrap_content"
+            android:id="@+id/playlist_following_button"
+            android:layout_width="80dp"
             android:layout_height="24dp"
             android:layout_margin="9dp"
-            android:text="Follow">
+            android:text="Follow"
+            android:textAllCaps="false"
+            style="@style/ToFollowButton">
         </Button>
 
     </LinearLayout>

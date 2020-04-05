@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/colorPrimary">
+    android:background="@color/colorWhite">
 
 
     <com.scwang.wave.MultiWaveHeader
@@ -16,8 +16,8 @@
         android:scaleX="2"
         android:scaleY="1.7"
         app:layout_constraintTop_toTopOf="parent"
-        app:mwhCloseColor="@color/colorSecondary"
-        app:mwhStartColor="@color/colorPrimary" />
+        app:mwhCloseColor="@color/colorWhite"
+        app:mwhStartColor="@color/colorWhite" />
 
     <TextView
         android:id="@+id/textView"
@@ -33,10 +33,10 @@
         android:id="@+id/home_recyclerview"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="30dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +27,9 @@ public class PlaylistListAdapter extends RecyclerView.Adapter<PlaylistListAdapte
     private PlaylistAdapterCallback mCallback;
     private int layoutId;
 
+    private Button followingButton;
+    private Boolean isFollowing;
+
 
     public PlaylistListAdapter(ArrayList<Playlist> playlists, Context context, PlaylistAdapterCallback callback, int layoutId) {
         mPlaylists = playlists;
@@ -38,12 +42,33 @@ public class PlaylistListAdapter extends RecyclerView.Adapter<PlaylistListAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
+        isFollowing = true;
+
+        followingButton = itemView.findViewById(R.id.playlist_following_button);
+        followingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isFollowing) {
+                    ((Button) view).setTextAppearance(R.style.FollowingButton);
+                    view.setBackgroundResource(R.drawable.round_corner_light);
+                    ((Button) view).setText("Following");
+                } else {
+                    ((Button) view).setTextAppearance(R.style.ToFollowButton);
+                    view.setBackgroundResource(R.drawable.round_corner);
+                    ((Button) view).setText("Follow");
+                }
+                isFollowing = !isFollowing;
+                //TODO: fer la interacció amb la API del following
+            }
+        });
+
         return new PlaylistListAdapter.ViewHolder(itemView);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         if (mPlaylists != null && mPlaylists.size() > 0) {
+
             holder.mLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

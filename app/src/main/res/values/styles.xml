@@ -101,4 +101,18 @@
         <item name="android:background">@drawable/round_corner_light</item>
     </style>
 
+    <style name="FollowingButton">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorPurpleButtons</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:background">@drawable/round_corner_light</item>
+    </style>
+
+    <style name="ToFollowButton">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:background">@drawable/round_corner</item>
+    </style>
+
 </resources>

@@ -9,7 +9,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -54,7 +53,7 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
     private void initViews(View v) {
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         //GridLayoutManager mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mAdapter = new PlaylistListAdapter(null, getContext(), this, R.layout.item_playlist_short);
+        mAdapter = new PlaylistListAdapter(null, getContext(), this, R.layout.item_playlist_vertical);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.home_recyclerview);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
@@ -90,7 +89,7 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
     @Override
     public void onAllList(ArrayList<Playlist> playlists) {
-        mAdapter = new PlaylistListAdapter(playlists, getContext(), this, R.layout.item_playlist_short);
+        mAdapter = new PlaylistListAdapter(playlists, getContext(), this, R.layout.item_playlist_vertical);
         mRecyclerView.setAdapter(mAdapter);
         //Toast.makeText(getContext(), "Playlists received", Toast.LENGTH_LONG).show();
     }

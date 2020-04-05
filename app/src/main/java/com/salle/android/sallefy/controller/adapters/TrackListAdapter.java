@@ -2,8 +2,6 @@ package com.salle.android.sallefy.controller.adapters;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,12 +18,7 @@ import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
 import com.salle.android.sallefy.model.Track;
-import com.salle.android.sallefy.utils.ImageHelper;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
 
 public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.ViewHolder> {
@@ -52,7 +45,7 @@ public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.View
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: called. Num viewHolders: " + NUM_VIEWHOLDERS++);
 
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_track, parent, false);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_track_vertical, parent, false);
         ViewHolder vh = new TrackListAdapter.ViewHolder(itemView);
         Log.d(TAG, "onCreateViewHolder: called. viewHolder hashCode: " + vh.hashCode());
 

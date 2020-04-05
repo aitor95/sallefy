@@ -82,7 +82,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mUsersView.setAdapter(mUserAdapter);
 
         LinearLayoutManager managerPlaylists = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-        mPlaylistAdapter = new PlaylistListAdapter(null, getContext(), null, R.layout.item_playlist_short);
+        mPlaylistAdapter = new PlaylistListAdapter(null, getContext(), null, R.layout.item_playlist_vertical);
         mPlaylistsView = (RecyclerView) v.findViewById(R.id.search_playlists_recyclerview);
         mPlaylistsView.setLayoutManager(managerPlaylists);
         mPlaylistsView.setAdapter(mPlaylistAdapter);
@@ -121,7 +121,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onAllList(ArrayList<Playlist> playlists) {
-        mPlaylistAdapter = new PlaylistListAdapter(playlists, getContext(), null, R.layout.item_playlist_short);
+        mPlaylistAdapter = new PlaylistListAdapter(playlists, getContext(), null, R.layout.item_playlist_vertical);
         mPlaylistsView.setAdapter(mPlaylistAdapter);
         //Toast.makeText(getContext(), "Playlists received", Toast.LENGTH_LONG).show();
     }

@@ -103,6 +103,8 @@
                 android:layout_height="120dp"
                 android:layout_marginTop="10dp"
                 android:ems="10"
+                android:gravity="start|top"
+                android:inputType="textMultiLine"
                 android:background="@color/colorLoginGrey"/>
 
         </LinearLayout>

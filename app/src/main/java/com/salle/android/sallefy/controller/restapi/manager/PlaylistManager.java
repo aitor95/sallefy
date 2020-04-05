@@ -13,7 +13,6 @@ import com.salle.android.sallefy.utils.Session;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -174,7 +173,7 @@ public class PlaylistManager {
                     playlistCallback.onPlaylistUpdated();
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);
-                    playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                    playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message() + " \n"+ response.errorBody()));
                 }
             }
 

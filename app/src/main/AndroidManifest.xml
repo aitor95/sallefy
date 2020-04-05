@@ -23,14 +23,14 @@
         <activity android:name=".controller.activities.AddToPlaylist"/>
         <activity android:name=".controller.activities.MainActivity" />
         <activity android:name=".controller.activities.SignUpActivity" />
-        <activity android:name=".controller.activities.LoginActivity">
+        <activity android:name=".controller.activities.EditPlaylistActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.activities.EditPlaylistActivity" />
+        <activity android:name=".controller.activities.LoginActivity" />
         <activity android:name=".controller.activities.NewPlaylistActivity" />
     </application>
 

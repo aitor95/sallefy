@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
@@ -15,6 +16,8 @@ import java.util.ArrayList;
  */
 
 public class Session {
+
+    private final String TAG = "Session";
 
     public static Session sSession;
     private static Object mutex = new Object();
@@ -84,7 +87,9 @@ public class Session {
         return mUserToken;
     }
 
-    public void setUserToken(UserToken userToken) {
+    public void setUserToken(UserToken userToken)
+    {
+        Log.d(TAG, "setUserToken: is " + userToken.getIdToken());
         mUserToken = userToken;
     }
 

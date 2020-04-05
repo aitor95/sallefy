@@ -1,10 +1,8 @@
 package com.salle.android.sallefy.controller.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -12,24 +10,27 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
-import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
 
 public class EditPlaylistActivity extends AppCompatActivity implements PlaylistCallback {
 
+    private final String TAG = "EditPlaylistActivity";
     private BottomNavigationView mNav;
     private ImageView mImg;
     private EditText mDescription;
     private EditText mTitle;
     private Playlist mPlaylist;
-    private int pId;
+    private Integer pId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +39,6 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
 
         Intent intent = getIntent();
         this.pId = (Integer) intent.getSerializableExtra("playlistId");
-
         initViews();
     }
 
@@ -87,11 +87,15 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         if(pImg != null){
             Glide.with(this).load(pImg).into(mImg);
         }
+
         String pTitle = playlist.getName();
         String pDescription = playlist.getDescription();
+
         if(pDescription != null){
             mDescription.setText(pDescription);
+            mDescription.setSelection(0);
         }
+
         if(pTitle != null){
             mTitle.setText(pTitle);
         }
@@ -125,7 +129,6 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
     @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_failure, Toast.LENGTH_LONG).show();
+        Log.e(TAG, "onFailure: "+throwable.getMessage());
     }
-
-
 }

@@ -8,5 +8,6 @@
 * Miquel Saula  - miquel.saula  - miquel.saula@students.salle.url.edu
 
 ## Cuenta Cloudinary
+* Email: aitor.ble@gmail.com
 * Usuario: dpoc4
 * contraseña: Dpodpoc4!

@@ -89,7 +89,7 @@
                 android:text="@string/action_login"
                 android:textColor="@color/colorWhite" />
             <LinearLayout
-                android:layout_marginTop="26dp"
+                android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -100,17 +100,21 @@
                     android:fontFamily="@font/roboto"
                     android:text="@string/LoginQuestion_start_text"/>
 
-                <Space
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content" />
-
-                <TextView
+                <Button
                     android:id="@+id/login_btn_SignUpNow"
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@null"
                     android:fontFamily="@font/roboto_bold"
-                    android:textSize="12sp"
-                    android:text="@string/Login_SignUp_Question_button"/>
+
+                    android:minHeight="48dp"
+                    android:minWidth="80dp"
+
+                    android:text="@string/Login_SignUp_Question_button"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textSize="12sp" />
 
             </LinearLayout>
         </LinearLayout>

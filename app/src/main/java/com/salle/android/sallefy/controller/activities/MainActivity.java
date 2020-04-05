@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -30,10 +31,15 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
 
+    private boolean backButtonPressed;
+    private long backButtonLastPressTime;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        backButtonLastPressTime = 0;
+        backButtonPressed = false;
         initViews();
         setInitialFragment();
         requestPermissions();
@@ -183,7 +189,29 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
     @Override
     public void onChangeFragment(Fragment fragment) {
         replaceFragment(fragment);
+
     }
 
+    /***
+     * Al apretar el boton de atras de android, no queremos salir de la main activity.
+     * Si el usuario aprieta back 2 veces en menos de 2 segundos se sale de la app.
+     */
+    @Override
+    public void onBackPressed() {
+        if(System.currentTimeMillis() - backButtonLastPressTime > 2000){
+            //Han pasado 2 segundos.
+            backButtonPressed = false;
+            backButtonLastPressTime = System.currentTimeMillis();
+        }
 
+        if(backButtonPressed) {
+            Intent intent = new Intent(Intent.ACTION_MAIN);
+            intent.addCategory(Intent.CATEGORY_HOME);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
+            backButtonPressed = true;
+        }
+    }
 }

@@ -40,7 +40,7 @@
                 style="@style/formLabel"/>
 
             <EditText
-                android:id="@+id/Signup_user"
+                android:id="@+id/signup_user"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:layout_marginTop="14dp"
@@ -61,7 +61,8 @@
                 style="@style/formLabel"/>
 
             <EditText
-                android:id="@+id/email_user"
+                android:id="@+id/signup_email"
+                android:inputType="textEmailAddress"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:layout_marginTop="14dp"
@@ -82,7 +83,7 @@
                 android:text="@string/SignUp_password"/>
 
             <EditText
-                android:id="@+id/SignUp_password"
+                android:id="@+id/signup_password"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:layout_marginTop="14dp"
@@ -103,7 +104,7 @@
                 android:text="@string/SignUp_repeat_password"/>
 
             <EditText
-                android:id="@+id/SignUp_repeat_password"
+                android:id="@+id/signup_repeat_password"
                 android:layout_width="match_parent"
                 android:layout_height="41dp"
                 android:layout_marginTop="14dp"
@@ -129,7 +130,7 @@
                 android:text="@string/action_signUp"
                 android:textColor="@color/colorWhite" />
             <LinearLayout
-                android:layout_marginTop="26dp"
+                android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:orientation="horizontal"
@@ -140,17 +141,19 @@
                     android:fontFamily="@font/roboto"
                     android:text="@string/SignUpQuestion_start_text"/>
 
-                <Space
-                    android:layout_width="5dp"
-                    android:layout_height="wrap_content" />
-
-                <TextView
-                    android:id="@+id/SignUp_btn_LoginNow"
+                <Button
+                    android:id="@+id/login_btn_SignUpNow"
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:background="@null"
                     android:fontFamily="@font/roboto_bold"
-                    android:textSize="12sp"
-                    android:text="@string/SignUp_Login_Question_button"/>
+                    android:minHeight="48dp"
+                    android:minWidth="80dp"
+                    android:text="@string/SignUp_Login_Question_button"
+                    android:textAlignment="center"
+                    android:textAllCaps="false"
+                    android:textSize="12sp" />
 
             </LinearLayout>
         </LinearLayout>

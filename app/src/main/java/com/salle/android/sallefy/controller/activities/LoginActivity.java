@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -26,28 +27,59 @@ public class LoginActivity extends AppCompatActivity implements UserCallback {
     private Button btnLogin;
     private boolean inAutomaticLogIn;
 
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+
+        if(!inAutomaticLogIn){
+            //Estar aqui dentro significa que hemos vuelto de SignUpActivity.
+            //Miramos si hay nuevas creedenciales guardadas, como en @onCreate
+
+            if(checkExistingPreferences()){
+                //Bingo, el usuario se acaba de crear una cuenta. Vamos a logearle
+                showSplash();
+            }else{
+                //Ignora, el usuario ha vuelto sin hacer login
+            }
+        }else{
+            //El usuario vuelve con a login porque ha salido del home.
+            //TODO: repair this
+            //showLogin();
+        }
+    }
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         //Uncomment this line to reset autologin data saved.
         //PreferenceUtils.resetValues(this);
 
         if(checkExistingPreferences()){
-            //Show the splashScreen
-            setContentView(R.layout.splash_screen);
-
-            //User and password are available. Try them.
-            doLogin(PreferenceUtils.getUser(this),PreferenceUtils.getPassword(this));
-            inAutomaticLogIn = true;
+            showSplash();
         }else{
             //User credentials not available. Show login.
-            setContentView(R.layout.activity_login);
-
-            //Buttons.
-            initViews();
-            inAutomaticLogIn = false;
+            showLogin();
         }
+    }
+
+    private void showSplash(){
+        //Show the splashScreen
+        setContentView(R.layout.splash_screen);
+
+        //User and password are available. Try them.
+        doLogin(PreferenceUtils.getUser(this),PreferenceUtils.getPassword(this));
+        inAutomaticLogIn = true;
+    }
+
+    private void showLogin(){
+        setContentView(R.layout.activity_login);
+
+        //Buttons.
+        initViews();
+        inAutomaticLogIn = false;
     }
 
     private void initViews() {
@@ -58,6 +90,15 @@ public class LoginActivity extends AppCompatActivity implements UserCallback {
         btnLogin = findViewById(R.id.login_btn_action);
         btnLogin.setOnClickListener(v -> doLogin(etLogin.getText().toString(),
                 etPassword.getText().toString()));
+
+        Button signUpNow = findViewById(R.id.login_btn_SignUpNow);
+        signUpNow.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void doLogin(String username, String password) {
@@ -104,6 +145,7 @@ public class LoginActivity extends AppCompatActivity implements UserCallback {
     public void onLoginFailure(Throwable throwable) {
         if(inAutomaticLogIn){
             Toast.makeText(getApplicationContext(), "Automatic login failed", Toast.LENGTH_LONG).show();
+            showLogin();
         }else{
             Toast.makeText(getApplicationContext(), "Login failed", Toast.LENGTH_LONG).show();
         }

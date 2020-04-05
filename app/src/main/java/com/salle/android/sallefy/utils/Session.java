@@ -6,7 +6,13 @@ import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserToken;
+
 import java.util.ArrayList;
+
+/***
+ * Classe global que guarda el userToken para las llamadas a la API de sallefy.
+ * Tambien se guarda si el usuario ha acceptado usar audio.
+ */
 
 public class Session {
 
@@ -14,6 +20,8 @@ public class Session {
     private static Object mutex = new Object();
 
     private Context mContext;
+
+    //private UserRegister mUserRegister;
 
     private User mUser;
     private UserToken mUserToken;
@@ -57,6 +65,15 @@ public class Session {
         isPlaying = false;
     }
 
+/*
+    public UserRegister getUserRegister() {
+        return mUserRegister;
+    }
+
+    public void setUserRegister(UserRegister userRegister) {
+        mUserRegister = userRegister;
+    }
+*/
     public User getUser() {
         return mUser;
     }

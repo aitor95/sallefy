@@ -22,6 +22,7 @@
         </service>
 
         <activity android:name="com.salle.android.sallefy.controller.activities.MainActivity"/>
+        <activity android:name="com.salle.android.sallefy.controller.activities.SignUpActivity"/>
         <activity android:name="com.salle.android.sallefy.controller.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

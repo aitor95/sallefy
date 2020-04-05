@@ -13,6 +13,7 @@ import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.Session;
 
+import java.io.IOException;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -120,7 +121,12 @@ public class UserManager {
                 if (response.isSuccessful()) {
                     userCallback.onRegisterSuccess();
                 } else {
-                    userCallback.onRegisterFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                    try{
+                        assert response.errorBody() != null;
+                        userCallback.onRegisterFailure(new Throwable("ERROR " + code + ", " + response.errorBody().string()));
+                    }catch (IOException e){
+                        e.printStackTrace();
+                    }
                 }
             }
 

@@ -29,6 +29,8 @@ import com.salle.android.sallefy.utils.Session;
 
 public class MainActivity extends FragmentActivity implements FragmentCallback {
 
+    public static final String TAG = MainActivity.class.getName();
+
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
 
@@ -44,6 +46,9 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         initViews();
         setInitialFragment();
         requestPermissions();
+        //Saca las siguientes lineas si no quieres testear el reproductor
+        Intent intent = new Intent(this,MusicPlayerActivity.class);
+        startActivity(intent);
     }
 
     private void initViews() {

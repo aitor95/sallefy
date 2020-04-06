@@ -21,7 +21,8 @@ import java.util.List;
 
 public class SignUpActivity extends AppCompatActivity implements UserCallback {
 
-    private final String TAG = "SignUpActivity";
+    public static final String TAG = SignUpActivity.class.getName();
+
     private EditText userName;
     private EditText password;
     private EditText email;

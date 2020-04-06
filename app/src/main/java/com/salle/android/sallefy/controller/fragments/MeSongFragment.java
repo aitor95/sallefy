@@ -80,6 +80,11 @@ public class MeSongFragment extends Fragment implements MusicCallback, TrackList
 	}
 
 	@Override
+	public void onSongFinishedPlaying() {
+
+	}
+
+	@Override
 	public void onNoTracks(Throwable throwable) {
 
 	}

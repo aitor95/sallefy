@@ -337,4 +337,9 @@ public class SongsFragment extends Fragment
         playAudio();
 
     }
+
+    @Override
+    public void onSongFinishedPlaying() {
+
+    }
 }

@@ -1,9 +1,5 @@
 package com.salle.android.sallefy.controller.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.app.ActionBar;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -11,7 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-import android.widget.Toolbar;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.salle.android.sallefy.R;
@@ -22,6 +20,8 @@ import com.salle.android.sallefy.model.Playlist;
 import java.util.ArrayList;
 
 public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCallback {
+
+    public static final String TAG = NewPlaylistActivity.class.getName();
 
     private BottomNavigationView mNav;
     private ImageView mImg;

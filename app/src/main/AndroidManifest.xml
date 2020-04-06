@@ -34,6 +34,7 @@
         <activity android:name=".controller.activities.EditPlaylistActivity" />
         <activity android:name=".controller.activities.NewPlaylistActivity" />
         <activity android:name=".controller.activities.UploadSongActivity"/>
+        <activity android:name=".controller.activities.EditSongActivity" />
     </application>
 
 </manifest>

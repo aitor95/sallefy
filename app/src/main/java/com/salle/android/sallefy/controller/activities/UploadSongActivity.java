@@ -9,6 +9,8 @@ import com.salle.android.sallefy.R;
 
 public class UploadSongActivity extends AppCompatActivity {
 
+    public static final String TAG = UploadSongActivity.class.getName();
+
     private Button uploadSong;
     private Button addGenre;
 

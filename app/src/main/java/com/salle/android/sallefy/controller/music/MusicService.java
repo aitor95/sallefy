@@ -17,6 +17,8 @@ import java.util.ArrayList;
 
 public class MusicService extends Service {
 
+    public static final String TAG = MusicService.class.getName();
+
     private MediaPlayer mediaPlayer;
     private final IBinder mBinder = new MusicBinder();
     private AudioManager audioManager;
@@ -74,7 +76,8 @@ public class MusicService extends Service {
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
-                updateTrack(1);
+                //updateTrack(1);
+                mCallback.onSongFinishedPlaying();
             }
         });
 
@@ -85,7 +88,7 @@ public class MusicService extends Service {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     mediaPlayer.start();
-                    System.out.println("Entra en el prepared");
+                    Log.d(TAG, "onPrepared: Entra en el prepared");
 
                     if (mCallback != null) {
                         System.out.println("Entra en el callback");
@@ -96,7 +99,6 @@ public class MusicService extends Service {
         } catch(Exception e) {
 
         }
-
     }
 
     public void playStream(ArrayList<Track> tracks, int currentTrack) {
@@ -210,7 +212,7 @@ public class MusicService extends Service {
 
     public void setCurrentDuration(int time) {
         try {
-            mediaPlayer.seekTo(time);
+                mediaPlayer.seekTo(time);
         } catch (Exception e) {
             Log.d("EXCEPTION", "Failed to set the duration");
         }
@@ -219,7 +221,7 @@ public class MusicService extends Service {
     public int getCurrrentPosition() {
         try {
             if (mediaPlayer != null) {
-                return mediaPlayer.getCurrentPosition();
+                return mediaPlayer.getCurrentPosition()/1000;
             } else {
                 return 0;
             }
@@ -232,7 +234,7 @@ public class MusicService extends Service {
     public int getMaxDuration() {
         try {
             if (mediaPlayer != null) {
-                return mediaPlayer.getDuration();
+                return mediaPlayer.getDuration()/1000;
             } else {
                 return 0;
             }

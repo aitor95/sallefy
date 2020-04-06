@@ -8,6 +8,8 @@ import com.salle.android.sallefy.R;
 
 public class EditSongActivity extends AppCompatActivity {
 
+    public static final String TAG = EditSongActivity.class.getName();
+
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
 

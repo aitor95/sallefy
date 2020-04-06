@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class EditPlaylistActivity extends AppCompatActivity implements PlaylistCallback {
 
-    private final String TAG = "EditPlaylistActivity";
+    public static final String TAG = EditPlaylistActivity.class.getName();
     private BottomNavigationView mNav;
     private ImageView mImg;
     private EditText mDescription;

@@ -38,7 +38,7 @@
             android:paddingBottom="5dp">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/profile_image"
+                android:id="@+id/music_player_thumbnail"
                 android:layout_width="232dp"
                 android:layout_height="232dp"
                 android:src="@drawable/music_player_image"
@@ -49,6 +49,7 @@
     </FrameLayout>
 
     <TextView
+        android:id="@+id/music_player_title"
         style="@style/TitlesTheme"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -56,6 +57,7 @@
         android:text="@string/music_player_title" />
 
     <TextView
+        android:id="@+id/music_player_author"
         style="@style/music_player_author"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -71,7 +73,7 @@
 
 
         <ImageButton
-            android:id="@+id/button"
+            android:id="@+id/music_player_fav"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_weight="1"
@@ -80,7 +82,7 @@
             android:src="@drawable/ic_favourite_grey_24dp" />
 
         <ImageButton
-            android:id="@+id/button2"
+            android:id="@+id/music_player_more"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_weight="1"
@@ -93,7 +95,7 @@
         android:layout_height="wrap_content">
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/music_player_curr_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="15dp"
@@ -101,7 +103,7 @@
             android:text="@string/music_player_left_number" />
 
         <SeekBar
-            android:id="@+id/seekBar"
+            android:id="@+id/music_player_seekBar"
             android:layout_width="221dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
@@ -112,7 +114,7 @@
             android:thumb="@drawable/music_player_thumb" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/music_player_total_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
@@ -128,7 +130,7 @@
         android:orientation="horizontal">
 
         <ImageButton
-            android:id="@+id/button3"
+            android:id="@+id/music_player_prev"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -138,7 +140,7 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:id="@+id/button4"
+            android:id="@+id/music_player_playStop"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -147,7 +149,7 @@
             android:layout_weight="1" />
 
         <ImageButton
-            android:id="@+id/button5"
+            android:id="@+id/music_player_next"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="37dp"

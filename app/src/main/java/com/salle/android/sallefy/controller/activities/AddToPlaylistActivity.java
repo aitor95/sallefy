@@ -21,7 +21,7 @@ import java.util.HashMap;
 
 public class AddToPlaylistActivity extends AppCompatActivity {
 
-    private final String TAG = "AddToPlaylist";
+    public static final String TAG = AddToPlaylistActivity.class.getName();
 
     private RecyclerView mAddToPlaylistRecyclerView;
     private AddToPlayListAdapter mAdapter;

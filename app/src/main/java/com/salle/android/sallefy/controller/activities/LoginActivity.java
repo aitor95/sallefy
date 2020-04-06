@@ -22,6 +22,8 @@ import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements UserCallback {
 
+    public static final String TAG = LoginActivity.class.getName();
+
     private EditText etLogin;
     private EditText etPassword;
     private Button btnLogin;

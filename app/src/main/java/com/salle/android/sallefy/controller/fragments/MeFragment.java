@@ -42,6 +42,10 @@ public class MeFragment extends Fragment {
 		Button songs = (Button) v.findViewById(R.id.action_me_songs);
 		Button playlists = (Button) v.findViewById(R.id.action_me_playlists);
 
+		Fragment fragmentMeUsers = new MeUserFragment();
+		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+		transaction.add(R.id.me_fragment_container, fragmentMeUsers).commit();
+
 		changePhoto.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View view) {

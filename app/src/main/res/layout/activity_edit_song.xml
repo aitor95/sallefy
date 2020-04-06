@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:clipToPadding="false">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clipToPadding="false">
+
+
+        <ImageView
+            android:id="@+id/edit_song_back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="right"
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/ic_back_arrow"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                style="@style/TitlesTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/edit_song" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:clipToPadding="false">
+
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="20dp"
+            android:paddingBottom="10dp"
+            android:clipToPadding="false">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/song_photo"
+                android:layout_width="141dp"
+                android:layout_height="141dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/song_placeholder"
+                app:civ_border_width="0dp"
+                app:civ_border_color="#FF000000"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="56dp"
+            android:layout_marginEnd="56dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_name"
+                    style="@style/formLabel"/>
+
+                <EditText
+                    android:id="@+id/edit_song_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="41dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@color/colorLoginGrey"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_artist"
+                    style="@style/formLabel"/>
+
+                <EditText
+                    android:id="@+id/edit_song_artist"
+                    android:layout_width="match_parent"
+                    android:layout_height="41dp"
+                    android:layout_marginTop="14dp"
+                    android:background="@color/colorLoginGrey"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/label_genre"
+                    style="@style/formLabel"/>
+
+                <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp">
+
+                    <EditText
+                        android:id="@+id/edit_song_genre"
+                        android:layout_width="match_parent"
+                        android:layout_height="41dp"
+                        android:background="@color/colorLoginGrey"
+                        android:gravity="center_vertical"/>
+
+                    <ImageButton
+                        android:id="@+id/add_new_genre"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:foregroundGravity="center"
+                        android:src="@drawable/ic_add_grey"
+                        android:backgroundTint="@color/colorLoginGrey"/>
+
+                </RelativeLayout>
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/fragment_container_tags"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:paddingTop="10dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/bottom_navigation">
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <Button
+                    android:id="@+id/edit_song_btn_action"
+                    style="@style/buttonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/login_btn"
+                    android:minWidth="200dp"
+                    android:text="@string/btn_save"
+                    android:textColor="@color/colorWhite" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+
+</LinearLayout>
+

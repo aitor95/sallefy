@@ -97,6 +97,18 @@
     <string name="SignUpQuestion_start_text">Already have an account?</string>
     <string name="SignUp_Login_Question_button">Sign in now!</string>
 
+    <!-- ACTIVITY [ Upload Song ] -->
+    <string name="upload_song">Upload Song</string>
+    <string name="label_name">Name</string>
+    <string name="label_artist">Artist</string>
+    <string name="label_genre">Genre</string>
+    <string name="btn_upload">Upload</string>
+    <string name="upload_genre_placeholder">Hardstyle</string>
+    <!--  cambiar este placeholder dinamicamente  -->
+
+    <!-- ACTIVITY [ Upload Song ] -->
+    <string name="edit_song">Edit Song</string>
+    <string name="btn_save">Save</string>
     <!-- FOLLOWING BUTTON -->
     <string name="ToFollowText">Follow</string>
     <string name="FollowingText">Following</string>

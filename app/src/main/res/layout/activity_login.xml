@@ -87,7 +87,8 @@
                 android:background="@drawable/login_btn"
                 android:minWidth="200dp"
                 android:text="@string/action_login"
-                android:textColor="@color/colorWhite" />
+                android:textColor="@color/colorWhite"/>
+
             <LinearLayout
                 android:layout_marginTop="5dp"
                 android:layout_width="wrap_content"

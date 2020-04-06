@@ -10,7 +10,7 @@
     </style>
 
     <style name="TitlesTheme" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">20dp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
         <item name="android:textColor">@color/colorBlack</item>
     </style>
@@ -121,6 +121,12 @@
         <item name="android:layout_height">@dimen/item_horizontalRV_size</item>
     </style>
 
+    <style name="HorizontalItemThumbnailProfile">
+        <item name="android:background">@drawable/horizontal_item_background</item>
+        <item name="android:layout_width">@dimen/item_track_size</item>
+        <item name="android:layout_height">@dimen/item_track_size</item>
+    </style>
+
     <style name="HorizontalItemThumbnailCircular">
         <item name="android:background">@drawable/horizontal_item_circular_background</item>
         <item name="android:layout_width">@dimen/item_horizontalRV_size</item>
@@ -144,5 +150,12 @@
         <item name="android:layout_width">@dimen/item_track_size</item>
         <item name="android:layout_height">@dimen/item_track_size</item>
     </style>
+
+    <style name="ProfileImageSong">
+        <item name="android:background">@drawable/vertical_item_background</item>
+        <item name="android:layout_width">@dimen/item_song_image_size</item>
+        <item name="android:layout_height">@dimen/item_song_image_size</item>
+    </style>
+
 
 </resources>

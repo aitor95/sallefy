@@ -20,10 +20,10 @@
             android:enabled="true"
             android:exported="true"></service>
 
-        <activity android:name=".controller.activities.AddToPlaylist"/>
+        <activity android:name=".controller.activities.AddToPlaylistActivity"/>
         <activity android:name=".controller.activities.MainActivity" />
         <activity android:name=".controller.activities.SignUpActivity" />
-        <activity android:name=".controller.activities.LoginActivity">
+        <activity android:name=".controller.activities.EditSongActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,6 +32,8 @@
         </activity>
         <activity android:name=".controller.activities.EditPlaylistActivity" />
         <activity android:name=".controller.activities.NewPlaylistActivity" />
+        <activity android:name=".controller.activities.UploadSongActivity" />
+
     </application>
 
 </manifest>

@@ -19,7 +19,7 @@ import com.salle.android.sallefy.model.Playlist;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class AddToPlaylist extends AppCompatActivity {
+public class AddToPlaylistActivity extends AppCompatActivity {
 
     private final String TAG = "AddToPlaylist";
 

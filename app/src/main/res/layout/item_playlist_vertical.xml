@@ -1,45 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/item_playlist_layout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:layout_margin="@dimen/mtrl_card_spacing"
+    android:padding="@dimen/mtrl_card_spacing"
     android:layout_centerInParent="true"
-    android:layout_centerHorizontal="true">
+    android:layout_centerHorizontal="true"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:paddingStart="24dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="5dp"
         android:background="#00FFFFFF"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clipToPadding="false">
 
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="@dimen/item_track_size"
-            android:layout_height="@dimen/item_track_size"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp">
+            style="@style/VerticalItemThumbnail"
+            android:elevation="5dp"
+            android:clipToPadding="false">
 
-            <androidx.cardview.widget.CardView
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="@dimen/item_track_size"
-                android:layout_height="@dimen/item_track_size"
-                android:layout_margin="0dp"
-                app:cardCornerRadius="7dp">
+                android:layout_height="69dp"
+                android:paddingBottom="5dp"
+                >
 
-                <ImageView
-                    android:id="@+id/item_playlist_photo"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:scaleType="centerCrop" />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="@dimen/item_track_size"
+                    android:layout_height="@dimen/item_track_size"
+                    android:layout_margin="0dp"
+                    app:cardCornerRadius="9dp">
 
-            </androidx.cardview.widget.CardView>
+                    <ImageView
+                        android:id="@+id/item_playlist_photo"
+                        android:elevation="4dp"
+                        android:layout_width="@dimen/item_track_size"
+                        android:layout_height="@dimen/item_track_size"/>
 
+                </androidx.cardview.widget.CardView>
+
+            </FrameLayout>
         </FrameLayout>
 
         <LinearLayout

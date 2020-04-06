@@ -5,4 +5,5 @@
     <dimen name="item_max_height">60dp</dimen>
     <dimen name="item_max_height2">88dp</dimen>
     <dimen name="item_track_size">64dp</dimen>>
+    <dimen name="item_horizontalRV_size">92dp</dimen>>
 </resources>

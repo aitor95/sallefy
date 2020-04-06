@@ -19,9 +19,9 @@ import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
 
-public class PlaylistListAdapter extends RecyclerView.Adapter<PlaylistListAdapter.ViewHolder> {
+public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistListVerticalAdapter.ViewHolder> {
 
-    public static final String TAG = PlaylistListAdapter.class.getName();
+    public static final String TAG = PlaylistListVerticalAdapter.class.getName();
     private ArrayList<Playlist> mPlaylists;
     private Context mContext;
     private PlaylistAdapterCallback mCallback;
@@ -31,7 +31,7 @@ public class PlaylistListAdapter extends RecyclerView.Adapter<PlaylistListAdapte
     private Boolean isFollowing;
 
 
-    public PlaylistListAdapter(ArrayList<Playlist> playlists, Context context, PlaylistAdapterCallback callback, int layoutId) {
+    public PlaylistListVerticalAdapter(ArrayList<Playlist> playlists, Context context, PlaylistAdapterCallback callback, int layoutId) {
         mPlaylists = playlists;
         mContext = context;
         mCallback = callback;
@@ -62,7 +62,7 @@ public class PlaylistListAdapter extends RecyclerView.Adapter<PlaylistListAdapte
             }
         });
 
-        return new PlaylistListAdapter.ViewHolder(itemView);
+        return new PlaylistListVerticalAdapter.ViewHolder(itemView);
     }
 
     @Override

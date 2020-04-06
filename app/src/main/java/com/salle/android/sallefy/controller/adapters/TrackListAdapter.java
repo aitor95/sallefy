@@ -71,34 +71,11 @@ public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.View
 
         holder.mLayout.setOnClickListener(v -> mCallback.onTrackSelected(position));
 
-        //Obtenemos las dimensiones de la pantalla entera
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int screenwidth = displayMetrics.widthPixels;
-        int screenheight = displayMetrics.heightPixels;
+        holder.tvTitle.setText(mTracks.get(position).getName());
+        adjustTextView(holder.tvTitle);
 
-        //Fijamos el contenido del nombre de la canción y obtenemos las dimensiones del TextView en pantalla
-        String titleTrack = mTracks.get(position).getName();
-        holder.tvTitle.setText(titleTrack);
-        holder.tvTitle.measure(0, 0);
-
-        //En caso de tener un nombre demasiado largo eliminamos una letra y volvemos a comprovar si cabe
-        //el nombre en una línea (con "..." al final del nombre). Si aun no cabe se repite el proceso.
-        while ((float) screenwidth * 0.475 < holder.tvTitle.getMeasuredWidth()) {
-            titleTrack = titleTrack.substring(0, titleTrack.length() - 1);
-            holder.tvTitle.setText(titleTrack.concat("..."));
-            holder.tvTitle.measure(0, 0);
-        }
-
-        //Repetimos el proceso pero con el nombre del autor
-        String authorTrack = mTracks.get(position).getUserLogin();
-        holder.tvAuthor.setText(authorTrack);
-        holder.tvAuthor.measure(0, 0);
-        while ((float) screenwidth * 0.475 < holder.tvAuthor.getMeasuredWidth()) {
-            authorTrack = authorTrack.substring(0, authorTrack.length() - 1);
-            holder.tvAuthor.setText(authorTrack.concat("..."));
-            holder.tvAuthor.measure(0, 0);
-        }
+        holder.tvAuthor.setText(mTracks.get(position).getUserLogin());
+        adjustTextView(holder.tvAuthor);
 
         if (mTracks.get(position).getThumbnail() != null) {
             Glide.with(mContext)
@@ -107,6 +84,22 @@ public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.View
                     .load(mTracks.get(position).getThumbnail())
                     .into(holder.ivPicture);
         }
+    }
+
+    private void adjustTextView(TextView tv) {
+        tv.getViewTreeObserver();
+        tv.measure(0, 0);
+
+        tv.post(() -> {
+            int linesCount = tv.getLineCount();
+
+            String titleTrack = (String) tv.getText();
+            if (linesCount > 1) {
+                titleTrack = titleTrack.substring(0, titleTrack.length() - 4);
+                tv.setText(titleTrack.concat("..."));
+                adjustTextView(tv);
+            }
+        });
     }
 
     @Override

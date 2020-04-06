@@ -5,41 +5,45 @@
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_max_height2"
-    android:layout_margin="0dp"
-    android:padding="0dp"
-    android:gravity="center_vertical">
+    android:gravity="center_vertical"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
+        android:paddingBottom="9dp"
+        android:paddingTop="9dp"
+        android:paddingStart="24dp"
         android:background="#00FFFFFF"
         android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:clipToPadding="false">
+
 
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:layout_width="@dimen/item_track_size"
-            android:layout_height="@dimen/item_track_size"
-            android:layout_marginBottom="12dp"
-            android:layout_marginTop="12dp">
+            style="@style/VerticalItemThumbnail"
+            android:elevation="7dp"
+            android:clipToPadding="false">
 
-            <androidx.cardview.widget.CardView
+            <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="@dimen/item_track_size"
-                android:layout_height="@dimen/item_track_size"
-                android:layout_margin="0dp"
-                app:cardCornerRadius="7dp">
+                android:layout_height="@dimen/item_track_size">
 
-                <ImageView
-                    android:id="@+id/track_img"
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:scaleType="centerCrop" />
+                <androidx.cardview.widget.CardView
+                    android:layout_width="@dimen/item_track_size"
+                    android:layout_height="@dimen/item_track_size"
+                    app:cardCornerRadius="7dp">
 
-            </androidx.cardview.widget.CardView>
+                    <ImageView
+                        android:id="@+id/track_img"
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:scaleType="centerCrop"/>
+
+                </androidx.cardview.widget.CardView>
+
+            </FrameLayout>
 
         </FrameLayout>
 

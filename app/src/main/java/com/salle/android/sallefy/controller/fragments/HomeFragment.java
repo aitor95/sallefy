@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.adapters.PlaylistListAdapter;
+import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.PlaylistAdapterCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
@@ -25,7 +25,7 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
     public static final String TAG = HomeFragment.class.getName();
     private RecyclerView mRecyclerView;
-    private PlaylistListAdapter mAdapter;
+    private PlaylistListVerticalAdapter mAdapter;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -53,7 +53,7 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
     private void initViews(View v) {
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         //GridLayoutManager mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mAdapter = new PlaylistListAdapter(null, getContext(), this, R.layout.item_playlist_vertical);
+        mAdapter = new PlaylistListVerticalAdapter(null, getContext(), this, R.layout.item_playlist_vertical);
         mRecyclerView = (RecyclerView) v.findViewById(R.id.home_recyclerview);
         mRecyclerView.setLayoutManager(manager);
         mRecyclerView.setAdapter(mAdapter);
@@ -89,7 +89,7 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
     @Override
     public void onAllList(ArrayList<Playlist> playlists) {
-        mAdapter = new PlaylistListAdapter(playlists, getContext(), this, R.layout.item_playlist_vertical);
+        mAdapter = new PlaylistListVerticalAdapter(playlists, getContext(), this, R.layout.item_playlist_vertical);
         mRecyclerView.setAdapter(mAdapter);
         //Toast.makeText(getContext(), "Playlists received", Toast.LENGTH_LONG).show();
     }

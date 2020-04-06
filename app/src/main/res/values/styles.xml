@@ -16,13 +16,13 @@
     </style>
 
     <style name="TrackTheme" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">13sp</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:textColor">@color/colorBlack</item>
     </style>
 
     <style name="SubTitlesTheme" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">11sp</item>
+        <item name="android:textSize">10sp</item>
         <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textColor">#FF333333</item>
     </style>
@@ -113,6 +113,18 @@
         <item name="android:textColor">@color/colorWhite</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
         <item name="android:background">@drawable/round_corner</item>
+    </style>
+
+    <style name="HorizontalItemThumbnail">
+        <item name="android:background">@drawable/horizontal_item_background</item>
+        <item name="android:layout_width">@dimen/item_horizontalRV_size</item>
+        <item name="android:layout_height">@dimen/item_horizontalRV_size</item>
+    </style>
+
+    <style name="VerticalItemThumbnail">
+        <item name="android:background">@drawable/vertical_item_background</item>
+        <item name="android:layout_width">@dimen/item_track_size</item>
+        <item name="android:layout_height">@dimen/item_track_size</item>
     </style>
 
 </resources>

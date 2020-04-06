@@ -14,7 +14,6 @@
         android:gravity="center_vertical"
         android:clipToPadding="false">
 
-
         <ImageView
             android:id="@+id/edit_song_back"
             android:layout_width="24dp"

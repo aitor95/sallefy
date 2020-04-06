@@ -158,4 +158,18 @@
     </style>
 
 
+    <style name="SongMiniplayer">
+        <item name="android:textSize">22sp</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="AuthorMiniplayer">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">@color/colorDarkGrey</item>
+    </style>
+
+
+
 </resources>

@@ -11,7 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,7 +45,7 @@ public class SongsFragment extends Fragment
     private ImageButton btnBackward;
     private ImageButton btnPlayStop;
     private ImageButton btnForward;
-    private SeekBar mSeekBar;
+    //private SeekBar mSeekBar;
 
     private Handler mHandler;
     private Runnable mRunnable;
@@ -69,7 +68,7 @@ public class SongsFragment extends Fragment
             mBoundService = binder.getService();
             mBoundService.setCallback(SongsFragment.this);
             mServiceBound = true;
-            updateSeekBar();
+            //updateSeekBar();
         }
 
         @Override
@@ -183,6 +182,7 @@ public class SongsFragment extends Fragment
             }
         });
 
+        /*
         mSeekBar = (SeekBar) v.findViewById(R.id.dynamic_seekBar);
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -202,6 +202,7 @@ public class SongsFragment extends Fragment
 
             }
         });
+        */
     }
 
     private void startStreamingService () {
@@ -211,7 +212,7 @@ public class SongsFragment extends Fragment
 
     private void playAudio() {
         if (!mBoundService.isPlaying()) { mBoundService.togglePlayer(); }
-        updateSeekBar();
+        //updateSeekBar();
         btnPlayStop.setImageResource(R.drawable.ic_pause);
         btnPlayStop.setTag(STOP_VIEW);
         Toast.makeText(getContext(), "Playing Audio", Toast.LENGTH_SHORT).show();
@@ -224,7 +225,7 @@ public class SongsFragment extends Fragment
         Toast.makeText(getContext(), "Pausing Audio", Toast.LENGTH_SHORT).show();
     }
 
-    public void updateSeekBar() {
+    /*public void updateSeekBar() {
         System.out.println("max duration: " + mBoundService.getMaxDuration());
         System.out.println("progress:" + mBoundService.getCurrrentPosition());
         mSeekBar.setMax(mBoundService.getMaxDuration());
@@ -240,6 +241,8 @@ public class SongsFragment extends Fragment
             mHandler.postDelayed(mRunnable, 1000);
         }
     }
+
+     */
 
     private void updateTrack(int index) {
         Track track = mTracks.get(index);
@@ -329,7 +332,7 @@ public class SongsFragment extends Fragment
     @Override
     public void onMusicPlayerPrepared() {
         System.out.println("Entra en el prepared");
-        mSeekBar.setMax(mBoundService.getMaxDuration());
+        //mSeekBar.setMax(mBoundService.getMaxDuration());
         mDuration =  mBoundService.getMaxDuration();
         playAudio();
 

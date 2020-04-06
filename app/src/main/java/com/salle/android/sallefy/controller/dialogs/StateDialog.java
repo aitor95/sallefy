@@ -64,7 +64,7 @@ public class StateDialog {
     private void inProgressTask() {
         tvTitle.setText(R.string.state_wait);
         tvSubtitle.setText(R.string.state_task_in_progress);
-        ivIcon.setImageDrawable(mContext.getDrawable(R.drawable.ic_info));
+        ivIcon.setImageDrawable(mContext.getDrawable(R.drawable.ic_sallefy));
         btnAccept.setVisibility(View.GONE);
     }
 

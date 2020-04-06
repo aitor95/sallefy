@@ -250,7 +250,7 @@ public class SongsFragment extends Fragment
         tvAuthor.setText(track.getUserLogin());
         tvTitle.setText(track.getName());
         mBoundService.playStream(mTracks, index);
-        btnPlayStop.setImageResource(R.drawable.ic_pause);
+        btnPlayStop.setImageResource(R.drawable.ic_pause_circle_64dp);
         btnPlayStop.setTag(STOP_VIEW);
         //updateSeekBar();
     }
@@ -258,10 +258,10 @@ public class SongsFragment extends Fragment
 
     private void resumeSongView(boolean isPlaying) {
         if (isPlaying) {
-            btnPlayStop.setImageResource(R.drawable.ic_pause);
+            btnPlayStop.setImageResource(R.drawable.ic_pause_circle_64dp);
             btnPlayStop.setTag(STOP_VIEW);
         } else {
-            btnPlayStop.setImageResource(R.drawable.ic_play);
+            btnPlayStop.setImageResource(R.drawable.ic_play_circle_filled_64dp);
             btnPlayStop.setTag(PLAY_VIEW);
         }
     }

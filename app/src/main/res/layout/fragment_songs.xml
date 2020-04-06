@@ -102,14 +102,14 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_play_circle_filled_64dp" />
+                    android:src="@drawable/ic_play_circle_filled_30dp" />
 
                 <ImageButton
                     android:id="@+id/dynamic_forward_btn"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_skip_next" />
+                    android:src="@drawable/ic_skip_next_14dp" />
 
             </LinearLayout>
 

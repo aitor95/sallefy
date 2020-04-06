@@ -94,6 +94,11 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	}
 
 	@Override
+	public void onUserClicked(User user) {
+
+	}
+
+	@Override
 	public void onFailure(Throwable throwable) {
 
 	}

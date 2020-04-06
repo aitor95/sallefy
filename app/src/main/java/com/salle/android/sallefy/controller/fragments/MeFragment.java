@@ -60,6 +60,10 @@ public class MeFragment extends Fragment {
 				playlists.setTextAppearance(R.style.MeNavigationView);
 				playlists.setBackgroundResource(0);
 
+				// FRAGMENT INTO FRAGMENT
+				Fragment fragmentMeUsers = new MeUserFragment();
+				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+				transaction.add(R.id.me_fragment_container, fragmentMeUsers).commit();
 			}
 		});
 
@@ -91,6 +95,11 @@ public class MeFragment extends Fragment {
 				songs.setBackgroundResource(0);
 				playlists.setTextAppearance(R.style.MeNavigationView_Active);
 				playlists.setBackgroundResource(R.drawable.round_corner_light);
+
+				// FRAGMENT INTO FRAGMENT
+				Fragment fragmentMePlaylists = new MePlaylistFragment();
+				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+				transaction.add(R.id.me_fragment_container, fragmentMePlaylists).commit();
 
 			}
 		});

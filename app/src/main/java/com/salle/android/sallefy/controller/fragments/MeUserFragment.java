@@ -12,22 +12,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.adapters.TrackListAdapter;
-import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
-import com.salle.android.sallefy.controller.music.MusicCallback;
-import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
-import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
-import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.controller.adapters.UserHorizontalAdapter;
+import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
+import com.salle.android.sallefy.controller.restapi.manager.UserManager;
+import com.salle.android.sallefy.model.User;
+import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MeSongFragment extends Fragment implements MusicCallback, TrackListCallback, TrackCallback {
+public class MeUserFragment extends Fragment implements UserCallback {
 
-	public static final String TAG = MeSongFragment.class.getName();
+	public static final String TAG = MeUserFragment.class.getName();
 
 	private RecyclerView mRecyclerView;
-	private ArrayList<Track> mTracks;
+	private ArrayList<User> mUsers;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,56 +45,51 @@ public class MeSongFragment extends Fragment implements MusicCallback, TrackList
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		TrackListAdapter adapter = new TrackListAdapter(this, getActivity(), null);
+		UserHorizontalAdapter adapter = new UserHorizontalAdapter(null, getContext());
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 	}
 
 	private void getData() {
-		//TODO: cambiar por cojer lascanciones que tocan
-		TrackManager.getInstance(getActivity()).getAllTracks(this);
-		mTracks = new ArrayList<>();
+		//TODO: cambiar por coger las listas que tocan
+		UserManager.getInstance(getActivity()).getUsers(this);
+		mUsers = new ArrayList<>();
 	}
 
 	@Override
-	public void onTracksReceived(List<Track> tracks) {
-		mTracks = (ArrayList) tracks;
-		TrackListAdapter adapter = new TrackListAdapter(this, getActivity(), mTracks);
+	public void onLoginSuccess(UserToken userToken) {
+
+	}
+
+	@Override
+	public void onLoginFailure(Throwable throwable) {
+
+	}
+
+	@Override
+	public void onRegisterSuccess() {
+
+	}
+
+	@Override
+	public void onRegisterFailure(Throwable throwable) {
+
+	}
+
+	@Override
+	public void onUserInfoReceived(User userData) {
+
+	}
+
+	@Override
+	public void onUsersReceived(List<User> users) {
+		mUsers = (ArrayList<User>) users;
+		UserHorizontalAdapter adapter = new UserHorizontalAdapter(mUsers, getContext());
 		mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override
-	public void onTrackSelected(Track track) {
-
-	}
-
-	@Override
-	public void onTrackSelected(int index) {
-
-	}
-
-	@Override
-	public void onMusicPlayerPrepared() {
-
-	}
-
-	@Override
-	public void onNoTracks(Throwable throwable) {
-
-	}
-
-	@Override
-	public void onPersonalTracksReceived(List<Track> tracks) {
-
-	}
-
-	@Override
-	public void onUserTracksReceived(List<Track> tracks) {
-
-	}
-
-	@Override
-	public void onCreateTrack() {
+	public void onUsersFailure(Throwable throwable) {
 
 	}
 

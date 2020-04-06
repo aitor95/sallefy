@@ -107,6 +107,7 @@
     <string name="content_description_item_add_to_playlist_photo">PlaylistImage</string>
     <string name="add_to_playlist_lastitem_title">New Playlist</string>
     <string name="add_to_playlist_lastitem_author">From you</string>
+    <string name="default_nfollowers">1M followers</string>
 
 
 </resources>

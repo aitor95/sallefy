@@ -13,4 +13,6 @@ public interface UserCallback extends FailureCallback {
     void onUserInfoReceived(User userData);
     void onUsersReceived(List<User> users);
     void onUsersFailure(Throwable throwable);
+
+    void onUserClicked(User user);
 }

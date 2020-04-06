@@ -139,4 +139,10 @@
         <item name="android:textColor">@color/colorBlack</item>
     </style>
 
+    <style name="VerticalItemThumbnailCircular">
+        <item name="android:background">@drawable/vertical_item_circular_background</item>
+        <item name="android:layout_width">@dimen/item_track_size</item>
+        <item name="android:layout_height">@dimen/item_track_size</item>
+    </style>
+
 </resources>

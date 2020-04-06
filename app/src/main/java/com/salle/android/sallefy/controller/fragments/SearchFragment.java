@@ -198,6 +198,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     }
 
+    @Override
+    public void onUserClicked(User user) {
+
+    }
+
     /**********************************************************************************************
      *   *   *   *   *   *   *   *   GenreCallback   *   *   *   *   *   *   *   *   *
      **********************************************************************************************/

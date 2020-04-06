@@ -140,8 +140,28 @@
     </style>
 
     <style name="SectionName" parent="TextAppearance.AppCompat">
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">25sp</item>
         <item name="android:fontFamily">@font/roboto_medium</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="SeeMoreFromSection" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">#FF828282</item>
+    </style>
+
+    <style name="SearchDefaultText" parent="TextAppearance.AppCompat">
+        <item name="android:background">@drawable/search_background</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">#FF828282</item>
+    </style>
+
+    <style name="SearchWritingText" parent="TextAppearance.AppCompat">
+        <item name="android:background">@drawable/search_background</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
         <item name="android:textColor">@color/colorBlack</item>
     </style>
 
@@ -149,6 +169,15 @@
         <item name="android:background">@drawable/vertical_item_circular_background</item>
         <item name="android:layout_width">@dimen/item_track_size</item>
         <item name="android:layout_height">@dimen/item_track_size</item>
+    </style>
+
+    <style name="GenreStyle">
+        <item name="android:background">@drawable/genre_design</item>
+        <item name="android:layout_width">@dimen/item_track_size</item>
+        <item name="android:layout_height">@dimen/item_track_size</item>
+        <item name="android:textSize">13sp</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <style name="ProfileImageSong">

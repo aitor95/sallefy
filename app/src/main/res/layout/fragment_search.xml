@@ -7,7 +7,6 @@
     android:gravity="center"
     android:background="@color/colorWhite">
 
-
     <com.scwang.wave.MultiWaveHeader
         android:id="@+id/search_multiWaveHeader"
         android:layout_width="match_parent"
@@ -19,25 +18,30 @@
         app:mwhCloseColor="@color/colorWhite"
         app:mwhStartColor="@color/colorWhite" />
 
-    <TextView
-        android:id="@+id/textView"
-        style="@style/TitlesTheme"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:text="@string/menu_search"
+    <EditText
+        android:id="@+id/searchText"
+        android:gravity="center"
+        style="@style/SearchDefaultText"
+        android:layout_width="304dp"
+        android:layout_height="26dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginBottom="20dp"
+        android:hint="@string/menu_search"
         android:textAlignment="center"
-        app:layout_constraintTop_toTopOf="@+id/search_multiWaveHeader" />
+        app:layout_constraintTop_toTopOf="@+id/search_multiWaveHeader"
+        app:layout_constraintBottom_toTopOf="@+id/search_scroll_view"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent" />
 
     <ScrollView
+        android:id="@+id/search_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="30dp"
         android:layout_marginBottom="10dp"
         android:padding="10dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView">
+        app:layout_constraintTop_toBottomOf="@+id/searchText">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,12 +54,30 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <TextView
-                    style="@style/SectionName"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/default_playlists" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SectionName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:text="@string/default_playlists"
+                        android:layout_alignParentStart="true"/>
+
+                    <TextView
+                        android:id="@+id/SeeAllSearchedPlaylists"
+                        style="@style/SeeMoreFromSection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginEnd="0dp"
+                        android:text="@string/SeeMoreSection"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/search_playlists_recyclerview"
@@ -67,15 +89,33 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
-                <TextView
-                    style="@style/SectionName"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/default_songs" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SectionName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="7dp"
+                        android:text="@string/default_songs"
+                        android:layout_alignParentStart="true"/>
+
+                    <TextView
+                        android:id="@+id/SeeAllSearchedSongs"
+                        style="@style/SeeMoreFromSection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginEnd="0dp"
+                        android:text="@string/SeeMoreSection"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/search_songs_recyclerview"
@@ -87,15 +127,33 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
-                <TextView
-                    style="@style/SectionName"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/default_usernames" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SectionName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="7dp"
+                        android:text="@string/default_usernames"
+                        android:layout_alignParentStart="true"/>
+
+                    <TextView
+                        android:id="@+id/SeeAllSearchedUsers"
+                        style="@style/SeeMoreFromSection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginEnd="0dp"
+                        android:text="@string/SeeMoreSection"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/search_users_recyclerview"
@@ -107,15 +165,33 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="10dp"
                 android:orientation="vertical">
 
-                <TextView
-                    style="@style/SectionName"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:text="@string/default_genres" />
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/SectionName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="7dp"
+                        android:text="@string/default_genres"
+                        android:layout_alignParentStart="true"/>
+
+                    <TextView
+                        android:id="@+id/SeeAllSearchedGenres"
+                        style="@style/SeeMoreFromSection"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="6dp"
+                        android:layout_marginEnd="0dp"
+                        android:text="@string/SeeMoreSection"
+                        android:layout_alignParentEnd="true"/>
+
+                </RelativeLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/search_genres_recyclerview"
@@ -125,8 +201,7 @@
             </LinearLayout>
 
         </LinearLayout>
+
     </ScrollView>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,15 +4,15 @@
     <!-- DEFAULT TRACK -->
     <string name="default_track_title">Título canción</string>
     <string name="default_track_author">Autor/a</string>
-    <string name="default_username">Usuario</string>
-    <string name="default_usernames">Usuarios</string>
+    <string name="default_username">User</string>
+    <string name="default_usernames">Users</string>
     <string name="default_playlists">Playlists</string>
-    <string name="default_songs">Canciones</string>
-    <string name="default_genres">Géneros</string>
+    <string name="default_songs">Songs</string>
+    <string name="default_genres">Genres</string>
 
     <!-- MAIN MENU -->
     <string name="menu_home">Home</string>
-    <string name="menu_search">Search</string>
+    <string name="menu_search">Search  songs, playlists or users...</string>
     <string name="menu_me">Me</string>
     <string name="menu_social">Social</string>
 
@@ -120,6 +120,7 @@
     <string name="add_to_playlist_lastitem_title">New Playlist</string>
     <string name="add_to_playlist_lastitem_author">From you</string>
     <string name="default_nfollowers">1M followers</string>
+    <string name="SeeMoreSection"><![CDATA[See all >]]></string>
 
 
 </resources>

@@ -3,15 +3,15 @@
     android:orientation="horizontal"
     android:layout_width="wrap_content"
     android:gravity="center"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="5dp">
 
-    <Button
-        android:id="@+id/item_genre_btn"
+    <TextView
+        style="@style/GenreStyle"
+        android:id="@+id/item_genre"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        style="@style/buttonText"
-        android:text="@string/create_song_genre"/>
-
+        android:padding="7dp"
+        android:text="@string/default_genres"/>
 
 </LinearLayout>

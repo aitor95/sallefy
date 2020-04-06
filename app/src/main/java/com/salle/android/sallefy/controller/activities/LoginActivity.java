@@ -107,8 +107,9 @@ public class LoginActivity extends AppCompatActivity implements UserCallback {
     }
 
     private boolean checkExistingPreferences () {
-        return PreferenceUtils.getUser(this) != null
-                && PreferenceUtils.getPassword(this) != null;
+        return false;
+        /*return PreferenceUtils.getUser(this) != null
+                && PreferenceUtils.getPassword(this) != null;*/
     }
 
     @Override

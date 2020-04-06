@@ -213,14 +213,14 @@ public class SongsFragment extends Fragment
     private void playAudio() {
         if (!mBoundService.isPlaying()) { mBoundService.togglePlayer(); }
         //updateSeekBar();
-        btnPlayStop.setImageResource(R.drawable.ic_pause);
+        btnPlayStop.setImageResource(R.drawable.ic_pause_circle_64dp);
         btnPlayStop.setTag(STOP_VIEW);
         Toast.makeText(getContext(), "Playing Audio", Toast.LENGTH_SHORT).show();
     }
 
     private void pauseAudio() {
         if (mBoundService.isPlaying()) { mBoundService.togglePlayer(); }
-        btnPlayStop.setImageResource(R.drawable.ic_play);
+        btnPlayStop.setImageResource(R.drawable.ic_play_circle_filled_64dp);
         btnPlayStop.setTag(PLAY_VIEW);
         Toast.makeText(getContext(), "Pausing Audio", Toast.LENGTH_SHORT).show();
     }

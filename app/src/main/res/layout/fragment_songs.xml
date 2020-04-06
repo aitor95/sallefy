@@ -95,14 +95,14 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_skip_previous" />
+                    android:src="@drawable/ic_skip_previous_14dp" />
 
                 <ImageButton
                     android:id="@+id/dynamic_play_btn"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@android:color/transparent"
-                    android:src="@drawable/ic_play" />
+                    android:src="@drawable/ic_play_circle_filled_64dp" />
 
                 <ImageButton
                     android:id="@+id/dynamic_forward_btn"

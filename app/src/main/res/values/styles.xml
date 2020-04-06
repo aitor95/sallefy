@@ -78,6 +78,13 @@
         <item name="android:fontFamily">@font/roboto_bold</item>
     </style>
 
+    <!--Music Player text-->
+    <style name="music_player_author">
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/colorGrey</item>
+    </style>
+
     <!--Me page-->
     <style name="username_me_text">
         <item name="android:textStyle">bold</item>

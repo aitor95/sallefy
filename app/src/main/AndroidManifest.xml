@@ -14,11 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".controller.activities.MusicPlayerActivity"></activity>
 
         <service
             android:name=".controller.music.MusicService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity android:name=".controller.activities.AddToPlaylistActivity"/>
         <activity android:name=".controller.activities.MainActivity" />

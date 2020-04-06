@@ -121,6 +121,12 @@
         <item name="android:layout_height">@dimen/item_horizontalRV_size</item>
     </style>
 
+    <style name="HorizontalItemThumbnailCircular">
+        <item name="android:background">@drawable/horizontal_item_circular_background</item>
+        <item name="android:layout_width">@dimen/item_horizontalRV_size</item>
+        <item name="android:layout_height">@dimen/item_horizontalRV_size</item>
+    </style>
+
     <style name="VerticalItemThumbnail">
         <item name="android:background">@drawable/vertical_item_background</item>
         <item name="android:layout_width">@dimen/item_track_size</item>

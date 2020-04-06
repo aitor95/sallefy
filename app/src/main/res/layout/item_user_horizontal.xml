@@ -22,7 +22,8 @@
         android:clipToPadding="false">
 
         <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            style="@style/HorizontalItemThumbnail"
+            style="@style/HorizontalItemThumbnailCircular"
+            android:radius="46dp"
             android:elevation="10dp"
             android:clipToPadding="false">
 
@@ -36,12 +37,14 @@
                     android:layout_width="@dimen/item_horizontalRV_size"
                     android:layout_height="@dimen/item_horizontalRV_size"
                     android:layout_margin="0dp"
-                    app:cardCornerRadius="15dp">
+                    app:cardCornerRadius="46dp">
 
                     <ImageView
-                        android:id="@+id/item_playlist_photo"
+                        android:id="@+id/item_user_photo"
                         android:layout_width="@dimen/item_horizontalRV_size"
-                        android:layout_height="@dimen/item_horizontalRV_size"/>
+                        android:layout_height="@dimen/item_horizontalRV_size"
+                        android:src="@drawable/ic_user_thumbnail"
+                        android:background="#FF777777"/>
 
                 </androidx.cardview.widget.CardView>
 
@@ -49,22 +52,12 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/item_playlist_title"
+            android:id="@+id/item_user_name"
             android:layout_width="@dimen/item_horizontalRV_size"
             android:layout_height="wrap_content"
-            android:textAlignment="textStart"
+            android:textAlignment="center"
             android:layout_marginTop="5dp"
-            style="@style/TrackTheme"
-            android:text="@string/fragment_playlists"/>
-
-        <TextView
-            android:id="@+id/item_playlist_author"
-            android:layout_width="@dimen/item_horizontalRV_size"
-            android:layout_height="wrap_content"
-            android:paddingTop=".5dp"
-            android:paddingBottom="5dp"
-            style="@style/SubTitlesTheme"
-            android:text="@string/default_track_author"/>
+            style="@style/TrackTheme" />
 
     </LinearLayout>
 

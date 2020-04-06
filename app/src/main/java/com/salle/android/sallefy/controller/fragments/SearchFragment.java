@@ -14,8 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.GenresAdapter;
 import com.salle.android.sallefy.controller.adapters.PlaylistListHorizontalAdapter;
-import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
-import com.salle.android.sallefy.controller.adapters.UserAdapter;
+import com.salle.android.sallefy.controller.adapters.UserHorizontalAdapter;
 import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
@@ -37,7 +36,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     public static final String TAG = SearchFragment.class.getName();
 
     private RecyclerView mUsersView;
-    private UserAdapter mUserAdapter;
+    private UserHorizontalAdapter mUserHorizontalAdapter;
 
     private RecyclerView mPlaylistsView;
     private PlaylistListHorizontalAdapter mPlaylistAdapter;
@@ -75,10 +74,10 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     private void initViews(View v) {
         LinearLayoutManager managerUsers = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-        mUserAdapter = new UserAdapter(null, getContext());
+        mUserHorizontalAdapter = new UserHorizontalAdapter(null, getContext());
         mUsersView = (RecyclerView) v.findViewById(R.id.search_users_recyclerview);
         mUsersView.setLayoutManager(managerUsers);
-        mUsersView.setAdapter(mUserAdapter);
+        mUsersView.setAdapter(mUserHorizontalAdapter);
 
         LinearLayoutManager managerPlaylists = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
         mPlaylistAdapter = new PlaylistListHorizontalAdapter(null, getContext(), null, R.layout.item_playlist_horizontal);
@@ -176,8 +175,8 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onUsersReceived(List<User> users) {
-        mUserAdapter = new UserAdapter((ArrayList<User>) users, getContext());
-        mUsersView.setAdapter(mUserAdapter);
+        mUserHorizontalAdapter = new UserHorizontalAdapter((ArrayList<User>) users, getContext());
+        mUsersView.setAdapter(mUserHorizontalAdapter);
     }
 
     @Override

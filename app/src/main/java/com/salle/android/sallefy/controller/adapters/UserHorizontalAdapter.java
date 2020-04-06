@@ -16,14 +16,14 @@ import com.salle.android.sallefy.model.User;
 
 import java.util.ArrayList;
 
-public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
+public class UserHorizontalAdapter extends RecyclerView.Adapter<UserHorizontalAdapter.ViewHolder> {
 
-    public static final String TAG = UserAdapter.class.getName();
+    public static final String TAG = UserHorizontalAdapter.class.getName();
 
     private ArrayList<User> mUsers;
     private Context mContext;
 
-    public UserAdapter(ArrayList<User> users, Context context) {
+    public UserHorizontalAdapter(ArrayList<User> users, Context context) {
         mUsers = users;
         mContext = context;
     }
@@ -31,7 +31,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_horizontal, parent, false);
         return new ViewHolder(v);
     }
 
@@ -41,7 +41,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         if (mUsers.get(position).getImageUrl() != null) {
             Glide.with(mContext)
                     .asBitmap()
-                    //.placeholder(R.drawable.ic_user_thumbnail)
+                    .placeholder(R.drawable.ic_user_thumbnail)
                     .load(mUsers.get(position).getImageUrl())
                     .into(holder.ivPhoto);
         }

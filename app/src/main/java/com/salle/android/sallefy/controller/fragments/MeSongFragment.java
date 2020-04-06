@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.adapters.TrackListAdapter;
+import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
 import com.salle.android.sallefy.controller.music.MusicCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
@@ -46,7 +46,7 @@ public class MeSongFragment extends Fragment implements MusicCallback, TrackList
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		TrackListAdapter adapter = new TrackListAdapter(this, getActivity(), null);
+		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(this, getActivity(), null);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 	}
@@ -60,7 +60,7 @@ public class MeSongFragment extends Fragment implements MusicCallback, TrackList
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
 		mTracks = (ArrayList) tracks;
-		TrackListAdapter adapter = new TrackListAdapter(this, getActivity(), mTracks);
+		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(this, getActivity(), mTracks);
 		mRecyclerView.setAdapter(adapter);
 	}
 

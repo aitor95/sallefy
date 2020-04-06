@@ -1,8 +1,6 @@
 package com.salle.android.sallefy.controller.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +19,7 @@ import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
 
-public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.ViewHolder> {
+public class TrackListHorizontalAdapter extends RecyclerView.Adapter<TrackListHorizontalAdapter.ViewHolder> {
 
     private static final String TAG = "TrackListAdapter";
     private ArrayList<Track> mTracks;
@@ -29,12 +27,7 @@ public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.View
     private TrackListCallback mCallback;
     private int NUM_VIEWHOLDERS = 0;
 
-    private Boolean liked;
-
-    private ImageView likeImg;
-    private ImageView moreInfoImg;
-
-    public TrackListAdapter(TrackListCallback callback, Context context, ArrayList<Track> tracks ) {
+    public TrackListHorizontalAdapter(TrackListCallback callback, Context context, ArrayList<Track> tracks ) {
         mTracks = tracks;
         mContext = context;
         mCallback = callback;
@@ -45,23 +38,9 @@ public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.View
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         Log.d(TAG, "onCreateViewHolder: called. Num viewHolders: " + NUM_VIEWHOLDERS++);
 
-        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_track_vertical, parent, false);
-        ViewHolder vh = new TrackListAdapter.ViewHolder(itemView);
+        View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_track_horizontal, parent, false);
+        ViewHolder vh = new TrackListHorizontalAdapter.ViewHolder(itemView);
         Log.d(TAG, "onCreateViewHolder: called. viewHolder hashCode: " + vh.hashCode());
-
-        likeImg = itemView.findViewById(R.id.track_like);
-        moreInfoImg = itemView.findViewById(R.id.track_moreInfo);
-        liked = true;
-
-        likeImg.setOnClickListener(view -> {
-            ((ImageView) view).setImageResource((liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
-            liked = !liked;
-            //TODO: Vincular el estado del like con la información real de la cuenta
-        });
-
-        moreInfoImg.setOnClickListener(view -> {
-            //TODO: Crear el menu despregable de la canción
-        });
 
         return vh;
     }
@@ -121,7 +100,7 @@ public class TrackListAdapter extends RecyclerView.Adapter<TrackListAdapter.View
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            mLayout = itemView.findViewById(R.id.track_item_layout);
+            mLayout = itemView.findViewById(R.id.track_item_horizontal_layout);
             tvTitle = (TextView) itemView.findViewById(R.id.track_title);
             tvAuthor = (TextView) itemView.findViewById(R.id.track_author);
             ivPicture = (ImageView) itemView.findViewById(R.id.track_img);

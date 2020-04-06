@@ -18,12 +18,12 @@
         <service
             android:name=".controller.music.MusicService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <activity android:name=".controller.activities.AddToPlaylistActivity"/>
         <activity android:name=".controller.activities.MainActivity" />
         <activity android:name=".controller.activities.SignUpActivity" />
-        <activity android:name=".controller.activities.EditSongActivity">
+        <activity android:name=".controller.activities.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,8 +32,7 @@
         </activity>
         <activity android:name=".controller.activities.EditPlaylistActivity" />
         <activity android:name=".controller.activities.NewPlaylistActivity" />
-        <activity android:name=".controller.activities.UploadSongActivity" />
-
+        <activity android:name=".controller.activities.UploadSongActivity"/>
     </application>
 
 </manifest>

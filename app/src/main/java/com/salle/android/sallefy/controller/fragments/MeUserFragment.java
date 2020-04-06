@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.adapters.UserHorizontalAdapter;
+import com.salle.android.sallefy.controller.adapters.UserVerticalAdapter;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
@@ -45,7 +45,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		UserHorizontalAdapter adapter = new UserHorizontalAdapter(null, getContext());
+		UserVerticalAdapter adapter = new UserVerticalAdapter(null, getContext(), this, R.layout.item_user_vertical);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 	}
@@ -84,7 +84,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	@Override
 	public void onUsersReceived(List<User> users) {
 		mUsers = (ArrayList<User>) users;
-		UserHorizontalAdapter adapter = new UserHorizontalAdapter(mUsers, getContext());
+		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), this, R.layout.item_user_vertical);
 		mRecyclerView.setAdapter(adapter);
 	}
 

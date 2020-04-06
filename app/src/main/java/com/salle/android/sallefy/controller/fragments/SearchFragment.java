@@ -1,9 +1,13 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,6 +55,13 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     private RecyclerView mTracksView;
     private TrackListHorizontalAdapter mTracksAdapter;
 
+    private TextView SeeAllTracks;
+    private TextView SeeAllPlaylists;
+    private TextView SeeAllUsers;
+    private TextView SeeAllGenres;
+
+    private EditText searchText;
+
     public static SearchFragment getInstance() {
         return new SearchFragment();
     }
@@ -86,11 +97,22 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mUsersView.setLayoutManager(managerUsers);
         mUsersView.setAdapter(mUserHorizontalAdapter);
 
+        SeeAllUsers = v.findViewById(R.id.SeeAllSearchedUsers);
+        SeeAllUsers.setOnClickListener(view -> {
+            //TODO: [USERS] Crear llistat de users
+        });
+
+
         LinearLayoutManager managerPlaylists = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
         mPlaylistAdapter = new PlaylistListHorizontalAdapter(null, getContext(), null, R.layout.item_playlist_horizontal);
         mPlaylistsView = (RecyclerView) v.findViewById(R.id.search_playlists_recyclerview);
         mPlaylistsView.setLayoutManager(managerPlaylists);
         mPlaylistsView.setAdapter(mPlaylistAdapter);
+
+        SeeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
+        SeeAllPlaylists.setOnClickListener(view -> {
+            //TODO: [PLAYLISTS] Crear llistat de playlists
+        });
 
         LinearLayoutManager managerGenres = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
         mGenresAdapter = new GenresAdapter(null);
@@ -98,11 +120,45 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mGenresView.setLayoutManager(managerGenres);
         mGenresView.setAdapter(mGenresAdapter);
 
+        SeeAllGenres = v.findViewById(R.id.SeeAllSearchedGenres);
+        SeeAllGenres.setOnClickListener(view -> {
+            //TODO: [GENRES] Afegir llistat de generes
+        });
+
+
         LinearLayoutManager managerTracks = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
         mTracksAdapter = new TrackListHorizontalAdapter(null, null, null);
         mTracksView = (RecyclerView) v.findViewById(R.id.search_songs_recyclerview);
         mTracksView.setLayoutManager(managerTracks);
         mTracksView.setAdapter(mTracksAdapter);
+
+        SeeAllTracks = v.findViewById(R.id.SeeAllSearchedSongs);
+        SeeAllTracks.setOnClickListener(view -> {
+            //TODO: [TRACKS] Afegir llistat de cançons
+        });
+
+        searchText = v.findViewById(R.id.searchText);
+        searchText.setOnClickListener(view -> {
+            //((EditText) view).setText("");
+            //((EditText) view).setTextAppearance(R.style.SearchWritingText);
+        });
+        searchText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                ((EditText) view).setTextAppearance(R.style.SearchWritingText);
+
+                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                    String text = ((EditText) view).getText().toString().replace("\n", "");
+                    ((EditText) view).setText(text);
+
+                    //TODO: El que s'hagi de fer alpremer enter
+                }
+
+                //TODO: [Search] Refresh de la pàgina
+                return false;
+            }
+        });
+
     }
 
     private void getData() {

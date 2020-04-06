@@ -3,7 +3,7 @@ package com.salle.android.sallefy.controller.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -41,11 +41,14 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        Button tvName;
+        TextView tvName;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvName = (Button) itemView.findViewById(R.id.item_genre_btn);
+            tvName = (TextView) itemView.findViewById(R.id.item_genre);
+            tvName.setOnClickListener(view -> {
+                //TODO: [GENRE] Anar a la llista de cançons del genere
+            });
         }
     }
 }

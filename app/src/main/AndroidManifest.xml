@@ -14,8 +14,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".controller.activities.MusicPlayerActivity"></activity>
 
+        <activity android:name=".controller.activities.MusicPlayerActivity"></activity>
         <service
             android:name=".controller.music.MusicService"
             android:enabled="true"

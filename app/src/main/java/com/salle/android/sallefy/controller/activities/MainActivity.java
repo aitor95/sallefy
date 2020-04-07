@@ -23,6 +23,7 @@ import com.salle.android.sallefy.controller.fragments.ContentFragment;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
+import com.salle.android.sallefy.controller.fragments.SocialFragment;
 import com.salle.android.sallefy.controller.fragments.SongsFragment;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.Session;
@@ -84,7 +85,8 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
                 social.setTextAppearance(R.style.BottomNavigationView_Active);
                 search.setImageResource(R.drawable.ic_search);
 
-                Fragment fragment = SongsFragment.getInstance();
+                //Fragment fragment = SongsFragment.getInstance();
+                Fragment fragment = SocialFragment.getInstance();
                 replaceFragment(fragment);
             }
         });

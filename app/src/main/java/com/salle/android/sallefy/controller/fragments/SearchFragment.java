@@ -117,7 +117,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         });
 
         LinearLayoutManager managerGenres = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-        mGenresAdapter = new GenresAdapter(null);
+        mGenresAdapter = new GenresAdapter(null, R.layout.item_genre);
         mGenresView = (RecyclerView) v.findViewById(R.id.search_genres_recyclerview);
         mGenresView.setLayoutManager(managerGenres);
         mGenresView.setAdapter(mGenresAdapter);
@@ -277,8 +277,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onGenresReceive(ArrayList<Genre> genres) {
-        ArrayList<String> genresString = (ArrayList<String>) genres.stream().map(Genre::getName).collect(Collectors.toList());
-        mGenresAdapter = new GenresAdapter(genresString);
+        mGenresAdapter = new GenresAdapter(genres, R.layout.item_genre);
         mGenresView.setAdapter(mGenresAdapter);
     }
 

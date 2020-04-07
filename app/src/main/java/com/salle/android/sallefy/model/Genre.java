@@ -6,6 +6,10 @@ import java.io.Serializable;
 
 public class Genre implements Serializable {
 
+    public Genre(String name) {
+        this.name = name;
+    }
+
     @SerializedName("id")
     private Integer id;
 

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.model.Genre;
 
 import java.util.ArrayList;
 
@@ -16,22 +17,28 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
 
     public static final String TAG = GenresAdapter.class.getName();
 
-    private ArrayList<String> mGenres;
+    private ArrayList<Genre> mGenres;
+    private int viewId;
 
-    public GenresAdapter(ArrayList<String> genres) {
+    //public GenresAdapter(ArrayList<> genres) {
+    //    mGenres = genres;
+    //}
+
+    public GenresAdapter(ArrayList<Genre> genres, int viewId) {
         mGenres = genres;
+        this.viewId = viewId;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_genre, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(viewId, parent, false);
         return new GenresAdapter.ViewHolder(v);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvName.setText(mGenres.get(position));
+        holder.tvName.setText(mGenres.get(position).getName());
     }
 
     @Override

@@ -17,13 +17,14 @@
             android:id="@+id/linearLayoutISAT"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingStart="10dp"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/user_sa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                style="@style/SectionName"
+                style="@style/SocialActivityMainName"
                 android:text="@string/default_username"
                 android:layout_margin="3dp" />
 
@@ -32,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                style="@style/SeeMoreFromSection"
+                style="@style/SocialActivityAuxText"
                 android:text="@string/default_timePassed" />
 
         </LinearLayout>
@@ -104,7 +105,7 @@
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/listofgenres_sa"
                     android:layout_width="match_parent"
-                    android:layout_height="25dp"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center">
 
                 </androidx.recyclerview.widget.RecyclerView>

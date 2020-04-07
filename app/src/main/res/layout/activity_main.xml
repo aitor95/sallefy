@@ -78,27 +78,105 @@
         android:background="@color/colorWhite"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/linearLayoutMiniplayer"
         app:layout_constraintTop_toBottomOf="@+id/bottom_navigation">
     </FrameLayout>
 
-
-<!--
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-
+    <!--REPRODUCTOR MINI-->
+    <LinearLayout
+        android:id="@+id/linearLayoutMiniplayer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:elevation="0dp"
-        android:layout_gravity="start"
+        android:layout_marginBottom="0dp"
+        android:orientation="vertical"
         android:background="@color/colorWhite"
-        android:paddingBottom="28dp"
-        app:labelVisibilityMode="labeled"
-        app:layout_constraintTop_toTopOf="parent"
-        app:itemIconTint="@color/selector_ic_search"
-        app:menu="@menu/top_navigation_main"
-        app:itemTextAppearanceActive="@style/BottomNavigationView.Active"
-        app:itemTextAppearanceInactive="@style/BottomNavigationView"
-        tools:layout_editor_absoluteX="0dp" />
--->
+        app:layout_constraintTop_toBottomOf="@id/fragment_container"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="15dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:paddingBottom="10dp"
+            android:paddingLeft="18dp"
+            android:paddingRight="18dp"
+            android:paddingTop="10dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/user_img"
+                android:layout_width="55dp"
+                android:layout_height="55dp"
+                android:src="@drawable/user_default_image"
+                app:civ_border_width="0dp"
+                app:civ_border_color="#FF000000"
+                />
+
+            <LinearLayout
+                android:paddingLeft="14dp"
+                android:id="@+id/linearLayout2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/dynamic_title"
+                    style="@style/SongMiniplayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_track_title" />
+
+                <TextView
+                    android:id="@+id/dynamic_artist"
+                    style="@style/AuthorMiniplayer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/default_track_author" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageButton
+                    android:id="@+id/music_player_prev"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_skip_previous_24dp"
+                    android:background="@null"
+                    android:layout_marginEnd="5dp"/>
+
+                <ImageButton
+                    android:id="@+id/music_player_playStop"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_pause_circle_40dp"
+                    android:background="@null" />
+
+                <ImageButton
+                    android:id="@+id/music_player_next"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:background="@null"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_skip_next_24dp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

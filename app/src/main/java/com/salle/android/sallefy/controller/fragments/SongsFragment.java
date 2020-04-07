@@ -149,7 +149,7 @@ public class SongsFragment extends Fragment
         tvAuthor = v.findViewById(R.id.dynamic_artist);
         tvTitle = v.findViewById(R.id.dynamic_title);
 
-        btnBackward = (ImageButton)v.findViewById(R.id.dynamic_backward_btn);
+        btnBackward = (ImageButton)v.findViewById(R.id.music_player_prev);
         btnBackward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -158,7 +158,7 @@ public class SongsFragment extends Fragment
                 updateTrack(currentTrack);
             }
         });
-        btnForward = (ImageButton)v.findViewById(R.id.dynamic_forward_btn);
+        btnForward = (ImageButton)v.findViewById(R.id.music_player_next);
         btnForward.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -168,7 +168,7 @@ public class SongsFragment extends Fragment
             }
         });
 
-        btnPlayStop = (ImageButton)v.findViewById(R.id.dynamic_play_btn);
+        btnPlayStop = (ImageButton)v.findViewById(R.id.music_player_playStop);
         btnPlayStop.setTag(PLAY_VIEW);
         btnPlayStop.setOnClickListener(new View.OnClickListener() {
 

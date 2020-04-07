@@ -53,6 +53,14 @@
     <string name="new_playlist_creation_success">Your playlist has been created!</string>
     <string name="new_playlist_creation_failure">Something went wrong</string>
 
+    <!-- ACTIVITY [ Playlist ] -->
+    <string name="playlist_follow">Follow</string>
+    <string name="playlist_edit">Edit</string>
+    <string name="playlist_following">Following</string>
+    <string name="playlist_creation_failure">Something went wrong</string>
+
+
+
     <!-- ACTIVITY [ Edit Playlist ] -->
     <string name="edit_playlist_name">Edit Playlist</string>
     <string name="edit_playlist_title">Title</string>
@@ -126,6 +134,7 @@
     <string name="music_player_title">Orange Heart</string>
     <string name="music_player_author">Headhunterz</string>
     <string name="music_player_left_number">0:0</string>
+    <string name="action_settings">Settings</string>
 
 
 </resources>

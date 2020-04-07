@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import okhttp3.ResponseBody;
+
 public class SearchFragment extends Fragment implements PlaylistCallback, UserCallback, GenreCallback, TrackCallback {
 
     public static final String TAG = SearchFragment.class.getName();
@@ -206,6 +208,16 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onPlaylistCreated() {
+
+    }
+
+    @Override
+    public void onUserFollows(ResponseBody follows) {
+
+    }
+
+    @Override
+    public void onUpdateFollow(ResponseBody result) {
 
     }
 

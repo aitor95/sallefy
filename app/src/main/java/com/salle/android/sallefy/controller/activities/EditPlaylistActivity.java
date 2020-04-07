@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -22,10 +23,12 @@ import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
+
 public class EditPlaylistActivity extends AppCompatActivity implements PlaylistCallback {
 
     public static final String TAG = EditPlaylistActivity.class.getName();
-    private BottomNavigationView mNav;
+    private ImageButton mNav;
     private ImageView mImg;
     private EditText mDescription;
     private EditText mTitle;
@@ -50,16 +53,11 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         PlaylistManager.getInstance(getApplicationContext())
                 .getPlaylistById(this.pId, EditPlaylistActivity.this);
 
-        mNav = (BottomNavigationView) findViewById(R.id.edit_playlist_nav);
-        mNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        mNav = (ImageButton) findViewById(R.id.edit_playlist_nav);
+        mNav.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.back_btn:
-                        finish();
-                        break;
-                }
-                return true;
+            public void onClick(View v) {
+                finish();
             }
         });
 
@@ -123,6 +121,16 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
 
     @Override
     public void onPlaylistCreated() {
+
+    }
+
+    @Override
+    public void onUserFollows(ResponseBody follows) {
+
+    }
+
+    @Override
+    public void onUpdateFollow(ResponseBody result) {
 
     }
 

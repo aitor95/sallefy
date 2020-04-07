@@ -75,6 +75,15 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
             }
         });
 
+        Button newBtn = findViewById(R.id.new_btn);
+        newBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),PlaylistActivity.class);
+                intent.putExtra("playlistId", 24);
+                startActivity(intent);
+            }
+        });
 
         social.setOnClickListener(new View.OnClickListener() {
             @Override

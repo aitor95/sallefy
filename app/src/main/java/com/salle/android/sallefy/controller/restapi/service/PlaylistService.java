@@ -24,6 +24,12 @@ public interface PlaylistService {
     @GET("me/playlists")
     Call<List<Playlist>> getOwnPlaylists(@Header("Authorization") String token);
 
+    @GET("playlists/{id}/follow")
+    Call<ResponseBody> getUserFollowing(@Path("id") Integer id, @Header("Authorization") String token);
+
+    @PUT("playlists/{id}/follow")
+    Call<ResponseBody> updateFollow(@Path("id") Integer id, @Body Boolean follow, @Header("Authorization") String token);
+
     @GET("me/playlists/following")
     Call<List<Playlist>> getFollowingPlaylists(@Header("Authorization") String token);
 
@@ -35,5 +41,6 @@ public interface PlaylistService {
 
     @POST("playlists")
     Call<Playlist> createPlaylist(@Body Playlist playlist, @Header("Authorization") String token);
+
 
 }

@@ -3,9 +3,9 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
-<!--        <item name="colorPrimaryDark">@color/colorDark</item>-->
-<!--        <item name="colorAccent">@color/colorAccent</item>-->
+        <!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+        <!--        <item name="colorPrimaryDark">@color/colorDark</item>-->
+        <!--        <item name="colorAccent">@color/colorAccent</item>-->
         <item name="android:fontFamily">@font/roboto</item>
     </style>
 
@@ -145,6 +145,15 @@
         <item name="android:layout_width">@dimen/item_track_size</item>
         <item name="android:layout_height">@dimen/item_track_size</item>
     </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
     <style name="SectionName" parent="TextAppearance.AppCompat">
         <item name="android:textSize">25sp</item>

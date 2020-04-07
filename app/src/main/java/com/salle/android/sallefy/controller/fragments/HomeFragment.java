@@ -21,6 +21,8 @@ import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
+
 public class HomeFragment extends Fragment implements PlaylistAdapterCallback, PlaylistCallback {
 
     public static final String TAG = HomeFragment.class.getName();
@@ -106,6 +108,16 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
     @Override
     public void onPlaylistCreated() {
+
+    }
+
+    @Override
+    public void onUserFollows(ResponseBody follows) {
+
+    }
+
+    @Override
+    public void onUpdateFollow(ResponseBody result) {
 
     }
 

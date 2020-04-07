@@ -3,6 +3,7 @@ package com.salle.android.sallefy.controller.restapi.manager;
 import android.content.Context;
 import android.util.Log;
 
+import com.salle.android.sallefy.controller.activities.PlaylistActivity;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.service.PlaylistService;
 import com.salle.android.sallefy.model.Playlist;
@@ -13,6 +14,7 @@ import com.salle.android.sallefy.utils.Session;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -211,5 +213,57 @@ public class PlaylistManager {
         });
 
     }
+
+    /**********************
+     * Checks if current user follows a playlist
+     **********************/
+    public void getUserFollows(Integer pId, PlaylistCallback playlistCallback) {
+        Call<ResponseBody> call = mService.getUserFollowing(pId, "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    playlistCallback.onUserFollows(response.body());
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+    }
+
+    /**********************
+     * Current user follows/Unfollows playlist
+     **********************/
+    public void setUserFollows(Integer pId, Boolean followed, PlaylistCallback playlistCallback) {
+        Call<ResponseBody> call = mService.updateFollow(pId, followed, "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    playlistCallback.onUpdateFollow(response.body());
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+    }
+
+
 
 }

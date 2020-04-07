@@ -1,10 +1,13 @@
 package com.salle.android.sallefy.controller.activities;
 
+
+
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -19,11 +22,13 @@ import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
+
 public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCallback {
 
     public static final String TAG = NewPlaylistActivity.class.getName();
 
-    private BottomNavigationView mNav;
+    private ImageButton mNav;
     private ImageView mImg;
     private EditText mDescription;
     private EditText mTitle;
@@ -36,19 +41,14 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     }
 
     private void initViews() {
-        mNav = (BottomNavigationView) findViewById(R.id.new_playlist_nav);
+        mNav = (ImageButton) findViewById(R.id.new_playlist_nav);
         mImg = (ImageView) findViewById(R.id.new_playlist_img);
         mDescription = (EditText) findViewById(R.id.new_playlist_description);
         mTitle = (EditText) findViewById(R.id.new_playlist_title);
-        mNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+        mNav.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.back_btn:
-                        finish();
-                        break;
-                }
-                return true;
+            public void onClick(View v) {
+                finish();
             }
         });
         Button mCreateBtn = (Button) findViewById(R.id.new_playlist_btn);
@@ -97,6 +97,16 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     @Override
     public void onPlaylistCreated() {
         Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_success, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onUserFollows(ResponseBody follows) {
+
+    }
+
+    @Override
+    public void onUpdateFollow(ResponseBody result) {
+
     }
 
     @Override

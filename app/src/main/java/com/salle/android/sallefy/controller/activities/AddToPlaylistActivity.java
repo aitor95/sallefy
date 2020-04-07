@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +25,7 @@ public class AddToPlaylistActivity extends AppCompatActivity {
     public static final String TAG = AddToPlaylistActivity.class.getName();
 
     private RecyclerView mAddToPlaylistRecyclerView;
+
     private AddToPlayListAdapter mAdapter;
 
     private HashMap<Integer, Integer> mSelectedPlaylists;
@@ -36,6 +38,9 @@ public class AddToPlaylistActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_to_playlist);
         mAddToPlaylistRecyclerView = (RecyclerView) findViewById(R.id.add_to_playlist_recycler_view);
+
+
+
         mAddToPlaylistRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mSelectedPlaylists = new HashMap<>();

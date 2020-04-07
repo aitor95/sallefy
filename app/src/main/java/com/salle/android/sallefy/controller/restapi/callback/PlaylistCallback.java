@@ -4,6 +4,8 @@ import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
 
+import okhttp3.ResponseBody;
+
 public interface PlaylistCallback extends FailureCallback {
 
     void onPlaylistById(Playlist playlist);
@@ -18,5 +20,7 @@ public interface PlaylistCallback extends FailureCallback {
 
     void onPlaylistCreated();
 
+    void onUserFollows(ResponseBody follows);
 
+    void onUpdateFollow(ResponseBody result);
 }

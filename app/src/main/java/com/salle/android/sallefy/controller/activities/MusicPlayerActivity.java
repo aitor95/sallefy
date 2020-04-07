@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -16,10 +17,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
+import com.salle.android.sallefy.controller.fragments.BottomSongMenuFragment;
 import com.salle.android.sallefy.controller.music.MusicCallback;
 import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
@@ -62,13 +68,15 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     private ImageView thumbnail;
     private SeekBar seekBar;
 
-
     //Thread management para la seekbar
     private Runnable mSeekBarPositionUpdateTask;
     private ScheduledExecutorService mExecutor;
 
-
     private Handler mHandler;
+
+    //Variable para abrir el detalle cancion
+    private View bottomSheet;
+    private BottomSheetBehavior mBottomSheetMenuBehavior;
 
     Runnable mSeekBarUpdater = new Runnable() {
         @Override
@@ -150,6 +158,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         mHandler = new Handler();
         //Important to run this line here, we need the UI thread!
         mSeekBarUpdater.run();
+
+//        Fragment fragmentBottomMenu = new BottomSongMenuFragment();
+//        fragmentBottomMenu = findViewById(R.layout.)
+//        bottomSheet = findViewById(R.id.bottom_sheet_menu);
+//        mBottomSheetMenuBehavior = BottomSheetBehavior.from(bottomSheet);
+
     }
 
     private void startStreamingService () {
@@ -227,7 +241,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             }
         });
 
-        more = findViewById(R.id.music_player_more);
+        /*more = findViewById(R.id.music_player_more);
+        more.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mBottomSheetMenuBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+            }
+        });*/
 
         songTitle = findViewById(R.id.music_player_title);
         songAuthor = findViewById(R.id.music_player_author);

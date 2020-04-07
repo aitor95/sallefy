@@ -136,5 +136,11 @@
     <string name="music_player_left_number">0:0</string>
     <string name="action_settings">Settings</string>
 
+    <!-- FRAGMENT [ Song Details ] -->
+    <string name="likeBottomMenu">Like</string>
+    <string name="showArtistBottomMenu">Show Artist</string>
+    <string name="DeleteBottomMenu">Delete</string>
+    <string name="EditBottomMenu">Edit</string>
+
 
 </resources>

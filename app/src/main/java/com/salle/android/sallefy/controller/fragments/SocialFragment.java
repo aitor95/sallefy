@@ -26,6 +26,9 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 	private RecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
 
+	public static final String TAG = SocialFragment.class.getName();
+
+
 	public static Fragment getInstance() {
 		return new SocialFragment();
 	}

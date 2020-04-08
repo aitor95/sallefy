@@ -1,7 +1,6 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +11,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -19,7 +20,6 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.GenresAdapter;
 import com.salle.android.sallefy.controller.adapters.PlaylistListHorizontalAdapter;
 import com.salle.android.sallefy.controller.adapters.TrackListHorizontalAdapter;
-import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.adapters.UserHorizontalAdapter;
 import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
@@ -37,7 +37,6 @@ import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import okhttp3.ResponseBody;
 
@@ -114,6 +113,12 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         SeeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
         SeeAllPlaylists.setOnClickListener(view -> {
             //TODO: [PLAYLISTS] Crear llistat de playlists
+            Fragment fragment = SeeAllPlaylistFragment.getInstance();
+	        FragmentManager manager = getFragmentManager();
+	        FragmentTransaction transaction = manager.beginTransaction();
+	        transaction.add(R.id.fragment_container,fragment);
+	        transaction.addToBackStack(null);
+	        transaction.commit();
         });
 
         LinearLayoutManager managerGenres = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
@@ -316,4 +321,5 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     public void onCreateTrack() {
 
     }
+
 }

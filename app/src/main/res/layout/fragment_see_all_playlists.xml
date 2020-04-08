@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@color/colorWhite">
+
+
+    <LinearLayout
+        android:id="@+id/seeAllTitle"
+        android:layout_width="410dp"
+        android:layout_height="50dp"
+        android:paddingTop="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutMeUsername">
+
+        <ImageButton
+            android:id="@+id/edit_playlist_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="24dp"
+            android:layout_gravity="start|start"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:background="#00000000"
+            android:paddingStart="10dp"
+            android:paddingTop="5dp"
+            android:src="@drawable/ic_back_arrow"
+            android:tint="@color/colorBlack" />
+
+
+        <TextView
+            android:layout_marginTop="0dp"
+            android:paddingLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/default_playlists"
+            style="@style/TitlesTheme"/>
+
+    </LinearLayout>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dynamic_recyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/seeAllTitle" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -38,7 +38,7 @@
             android:paddingLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/default_playlists"
+            android:text="@string/default_songs"
             style="@style/TitlesTheme"/>
 
     </LinearLayout>

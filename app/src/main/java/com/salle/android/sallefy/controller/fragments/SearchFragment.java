@@ -142,6 +142,12 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         SeeAllTracks = v.findViewById(R.id.SeeAllSearchedSongs);
         SeeAllTracks.setOnClickListener(view -> {
             //TODO: [TRACKS] Afegir llistat de cançons
+            Fragment fragment = SeeAllSongFragment.getInstance();
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.add(R.id.fragment_container,fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
 
         searchText = v.findViewById(R.id.searchText);

@@ -146,6 +146,7 @@
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="0dp"
+        android:paddingTop="10dp"
         app:layout_insetEdge="bottom"
         android:layout_marginEnd="0dp"
         app:layout_constraintBottom_toBottomOf="parent" />

@@ -11,25 +11,63 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutSettingsTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="100dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:padding="24dp">
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clipToPadding="false">
 
-        <TextView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            style="@style/SectionName"
-            android:text="@string/Back_from_menu_text"
+        <ImageView
             android:id="@+id/Back_from_settings"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_gravity="right"
+            android:layout_marginLeft="30dp"
+            android:src="@drawable/ic_back_arrow"/>
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
-            android:src="@drawable/user_default_image" />
-
+            <TextView
+                style="@style/TitlesTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/Back_from_menu_text" />
+        </LinearLayout>
     </RelativeLayout>
+
+<!--    <RelativeLayout-->
+<!--       -->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        android:padding="24dp">-->
+
+<!--        <TextView-->
+<!--            xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--            style="@style/SectionName"-->
+<!--            android:text="@string/Back_from_menu_text"-->
+<!--            android:id="@+id/Back_from_settings"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentStart="true"-->
+<!--            android:layout_centerHorizontal="true"-->
+
+<!--            android:src="@drawable/user_default_image" />-->
+
+<!--    </RelativeLayout>-->
 
     <RelativeLayout
         android:id="@+id/relativeLayoutSettingsUserImg"
@@ -38,8 +76,8 @@
         app:layout_constraintTop_toBottomOf="@+id/relativeLayoutSettingsTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:paddingTop="30dp"
-        android:paddingBottom="30dp">
+        android:paddingBottom="30dp"
+        android:paddingTop="20dp">
 
         <de.hdodenhof.circleimageview.CircleImageView
             xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -119,34 +157,29 @@
 
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/settings_option_logOut"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="12dp"
-            android:paddingTop="12dp">
-
-            <TextView
-                style="@style/SettingOptionStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:paddingStart="24dp"
-                android:text="@string/optionLogOut"
-                android:layout_alignParentStart="true"/>
-
-            <TextView
-                style="@style/SettingOptionStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:paddingEnd="35dp"
-                android:text="@string/GotoSymbol"
-                android:layout_alignParentEnd="true"/>
-
-        </RelativeLayout>
-
     </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/settings_option_logOut"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/settings_option_layout">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:scaleType="fitXY"
+            android:text="@string/optionLogOut"
+            android:background="@drawable/login_btn"
+            android:minWidth="100dp"
+            android:minHeight="40dp"
+            style="@style/buttonText"/>
+
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

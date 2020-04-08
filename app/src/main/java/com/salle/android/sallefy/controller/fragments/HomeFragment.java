@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,21 +14,30 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
+import com.salle.android.sallefy.controller.adapters.PlaylistListHorizontalAdapter;
+import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.PlaylistAdapterCallback;
+import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
+import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
+import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 
-public class HomeFragment extends Fragment implements PlaylistAdapterCallback, PlaylistCallback {
+public class HomeFragment extends Fragment implements PlaylistAdapterCallback, PlaylistCallback, TrackListCallback, TrackCallback {
 
     public static final String TAG = HomeFragment.class.getName();
-    private RecyclerView mRecyclerView;
-    private PlaylistListVerticalAdapter mAdapter;
+    private RecyclerView rvPlaylists;
+    private RecyclerView rvSongs;
+
+    private PlaylistListHorizontalAdapter playlistsAdapter;
+    private TrackListVerticalAdapter tracksAdapter;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -53,17 +63,24 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
     }
 
     private void initViews(View v) {
-        LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-        //GridLayoutManager mGridLayoutManager = new GridLayoutManager(getActivity(), 2);
-        mAdapter = new PlaylistListVerticalAdapter(null, getContext(), this, R.layout.item_playlist_vertical);
-        mRecyclerView = (RecyclerView) v.findViewById(R.id.home_recyclerview);
-        mRecyclerView.setLayoutManager(manager);
-        mRecyclerView.setAdapter(mAdapter);
+        LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
+        playlistsAdapter = new PlaylistListHorizontalAdapter(null, getContext(), this, R.layout.item_playlist_horizontal);
+        rvPlaylists = (RecyclerView) v.findViewById(R.id.home_new_playlists);
+        rvPlaylists.setLayoutManager(manager);
+        rvPlaylists.setAdapter(playlistsAdapter);
+
+        LinearLayoutManager manager2 = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+        tracksAdapter = new TrackListVerticalAdapter( null, getContext(), null);
+        rvSongs = (RecyclerView) v.findViewById(R.id.songs_home);
+        rvSongs.setLayoutManager(manager2);
+        rvSongs.setAdapter(tracksAdapter);
     }
 
     private void getData() {
         PlaylistManager.getInstance(getContext())
                 .getListOfPlaylist(this);
+        TrackManager.getInstance(getContext())
+                .getAllTracks(this);
     }
 
     @Override
@@ -91,9 +108,8 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
     @Override
     public void onAllList(ArrayList<Playlist> playlists) {
-        mAdapter = new PlaylistListVerticalAdapter(playlists, getContext(), this, R.layout.item_playlist_vertical);
-        mRecyclerView.setAdapter(mAdapter);
-        //Toast.makeText(getContext(), "Playlists received", Toast.LENGTH_LONG).show();
+        playlistsAdapter = new PlaylistListHorizontalAdapter(playlists, getContext(), this, R.layout.item_playlist_horizontal);
+        rvPlaylists.setAdapter(playlistsAdapter);
     }
 
     @Override
@@ -124,5 +140,41 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
     @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onTrackSelected(Track track) {
+
+    }
+
+    @Override
+    public void onTrackSelected(int index) {
+
+    }
+
+    @Override
+    public void onTracksReceived(List<Track> tracks) {
+        tracksAdapter = new TrackListVerticalAdapter(this, getContext(), (ArrayList<Track>) tracks);
+        rvSongs.setAdapter(tracksAdapter);
+    }
+
+    @Override
+    public void onNoTracks(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onPersonalTracksReceived(List<Track> tracks) {
+
+    }
+
+    @Override
+    public void onUserTracksReceived(List<Track> tracks) {
+
+    }
+
+    @Override
+    public void onCreateTrack() {
+
     }
 }

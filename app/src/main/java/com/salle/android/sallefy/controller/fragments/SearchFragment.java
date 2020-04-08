@@ -101,6 +101,12 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         SeeAllUsers = v.findViewById(R.id.SeeAllSearchedUsers);
         SeeAllUsers.setOnClickListener(view -> {
             //TODO: [USERS] Crear llistat de users
+            Fragment fragment = SeeAllUserFragment.getInstance();
+            FragmentManager manager = getFragmentManager();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.add(R.id.fragment_container,fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
 
 

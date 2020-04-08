@@ -1,11 +1,13 @@
 package com.salle.android.sallefy.controller.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.activities.SettingsActivity;
 
 public class MeFragment extends Fragment {
 
@@ -106,6 +109,12 @@ public class MeFragment extends Fragment {
 				transaction.add(R.id.me_fragment_container, fragmentMePlaylists).commit();
 
 			}
+		});
+
+		ImageView configButton = v.findViewById(R.id.config_button);
+		configButton.setOnClickListener(view -> {
+			Intent intent = new Intent(getContext(), SettingsActivity.class);
+			startActivity(intent);
 		});
 
 	}

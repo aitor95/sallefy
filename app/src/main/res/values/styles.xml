@@ -161,6 +161,12 @@
         <item name="android:textColor">@color/colorBlack</item>
     </style>
 
+    <style name="SettingOptionStyle" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
     <style name="SeeMoreFromSection" parent="TextAppearance.AppCompat">
         <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">@font/roboto_light</item>

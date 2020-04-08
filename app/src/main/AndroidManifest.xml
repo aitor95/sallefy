@@ -14,16 +14,19 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".controller.activities.StatisticsActivity"></activity>
+        <activity
+            android:name=".controller.activities.SettingsActivity"
+            android:label="@string/title_activity_settings" />
+        <activity android:name=".controller.activities.MusicPlayerActivity" />
 
-        <activity android:name=".controller.activities.MusicPlayerActivity"></activity>
         <service
             android:name=".controller.music.MusicService"
             android:enabled="true"
             android:exported="true" />
 
-        <activity android:name=".controller.activities.AddToPlaylistActivity"/>
+        <activity android:name=".controller.activities.AddToPlaylistActivity" />
         <activity android:name=".controller.activities.MainActivity" />
-
         <activity android:name=".controller.activities.SignUpActivity" />
         <activity android:name=".controller.activities.LoginActivity">
             <intent-filter>
@@ -31,11 +34,10 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
         <activity android:name=".controller.activities.EditPlaylistActivity" />
         <activity android:name=".controller.activities.NewPlaylistActivity" />
-        <activity android:name=".controller.activities.UploadSongActivity"/>
+        <activity android:name=".controller.activities.UploadSongActivity" />
         <activity android:name=".controller.activities.EditSongActivity" />
         <activity android:name=".controller.activities.PlaylistActivity" />
     </application>

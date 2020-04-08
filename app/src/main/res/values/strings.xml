@@ -60,7 +60,6 @@
     <string name="playlist_creation_failure">Something went wrong</string>
 
 
-
     <!-- ACTIVITY [ Edit Playlist ] -->
     <string name="edit_playlist_name">Edit Playlist</string>
     <string name="edit_playlist_title">Title</string>
@@ -143,6 +142,27 @@
     <string name="EditBottomMenu">Edit</string>
     <string name="home_new_playlists_title">New Playlists</string>
     <string name="default_home_songs_title">Latino Sounds</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="Back_from_menu_text"><![CDATA[< Settings]]></string>
+    <string name="GotoSymbol"><![CDATA[>]]></string>
+    <string name="optionViewStats">View Sallefy statistics</string>
+    <string name="optionDeleteAccount">Delete user account</string>
+    <string name="optionLogOut">Log Out from this account</string>
 
 
 </resources>

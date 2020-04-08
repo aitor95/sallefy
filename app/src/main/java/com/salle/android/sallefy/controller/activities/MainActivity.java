@@ -19,12 +19,10 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.FragmentCallback;
-import com.salle.android.sallefy.controller.fragments.ContentFragment;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
 import com.salle.android.sallefy.controller.fragments.SocialFragment;
-import com.salle.android.sallefy.controller.fragments.SongsFragment;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.Session;
 
@@ -166,13 +164,13 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         if (fragment instanceof HomeFragment) {
             return HomeFragment.TAG;
         } else {
-            if (fragment instanceof SongsFragment) {
-                return SongsFragment.TAG;
+            if (fragment instanceof MeFragment) {
+                return MeFragment.TAG;
             } else {
-                if (fragment instanceof SearchFragment) {
-                    return SearchFragment.TAG;
+                if (fragment instanceof SocialFragment) {
+                    return SocialFragment.TAG;
                 } else {
-                    return ContentFragment.TAG;
+                    return SearchFragment.TAG;
                 }
             }
         }

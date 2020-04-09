@@ -7,18 +7,6 @@
     android:gravity="center"
     android:background="@color/colorPrimary">
 
-
-    <com.scwang.wave.MultiWaveHeader
-        android:id="@+id/multiWaveHeader"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:rotation="-20"
-        android:scaleX="2"
-        android:scaleY="1.7"
-        app:layout_constraintTop_toTopOf="parent"
-        app:mwhCloseColor="@color/colorSecondary"
-        app:mwhStartColor="@color/colorPrimary" />
-
     <TextView
         android:id="@+id/searchText"
         style="@style/TitlesTheme"
@@ -27,6 +15,6 @@
         android:layout_marginTop="30dp"
         android:text="@string/fragment_playlists"
         android:textAlignment="center"
-        app:layout_constraintTop_toTopOf="@+id/multiWaveHeader" />
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

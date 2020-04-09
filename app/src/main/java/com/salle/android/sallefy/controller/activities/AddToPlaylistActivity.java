@@ -2,13 +2,10 @@ package com.salle.android.sallefy.controller.activities;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,8 +36,6 @@ public class AddToPlaylistActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_to_playlist);
         mAddToPlaylistRecyclerView = (RecyclerView) findViewById(R.id.add_to_playlist_recycler_view);
 
-
-
         mAddToPlaylistRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         mSelectedPlaylists = new HashMap<>();
@@ -65,19 +60,6 @@ public class AddToPlaylistActivity extends AppCompatActivity {
                     s += entry.getKey() + " " + entry.getValue() + " ";
                 }
                 */
-            }
-        });
-
-        goBack = findViewById(R.id.add_to_playlist_back);
-        goBack.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                switch (menuItem.getItemId()) {
-                    case R.id.add_to_playlist_back:
-                        finish();
-                        break;
-                }
-                return true;
             }
         });
     }

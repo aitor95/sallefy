@@ -19,13 +19,16 @@
         android:gravity="center_vertical"
         android:clipToPadding="false">
 
-        <ImageView
-            android:id="@+id/Back_from_settings"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_gravity="right"
-            android:layout_marginLeft="30dp"
-            android:src="@drawable/ic_back_arrow"/>
+        <ImageButton
+            android:id="@+id/new_playlist_nav"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back_arrow"
+            android:tint="@color/colorBlack"
+            android:background="#00000000"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="0dp"
+            android:layout_gravity="start|start"/>
 
 
         <LinearLayout

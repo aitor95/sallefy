@@ -14,7 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".controller.activities.StatisticsActivity"></activity>
+        <activity android:name=".controller.activities.StatisticsActivity"/>
         <activity
             android:name=".controller.activities.SettingsActivity"
             android:label="@string/title_activity_settings" />

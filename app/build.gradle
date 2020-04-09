@@ -67,4 +67,7 @@ dependencies {
 
     implementation 'com.android.support:support-v4:28.0.0'
 
+    //Detalle cancion.
+    implementation 'com.android.support:design:28.0.0'
+
 }

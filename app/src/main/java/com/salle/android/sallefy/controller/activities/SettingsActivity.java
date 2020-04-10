@@ -2,12 +2,15 @@ package com.salle.android.sallefy.controller.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.utils.PreferenceUtils;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -27,9 +30,12 @@ public class SettingsActivity extends AppCompatActivity {
             //TODO: Delete user
         });
 
-        RelativeLayout optionLogOut = findViewById(R.id.settings_option_logOut);
+        Button optionLogOut = findViewById(R.id.btn_settings_logout);
         optionLogOut.setOnClickListener(view -> {
-            //TODO: LogOut from the account
+            PreferenceUtils.resetValues(this);
+
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
         });
 
         RelativeLayout backoption = findViewById(R.id.relativeLayoutSettingsTitle);
@@ -44,4 +50,6 @@ public class SettingsActivity extends AppCompatActivity {
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
         }
     }
+
+
 }

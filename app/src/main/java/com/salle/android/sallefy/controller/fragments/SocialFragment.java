@@ -64,8 +64,14 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
 		mTracks = new ArrayList<Track>();
-		for (int i = 0; i < tracks.size(); i++) if (!("" + tracks.get(i).getReleased()).equals("null"))
-			mTracks.add(tracks.get(i));
+		for (int i = 0; i < tracks.size(); i++){
+			if (!("" + tracks.get(i).getReleased()).equals("null")) {
+				//IF MTRACK IS FROM FOLLOWED USER
+				mTracks.add(tracks.get(i));
+			}
+		}
+
+		//ORDER MTRACKS BY RELEASE DATE
 
 		SocialActivityAdapter adapter = new SocialActivityAdapter(this, getContext(), mTracks);
 		mRecyclerView.setAdapter(adapter);

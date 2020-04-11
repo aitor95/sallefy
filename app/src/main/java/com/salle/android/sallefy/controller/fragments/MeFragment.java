@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -16,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.activities.SettingsActivity;
+import com.salle.android.sallefy.utils.PreferenceUtils;
 
 public class MeFragment extends Fragment {
 
@@ -117,6 +119,8 @@ public class MeFragment extends Fragment {
 			startActivity(intent);
 		});
 
+		TextView user_name = v.findViewById(R.id.user_name);
+		user_name.setText(PreferenceUtils.getUser(v.getContext()));
 	}
 
     @Override

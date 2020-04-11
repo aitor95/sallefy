@@ -23,8 +23,9 @@
         android:background="@drawable/music_player_image_background"
         android:layout_width="@dimen/music_player_image_size"
         android:layout_height="@dimen/music_player_image_size"
-        android:elevation="10dp"
-        android:clipToPadding="false">
+        android:elevation="20dp"
+        android:clipToPadding="false"
+        android:layout_marginTop="40dp">
 
         <FrameLayout
             android:layout_width="@dimen/music_player_image_size"

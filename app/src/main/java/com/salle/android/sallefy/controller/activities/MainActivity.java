@@ -47,8 +47,8 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         setInitialFragment();
         requestPermissions();
         //Saca las siguientes lineas si no quieres testear el reproductor
-        //Intent intent = new Intent(this,MusicPlayerActivity.class);
-        //startActivity(intent);
+        Intent intent = new Intent(this,MusicPlayerActivity.class);
+        startActivity(intent);
     }
 
     private void initViews() {

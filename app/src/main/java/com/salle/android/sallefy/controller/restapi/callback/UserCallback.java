@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.restapi.callback;
 
 import com.salle.android.sallefy.model.User;
+import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
 
 import java.util.List;
@@ -15,4 +16,6 @@ public interface UserCallback extends FailureCallback {
     void onUsersFailure(Throwable throwable);
 
     void onUserClicked(User user);
+
+    void onMeFollowingsReceived(List<UserPublicInfo> users);
 }

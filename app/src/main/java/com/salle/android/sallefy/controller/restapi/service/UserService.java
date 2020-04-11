@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.restapi.service;
 
 import com.salle.android.sallefy.model.User;
+import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserRegister;
 
 import java.util.List;
@@ -23,6 +24,9 @@ public interface UserService {
 
     @POST("register")
     Call<ResponseBody> registerUser(@Body UserRegister user);
+
+    @GET("me/followings")
+    Call<List<UserPublicInfo>> getMeFollowings(@Header("Authorization") String token);
 
 
 }

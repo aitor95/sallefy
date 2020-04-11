@@ -33,6 +33,7 @@ import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
+import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
@@ -285,6 +286,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onUserClicked(User user) {
+
+    }
+
+    @Override
+    public void onMeFollowingsReceived(List<UserPublicInfo> users) {
 
     }
 

@@ -15,16 +15,22 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.SocialActivityAdapter;
 import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
+import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.model.User;
+import com.salle.android.sallefy.model.UserPublicInfo;
+import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SocialFragment extends Fragment implements TrackCallback, TrackListCallback {
+public class SocialFragment extends Fragment implements TrackCallback, TrackListCallback, UserCallback {
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
+	private ArrayList<UserPublicInfo> mFollowing;
 
 	public static final String TAG = SocialFragment.class.getName();
 
@@ -56,22 +62,31 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 	}
 
 	private void getData() {
-		//TODO: cambiar por coger las listas que tocan
+		UserManager.getInstance(this.getContext()).getMeFollowing(this);
 		TrackManager.getInstance(getActivity()).getAllTracks(this);
-		mTracks = new ArrayList<>();
+	}
+
+	@Override
+	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
+		mFollowing = new ArrayList<UserPublicInfo>();
+		mFollowing.addAll(users);
 	}
 
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
+
 		mTracks = new ArrayList<Track>();
 		for (int i = 0; i < tracks.size(); i++){
 			if (!("" + tracks.get(i).getReleased()).equals("null")) {
-				//IF MTRACK IS FROM FOLLOWED USER
-				mTracks.add(tracks.get(i));
+				for (int j = 0; j < this.mFollowing.size(); j++) {
+					if (tracks.get(i).getUser().getLogin().equals(this.mFollowing.get(j).getLogin())){
+						mTracks.add(tracks.get(i));
+					}
+				}
 			}
 		}
 
-		//ORDER MTRACKS BY RELEASE DATE
+		//TODO ORDER MTRACKS BY RELEASE DATE
 
 		SocialActivityAdapter adapter = new SocialActivityAdapter(this, getContext(), mTracks);
 		mRecyclerView.setAdapter(adapter);
@@ -109,6 +124,45 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 
 	@Override
 	public void onTrackSelected(int index) {
+
+	}
+
+	@Override
+	public void onLoginSuccess(UserToken userToken) {
+
+	}
+
+	@Override
+	public void onLoginFailure(Throwable throwable) {
+
+	}
+
+	@Override
+	public void onRegisterSuccess() {
+
+	}
+
+	@Override
+	public void onRegisterFailure(Throwable throwable) {
+
+	}
+
+	@Override
+	public void onUserInfoReceived(User userData) {
+	}
+
+	@Override
+	public void onUsersReceived(List<User> users) {
+
+	}
+
+	@Override
+	public void onUsersFailure(Throwable throwable) {
+
+	}
+
+	@Override
+	public void onUserClicked(User user) {
 
 	}
 }

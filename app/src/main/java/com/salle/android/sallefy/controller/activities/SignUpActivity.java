@@ -14,6 +14,7 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
+import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 
@@ -109,6 +110,11 @@ public class SignUpActivity extends AppCompatActivity implements UserCallback {
 
     @Override
     public void onUserClicked(User user) {
+
+    }
+
+    @Override
+    public void onMeFollowingsReceived(List<UserPublicInfo> users) {
 
     }
 

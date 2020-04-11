@@ -16,6 +16,7 @@ import com.salle.android.sallefy.controller.adapters.UserVerticalAdapter;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
+import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
@@ -99,6 +100,11 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onUserClicked(User user) {
+
+	}
+
+	@Override
+	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
 
 	}
 

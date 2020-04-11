@@ -8,6 +8,7 @@ import com.salle.android.sallefy.controller.restapi.service.UserService;
 import com.salle.android.sallefy.controller.restapi.service.UserTokenService;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserLogin;
+import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserRegister;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
@@ -159,10 +160,27 @@ public class UserManager {
         });
     }
 
-
-
-
     /********************   GETTERS / SETTERS    ********************/
+    public synchronized void getMeFollowing (final UserCallback userCallback) {
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+        Call<List<UserPublicInfo>> call = mService.getMeFollowings( "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<List<UserPublicInfo>>() {
+            @Override
+            public void onResponse(Call<List<UserPublicInfo>> call, Response<List<UserPublicInfo>> response) {
+                if (response.isSuccessful()) {
+                    userCallback.onMeFollowingsReceived(response.body());
+                } else {
+                    userCallback.onUsersFailure(new Throwable());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserPublicInfo>> call, Throwable t) {
+                userCallback.onFailure(t);
+            }
+        });
+    }
+
 
 
 }

@@ -8,7 +8,6 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -27,6 +26,7 @@ import com.salle.android.sallefy.controller.fragments.PlaylistSongFragment;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.utils.PreferenceUtils;
 
 
 import java.io.IOException;
@@ -64,7 +64,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     //Fragments
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
-
+    private Fragment playlistSongFragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,13 +79,18 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
     }
 
-    /*@Override
+    @Override
     protected void onRestart() {
         super.onRestart();
         System.out.println("im back");
+        getIntent().removeExtra("playlistTracks");
         PlaylistManager.getInstance(getApplicationContext())
                 .getPlaylistById(this.pId, PlaylistActivity.this);
-    }*/
+        mTransaction = getSupportFragmentManager().beginTransaction();
+        mTransaction.detach(playlistSongFragment);
+        mTransaction.attach(playlistSongFragment);
+        mTransaction.commit();
+    }
 
     private void initViews() {
 
@@ -127,14 +132,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
         PlaylistManager.getInstance(getApplicationContext())
                 .getPlaylistById(this.pId, PlaylistActivity.this);
-
-        //Call API to get if current user follows playlist with id
-        if(!this.owner){
-            PlaylistManager.getInstance(getApplicationContext()).getUserFollows(this.pId, PlaylistActivity.this);
-        }else{
-            this.mFollowBtn.setBackgroundResource(R.drawable.login_btn);
-            mFollowBtn.setText(R.string.playlist_edit);
-        }
+        playlistSongFragment = new PlaylistSongFragment();
+        mTransaction.add(R.id.fragment_container, playlistSongFragment);
+        mTransaction.commit();
 
         //Follow playlist button
         mFollowBtn.setOnClickListener(new View.OnClickListener() {
@@ -253,6 +253,19 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     public void onPlaylistById(Playlist playlist) {
         this.mPlaylist = playlist;
 
+        if(PreferenceUtils.getUser(this).equals(mPlaylist.getUserLogin())){
+            this.owner = true;
+        }
+
+
+        if(!this.owner){
+            //Call API to get if current user follows playlist with id
+            PlaylistManager.getInstance(getApplicationContext()).getUserFollows(this.pId, PlaylistActivity.this);
+        }else{
+            //Enable Edit button instead of Follow
+            this.mFollowBtn.setBackgroundResource(R.drawable.login_btn);
+            mFollowBtn.setText(R.string.playlist_edit);
+        }
         //Load cover image from URL
         this.pImg = playlist.getThumbnail();
         if(pImg != null){
@@ -279,9 +292,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
         //Send playlist tracks to PlaylistSongFragment
         getIntent().putExtra("playlistTracks", (Serializable) this.mPlaylist.getTracks());
-        Fragment playlistSongFragment = new PlaylistSongFragment();
-        mTransaction.add(R.id.fragment_container, playlistSongFragment);
-        mTransaction.commit();
+
     }
 
     @Override

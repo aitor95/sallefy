@@ -80,7 +80,6 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/linearLayoutMiniplayer"
         app:layout_constraintTop_toBottomOf="@+id/bottom_navigation">
-
     </FrameLayout>
 
     <!--REPRODUCTOR MINI-->

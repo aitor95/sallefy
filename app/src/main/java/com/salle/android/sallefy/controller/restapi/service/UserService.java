@@ -28,5 +28,4 @@ public interface UserService {
     @GET("me/followings")
     Call<List<UserPublicInfo>> getMeFollowings(@Header("Authorization") String token);
 
-
 }

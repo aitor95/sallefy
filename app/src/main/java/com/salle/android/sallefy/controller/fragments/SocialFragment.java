@@ -87,7 +87,6 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 			}
 		}
 		mTracks.sort(Comparator.comparing(Track::getReleased));
-		//TODO ORDER MTRACKS BY RELEASE DATE
 
 		SocialActivityAdapter adapter = new SocialActivityAdapter(this, getContext(), mTracks);
 		mRecyclerView.setAdapter(adapter);

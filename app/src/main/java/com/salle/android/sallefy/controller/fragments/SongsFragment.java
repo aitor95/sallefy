@@ -312,6 +312,11 @@ public class SongsFragment extends Fragment
     }
 
     @Override
+    public void onUpdatedTrack() {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
 
     }
@@ -323,6 +328,11 @@ public class SongsFragment extends Fragment
     public void onTrackSelected(int index) {
         System.out.println("Index song: " + index);
         updateTrack(index);
+    }
+
+    @Override
+    public void onTrackUpdated(Track track) {
+        TrackManager.getInstance(getContext()).updateTrack(track, this);
     }
 
 

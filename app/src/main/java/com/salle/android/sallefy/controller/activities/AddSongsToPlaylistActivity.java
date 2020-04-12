@@ -189,4 +189,9 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     public void onCreateTrack() {
 
     }
+
+    @Override
+    public void onUpdatedTrack() {
+
+    }
 }

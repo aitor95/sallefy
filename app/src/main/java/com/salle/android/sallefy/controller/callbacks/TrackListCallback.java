@@ -5,4 +5,5 @@ import com.salle.android.sallefy.model.Track;
 public interface TrackListCallback {
     void onTrackSelected(Track track);
     void onTrackSelected(int index);
+    void onTrackUpdated(Track track);
 }

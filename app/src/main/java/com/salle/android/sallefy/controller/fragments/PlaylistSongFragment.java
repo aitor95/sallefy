@@ -81,6 +81,11 @@ public class PlaylistSongFragment extends Fragment implements MusicCallback, Tra
 	}
 
 	@Override
+	public void onTrackUpdated(Track track) {
+		TrackManager.getInstance(getContext()).updateTrack(track, this);
+	}
+
+	@Override
 	public void onMusicPlayerPrepared() {
 
 	}
@@ -107,6 +112,11 @@ public class PlaylistSongFragment extends Fragment implements MusicCallback, Tra
 
 	@Override
 	public void onCreateTrack() {
+
+	}
+
+	@Override
+	public void onUpdatedTrack() {
 
 	}
 

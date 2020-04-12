@@ -1,5 +1,6 @@
 package com.salle.android.sallefy.controller.restapi.service;
 
+import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.List;
@@ -10,6 +11,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface TrackService {
@@ -26,4 +28,9 @@ public interface TrackService {
     @POST("tracks")
     Call<ResponseBody> createTrack(@Body Track track, @Header("Authorization") String token);
 
+    @PUT("tracks")
+    Call<ResponseBody> updateTrack(@Body Track track, @Header("Authorization") String token);
+
+    @PUT("tracks/{id}/like")
+    Call<ResponseBody> likeTrack(@Path("id") int id, @Body Like like, @Header("Authorization") String token);
 }

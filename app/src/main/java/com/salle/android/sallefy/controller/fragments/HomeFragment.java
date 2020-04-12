@@ -153,6 +153,11 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
     }
 
     @Override
+    public void onTrackUpdated(Track track) {
+        TrackManager.getInstance(getContext()).updateTrack(track, this);
+    }
+
+    @Override
     public void onTracksReceived(List<Track> tracks) {
         tracksAdapter = new TrackListVerticalAdapter(this, getContext(), (ArrayList<Track>) tracks);
         rvSongs.setAdapter(tracksAdapter);
@@ -175,6 +180,11 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
     @Override
     public void onCreateTrack() {
+
+    }
+
+    @Override
+    public void onUpdatedTrack() {
 
     }
 }

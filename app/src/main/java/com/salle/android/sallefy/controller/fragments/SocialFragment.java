@@ -113,6 +113,11 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 	}
 
 	@Override
+	public void onUpdatedTrack() {
+
+	}
+
+	@Override
 	public void onFailure(Throwable throwable) {
 
 	}
@@ -125,6 +130,11 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 	@Override
 	public void onTrackSelected(int index) {
 
+	}
+
+	@Override
+	public void onTrackUpdated(Track track) {
+		TrackManager.getInstance(getContext()).updateTrack(track, this);
 	}
 
 	@Override

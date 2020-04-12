@@ -114,7 +114,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         mHandler = new Handler();
         //Important to run this line here, we need the UI thread!
         mSeekBarUpdater.run();
-
     }
 
     private void startStreamingService () {
@@ -179,15 +178,19 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
         fav = findViewById(R.id.music_player_fav);
         fav.setTag("Fav");
+
+        TrackCallback callback = this;
         fav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if(fav.getTag().equals("Fav")){
                     fav.setImageResource(R.drawable.ic_favourite_grey_24dp);
                     fav.setTag("NoFav");
+                    TrackManager.getInstance(getApplicationContext()).likeTrack(currentTrack, false, callback);
                 }else{
                     fav.setTag("Fav");
                     fav.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    TrackManager.getInstance(getApplicationContext()).likeTrack(currentTrack, true, callback);
                 }
             }
         });
@@ -297,6 +300,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         updateTrack(index);
     }
 
+    @Override
+    public void onTrackUpdated(Track track) {
+        TrackManager.getInstance(this).updateTrack(track, this);
+    }
+
     //UpdateTrack pide una nueva track. Cuando este lista, se llama a este callback.
     @Override
     public void onMusicPlayerPrepared() {
@@ -332,6 +340,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
     @Override
     public void onCreateTrack() {
+
+    }
+
+    @Override
+    public void onUpdatedTrack() {
 
     }
 

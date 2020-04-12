@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.service.TrackService;
+import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
@@ -58,6 +59,54 @@ public class TrackManager {
                 int code = response.code();
                 if (response.isSuccessful()) {
                     trackCallback.onCreateTrack();
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    trackCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                trackCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+    }
+
+    public synchronized void updateTrack(Track track, final TrackCallback trackCallback) {
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+
+        Call<ResponseBody> call = mTrackService.updateTrack(track, "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    trackCallback.onUpdatedTrack();
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    trackCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                trackCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+    }
+
+    public synchronized void likeTrack(int songId, Boolean like, final TrackCallback trackCallback) {
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+
+        Call<ResponseBody> call = mTrackService.likeTrack(songId, new Like(like), "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    //TODO: is anything necessary to do when a song is liked?
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);
                     trackCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));

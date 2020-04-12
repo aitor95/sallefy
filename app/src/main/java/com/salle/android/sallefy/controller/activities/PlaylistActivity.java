@@ -39,6 +39,8 @@ import okhttp3.ResponseBody;
 
 public class PlaylistActivity extends AppCompatActivity implements PlaylistCallback {
 
+    public static final String TAG = PlaylistActivity.class.getName();
+
     //Layout
     private ImageButton mNav;
     private ImageView mImg;
@@ -54,6 +56,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     private boolean followed;
     private boolean shuffle;
     private boolean owner;
+    private boolean fragmentCreated;
     private int pId;
     private String pImg;
     private Playlist mPlaylist;
@@ -65,6 +68,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
     private Fragment playlistSongFragment;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +80,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         this.followed = false;
         this.shuffle = false;
         this.owner = false;
+        this.fragmentCreated = false;
+        PlaylistManager.getInstance(getApplicationContext())
+                .getPlaylistById(this.pId, PlaylistActivity.this);
         initViews();
 
     }
@@ -82,14 +90,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     @Override
     protected void onRestart() {
         super.onRestart();
-        System.out.println("im back");
         getIntent().removeExtra("playlistTracks");
         PlaylistManager.getInstance(getApplicationContext())
                 .getPlaylistById(this.pId, PlaylistActivity.this);
-        mTransaction = getSupportFragmentManager().beginTransaction();
-        mTransaction.detach(playlistSongFragment);
-        mTransaction.attach(playlistSongFragment);
-        mTransaction.commit();
     }
 
     private void initViews() {
@@ -127,14 +130,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 blurTransformation(25);
             }
         });
-
-        //Call API to get playlist by id
-
-        PlaylistManager.getInstance(getApplicationContext())
-                .getPlaylistById(this.pId, PlaylistActivity.this);
-        playlistSongFragment = new PlaylistSongFragment();
-        mTransaction.add(R.id.fragment_container, playlistSongFragment);
-        mTransaction.commit();
 
         //Follow playlist button
         mFollowBtn.setOnClickListener(new View.OnClickListener() {
@@ -174,8 +169,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
     private void initElements() {
         //Get elements from layout
-        mFragmentManager = getSupportFragmentManager();
-        mTransaction = mFragmentManager.beginTransaction();
         mImg = findViewById(R.id.playlist_img);
         mCoverImg = findViewById(R.id.playlist_img_small);
         mAuthor = findViewById(R.id.playlist_author);
@@ -190,7 +183,10 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
 
     private void setInitialFragment() {
-        mTransaction.add(R.id.fragment_container, HomeFragment.getInstance());
+        mFragmentManager = getSupportFragmentManager();
+        mTransaction = mFragmentManager.beginTransaction();
+        playlistSongFragment = new PlaylistSongFragment();
+        mTransaction.add(R.id.fragment_container, playlistSongFragment);
         mTransaction.commit();
     }
 
@@ -253,22 +249,22 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     public void onPlaylistById(Playlist playlist) {
         this.mPlaylist = playlist;
 
-        if(PreferenceUtils.getUser(this).equals(mPlaylist.getUserLogin())){
+        if (PreferenceUtils.getUser(this).equals(mPlaylist.getUserLogin())) {
             this.owner = true;
         }
 
 
-        if(!this.owner){
+        if (!this.owner) {
             //Call API to get if current user follows playlist with id
             PlaylistManager.getInstance(getApplicationContext()).getUserFollows(this.pId, PlaylistActivity.this);
-        }else{
+        } else {
             //Enable Edit button instead of Follow
             this.mFollowBtn.setBackgroundResource(R.drawable.login_btn);
             mFollowBtn.setText(R.string.playlist_edit);
         }
         //Load cover image from URL
         this.pImg = playlist.getThumbnail();
-        if(pImg != null){
+        if (pImg != null) {
             Glide.with(this).load(pImg).into(mImg);
             Glide.with(this).load(pImg).into(mCoverImg);
         }
@@ -280,19 +276,32 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
         this.followed = playlist.isFollowed();
 
-        if(pAuthor != null){
+        if (pAuthor != null) {
             mAuthor.setText(pAuthor);
         }
-        if(pTitle != null){
+        if (pTitle != null) {
             mTitle.setText(pTitle);
         }
-        if(pDescription != null){
+        if (pDescription != null) {
             mDescription.setText(pDescription);
         }
 
         //Send playlist tracks to PlaylistSongFragment
         getIntent().putExtra("playlistTracks", (Serializable) this.mPlaylist.getTracks());
+        if (!this.fragmentCreated) {
+            setInitialFragment();
+            this.fragmentCreated = true;
+        } else {
+            updateFragment();
+        }
+    }
 
+    private void updateFragment() {
+        //Update playlist tracks onRestart
+        mTransaction = getSupportFragmentManager().beginTransaction();
+        mTransaction.detach(playlistSongFragment);
+        mTransaction.attach(playlistSongFragment);
+        mTransaction.commit();
     }
 
     @Override

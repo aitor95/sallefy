@@ -45,6 +45,13 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         initViews();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        PlaylistManager.getInstance(getApplicationContext())
+                .getPlaylistById(this.pId, EditPlaylistActivity.this);
+    }
+
     private void initViews() {
         mImg = (ImageView) findViewById(R.id.edit_playlist_img);
         mDescription = (EditText) findViewById(R.id.edit_playlist_description);
@@ -66,6 +73,16 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
             @Override
             public void onClick(View view) {
                 updatePlaylist();
+            }
+        });
+
+        Button mAddSongsBtn = (Button) findViewById(R.id.edit_playlist_add);
+        mAddSongsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getApplicationContext(),AddSongsToPlaylistActivity.class);
+                intent.putExtra("playlistId", pId);
+                startActivity(intent);
             }
         });
     }

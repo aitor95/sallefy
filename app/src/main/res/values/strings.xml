@@ -69,6 +69,12 @@
     <string name="edit_playlist_creation_success">Your changes have been saved!</string>
     <string name="edit_playlist_creation_failure">Something went wrong</string>
 
+    <!-- ACTIVITY [ Add Songs To Playlist ] -->
+    <string name="add_songs_to_playlist_title">Add songs</string>
+    <string name="add_song_to_playlist_button">Save</string>
+    <string name="add_songs_to_playlist_lastitem_title">New Track</string>
+    <string name="add_songs_to_playlist_lastitem_author">From you</string>
+
     <!-- URL -->
     <string name="url_static">Static URL Playback</string>
 

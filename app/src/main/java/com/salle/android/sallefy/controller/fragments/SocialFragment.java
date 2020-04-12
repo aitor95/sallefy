@@ -24,6 +24,7 @@ import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class SocialFragment extends Fragment implements TrackCallback, TrackListCallback, UserCallback {
@@ -85,7 +86,7 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 				}
 			}
 		}
-
+		mTracks.sort(Comparator.comparing(Track::getReleased));
 		//TODO ORDER MTRACKS BY RELEASE DATE
 
 		SocialActivityAdapter adapter = new SocialActivityAdapter(this, getContext(), mTracks);

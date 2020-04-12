@@ -86,7 +86,7 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 				}
 			}
 		}
-		mTracks.sort(Comparator.comparing(Track::getReleased));
+		mTracks.sort(Comparator.comparing(Track::getReleased).reversed());
 
 		SocialActivityAdapter adapter = new SocialActivityAdapter(this, getContext(), mTracks);
 		mRecyclerView.setAdapter(adapter);

@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,25 +24,30 @@ import com.salle.android.sallefy.controller.adapters.TrackListHorizontalAdapter;
 import com.salle.android.sallefy.controller.adapters.UserHorizontalAdapter;
 import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
+import com.salle.android.sallefy.controller.restapi.callback.SearchCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.GenreManager;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
+import com.salle.android.sallefy.controller.restapi.manager.SearchManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.model.Search;
+import com.salle.android.sallefy.model.SearchResult;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import okhttp3.ResponseBody;
 
-public class SearchFragment extends Fragment implements PlaylistCallback, UserCallback, GenreCallback, TrackCallback {
+public class SearchFragment extends Fragment implements PlaylistCallback, UserCallback, GenreCallback, TrackCallback, SearchCallback {
 
     public static final String TAG = SearchFragment.class.getName();
 
@@ -158,23 +164,24 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         });
 
         searchText = v.findViewById(R.id.searchText);
-        searchText.setOnClickListener(view -> {
-            //((EditText) view).setText("");
-            //((EditText) view).setTextAppearance(R.style.SearchWritingText);
-        });
+
+        SearchCallback scallback = this;
         searchText.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 ((EditText) view).setTextAppearance(R.style.SearchWritingText);
+                String text = ((EditText) view).getText().toString();
 
                 if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    String text = ((EditText) view).getText().toString().replace("\n", "");
-                    ((EditText) view).setText(text);
-
-                    //TODO: El que s'hagi de fer alpremer enter
+                    ((EditText) view).setText(text.replace("\n", ""));
+                    if (text.equals("")) getData();
+                    else SearchManager.getInstance(getContext()).search(((EditText) view).getText().toString(), scallback);
                 }
 
-                //TODO: [Search] Refresh de la pàgina
+                if (text.equals("")) getData();
+                else SearchManager.getInstance(getContext()).search(((EditText) view).getText().toString(), scallback);
+
+                //SearchManager.getInstance(getContext()).search(((EditText) view).getText().toString(), scallback);
                 return false;
             }
         });
@@ -345,4 +352,23 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     }
 
+    @Override
+    public void onSearchResultReceived(SearchResult body) {
+        ArrayList<Track> tracks = (ArrayList<Track>) body.getTracks();
+        ArrayList<Playlist> playlists = (ArrayList<Playlist>) body.getPlaylists();
+        ArrayList<User> users = (ArrayList<User>) body.getUsers();
+        ArrayList<Genre> genres = (ArrayList<Genre>) body.getGenres();
+
+        TrackListHorizontalAdapter adapter = new TrackListHorizontalAdapter(null, getActivity(), tracks);
+        mTracksView.setAdapter(adapter);
+
+        mPlaylistAdapter = new PlaylistListHorizontalAdapter(playlists, getContext(), null, R.layout.item_playlist_horizontal);
+        mPlaylistsView.setAdapter(mPlaylistAdapter);
+
+        mGenresAdapter = new GenresAdapter(genres, R.layout.item_genre);
+        mGenresView.setAdapter(mGenresAdapter);
+
+        mUserHorizontalAdapter = new UserHorizontalAdapter(users, getContext());
+        mUsersView.setAdapter(mUserHorizontalAdapter);
+    }
 }

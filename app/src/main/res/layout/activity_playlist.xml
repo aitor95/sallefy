@@ -165,10 +165,11 @@
             android:id="@+id/playlist_no_tracks"
             style="@style/SubTitlesTheme"
             android:layout_width="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="25dp"
             android:text="@string/playlist_no_tracks"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorDarkGrey"
             android:textSize="20sp" />
     </FrameLayout>
 

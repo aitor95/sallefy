@@ -298,6 +298,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
             mDescription.setText(pDescription);
         }
 
+        if(this.mPlaylist.getTracks().size() != 0){
+            this.mNoTracks.setVisibility(View.GONE);
+        }
         //Send playlist tracks to PlaylistSongFragment
         getIntent().putExtra("playlistTracks", (Serializable) this.mPlaylist.getTracks());
         if (!this.fragmentCreated) {

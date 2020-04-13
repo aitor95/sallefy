@@ -1,13 +1,14 @@
 package com.salle.android.sallefy.controller.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,13 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.PlaylistAdapterCallback;
-import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
+import com.salle.android.sallefy.controller.restapi.callback.PlaylistFollowCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
 
-public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistListVerticalAdapter.ViewHolder> {
+public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistListVerticalAdapter.ViewHolder> implements PlaylistFollowCallback {
 
     public static final String TAG = PlaylistListVerticalAdapter.class.getName();
     private ArrayList<Playlist> mPlaylists;
@@ -29,20 +30,22 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
     private PlaylistAdapterCallback mCallback;
     private int layoutId;
 
-    private Boolean isFollowing;
+    //Guardamos la referencia del holder que le han dado follow
+    private ViewHolder followHolder;
 
     public PlaylistListVerticalAdapter(ArrayList<Playlist> playlists, Context context, PlaylistAdapterCallback callback, int layoutId) {
         mPlaylists = playlists;
         mContext = context;
         mCallback = callback;
         this.layoutId = layoutId;
+        followHolder = null;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
-        isFollowing = false;
+
 
         return new PlaylistListVerticalAdapter.ViewHolder(itemView);
     }
@@ -51,25 +54,28 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         if (mPlaylists != null && mPlaylists.size() > 0) {
 
+            Playlist currPlaylist = mPlaylists.get(position);
+
             holder.mLayout.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (mCallback != null)
-                        mCallback.onPlaylistClick(mPlaylists.get(position));
+                        mCallback.onPlaylistClick(currPlaylist);
                 }
             });
-            holder.mTitle.setText(mPlaylists.get(position).getName());
-            holder.mAuthor.setText(mPlaylists.get(position).getUser().getLogin());
-            if (mPlaylists.get(position).getThumbnail() != null) {
+
+            holder.mTitle.setText(currPlaylist.getName());
+            holder.mAuthor.setText(currPlaylist.getUser().getLogin());
+
+            if (currPlaylist.getThumbnail() != null) {
                 Glide.with(mContext)
                         .asBitmap()
                         .placeholder(R.drawable.ic_audiotrack)
-                        .load(mPlaylists.get(position).getThumbnail())
+                        .load(currPlaylist.getThumbnail())
                         .into(holder.mPhoto);
             }
 
-            isFollowing = mPlaylists.get(position).isFollowed();
-            if (isFollowing) {
+            if (currPlaylist.isFollowed()) {
                 holder.followingButton.setTextAppearance(R.style.FollowingButton);
                 holder.followingButton.setBackgroundResource(R.drawable.round_corner_light);
                 holder.followingButton.setText(R.string.FollowingText);
@@ -80,18 +86,12 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
             }
 
             holder.followingButton.setOnClickListener(view -> {
-                isFollowing = !isFollowing;
-
-                PlaylistManager.getInstance(mContext).followPlaylist(mPlaylists.get(position), isFollowing, (PlaylistCallback) mCallback);
-
-                if (isFollowing) {
-                    ((Button) view).setTextAppearance(R.style.FollowingButton);
-                    view.setBackgroundResource(R.drawable.round_corner_light);
-                    ((Button) view).setText(R.string.FollowingText);
-                } else {
-                    ((Button) view).setTextAppearance(R.style.ToFollowButton);
-                    view.setBackgroundResource(R.drawable.round_corner);
-                    ((Button) view).setText(R.string.ToFollowText);
+                if(followHolder == null) {
+                    followHolder = holder;
+                    PlaylistManager.getInstance(mContext).followPlaylist(currPlaylist, !currPlaylist.isFollowed(),  PlaylistListVerticalAdapter.this);
+                }else{
+                    //El sistema esta ocupado dando like a otro post.
+                    Toast.makeText(mContext, R.string.error_follow, Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -100,6 +100,34 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
     @Override
     public int getItemCount() {
         return (mPlaylists != null ? mPlaylists.size() : 0);
+    }
+
+    @Override
+    public void onFollowSuccess(Playlist playlist) {
+        for(Playlist p : mPlaylists){
+            if(p.getId().intValue() == playlist.getId()){
+                p.setFollowed(!p.isFollowed());
+                break;
+            }
+        }
+
+        Log.d(TAG, "onFollowSuccess: Playlist is " + playlist.isFollowed() + " data: " + playlist.getName());
+
+        if (playlist.isFollowed()) {
+            followHolder.followingButton.setTextAppearance(R.style.FollowingButton);
+            followHolder.followingButton.setBackgroundResource(R.drawable.round_corner_light);
+            followHolder.followingButton.setText(R.string.FollowingText);
+        } else {
+            followHolder.followingButton.setTextAppearance(R.style.ToFollowButton);
+            followHolder.followingButton.setBackgroundResource(R.drawable.round_corner);
+            followHolder.followingButton.setText(R.string.ToFollowText);
+        }
+        followHolder = null;
+    }
+
+    @Override
+    public void onFailure(Throwable throwable) {
+        Log.d(TAG, "onFailure: Erros following in playlistVerticalAdapter " + throwable.getMessage());
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

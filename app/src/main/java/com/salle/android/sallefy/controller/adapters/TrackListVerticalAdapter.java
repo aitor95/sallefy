@@ -37,6 +37,7 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
         mTracks = tracks;
         mContext = context;
         mCallback = callback;
+        likedHolder = null;
     }
 
     @NonNull

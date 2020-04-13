@@ -3,8 +3,8 @@ package com.salle.android.sallefy.controller.restapi.manager;
 import android.content.Context;
 import android.util.Log;
 
-import com.salle.android.sallefy.controller.activities.PlaylistActivity;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
+import com.salle.android.sallefy.controller.restapi.callback.PlaylistFollowCallback;
 import com.salle.android.sallefy.controller.restapi.service.PlaylistService;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.UserToken;
@@ -191,15 +191,14 @@ public class PlaylistManager {
     /**********************
      * Follows a playlist
      **********************/
-    public synchronized void followPlaylist(Playlist playlist, Boolean isFollowing, final PlaylistCallback playlistCallback){
+    public synchronized void followPlaylist(Playlist playlist, Boolean isFollowing, final PlaylistFollowCallback playlistCallback){
         Call<ResponseBody> call = mService.updateFollow(playlist.getId(), isFollowing,"Bearer " + userToken.getIdToken());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 int code = response.code();
                 if (response.isSuccessful()) {
-                    //TODO: Do something when playlist followed
-                    //playlistCallback.onPlaylistUpdated();
+                    playlistCallback.onFollowSuccess(playlist);
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);
                     playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message() + " \n"+ response.errorBody()));

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.GestureDetectorCompat;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
@@ -27,6 +29,7 @@ import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.utils.OnSwipeListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,7 +55,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
     private ImageButton nextTrack;
     private ImageButton prevTrack;
-    private ImageButton fav;
+    private ImageButton like;
     private ImageButton more;
     private TextView songTitle;
     private TextView songAuthor;
@@ -78,6 +81,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         }
     };
 
+    //Gesture detector.
+    private GestureDetectorCompat detector;
+
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -101,11 +107,43 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     }
 
     @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return detector.onTouchEvent(event);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         startStreamingService();
         setContentView(R.layout.activity_music_player);
         atachButtons();
+
+        detector = new GestureDetectorCompat(this, new OnSwipeListener() {
+            @Override
+            public boolean onSwipe(Direction direction) {
+                boolean rtn = false;
+                switch (direction) {
+                    case down:
+                        Log.d(TAG, "onSwipe: DOWN");
+                        rtn = true;
+                        break;
+                    case up:
+                        Log.d(TAG, "onSwipe: UP");
+                        showMoreMenu();
+                        rtn = true;
+                        break;
+                    case left:
+                        Log.d(TAG, "onSwipe: LEFT");
+                        rtn = true;
+                        break;
+                    case right:
+                        Log.d(TAG, "onSwipe: RIGHT");
+                        rtn = true;
+                        break;
+                }
+                return rtn;
+            }
+        });
 
         //Get all the tracks!
         TrackManager.getInstance(this).getAllTracks(this);
@@ -176,20 +214,20 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         });
 
 
-        fav = findViewById(R.id.music_player_fav);
-        fav.setTag("Fav");
+        like = findViewById(R.id.music_player_fav);
+        like.setTag("Fav");
 
         TrackCallback callback = this;
-        fav.setOnClickListener(new View.OnClickListener() {
+        like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(fav.getTag().equals("Fav")){
-                    fav.setImageResource(R.drawable.ic_favourite_grey_24dp);
-                    fav.setTag("NoFav");
+                if(like.getTag().equals("Fav")){
+                    like.setImageResource(R.drawable.ic_favourite_grey_24dp);
+                    like.setTag("NoFav");
                     TrackManager.getInstance(getApplicationContext()).likeTrack(currentTrack, false, callback);
                 }else{
-                    fav.setTag("Fav");
-                    fav.setImageResource(R.drawable.ic_favorite_black_24dp);
+                    like.setTag("Fav");
+                    like.setImageResource(R.drawable.ic_favorite_black_24dp);
                     TrackManager.getInstance(getApplicationContext()).likeTrack(currentTrack, true, callback);
                 }
             }
@@ -201,8 +239,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             public void onClick(View view) {
 
                 //getWindow().setNavigationBarColor(RED);
-                BottomMenuDialog dialog = new BottomMenuDialog();
-                dialog.show(getSupportFragmentManager(),"options");
+                showMoreMenu();
 
             }
         });
@@ -213,6 +250,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         totalTrackTime = findViewById(R.id.music_player_total_time);
 
         thumbnail = findViewById(R.id.music_player_thumbnail);
+    }
+
+    private void showMoreMenu() {
+        BottomMenuDialog dialog = new BottomMenuDialog();
+        dialog.show(getSupportFragmentManager(),"options");
     }
 
     private void playAudio() {
@@ -289,6 +331,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     private String getTimeFromSeconds(int time) {
         return time / 60 + ":" + time % 60;
     }
+
 
     @Override
     public void onTrackSelected(Track track) {

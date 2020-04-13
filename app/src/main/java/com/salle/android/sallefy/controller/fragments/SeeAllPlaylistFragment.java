@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,7 @@ import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.ResponseBody;
 
@@ -53,6 +55,10 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(null, getContext(), null, R.layout.item_playlist_vertical);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
+
+		v.findViewById(R.id.seeAllTitlePlaylists).setOnClickListener(view -> {
+			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+		});
 	}
 
 	private void getData() {

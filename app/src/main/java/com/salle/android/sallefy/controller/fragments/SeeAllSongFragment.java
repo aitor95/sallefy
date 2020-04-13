@@ -53,6 +53,10 @@ public class SeeAllSongFragment extends Fragment implements MusicCallback, Track
 		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(this, getActivity(), null);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
+
+		v.findViewById(R.id.seeAllTitleSongs).setOnClickListener(view -> {
+			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+		});
 	}
 
 	private void getData() {

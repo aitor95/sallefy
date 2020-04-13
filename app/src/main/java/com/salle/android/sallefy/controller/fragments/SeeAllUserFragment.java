@@ -53,6 +53,10 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 		UserVerticalAdapter adapter = new UserVerticalAdapter(null, getContext(), this, R.layout.item_user_vertical);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
+
+		v.findViewById(R.id.seeAllTitleUsers).setOnClickListener(view -> {
+			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+		});
 	}
 
 	private void getData() {

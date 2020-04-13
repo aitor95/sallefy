@@ -111,6 +111,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             Fragment fragment = SeeAllUserFragment.getInstance();
             FragmentManager manager = getFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
             transaction.add(R.id.fragment_container,fragment);
             transaction.addToBackStack(null);
             transaction.commit();
@@ -129,6 +130,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             Fragment fragment = SeeAllPlaylistFragment.getInstance();
 	        FragmentManager manager = getFragmentManager();
 	        FragmentTransaction transaction = manager.beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
 	        transaction.add(R.id.fragment_container,fragment);
 	        transaction.addToBackStack(null);
 	        transaction.commit();
@@ -158,6 +160,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             Fragment fragment = SeeAllSongFragment.getInstance();
             FragmentManager manager = getFragmentManager();
             FragmentTransaction transaction = manager.beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
             transaction.add(R.id.fragment_container,fragment);
             transaction.addToBackStack(null);
             transaction.commit();

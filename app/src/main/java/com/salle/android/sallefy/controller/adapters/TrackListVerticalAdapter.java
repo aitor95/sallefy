@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,8 +30,8 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
     private TrackListCallback mCallback;
     private int NUM_VIEWHOLDERS = 0;
 
-    private Boolean liked;
-
+    //Guardamos la referencia del holder que le han dado like
+    private ViewHolder likedHolder;
 
     public TrackListVerticalAdapter(TrackListCallback callback, Context context, ArrayList<Track> tracks ) {
         mTracks = tracks;
@@ -53,31 +54,33 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called. viewHolder hashcode: " + holder.hashCode());
 
+        Track t = mTracks.get(position);
         holder.mLayout.setOnClickListener(v -> mCallback.onTrackSelected(position));
 
-        holder.tvTitle.setText(mTracks.get(position).getName());
+        holder.tvTitle.setText(t.getName());
         adjustTextView(holder.tvTitle);
 
-        holder.tvAuthor.setText(mTracks.get(position).getUserLogin());
+        holder.tvAuthor.setText(t.getUserLogin());
         adjustTextView(holder.tvAuthor);
 
-        if (mTracks.get(position).getThumbnail() != null) {
+        if (t.getThumbnail() != null) {
             Glide.with(mContext)
                     .asBitmap()
                     .placeholder(R.drawable.ic_audiotrack)
-                    .load(mTracks.get(position).getThumbnail())
+                    .load(t.getThumbnail())
                     .into(holder.ivPicture);
         }
 
-        liked = mTracks.get(position).isLiked();
-        holder.likeImg.setImageResource((!liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
+        holder.likeImg.setImageResource((!t.isLiked()) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
 
         holder.likeImg.setOnClickListener(view -> {
-            ((ImageView) view).setImageResource((liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
-            liked = !liked;
-
-            mTracks.get(position).setLiked(liked);
-            TrackManager.getInstance(mContext).likeTrack(mTracks.get(position).getId(), liked, this);
+            if(likedHolder == null) {
+                likedHolder = holder;
+                TrackManager.getInstance(mContext).likeTrack(mTracks.get(position).getId(), !mTracks.get(position).isLiked(), this);
+            }else{
+                //El sistema esta ocupado dando like a otro post.
+                Toast.makeText(mContext, R.string.error_like, Toast.LENGTH_SHORT).show();
+            }
         });
 
         holder.moreInfoImg.setOnClickListener(view -> {
@@ -113,7 +116,16 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
 
     @Override
     public void onLikeSuccess(int songId) {
-
+        for (Track t : mTracks){
+            if(t.getId() == songId){
+                t.setLiked(!t.isLiked());
+                boolean liked = t.isLiked();
+                likedHolder.likeImg.setImageResource((!liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
+                t.setLikes(t.getLikes() + ((liked) ? +1 : -1));
+                break;
+            }
+        }
+        likedHolder = null;
     }
 
     @Override

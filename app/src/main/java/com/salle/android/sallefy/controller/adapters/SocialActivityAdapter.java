@@ -34,8 +34,8 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
     private TrackListCallback mCallback;
     private int NUM_VIEWHOLDERS = 0;
 
-    private Boolean liked;
-    ViewHolder likedHolder;
+    //Guardamos la referencia del holder que le han dado like
+    private ViewHolder likedHolder;
 
     public SocialActivityAdapter(TrackListCallback callback, Context context, ArrayList<Track> tracks) {
         mTracks = tracks;
@@ -101,7 +101,7 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
                 TrackManager.getInstance(mContext).likeTrack(mTracks.get(position).getId(), !mTracks.get(position).isLiked(), this);
             }else{
                 //El sistema esta ocupado dando like a otro post.
-                Toast.makeText(mContext, R.string.error_like, Toast.LENGTH_SHORT);
+                Toast.makeText(mContext, R.string.error_like, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -186,7 +186,7 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
         for (Track t : mTracks){
             if(t.getId() == songId){
                 t.setLiked(!t.isLiked());
-                liked = t.isLiked();
+                boolean liked = t.isLiked();
                 likedHolder.favImg.setImageResource((!liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
                 t.setLikes(t.getLikes() + ((liked) ? +1 : -1));
                 likedHolder.NumOfLikes.setText("" + t.getLikes());

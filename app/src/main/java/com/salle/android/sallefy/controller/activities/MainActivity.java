@@ -30,8 +30,6 @@ import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
 
-import java.util.List;
-
 public class MainActivity extends FragmentActivity implements FragmentCallback {
 
     public static final String TAG = MainActivity.class.getName();
@@ -52,6 +50,9 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
 
     //Gesture detector.
     private GestureDetectorCompat detector;
+
+    //TAG del fragment activado actualmente...
+    private  static String tagFragmentActivado;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -130,6 +131,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
 
         Fragment fragment = HomeFragment.getInstance();
         replaceFragment(fragment);
+
     }
 
     private void enterSocialFragment() {
@@ -167,7 +169,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
     private void setInitialFragment() {
         mTransaction.add(R.id.fragment_container, HomeFragment.getInstance());
         mTransaction.commit();
-
+        tagFragmentActivado = HomeFragment.TAG;
     }
 
     private void requestPermissions() {
@@ -185,6 +187,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
 
     private void replaceFragment(Fragment fragment) {
         String fragmentTag = getFragmentTag(fragment);
+        tagFragmentActivado = fragmentTag;
         Fragment currentFragment = mFragmentManager.findFragmentByTag(fragmentTag);
         if (currentFragment != null) {
             if (!currentFragment.isVisible()) {
@@ -241,7 +244,6 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
     @Override
     public void onChangeFragment(Fragment fragment) {
         replaceFragment(fragment);
-
     }
 
     /***
@@ -267,22 +269,10 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         }
     }
 
-
-    //Viable per a pocs fragments.
-    public Fragment getVisibleFragment(){
-        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
-        List<Fragment> fragments = fragmentManager.getFragments();
-        for(Fragment fragment : fragments){
-        if(fragment != null && fragment.isVisible())
-            return fragment;
-        }
-        return null;
-    }
-
     //Lugar oscuro de la app....
     private boolean changeFragmentBasedOnDirection(OnSwipeListener.Direction direction) {
         boolean rtn = false;
-        Fragment fragment = getVisibleFragment();
+        Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
         if (fragment instanceof HomeFragment) {
 
             if(direction == OnSwipeListener.Direction.left) {

@@ -170,7 +170,7 @@
                         android:text="@string/default_genres"
                         android:layout_alignParentStart="true"/>
 
-                    <TextView
+                    <!--<TextView
                         android:id="@+id/SeeAllSearchedGenres"
                         style="@style/SeeMoreFromSection"
                         android:layout_width="wrap_content"
@@ -178,7 +178,7 @@
                         android:layout_marginBottom="6dp"
                         android:layout_marginEnd="0dp"
                         android:text="@string/SeeMoreSection"
-                        android:layout_alignParentEnd="true"/>
+                        android:layout_alignParentEnd="true"/>-->
 
                 </RelativeLayout>
 

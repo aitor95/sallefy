@@ -15,6 +15,7 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.UserVerticalAdapter;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
+import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
@@ -25,6 +26,7 @@ import java.util.List;
 public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 	public static final String TAG = SeeAllUserFragment.class.getName();
+	public static final String TAG_CONTENT = SeeAllUserFragment.class.getName();
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<User> mUsers;
@@ -43,7 +45,10 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_see_all_users, container, false);
 		initViews(v);
-		getData();
+
+		mUsers = (ArrayList<User>) getArguments().getSerializable(TAG_CONTENT);
+		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), this, R.layout.item_user_vertical);
+		mRecyclerView.setAdapter(adapter);
 		return v;
 	}
 
@@ -57,6 +62,15 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 		v.findViewById(R.id.seeAllTitleUsers).setOnClickListener(view -> {
 			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 		});
+	}
+
+	public static SeeAllUserFragment newInstance(ArrayList<User> users) {
+		SeeAllUserFragment fragment = new SeeAllUserFragment();
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(TAG_CONTENT, users);
+		fragment.setArguments(bundle);
+
+		return fragment;
 	}
 
 	private void getData() {

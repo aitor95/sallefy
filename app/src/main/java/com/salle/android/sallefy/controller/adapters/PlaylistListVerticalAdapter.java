@@ -15,6 +15,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.PlaylistAdapterCallback;
+import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
+import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
@@ -27,7 +29,6 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
     private PlaylistAdapterCallback mCallback;
     private int layoutId;
 
-    private Button followingButton;
     private Boolean isFollowing;
 
 
@@ -44,7 +45,7 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
         View itemView = LayoutInflater.from(parent.getContext()).inflate(layoutId, parent, false);
         isFollowing = false;
 
-        followingButton = itemView.findViewById(R.id.playlist_following_button);
+        /*followingButton = itemView.findViewById(R.id.playlist_following_button);
         followingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -60,7 +61,7 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
                 }
                 //TODO: fer la interacció amb la API del following
             }
-        });
+        });*/
 
         return new PlaylistListVerticalAdapter.ViewHolder(itemView);
     }
@@ -85,6 +86,33 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
                         .load(mPlaylists.get(position).getThumbnail())
                         .into(holder.mPhoto);
             }
+
+            isFollowing = mPlaylists.get(position).isFollowed();
+            if (isFollowing) {
+                holder.followingButton.setTextAppearance(R.style.FollowingButton);
+                holder.followingButton.setBackgroundResource(R.drawable.round_corner_light);
+                holder.followingButton.setText(R.string.FollowingText);
+            } else {
+                holder.followingButton.setTextAppearance(R.style.ToFollowButton);
+                holder.followingButton.setBackgroundResource(R.drawable.round_corner);
+                holder.followingButton.setText(R.string.ToFollowText);
+            }
+
+            holder.followingButton.setOnClickListener(view -> {
+                isFollowing = !isFollowing;
+
+                PlaylistManager.getInstance(mContext).followPlaylist(mPlaylists.get(position), isFollowing, (PlaylistCallback) mCallback);
+
+                if (isFollowing) {
+                    ((Button) view).setTextAppearance(R.style.FollowingButton);
+                    view.setBackgroundResource(R.drawable.round_corner_light);
+                    ((Button) view).setText(R.string.FollowingText);
+                } else {
+                    ((Button) view).setTextAppearance(R.style.ToFollowButton);
+                    view.setBackgroundResource(R.drawable.round_corner);
+                    ((Button) view).setText(R.string.ToFollowText);
+                }
+            });
         }
     }
 
@@ -98,6 +126,7 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
         ImageView mPhoto;
         TextView mTitle;
         TextView mAuthor;
+        TextView followingButton;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -105,6 +134,7 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
             mPhoto = (ImageView) itemView.findViewById(R.id.item_playlist_photo);
             mTitle = (TextView) itemView.findViewById(R.id.item_playlist_title);
             mAuthor = (TextView) itemView.findViewById(R.id.item_playlist_author);
+            followingButton = (TextView) itemView.findViewById(R.id.playlist_following_button);
         }
     }
 }

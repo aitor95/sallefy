@@ -61,14 +61,10 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     private GenresAdapter mGenresAdapter;
 
     private RecyclerView mTracksView;
-    private TrackListHorizontalAdapter mTracksAdapter;
 
-    private TextView SeeAllTracks;
-    private TextView SeeAllPlaylists;
-    private TextView SeeAllUsers;
-    private TextView SeeAllGenres;
-
-    private EditText searchText;
+    private ArrayList<Playlist> playlists;
+    private ArrayList<Track> tracks;
+    private ArrayList<User> users;
 
     public static SearchFragment getInstance() {
         return new SearchFragment();
@@ -85,6 +81,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         View v = inflater.inflate(R.layout.fragment_search, container, false);
         initViews(v);
         getData();
+
+        playlists = new ArrayList<>();
+        tracks = new ArrayList<>();
+        users = new ArrayList<>();
+
         return v;
     }
 
@@ -105,11 +106,12 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mUsersView.setLayoutManager(managerUsers);
         mUsersView.setAdapter(mUserHorizontalAdapter);
 
-        SeeAllUsers = v.findViewById(R.id.SeeAllSearchedUsers);
-        SeeAllUsers.setOnClickListener(view -> {
+        TextView seeAllUsers = v.findViewById(R.id.SeeAllSearchedUsers);
+        seeAllUsers.setOnClickListener(view -> {
             //TODO: [USERS] Crear llistat de users
-            Fragment fragment = SeeAllUserFragment.getInstance();
+            Fragment fragment = SeeAllUserFragment.newInstance(users);
             FragmentManager manager = getFragmentManager();
+            assert manager != null;
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
             transaction.add(R.id.fragment_container,fragment);
@@ -124,12 +126,13 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mPlaylistsView.setLayoutManager(managerPlaylists);
         mPlaylistsView.setAdapter(mPlaylistAdapter);
 
-        SeeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
-        SeeAllPlaylists.setOnClickListener(view -> {
+        TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
+        seeAllPlaylists.setOnClickListener(view -> {
             //TODO: [PLAYLISTS] Crear llistat de playlists
-            Fragment fragment = SeeAllPlaylistFragment.getInstance();
+            Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists);
 	        FragmentManager manager = getFragmentManager();
-	        FragmentTransaction transaction = manager.beginTransaction();
+            assert manager != null;
+            FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
 	        transaction.add(R.id.fragment_container,fragment);
 	        transaction.addToBackStack(null);
@@ -142,23 +145,24 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mGenresView.setLayoutManager(managerGenres);
         mGenresView.setAdapter(mGenresAdapter);
 
-        SeeAllGenres = v.findViewById(R.id.SeeAllSearchedGenres);
-        SeeAllGenres.setOnClickListener(view -> {
+        /*TextView seeAllGenres = v.findViewById(R.id.SeeAllSearchedGenres);
+        seeAllGenres.setOnClickListener(view -> {
             //TODO: [GENRES] Afegir llistat de generes
-        });
+        });*/
 
 
         LinearLayoutManager managerTracks = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-        mTracksAdapter = new TrackListHorizontalAdapter(null, null, null);
+        TrackListHorizontalAdapter mTracksAdapter = new TrackListHorizontalAdapter(null, null, null);
         mTracksView = (RecyclerView) v.findViewById(R.id.search_songs_recyclerview);
         mTracksView.setLayoutManager(managerTracks);
         mTracksView.setAdapter(mTracksAdapter);
 
-        SeeAllTracks = v.findViewById(R.id.SeeAllSearchedSongs);
-        SeeAllTracks.setOnClickListener(view -> {
+        TextView seeAllTracks = v.findViewById(R.id.SeeAllSearchedSongs);
+        seeAllTracks.setOnClickListener(view -> {
             //TODO: [TRACKS] Afegir llistat de cançons
-            Fragment fragment = SeeAllSongFragment.getInstance();
+            Fragment fragment = SeeAllSongFragment.newInstance(tracks);
             FragmentManager manager = getFragmentManager();
+            assert manager != null;
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
             transaction.add(R.id.fragment_container,fragment);
@@ -166,7 +170,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             transaction.commit();
         });
 
-        searchText = v.findViewById(R.id.searchText);
+        EditText searchText = v.findViewById(R.id.searchText);
 
         SearchCallback scallback = this;
         searchText.setOnKeyListener(new View.OnKeyListener() {
@@ -222,6 +226,8 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mPlaylistAdapter = new PlaylistListHorizontalAdapter(playlists, getContext(), null, R.layout.item_playlist_horizontal);
         mPlaylistsView.setAdapter(mPlaylistAdapter);
         //Toast.makeText(getContext(), "Playlists received", Toast.LENGTH_LONG).show();
+
+        this.playlists = (ArrayList<Playlist>) playlists;
     }
 
     @Override
@@ -287,6 +293,8 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     public void onUsersReceived(List<User> users) {
         mUserHorizontalAdapter = new UserHorizontalAdapter((ArrayList<User>) users, getContext());
         mUsersView.setAdapter(mUserHorizontalAdapter);
+
+        this.users = (ArrayList<User>) users;
     }
 
     @Override
@@ -325,9 +333,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onTracksReceived(List<Track> tracks) {
-        ArrayList<Track> mTracks = (ArrayList) tracks;
+        ArrayList<Track> mTracks = (ArrayList<Track>) tracks;
         TrackListHorizontalAdapter adapter = new TrackListHorizontalAdapter(null, getActivity(), mTracks);
         mTracksView.setAdapter(adapter);
+
+        this.tracks = (ArrayList<Track>) tracks;
     }
 
     @Override
@@ -364,14 +374,17 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TrackListHorizontalAdapter adapter = new TrackListHorizontalAdapter(null, getActivity(), tracks);
         mTracksView.setAdapter(adapter);
+        this.tracks = tracks;
 
         mPlaylistAdapter = new PlaylistListHorizontalAdapter(playlists, getContext(), null, R.layout.item_playlist_horizontal);
         mPlaylistsView.setAdapter(mPlaylistAdapter);
+        this.playlists = playlists;
 
         mGenresAdapter = new GenresAdapter(genres, R.layout.item_genre);
         mGenresView.setAdapter(mGenresAdapter);
 
         mUserHorizontalAdapter = new UserHorizontalAdapter(users, getContext());
         mUsersView.setAdapter(mUserHorizontalAdapter);
+        this.users = users;
     }
 }

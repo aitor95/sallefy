@@ -189,6 +189,33 @@ public class PlaylistManager {
     }
 
     /**********************
+     * Follows a playlist
+     **********************/
+    public synchronized void followPlaylist(Playlist playlist, Boolean isFollowing, final PlaylistCallback playlistCallback){
+        Call<ResponseBody> call = mService.updateFollow(playlist.getId(), isFollowing,"Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    //TODO: Do something when playlist followed
+                    //playlistCallback.onPlaylistUpdated();
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message() + " \n"+ response.errorBody()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+
+    }
+
+    /**********************
      * Update info of a playlist
      **********************/
     public synchronized void createPlaylist(Playlist playlist, final PlaylistCallback playlistCallback){

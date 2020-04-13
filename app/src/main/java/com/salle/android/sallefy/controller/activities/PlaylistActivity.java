@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.activities;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -21,7 +22,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.PlaylistSongFragment;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
@@ -48,9 +48,11 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     private TextView mAuthor;
     private TextView mTitle;
     private TextView mDescription;
+    private TextView mNoTracks;
     private Button mFollowBtn;
     private ImageButton mShuffleBtn;
     private View mBottomSheet;
+    private CardView mImgCard;
 
     //Logic
     private boolean followed;
@@ -171,12 +173,14 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         //Get elements from layout
         mImg = findViewById(R.id.playlist_img);
         mCoverImg = findViewById(R.id.playlist_img_small);
+        mImgCard = findViewById(R.id.playlist_card);
         mAuthor = findViewById(R.id.playlist_author);
         mTitle = findViewById(R.id.playlist_title);
         mDescription = findViewById(R.id.playlist_description);
         mFollowBtn = findViewById(R.id.playlist_view_follow);
         mShuffleBtn = findViewById(R.id.playlist_view_shuffle);
         mBottomSheet = findViewById(R.id.fragment_container);
+        mNoTracks = findViewById(R.id.playlist_no_tracks);
         mNav = (ImageButton) findViewById(R.id.playlist_back);
 
     }
@@ -196,13 +200,16 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 Glide
                         .with(getApplicationContext())
                         .load(pImg)
-                        // .placeholder(R.drawable.ic_playlist_cover)
+                        .centerCrop()
+                        .override(400,400)
                         .transform(new BlurTransformation(intensity))
                         .into(mImg);
             }else{
                 Glide
                         .with(getApplicationContext())
                         .load(R.drawable.ic_playlist_cover)
+                        .centerCrop()
+                        .override(400,400)
                         .transform(new BlurTransformation(intensity))
                         .into(mImg);
             }
@@ -212,7 +219,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 Glide
                         .with(getApplicationContext())
                         .load(pImg)
-                        //  .placeholder(R.drawable.ic_playlist_cover)
+                        .centerCrop()
+                        .override(400,400)
                         .transform(new BlurTransformation(intensity))
                         .transition(DrawableTransitionOptions.withCrossFade(2000))
                         .into(mImg);
@@ -220,6 +228,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 Glide
                         .with(getApplicationContext())
                         .load(R.drawable.ic_playlist_cover)
+                        .centerCrop()
+                        .override(400,400)
                         .transform(new BlurTransformation(intensity))
                         .transition(DrawableTransitionOptions.withCrossFade(2000))
                         .into(mImg);
@@ -233,12 +243,14 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
             mShuffleBtn.setVisibility(View.VISIBLE);
             mDescription.setVisibility(View.VISIBLE);
             mCoverImg.setVisibility(View.GONE);
+            mImgCard.setVisibility(View.GONE);
             mTitle.setTextSize(50);
         }else{
             mFollowBtn.setVisibility(View.GONE);
             mShuffleBtn.setVisibility(View.GONE);
             mDescription.setVisibility(View.GONE);
             mCoverImg.setVisibility(View.VISIBLE);
+            mImgCard.setVisibility(View.VISIBLE);
             mTitle.setTextSize(30);
         }
     }

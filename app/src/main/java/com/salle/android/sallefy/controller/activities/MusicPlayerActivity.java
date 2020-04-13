@@ -347,7 +347,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
 
     @Override
-    public void onLikeSuccess() {
+    public void onLikeSuccess(int songId) {
         if(like.getTag().equals("Fav")){
             like.setImageResource(R.drawable.ic_favourite_grey_24dp);
             like.setTag("NoFav");

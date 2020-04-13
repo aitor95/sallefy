@@ -15,13 +15,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
-import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
+import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
 
-public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVerticalAdapter.ViewHolder> {
+public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVerticalAdapter.ViewHolder> implements LikeCallback{
 
     private static final String TAG = "TrackListAdapter";
     private ArrayList<Track> mTracks;
@@ -77,7 +77,7 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
             liked = !liked;
 
             mTracks.get(position).setLiked(liked);
-            TrackManager.getInstance(mContext).likeTrack(mTracks.get(position).getId(), liked, (TrackCallback) mCallback);
+            TrackManager.getInstance(mContext).likeTrack(mTracks.get(position).getId(), liked, this);
         });
 
         holder.moreInfoImg.setOnClickListener(view -> {
@@ -109,6 +109,16 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
     public void updateTrackLikeStateIcon(int position, boolean isLiked) {
         mTracks.get(position).setLiked(isLiked);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public void onLikeSuccess(int songId) {
+
+    }
+
+    @Override
+    public void onFailure(Throwable throwable) {
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

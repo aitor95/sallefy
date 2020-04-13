@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
-import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
+import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Track;
@@ -25,7 +26,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAdapter.ViewHolder> {
+public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAdapter.ViewHolder> implements LikeCallback {
 
     private static final String TAG = "TrackListAdapter";
     private ArrayList<Track> mTracks;
@@ -34,11 +35,13 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
     private int NUM_VIEWHOLDERS = 0;
 
     private Boolean liked;
+    ViewHolder likedHolder;
 
-    public SocialActivityAdapter(TrackListCallback callback, Context context, ArrayList<Track> tracks ) {
+    public SocialActivityAdapter(TrackListCallback callback, Context context, ArrayList<Track> tracks) {
         mTracks = tracks;
         mContext = context;
         mCallback = callback;
+        likedHolder = null;
     }
 
     @NonNull
@@ -86,8 +89,6 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
         int likes = mTracks.get(position).getLikes();
         holder.NumOfLikes.setText(likes + "");                                        //TODO: posar valor de debó
 
-        liked = track.isLiked();
-
         holder.favImg.setImageResource(
                 (track.isLiked()) ?
                         R.drawable.ic_favorite_black_24dp :
@@ -95,15 +96,13 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
         );
 
         holder.favImg.setOnClickListener(view -> {
-            Track t = mTracks.get(position);
-            t.setLiked(!t.isLiked());
-            liked = t.isLiked();
-
-            TrackManager.getInstance(mContext).likeTrack(mTracks.get(position).getId(), liked, (TrackCallback) mCallback);
-            ((ImageView) view).setImageResource((!liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
-
-            t.setLikes(t.getLikes() + ((liked) ? +1 : -1));
-            holder.NumOfLikes.setText("" + t.getLikes());
+            if(likedHolder == null) {
+                likedHolder = holder;
+                TrackManager.getInstance(mContext).likeTrack(mTracks.get(position).getId(), !mTracks.get(position).isLiked(), this);
+            }else{
+                //El sistema esta ocupado dando like a otro post.
+                Toast.makeText(mContext, R.string.error_like, Toast.LENGTH_SHORT);
+            }
         });
 
         if (mTracks.get(position).getThumbnail() != null) {
@@ -180,6 +179,26 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
     public void updateTrackLikeStateIcon(int position, boolean isLiked) {
         mTracks.get(position).setLiked(isLiked);
         notifyDataSetChanged();
+    }
+
+    @Override
+    public synchronized void onLikeSuccess(int songId) {
+        for (Track t : mTracks){
+            if(t.getId() == songId){
+                t.setLiked(!t.isLiked());
+                liked = t.isLiked();
+                likedHolder.favImg.setImageResource((!liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
+                t.setLikes(t.getLikes() + ((liked) ? +1 : -1));
+                likedHolder.NumOfLikes.setText("" + t.getLikes());
+                break;
+            }
+        }
+        likedHolder = null;
+    }
+
+    @Override
+    public void onFailure(Throwable throwable) {
+        Log.d(TAG, "onFailure: Error donant like a social.");
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

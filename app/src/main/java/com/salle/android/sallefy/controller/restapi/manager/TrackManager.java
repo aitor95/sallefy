@@ -107,7 +107,7 @@ public class TrackManager {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 int code = response.code();
                 if (response.isSuccessful()) {
-                    likeCallback.onLikeSuccess();
+                    likeCallback.onLikeSuccess(songId);
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);
                     likeCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));

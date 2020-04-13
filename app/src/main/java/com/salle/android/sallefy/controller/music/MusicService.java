@@ -111,7 +111,8 @@ public class MusicService extends Service {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         if (mCallback != null) {
-                            mCallback.onMusicPlayerPrepared();
+                            mCallback.
+                                    onMusicPlayerPrepared();
                             playSong();
                         }
                     }

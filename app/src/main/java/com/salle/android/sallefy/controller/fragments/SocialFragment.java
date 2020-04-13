@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class SocialFragment extends Fragment implements TrackCallback, TrackListCallback, UserCallback {
+public class SocialFragment extends Fragment implements TrackCallback, TrackListCallback, UserCallback{
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;

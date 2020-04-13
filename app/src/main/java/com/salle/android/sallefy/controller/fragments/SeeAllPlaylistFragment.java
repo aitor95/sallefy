@@ -24,9 +24,10 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 
-public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback {
+public class SeeAllPlaylistFragment extends Fragment {
 
 	public static final String TAG = SeeAllPlaylistFragment.class.getName();
+	public static final String TAG_CONTENT = "TAG_LIST";
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<Playlist> mPlaylists;
@@ -45,8 +46,20 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_see_all_playlists, container, false);
 		initViews(v);
-		getData();
+
+		mPlaylists = (ArrayList<Playlist>) getArguments().getSerializable(TAG_CONTENT);
+		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), null, R.layout.item_playlist_vertical);
+		mRecyclerView.setAdapter(adapter);
 		return v;
+	}
+
+	public static SeeAllPlaylistFragment newInstance(ArrayList<Playlist> playlists) {
+		SeeAllPlaylistFragment fragment = new SeeAllPlaylistFragment();
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(TAG_CONTENT, playlists);
+		fragment.setArguments(bundle);
+
+		return fragment;
 	}
 
 	private void initViews(View v) {
@@ -59,57 +72,5 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 		v.findViewById(R.id.seeAllTitlePlaylists).setOnClickListener(view -> {
 			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 		});
-	}
-
-	private void getData() {
-		//TODO: cambiar por coger las listas que tocan
-		PlaylistManager.getInstance(getActivity()).getListOfPlaylist(this);
-		mPlaylists = new ArrayList<>();
-	}
-
-	@Override
-	public void onPlaylistById(Playlist playlist) {
-
-	}
-
-	@Override
-	public void onPlaylistsByUser(ArrayList<Playlist> playlists) {
-
-	}
-
-	@Override
-	public void onAllList(ArrayList<Playlist> playlists) {
-		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(playlists, getContext(), null, R.layout.item_playlist_vertical);
-		mRecyclerView.setAdapter(adapter);
-	}
-
-	@Override
-	public void onFollowingList(ArrayList<Playlist> playlists) {
-
-	}
-
-	@Override
-	public void onPlaylistUpdated() {
-
-	}
-
-	@Override
-	public void onPlaylistCreated() {
-
-	}
-
-	@Override
-	public void onUserFollows(ResponseBody follows) {
-
-	}
-
-	@Override
-	public void onUpdateFollow(ResponseBody result) {
-
-	}
-
-	@Override
-	public void onFailure(Throwable throwable) {
-
 	}
 }

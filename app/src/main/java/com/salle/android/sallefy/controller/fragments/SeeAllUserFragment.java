@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,8 +48,7 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 		initViews(v);
 
 		mUsers = (ArrayList<User>) getArguments().getSerializable(TAG_CONTENT);
-		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), this, R.layout.item_user_vertical);
-		mRecyclerView.setAdapter(adapter);
+		UserManager.getInstance(getContext()).getMeFollowing(this);
 		return v;
 	}
 
@@ -107,8 +107,9 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	@Override
 	public void onUsersReceived(List<User> users) {
 		mUsers = (ArrayList<User>) users;
-		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), this, R.layout.item_user_vertical);
-		mRecyclerView.setAdapter(adapter);
+
+		//UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), this, R.layout.item_user_vertical);
+		//mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override
@@ -123,6 +124,18 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
+		for (User u: mUsers) {
+			u.setFollowedByUser(false);
+			for (UserPublicInfo upi: users)
+				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
+		}
+
+		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), this, R.layout.item_user_vertical);
+		mRecyclerView.setAdapter(adapter);
+	}
+
+	@Override
+	public void onIsFollowingResponseReceived(String login, Boolean isFollowed) {
 
 	}
 

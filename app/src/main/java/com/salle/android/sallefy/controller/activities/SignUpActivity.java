@@ -119,6 +119,11 @@ public class SignUpActivity extends AppCompatActivity implements UserCallback {
     }
 
     @Override
+    public void onIsFollowingResponseReceived(String login, Boolean isFollowed) {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
 
     }

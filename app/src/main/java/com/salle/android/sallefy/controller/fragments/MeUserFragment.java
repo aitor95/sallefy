@@ -28,6 +28,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<User> mUsers;
+	private ArrayList<User> mFollowing;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,8 +86,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	@Override
 	public void onUsersReceived(List<User> users) {
 		mUsers = (ArrayList<User>) users;
-		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), this, R.layout.item_user_vertical);
-		mRecyclerView.setAdapter(adapter);
+		UserManager.getInstance(getContext()).getMeFollowing(this);
 	}
 
 	@Override
@@ -101,6 +101,18 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
+		for (User u: mUsers) {
+			u.setFollowedByUser(false);
+			for (UserPublicInfo upi: users)
+				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
+		}
+
+		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), this, R.layout.item_user_vertical);
+		mRecyclerView.setAdapter(adapter);
+	}
+
+	@Override
+	public void onIsFollowingResponseReceived(String login, Boolean isFollowed) {
 
 	}
 

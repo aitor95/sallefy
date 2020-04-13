@@ -52,10 +52,12 @@
     <string name="new_playlist_button">Create Playlist</string>
     <string name="new_playlist_creation_success">Your playlist has been created!</string>
     <string name="new_playlist_creation_failure">Something went wrong</string>
+    <string name="new_playlist_not_complete">You have to add a title for your playlist!</string>
 
     <!-- ACTIVITY [ Playlist ] -->
     <string name="playlist_follow">Follow</string>
     <string name="playlist_edit">Edit</string>
+    <string name="playlist_no_tracks">No tracks added yet</string>
     <string name="playlist_following">Following</string>
     <string name="playlist_creation_failure">Something went wrong</string>
 
@@ -169,6 +171,8 @@
     <string name="optionViewStats">View Sallefy statistics</string>
     <string name="optionDeleteAccount">Delete user account</string>
     <string name="optionLogOut">Log Out</string>
+    <string name="no_tracks_on_social">The people you follow hasn\'t uploaded anything yet</string>
+    <string name="no_users_on_social">You are not following anyone. Please, follow some users first to see their activity</string>
 
 
 </resources>

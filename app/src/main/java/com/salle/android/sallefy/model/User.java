@@ -58,6 +58,16 @@ public class User implements Serializable {
     @SerializedName("login")
     private String login;
 
+    private Boolean followedByUser;
+
+    public Boolean getFollowedByUser() {
+        return followedByUser;
+    }
+
+    public void setFollowedByUser(Boolean followedByUser) {
+        this.followedByUser = followedByUser;
+    }
+
     public Boolean getActivated() {
         return activated;
     }

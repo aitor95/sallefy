@@ -312,6 +312,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     }
 
+    @Override
+    public void onIsFollowingResponseReceived(String login, Boolean isFollowed) {
+
+    }
+
     /**********************************************************************************************
      *   *   *   *   *   *   *   *   GenreCallback   *   *   *   *   *   *   *   *   *
      **********************************************************************************************/

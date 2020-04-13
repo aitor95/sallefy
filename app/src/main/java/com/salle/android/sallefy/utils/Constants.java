@@ -34,4 +34,10 @@ public class Constants {
     public interface NOTIFICATION_ID {
         public static int FOREGROUND_SERVICE = 101;
     }
+
+    public interface STORAGE {
+        public static int SONG_SELECTED = 4;
+        public static int IMAGE_SELECTED = 5;
+
+    }
 }

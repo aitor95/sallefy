@@ -100,7 +100,11 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         String pImg = playlist.getThumbnail();
 
         if(pImg != null){
-            Glide.with(this).load(pImg).into(mImg);
+            Glide.with(this)
+                .load(pImg)
+                .centerCrop()
+                .override(400,400)
+                .into(mImg);
         }
 
         String pTitle = playlist.getName();

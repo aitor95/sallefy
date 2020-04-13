@@ -12,10 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.AddSongsToPlayListAdapter;
-import com.salle.android.sallefy.controller.adapters.AddToPlayListAdapter;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
@@ -24,10 +22,7 @@ import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import okhttp3.ResponseBody;
 
@@ -106,7 +101,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         if(this.mPlaylist.getTracks()!=null){
             for (int i = 0; i < this.mTracks.size(); i++) {
                 for (int j = 0; j < this.mPlaylist.getTracks().size(); j++) {
-                    if(this.mTracks.get(i).getId() == this.mPlaylist.getTracks().get(j).getId()){
+                    if(this.mTracks.get(i).getId().intValue() == this.mPlaylist.getTracks().get(j).getId().intValue()){
                         this.mTracks.remove(mTracks.get(i));
                     }
                 }

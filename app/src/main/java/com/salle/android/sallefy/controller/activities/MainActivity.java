@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -12,6 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GestureDetectorCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
@@ -24,17 +27,36 @@ import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
 import com.salle.android.sallefy.controller.fragments.SocialFragment;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
+
+import java.util.List;
 
 public class MainActivity extends FragmentActivity implements FragmentCallback {
 
     public static final String TAG = MainActivity.class.getName();
 
+    //Fragment management
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
 
+    //Android Back button control variables.
     private boolean backButtonPressed;
     private long backButtonLastPressTime;
+
+    //XML elements
+    private Button home;
+    private Button social;
+    private Button me;
+    private ImageView search;
+
+    //Gesture detector.
+    private GestureDetectorCompat detector;
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return detector.onTouchEvent(event);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,33 +65,35 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         backButtonLastPressTime = 0;
         backButtonPressed = false;
         initViews();
+
+        detector = new GestureDetectorCompat(this, new OnSwipeListener() {
+            @Override
+            public boolean onSwipe(Direction direction) {
+                Log.d(TAG, "onSwipe:" + direction);
+                return changeFragmentBasedOnDirection(direction);
+            }
+        });
+
         setInitialFragment();
         requestPermissions();
         //Saca las siguientes lineas si no quieres testear el reproductor
-        Intent intent = new Intent(this,MusicPlayerActivity.class);
-        startActivity(intent);
+        //Intent intent = new Intent(this,MusicPlayerActivity.class);
+        //startActivity(intent);
     }
 
     private void initViews() {
         mFragmentManager = getSupportFragmentManager();
         mTransaction = mFragmentManager.beginTransaction();
 
-        Button home = (Button) findViewById(R.id.action_home);
-        Button social = (Button) findViewById(R.id.action_social);
-        Button me = (Button) findViewById(R.id.action_me);
-        ImageView search = (ImageView) findViewById(R.id.action_search);
+        home = (Button) findViewById(R.id.action_home);
+        social = (Button) findViewById(R.id.action_social);
+        me = (Button) findViewById(R.id.action_me);
+        search = (ImageView) findViewById(R.id.action_search);
 
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                social.setTextAppearance(R.style.BottomNavigationView);
-                me.setTextAppearance(R.style.BottomNavigationView);
-                home.setTextAppearance(R.style.BottomNavigationView_Active);
-                search.setImageResource(R.drawable.ic_search);
-
-                Fragment fragment = HomeFragment.getInstance();
-                replaceFragment(fragment);
+                enterHomeFragment();
             }
         });
 
@@ -77,15 +101,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         social.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                me.setTextAppearance(R.style.BottomNavigationView);
-                home.setTextAppearance(R.style.BottomNavigationView);
-                social.setTextAppearance(R.style.BottomNavigationView_Active);
-                search.setImageResource(R.drawable.ic_search);
-
-                //Fragment fragment = SongsFragment.getInstance();
-                Fragment fragment = SocialFragment.getInstance();
-                replaceFragment(fragment);
+                enterSocialFragment();
             }
         });
 
@@ -93,14 +109,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         me.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                social.setTextAppearance(R.style.BottomNavigationView);
-                me.setTextAppearance(R.style.BottomNavigationView_Active);
-                home.setTextAppearance(R.style.BottomNavigationView);
-                search.setImageResource(R.drawable.ic_search);
-
-                Fragment fragment = MeFragment.getInstance();
-                replaceFragment(fragment);
+                enterMeFragment();
             }
         });
 
@@ -108,21 +117,57 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                search.setImageResource(R.drawable.ic_search_clicked);
-
-                social.setTextAppearance(R.style.BottomNavigationView);
-                me.setTextAppearance(R.style.BottomNavigationView);
-                home.setTextAppearance(R.style.BottomNavigationView);
-
-                Fragment fragment = SearchFragment.getInstance();
-                replaceFragment(fragment);
+                enterSearchFragment();
             }
         });
     }
 
+    private void enterHomeFragment() {
+        social.setTextAppearance(R.style.BottomNavigationView);
+        me.setTextAppearance(R.style.BottomNavigationView);
+        home.setTextAppearance(R.style.BottomNavigationView_Active);
+        search.setImageResource(R.drawable.ic_search);
+
+        Fragment fragment = HomeFragment.getInstance();
+        replaceFragment(fragment);
+    }
+
+    private void enterSocialFragment() {
+        me.setTextAppearance(R.style.BottomNavigationView);
+        home.setTextAppearance(R.style.BottomNavigationView);
+        social.setTextAppearance(R.style.BottomNavigationView_Active);
+        search.setImageResource(R.drawable.ic_search);
+
+        Fragment fragment = SocialFragment.getInstance();
+        replaceFragment(fragment);
+    }
+
+    private void enterMeFragment() {
+        social.setTextAppearance(R.style.BottomNavigationView);
+        me.setTextAppearance(R.style.BottomNavigationView_Active);
+        home.setTextAppearance(R.style.BottomNavigationView);
+        search.setImageResource(R.drawable.ic_search);
+
+        Fragment fragment = MeFragment.getInstance();
+        replaceFragment(fragment);
+    }
+
+    private void enterSearchFragment() {
+        search.setImageResource(R.drawable.ic_search_clicked);
+
+        social.setTextAppearance(R.style.BottomNavigationView);
+        me.setTextAppearance(R.style.BottomNavigationView);
+        home.setTextAppearance(R.style.BottomNavigationView);
+
+        Fragment fragment = SearchFragment.getInstance();
+        replaceFragment(fragment);
+    }
+
+
     private void setInitialFragment() {
         mTransaction.add(R.id.fragment_container, HomeFragment.getInstance());
         mTransaction.commit();
+
     }
 
     private void requestPermissions() {
@@ -221,4 +266,59 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
             backButtonPressed = true;
         }
     }
+
+
+    //Viable per a pocs fragments.
+    public Fragment getVisibleFragment(){
+        FragmentManager fragmentManager = MainActivity.this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        for(Fragment fragment : fragments){
+        if(fragment != null && fragment.isVisible())
+            return fragment;
+        }
+        return null;
+    }
+
+    //Lugar oscuro de la app....
+    private boolean changeFragmentBasedOnDirection(OnSwipeListener.Direction direction) {
+        boolean rtn = false;
+        Fragment fragment = getVisibleFragment();
+        if (fragment instanceof HomeFragment) {
+
+            if(direction == OnSwipeListener.Direction.left) {
+                enterSocialFragment();
+                rtn = true;
+            }
+        } else {
+            if (fragment instanceof MeFragment) {
+
+                if(direction == OnSwipeListener.Direction.right) {
+                    enterSocialFragment();
+                    rtn = true;
+                } else if(direction == OnSwipeListener.Direction.left) {
+                    enterSearchFragment();
+                    rtn = true;
+                }
+            } else {
+                if (fragment instanceof SocialFragment) {
+
+                    if(direction == OnSwipeListener.Direction.right) {
+                        enterHomeFragment();
+                        rtn = true;
+                    } else if(direction == OnSwipeListener.Direction.left) {
+                        enterMeFragment();
+                        rtn = true;
+                    }
+                } else {
+                    if(direction == OnSwipeListener.Direction.right) {
+                        enterMeFragment();
+                        rtn = true;
+                    }
+                }
+            }
+        }
+        return rtn;
+    }
 }
+
+

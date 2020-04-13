@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -35,10 +36,11 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 
 	public static final String TAG = SocialFragment.class.getName();
 
-
 	public static Fragment getInstance() {
 		return new SocialFragment();
 	}
+
+	private TextView nitv;
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +62,8 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 		SocialActivityAdapter adapter = new SocialActivityAdapter(null, getContext(), null);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
+
+		nitv = v.findViewById(R.id.no_info_aviable_on_social);
 	}
 
 	private void getData() {
@@ -71,6 +75,11 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
 		mFollowing = new ArrayList<UserPublicInfo>();
 		mFollowing.addAll(users);
+	}
+
+	@Override
+	public void onIsFollowingResponseReceived(String login, Boolean isFollowed) {
+
 	}
 
 	@Override
@@ -88,8 +97,13 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 		}
 		mTracks.sort(Comparator.comparing(Track::getReleased).reversed());
 
-		SocialActivityAdapter adapter = new SocialActivityAdapter(this, getContext(), mTracks);
-		mRecyclerView.setAdapter(adapter);
+		if (mTracks.size() != 0) {
+			SocialActivityAdapter adapter = new SocialActivityAdapter(this, getContext(), mTracks);
+			mRecyclerView.setAdapter(adapter);
+		} else {
+			if (mFollowing.size() != 0) nitv.setText(R.string.no_tracks_on_social);
+			else nitv.setText(R.string.no_users_on_social);
+		}
 	}
 
 	@Override
@@ -134,7 +148,7 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 
 	@Override
 	public void onTrackUpdated(Track track) {
-		TrackManager.getInstance(getContext()).updateTrack(track, this);
+
 	}
 
 	@Override

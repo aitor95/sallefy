@@ -1,5 +1,6 @@
 package com.salle.android.sallefy.controller.restapi.service;
 
+import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserRegister;
@@ -12,6 +13,7 @@ import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface UserService {
@@ -28,4 +30,9 @@ public interface UserService {
     @GET("me/followings")
     Call<List<UserPublicInfo>> getMeFollowings(@Header("Authorization") String token);
 
+    @PUT("users/{login}/follow")
+    Call<ResponseBody> followUser(@Path("login") String userLogin, @Body Boolean isFollowing, @Header("Authorization") String token);
+
+    @GET("users/{login}/follow")
+    Call<Follow> isFollowingUser(@Path("login") String userLogin, @Header("Authorization") String token);
 }

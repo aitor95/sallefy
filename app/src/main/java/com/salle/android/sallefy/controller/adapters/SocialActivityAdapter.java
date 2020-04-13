@@ -16,6 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
+import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
+import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Track;
 
@@ -48,14 +50,14 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
         ViewHolder vh = new SocialActivityAdapter.ViewHolder(v);
         Log.d(TAG, "onCreateViewHolder: called. viewHolder hashCode: " + vh.hashCode());
 
-        ImageView likeImg = v.findViewById(R.id.track_like_sa);
+        /*ImageView likeImg = v.findViewById(R.id.track_like_sa);
         liked = false;
 
         likeImg.setOnClickListener(view -> {
             ((ImageView) view).setImageResource((liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
             liked = !liked;
             //TODO: Vincular el estado del like con la información real de la cuenta
-        });
+        });*/
 
         return vh;
     }
@@ -68,10 +70,8 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
         holder.mLayout.setOnClickListener(v -> mCallback.onTrackSelected(position));
 
         holder.username.setText(track.getUserLogin());
-        //2020-04-05T13:52:53Z
-        //yyyy-MM-ddTHH:mm:ssZ
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
-        Log.d("TAGG", track.getReleased());
         holder.timeToGo.setText(new StringBuilder().append("posted a song ")
                         .append(getTimePassed(LocalDateTime.parse(track
                             .getReleased()
@@ -83,7 +83,10 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
 
         holder.trackArtist.setText(track.getUserLogin());                       //TODO: Buscar alternativa
 
-        holder.NumOfLikes.setText("54");                                        //TODO: posar valor de debó
+        int likes = mTracks.get(position).getLikes();
+        holder.NumOfLikes.setText(likes + "");                                        //TODO: posar valor de debó
+
+        liked = track.isLiked();
 
         holder.favImg.setImageResource(
                 (track.isLiked()) ?
@@ -91,7 +94,17 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
                         R.drawable.ic_favorite_border_black_24dp
         );
 
-        liked = track.isLiked();
+        holder.favImg.setOnClickListener(view -> {
+            Track t = mTracks.get(position);
+            t.setLiked(!t.isLiked());
+            liked = t.isLiked();
+
+            TrackManager.getInstance(mContext).likeTrack(mTracks.get(position).getId(), liked, (TrackCallback) mCallback);
+            ((ImageView) view).setImageResource((!liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
+
+            t.setLikes(t.getLikes() + ((liked) ? +1 : -1));
+            holder.NumOfLikes.setText("" + t.getLikes());
+        });
 
         if (mTracks.get(position).getThumbnail() != null) {
             Glide.with(mContext)
@@ -115,7 +128,6 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
         holder.genres.setAdapter(adapter);
 
         holder.genres.measure(0, 0);
-        Log.d("TAGG", "Width: " + holder.genres.getMeasuredWidth());
     }
 
     private String getTimePassed(LocalDateTime trackDate) {

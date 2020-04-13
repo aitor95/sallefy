@@ -171,6 +171,8 @@
     <string name="optionViewStats">View Sallefy statistics</string>
     <string name="optionDeleteAccount">Delete user account</string>
     <string name="optionLogOut">Log Out</string>
+    <string name="no_tracks_on_social">The people you follow hasn\'t uploaded anything yet</string>
+    <string name="no_users_on_social">You are not following anyone. Please, follow some users first to see their activity</string>
 
 
 </resources>

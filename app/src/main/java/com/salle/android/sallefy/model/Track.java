@@ -38,6 +38,16 @@ public class Track implements Serializable {
 
     private boolean liked;
 
+    private int likes;
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
     public String getColor() {
         return color;
     }

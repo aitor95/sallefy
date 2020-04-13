@@ -3,14 +3,16 @@ package com.salle.android.sallefy.utils;
 public class Constants {
     public static final String URL = "url";
 
+    public interface INTENT_EXTRAS{
+        String SONG = "_EXTRA_SONG_";
+    }
+
     public interface CALLBACKS {
         public static String MUSIC_CALLBACK = "musicCallback";
     }
 
     public interface NETWORK {
         public static  String BASE_URL = "http://" + "sallefy.eu-west-3.elasticbeanstalk.com/api/";
-        public static int LOGIN_OK = 1;
-        public static int LOGIN_KO = 2;
     }
 
     public interface PERMISSIONS {

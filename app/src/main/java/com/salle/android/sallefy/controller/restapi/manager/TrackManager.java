@@ -3,6 +3,7 @@ package com.salle.android.sallefy.controller.restapi.manager;
 import android.content.Context;
 import android.util.Log;
 
+import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.service.TrackService;
 import com.salle.android.sallefy.model.Like;
@@ -97,7 +98,7 @@ public class TrackManager {
         });
     }
 
-    public synchronized void likeTrack(int songId, Boolean like, final TrackCallback trackCallback) {
+    public synchronized void likeTrack(int songId, Boolean like, final LikeCallback likeCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
 
         Call<ResponseBody> call = mTrackService.likeTrack(songId, new Like(like), "Bearer " + userToken.getIdToken());
@@ -106,17 +107,17 @@ public class TrackManager {
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 int code = response.code();
                 if (response.isSuccessful()) {
-                    //TODO: is anything necessary to do when a song is liked?
+                    likeCallback.onLikeSuccess();
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);
-                    trackCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                    likeCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
                 }
             }
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d(TAG, "Error Failure: " + t.getStackTrace());
-                trackCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+                likeCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
             }
         });
     }

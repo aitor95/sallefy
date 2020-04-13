@@ -10,32 +10,37 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.salle.android.sallefy.model.Track;
-import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MusicService extends Service {
 
     public static final String TAG = MusicService.class.getName();
 
+    //Reproductor de contenido en streaming.
     private MediaPlayer mediaPlayer;
+
     private final IBinder mBinder = new MusicBinder();
+
+    //Para poder pedir el focus del audio.
     private AudioManager audioManager;
-    private boolean playingBeforeInterruption = false;
 
-    private ArrayList<Track> mTracks = new ArrayList<>();
-    private int currentTrack = 0;
+    //Flag para el control de las interrupciones de audio.
+    private boolean playingBeforeInterruption;
 
+    //Lista de canciones a reproducir
+    private List<Track> mTracks;
+    private int currentTrack;
+
+    //Comunicacion con el cliente.
     private MusicCallback mCallback;
 
     public class MusicBinder extends Binder {
         public MusicService getService(){
             return MusicService.this;
         }
-    }
-
-    public MusicService() {
     }
 
     @Override
@@ -45,99 +50,76 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (intent.getStringExtra(Constants.URL) != null)
-            playStream(intent.getStringExtra(Constants.URL));
-
         return START_REDELIVER_INTENT;
     }
 
+    //Funcion que llama el primer cliente que se quiere conectar al servicio.
+    //Returns: El canal de comunicacion con el servicio.
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
 
-    public void stopService() {
-        pausePlayer();
-        stopSelf();
-        onDestroy();
+    //Interfaz que permite comunicar el servicio con el cliente.
+    public void setCallback(MusicCallback callback) {
+        mCallback = callback;
     }
 
-    public void playStream(String url) {
-        if (mediaPlayer != null) {
-            try {
-                mediaPlayer.stop();
-            } catch(Exception e) {
-            }
-            mediaPlayer = null;
-        }
+    public void stopService() {
+        pauseSong();
 
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                //updateTrack(1);
-                mCallback.onSongFinishedPlaying();
-            }
-        });
+        //Finaliza el servicio
+        stopSelf();
+    }
 
-        try {
-            mediaPlayer.setDataSource(url);
-            mediaPlayer.prepare();
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+    public void setSongList(ArrayList<Track> tracks){
+        this.mTracks = tracks;
+    }
+
+    //Carga una cancion es streaming.
+    public void loadSong(String url) {
+        boolean mediaPlayerWasNull = (mediaPlayer == null);
+        if (mediaPlayerWasNull) {
+
+            //Init class values
+
+            currentTrack = 0;
+            playingBeforeInterruption = false;
+
+            mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mediaPlayer.start();
-                    Log.d(TAG, "onPrepared: Entra en el prepared");
-
+                public void onCompletion(MediaPlayer mp) {
                     if (mCallback != null) {
-                        System.out.println("Entra en el callback");
-                        mCallback.onMusicPlayerPrepared();
+                        mCallback.onSongFinishedPlaying();
                     }
                 }
             });
-        } catch(Exception e) {
-
         }
-    }
-
-    public void playStream(ArrayList<Track> tracks, int currentTrack) {
-
-        if (mediaPlayer != null) {
-            try {
-                mediaPlayer.stop();
-            } catch(Exception e) {
-            }
-            mediaPlayer = null;
-        }
-
-        mTracks = tracks;
-        this.currentTrack = currentTrack;
-        String url = mTracks.get(currentTrack).getUrl();
-
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                updateTrack(1);
-            }
-        });
 
         try {
+            //Si ya existia el media player, resetealo.
+            if(!mediaPlayerWasNull) mediaPlayer.reset();
+
             mediaPlayer.setDataSource(url);
             mediaPlayer.prepare();
-            mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    mediaPlayer.start();
-                    mCallback.onMusicPlayerPrepared();
 
-                }
-            });
+            //Como no existia el player, define el onPrepared listener.
+            if(mediaPlayerWasNull){
+                mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                    @Override
+                    public void onPrepared(MediaPlayer mp) {
+                        if (mCallback != null) {
+                            mCallback.onMusicPlayerPrepared();
+                            playSong();
+                        }
+                    }
+                });
+            }
         } catch(Exception e) {
+            Log.d(TAG, "playStream: EXCEPTION" + e.getMessage());
         }
-
     }
 
     public int getAudioSession() {
@@ -145,50 +127,83 @@ public class MusicService extends Service {
     }
 
     public Track getCurrentTrack() {
+        if(mTracks == null) return null;
         return mTracks.size() > 0 ? mTracks.get(currentTrack):null;
     }
 
-    public void updateTrack(int offset) {
-        currentTrack = ((currentTrack+offset)%(mTracks.size()));
-        currentTrack = currentTrack >= mTracks.size() ? 0:currentTrack;
 
-        String newUrl = mTracks.get(currentTrack).getUrl();
-        try {
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(newUrl);
-            //mediaPlayer.pause();
-            mediaPlayer.prepare();
-        } catch(Exception e) {
-        }
+    //Permite mover el current track offset veces.
+    // Nota: offset puede ser negativo para reproducir canciones antiguas
+    //       y puede ser positivo, para reproducir las siguientes de la lista.
+    public Track changeTrack(int offset) {
+        if(mTracks == null) return null;
+
+        int size = mTracks.size(); //Only query size once.
+
+        currentTrack = (currentTrack + offset) % size;
+
+        //Si nos pasamos por encima, pon el indice al inicio.
+        currentTrack = currentTrack >= size ? 0 : currentTrack;
+
+        //Si nos pasamos por debajo, pon el indice al final.
+        currentTrack = currentTrack < 0 ? (size - 1) : currentTrack;
+
+        Track track = mTracks.get(currentTrack);
+        loadSong(track.getUrl());
+
+        return track;
     }
 
-    public void pausePlayer() {
+
+    private void nextTrack() {
+        int size = mTracks.size(); //Only query size once.
+        currentTrack = (currentTrack - 1) % size;
+
+        //Si nos pasamos por debajo, pon el indice al final.
+        currentTrack = currentTrack < 0 ? (mTracks.size() - 1) : currentTrack;
+        changeTrack(currentTrack);
+    }
+
+    private void prevTrack() {
+        int size = mTracks.size(); //Only query size once.
+        currentTrack = (currentTrack + 1) % size;
+
+        //Si nos pasamos por encima, pon el indice al inicio.
+        currentTrack = currentTrack >= size ? 0 : currentTrack;
+        changeTrack(currentTrack);
+    }
+
+
+    public void pauseSong() {
         try {
             mediaPlayer.pause();
            // showNotification();
         } catch (Exception e) {
-            Log.d(" EXCEPTION", "failed to ic_pause media player.");
+            Log.d(TAG, "failed to ic_pause media player.");
         }
     }
 
-    public void playPlayer() {
+    // Inicia la reproducion del audio.
+    // Nota: Antes de llamar a play, se ha de cargar la cancion con playStream() y esperar
+    // al callback onPrepared.
+    public void playSong() {
         try {
             getAudioFocusAndPlay();
             //showNotification();
         } catch (Exception e) {
-            Log.d("EXCEPTION", "failed to start media player.");
+            Log.d(TAG, "failed to start media player.");
         }
     }
 
     public void togglePlayer() {
         try {
             if (mediaPlayer.isPlaying()) {
-                pausePlayer();
+                pauseSong();
             } else {
-                playPlayer();
+                playSong();
             }
         }catch(Exception e) {
-            Log.d("EXCEPTION", "failed to toggle media player.");
+            Log.d(TAG, "failed to toggle media player.");
         }
     }
 
@@ -196,29 +211,24 @@ public class MusicService extends Service {
         return mediaPlayer != null && mediaPlayer.isPlaying();
     }
 
-    // audio focus section
-    public void getAudioFocusAndPlay () {
-        audioManager = (AudioManager) this.getBaseContext().getSystemService(Context.AUDIO_SERVICE);
-
-        int result = audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
-        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
-            mediaPlayer.start();
-        }
-    }
-
-    public void setCallback(MusicCallback callback) {
-        mCallback = callback;
-    }
-
-    public void setCurrentDuration(int time) {
+    //Premite definir el instante actual de reproduccion de una cancion.
+    //Time es en segundos
+    public void setCurrentPosition(int time) {
         try {
-                mediaPlayer.seekTo(time);
+            int seekToValue = time *1000;
+            if (seekToValue > mediaPlayer.getDuration()){
+                Log.d(TAG, "setCurrentPosition: Alguien ha intentado reproducir un instante" +
+                        "de tiempo fuera de la longitud de la canción.");
+                return;
+            }
+            mediaPlayer.seekTo(seekToValue);
         } catch (Exception e) {
-            Log.d("EXCEPTION", "Failed to set the duration");
+            Log.d(TAG, "Failed to set the duration");
         }
     }
 
-    public int getCurrrentPosition() {
+    //Devuelve el instante de tiempo actual de la cancion en segundos
+    public int getCurrentPosition() {
         try {
             if (mediaPlayer != null) {
                 return mediaPlayer.getCurrentPosition()/1000;
@@ -226,11 +236,12 @@ public class MusicService extends Service {
                 return 0;
             }
         }catch(Exception e) {
-            Log.d("EXCEPTION", "Failed to get the duration");
+            Log.d(TAG, "Failed to get the position");
         }
         return 0;
     }
 
+    //Devuelve el numero de segundos que tiene una canción
     public int getMaxDuration() {
         try {
             if (mediaPlayer != null) {
@@ -239,10 +250,22 @@ public class MusicService extends Service {
                 return 0;
             }
         }catch(Exception e) {
-            Log.d("EXCEPTION", "Failed to get the duration");
+            Log.d(TAG, "Failed to get the duration");
         }
         return 0;
     }
+
+
+    //Request audio focus. If succes, play the song.
+    private void getAudioFocusAndPlay () {
+        audioManager = (AudioManager) this.getBaseContext().getSystemService(Context.AUDIO_SERVICE);
+
+        int result = audioManager.requestAudioFocus(afChangeListener, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        if (result == AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
+            mediaPlayer.start();
+        }
+    }
+
 
     AudioManager.OnAudioFocusChangeListener afChangeListener = new AudioManager.OnAudioFocusChangeListener() {
         @Override
@@ -253,13 +276,13 @@ public class MusicService extends Service {
                 } else {
                     playingBeforeInterruption = false;
                 }
-                pausePlayer();
+                pauseSong();
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                 if (playingBeforeInterruption) {
-                    playPlayer();
+                    playSong();
                 }
             } else if (focusChange == AudioManager.AUDIOFOCUS_LOSS) {
-                pausePlayer();
+                pauseSong();
                 audioManager.abandonAudioFocus(afChangeListener);
             }
         }

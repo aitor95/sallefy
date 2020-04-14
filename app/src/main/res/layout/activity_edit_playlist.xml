@@ -27,41 +27,45 @@
         android:text="@string/edit_playlist_name"
         style="@style/TitlesTheme"/>
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
-        android:layout_gravity="center">
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/edit_playlist_card"
+            android:layout_marginTop="25dp"
             android:layout_width="@dimen/item_song_image_size"
             android:layout_height="@dimen/item_song_image_size"
             app:cardCornerRadius="15dp">
 
-            <ImageView
-                android:id="@+id/edit_playlist_img"
+            <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_playlist_cover"/>
+                android:layout_gravity="center">
+
+                <ImageView
+                    android:id="@+id/edit_playlist_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_playlist_cover"/>
+
+                <ImageButton
+                    android:id="@+id/edit_playlist_change_photo"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignEnd="@id/edit_playlist_img"
+                    android:layout_alignBottom="@id/edit_playlist_img"
+                    android:layout_marginEnd="2dp"
+                    android:layout_marginBottom="2dp"
+                    android:src="@drawable/photo_camera_white_18dp"
+                    android:tint="@color/colorSecondary"
+                    android:backgroundTint="@color/colorWhite"
+                    android:background="@drawable/round_corner" />
+            </RelativeLayout>
+
 
         </androidx.cardview.widget.CardView>
 
 
-        <ImageButton
-            android:id="@+id/edit_playlist_change_photo"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignEnd="@id/edit_playlist_card"
-            android:layout_alignBottom="@id/edit_playlist_card"
-            android:layout_marginEnd="2dp"
-            android:layout_marginBottom="2dp"
-            android:src="@drawable/photo_camera_white_18dp"
-            android:tint="@color/colorSecondary"
-            android:backgroundTint="@color/colorWhite"
-            android:background="@drawable/round_corner"
-            />
-    </RelativeLayout>
+
 
 
 

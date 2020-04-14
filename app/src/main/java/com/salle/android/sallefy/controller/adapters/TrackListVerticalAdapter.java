@@ -77,7 +77,7 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
         holder.likeImg.setOnClickListener(view -> {
             if(likedHolder == null) {
                 likedHolder = holder;
-                TrackManager.getInstance(mContext).likeTrack(mTracks.get(position).getId(), !mTracks.get(position).isLiked(), this);
+                TrackManager.getInstance(mContext).likeTrack(mTracks.get(position).getId(), !mTracks.get(position).isLiked(), TrackListVerticalAdapter.this);
             }else{
                 //El sistema esta ocupado dando like a otro post.
                 Toast.makeText(mContext, R.string.error_like, Toast.LENGTH_SHORT).show();

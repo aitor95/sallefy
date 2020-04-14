@@ -1,9 +1,9 @@
 package com.salle.android.sallefy.controller.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,29 +11,46 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
+import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import okhttp3.ResponseBody;
 
-public class EditPlaylistActivity extends AppCompatActivity implements PlaylistCallback {
+public class EditPlaylistActivity extends AppCompatActivity implements PlaylistCallback, UploadCallback {
 
     public static final String TAG = EditPlaylistActivity.class.getName();
+
+    //Layout
     private ImageButton mNav;
     private ImageView mImg;
     private EditText mDescription;
     private EditText mTitle;
+    private ImageButton mImgBtn;
+
+    //Cover file
+    private Uri mUri;
+    private String mFilename;
+
+    //Logic
     private Playlist mPlaylist;
     private Integer pId;
+    private boolean coverChosen;
+    private boolean saved;
+    private boolean completed;
+    private String previousThumbnail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,20 +59,26 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
 
         Intent intent = getIntent();
         this.pId = (Integer) intent.getSerializableExtra("playlistId");
+        coverChosen = false;
+        completed = true;
+        saved = true;
         initViews();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        PlaylistManager.getInstance(getApplicationContext())
-                .getPlaylistById(this.pId, EditPlaylistActivity.this);
-    }
+        if(!coverChosen){
+            PlaylistManager.getInstance(getApplicationContext())
+                    .getPlaylistById(this.pId, EditPlaylistActivity.this);
+        }
+     }
 
     private void initViews() {
         mImg = (ImageView) findViewById(R.id.edit_playlist_img);
         mDescription = (EditText) findViewById(R.id.edit_playlist_description);
         mTitle = (EditText) findViewById(R.id.edit_playlist_title);
+        mImgBtn = (ImageButton) findViewById(R.id.edit_playlist_change_photo);
 
         PlaylistManager.getInstance(getApplicationContext())
                 .getPlaylistById(this.pId, EditPlaylistActivity.this);
@@ -63,9 +86,17 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         mNav = (ImageButton) findViewById(R.id.edit_playlist_nav);
         mNav.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                finish();
-            }
+            public void onClick(View v) { finish(); }
+        });
+
+        mImg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { chooseCoverImage(); }
+        });
+
+        mImgBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { chooseCoverImage(); }
         });
 
         Button mSaveBtn = (Button) findViewById(R.id.edit_playlist_save);
@@ -90,19 +121,59 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
     private void updatePlaylist() {
         this.mPlaylist.setName(mTitle.getText().toString());
         this.mPlaylist.setDescription(mDescription.getText().toString());
-        PlaylistManager.getInstance(getApplicationContext())
-                .updatePlaylist(this.mPlaylist, EditPlaylistActivity.this);
+        this.saved = true;
+        if(coverChosen){
+            CloudinaryManager.getInstance(this).uploadCoverImage(mUri, mFilename, EditPlaylistActivity.this);
+            completed = false;
+        }
+
+        if(completed){
+            PlaylistManager.getInstance(getApplicationContext())
+                    .updatePlaylist(this.mPlaylist, EditPlaylistActivity.this);
+        }
+
     }
+
+    private void chooseCoverImage() {
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(Intent.createChooser(intent, "Choose a cover image"), Constants.STORAGE.IMAGE_SELECTED);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.STORAGE.IMAGE_SELECTED && resultCode == RESULT_OK) {
+            mUri = data.getData();
+            mFilename = mUri.toString();
+            System.out.println("this is the uri " + mUri.toString());
+            saved = false;
+            Glide.with(getApplicationContext())
+                .load(mUri.toString())
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .centerCrop()
+                .placeholder(R.drawable.ic_playlist_cover)
+                .override(400,400)
+                .into(mImg);
+            coverChosen = true;
+        }
+    }
+
+    /**********************************************************************************************
+     *   *   *   *   *   *   *   *   PlaylistCallback   *   *   *   *   *   *   *   *   *
+     **********************************************************************************************/
 
     @Override
     public void onPlaylistById(Playlist playlist) {
         this.mPlaylist = playlist;
         String pImg = playlist.getThumbnail();
-
         if(pImg != null){
-            Glide.with(this)
+            Glide.with(getApplicationContext())
                 .load(pImg)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .centerCrop()
+                .placeholder(R.drawable.ic_playlist_cover)
                 .override(400,400)
                 .into(mImg);
         }
@@ -160,4 +231,35 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_failure, Toast.LENGTH_LONG).show();
         Log.e(TAG, "onFailure: "+throwable.getMessage());
     }
+
+    /**********************************************************************************************
+     *   *   *   *   *   *   *   *   UploadCallback   *   *   *   *   *   *   *   *   *
+     **********************************************************************************************/
+
+    @Override
+    public void onStart(String requestId) { }
+
+    @Override
+    public void onProgress(String requestId, long bytes, long totalBytes) {
+        Double progress = (double) bytes/totalBytes;
+    }
+
+    @Override
+    public void onSuccess(String requestId, Map resultData) {
+        mPlaylist.setThumbnail((String)resultData.get("url"));
+        mPlaylist.setCover((String)resultData.get("url"));
+        coverChosen = false;
+        completed = true;
+        PlaylistManager.getInstance(getApplicationContext())
+                .updatePlaylist(this.mPlaylist, EditPlaylistActivity.this);
+    }
+
+    @Override
+    public void onError(String requestId, ErrorInfo error) {
+        Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure, Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onReschedule(String requestId, ErrorInfo error) { }
+
 }

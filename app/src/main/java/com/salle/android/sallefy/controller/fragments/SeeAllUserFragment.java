@@ -1,7 +1,6 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.UserVerticalAdapter;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
-import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
@@ -55,7 +53,7 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		UserVerticalAdapter adapter = new UserVerticalAdapter(null, getContext(), this, R.layout.item_user_vertical);
+		UserVerticalAdapter adapter = new UserVerticalAdapter(null, getContext(), R.layout.item_user_vertical);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 
@@ -130,7 +128,7 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
 		}
 
-		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), this, R.layout.item_user_vertical);
+		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), R.layout.item_user_vertical);
 		mRecyclerView.setAdapter(adapter);
 	}
 

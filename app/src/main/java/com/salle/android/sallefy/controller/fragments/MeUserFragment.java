@@ -47,7 +47,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		UserVerticalAdapter adapter = new UserVerticalAdapter(null, getContext(), this, R.layout.item_user_vertical);
+		UserVerticalAdapter adapter = new UserVerticalAdapter(null, getContext(), R.layout.item_user_vertical);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 	}
@@ -107,7 +107,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
 		}
 
-		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), this, R.layout.item_user_vertical);
+		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(),  R.layout.item_user_vertical);
 		mRecyclerView.setAdapter(adapter);
 	}
 

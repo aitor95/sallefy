@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
+import com.salle.android.sallefy.controller.restapi.callback.UserFollowCallback;
 import com.salle.android.sallefy.controller.restapi.service.UserService;
 import com.salle.android.sallefy.controller.restapi.service.UserTokenService;
 import com.salle.android.sallefy.model.Follow;
@@ -139,7 +140,7 @@ public class UserManager {
         });
     }
 
-    public synchronized void setFollowing(String userLogin, Boolean following, final UserCallback userCallback) {
+    public synchronized void setFollowing(String userLogin, Boolean following, final UserFollowCallback userFollowCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
         Call<ResponseBody> call = mService.followUser(userLogin, following, "Bearer " + userToken.getIdToken());
 
@@ -149,12 +150,11 @@ public class UserManager {
 
                 int code = response.code();
                 if (response.isSuccessful()) {
-                    //TODO: Do something (necessary?)
-                    //userCallback.onRegisterSuccess();
+                    userFollowCallback.onFollowSuccess(userLogin);
                 } else {
                     try {
                         assert response.errorBody() != null;
-                        userCallback.onRegisterFailure(new Throwable("ERROR " + code + ", " + response.errorBody().string()));
+                        userFollowCallback.onFailure(new Throwable("ERROR " + code + ", " + response.errorBody().string()));
                     } catch (IOException e){
                         e.printStackTrace();
                     }
@@ -163,7 +163,7 @@ public class UserManager {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
-                userCallback.onFailure(t);
+                userFollowCallback.onFailure(t);
             }
         });
     }

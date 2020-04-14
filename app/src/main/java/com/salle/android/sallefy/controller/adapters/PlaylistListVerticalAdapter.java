@@ -111,8 +111,6 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
             }
         }
 
-        Log.d(TAG, "onFollowSuccess: Playlist is " + playlist.isFollowed() + " data: " + playlist.getName());
-
         if (playlist.isFollowed()) {
             followHolder.followingButton.setTextAppearance(R.style.FollowingButton);
             followHolder.followingButton.setBackgroundResource(R.drawable.round_corner_light);

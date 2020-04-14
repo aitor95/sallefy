@@ -7,6 +7,7 @@
     android:background="@color/colorBlack"
     tools:context="com.salle.android.sallefy.controller.activities.PlaylistActivity">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -148,7 +149,7 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="450dp"
+        android:layout_height="380dp"
         android:background="@drawable/header_rounded_white"
         app:layout_behavior="@string/bottom_sheet_behavior"
         app:behavior_hideable="false"
@@ -172,9 +173,6 @@
             android:textColor="@color/colorDarkGrey"
             android:textSize="20sp" />
     </FrameLayout>
-
-
-
 
 
 

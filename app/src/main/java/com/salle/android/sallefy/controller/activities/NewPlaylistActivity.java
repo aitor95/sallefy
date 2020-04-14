@@ -50,7 +50,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     //Logic
     private Playlist mPlaylist;
     private boolean coverChosen;
-    private boolean completed;
+
 
 
     @Override
@@ -58,7 +58,6 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_playlist);
         coverChosen = false;
-        completed = false;
         initViews();
     }
 
@@ -91,23 +90,24 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     private void createPlaylist() {
         mPlaylist = new Playlist();
         mPlaylist.setDescription(mDescription.getText().toString());
-        mPlaylist.setPublicAccessible(true);
+        mPlaylist.setPublicAccessible(new Boolean(true));
+
         if(mTitle.getText().toString().equals("")){
-            completed = false;
+
             Toast.makeText(getApplicationContext(), R.string.new_playlist_not_complete, Toast.LENGTH_SHORT).show();
-        }else{
+
+        }else {
+
             mPlaylist.setName(mTitle.getText().toString());
-            completed = true;
-        }
 
-        if(coverChosen){
-            completed = false;
-            CloudinaryManager.getInstance(this).uploadCoverImage(mUri, mFilename, NewPlaylistActivity.this);
-        }
+            if (coverChosen) {
+                CloudinaryManager.getInstance(this).uploadCoverImage(mUri, mFilename, NewPlaylistActivity.this);
+            }
 
-        if(completed){
-            PlaylistManager.getInstance(getApplicationContext())
-                    .createPlaylist(mPlaylist, NewPlaylistActivity.this);
+            if (!coverChosen) {
+                PlaylistManager.getInstance(getApplicationContext())
+                        .createPlaylist(mPlaylist, NewPlaylistActivity.this);
+            }
         }
     }
 
@@ -168,6 +168,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
 
     @Override
     public void onPlaylistCreated() {
+        coverChosen = false;
         Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_success, Toast.LENGTH_SHORT).show();
     }
 

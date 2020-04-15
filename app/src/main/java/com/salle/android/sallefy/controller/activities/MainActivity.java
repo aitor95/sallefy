@@ -415,7 +415,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
             startActivity(intent);
         } else {
             Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
-            backButtonPressed = true;
+        //    backButtonPressed = true;
         }
     }
 
@@ -462,10 +462,12 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
 
     @Override
     public void onTrackClicked(Track track) {
+
         Log.d(TAG, "onTrackSelected: Track is " + track.getName());
         Intent intent = new Intent(this, MusicPlayerActivity.class);
         intent.putExtra(Constants.INTENT_EXTRAS.PLAYER_SONG,track);
         startActivity(intent);
+
     }
 
     @Override

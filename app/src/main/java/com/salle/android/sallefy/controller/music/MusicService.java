@@ -10,6 +10,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.utils.CreateNotification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -102,7 +103,7 @@ public class MusicService extends Service {
     public void loadSong(Track track) {
         boolean mediaPlayerWasNull = (mediaPlayer == null);
         if (mediaPlayerWasNull) {
-
+            CreateNotification.createNotification(this,track);
             //Init class values
             currentTrack = 0;
             playingBeforeInterruption = false;

@@ -1,15 +1,22 @@
 package com.salle.android.sallefy.controller.activities;
 
 import android.Manifest;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,6 +28,7 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.callbacks.FragmentCallback;
@@ -28,6 +36,8 @@ import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
 import com.salle.android.sallefy.controller.fragments.SocialFragment;
+import com.salle.android.sallefy.controller.music.MusicCallback;
+import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
@@ -36,7 +46,9 @@ import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
 
-public class MainActivity extends FragmentActivity implements FragmentCallback, AdapterClickCallback {
+import de.hdodenhof.circleimageview.CircleImageView;
+
+public class MainActivity extends FragmentActivity implements FragmentCallback, AdapterClickCallback, MusicCallback {
 
     public static final String TAG = MainActivity.class.getName();
 
@@ -53,7 +65,19 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
     private Button social;
     private Button me;
     private ImageView search;
+
+    //XML elements of media player.
     private LinearLayout linearLayoutMiniplayer;
+    //El boton de playStop usa los siguientes tags para saber si tiene el drawable pause o play.
+    private static final String PLAY = "Play";
+    private static final String STOP = "Stop";
+    private ImageButton repPlayStop;
+    private ImageButton repPrev;
+    private ImageButton repNext;
+    private TextView repSongArtist;
+    private TextView repSongTitle;
+    private CircleImageView repImgUsr;
+
 
     //Gesture detector.
     private GestureDetectorCompat detector;
@@ -61,9 +85,41 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
     //TAG del fragment activado actualmente...
     private  static String tagFragmentActivado;
 
+
+    // Service
+    private MusicService mBoundService;
+    private boolean mServiceBound = false;
+    private ServiceConnection mServiceConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            MusicService.MusicBinder binder = (MusicService.MusicBinder)service;
+            mBoundService = binder.getService();
+            mBoundService.setCallbackMini(MainActivity.this);
+            mServiceBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+            mServiceBound = false;
+            Log.d(TAG, "onServiceDisconnected: Service desconnected.");
+        }
+    };
+
+    private void startStreamingService () {
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+    }
+
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         return detector.onTouchEvent(event);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        //linearLayoutMiniplayer.setVisibility(View.GONE);
     }
 
     @Override
@@ -71,6 +127,34 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
         super.onResume();
         //Volvemos del reproductor, actualizamos el mini reproductor.
         Log.d(TAG, "onResume: Volviendo a la main activity");
+        if(mServiceBound){
+            Track track = mBoundService.getCurrentTrack();
+            if(track != null){
+                updateMiniReproductorUI(track);
+            }
+        }
+
+    }
+
+    private void updateMiniReproductorUI(Track track) {
+        linearLayoutMiniplayer.setVisibility(View.VISIBLE);
+        repSongArtist.setText(track.getUserLogin());
+        repSongTitle.setText(track.getName());
+
+        if(mBoundService.isPlaying()){
+            repPlayStop.setImageResource(R.drawable.ic_pause_circle_40dp);
+            repPlayStop.setTag(STOP);
+        }else{
+            repPlayStop.setImageResource(R.drawable.ic_play_circle_filled_40dp);
+            repPlayStop.setTag(PLAY);
+        }
+
+        //Modificar el thumbnail
+        Glide.with(this)
+                .asBitmap()
+                .placeholder(new ColorDrawable(getResources().getColor(R.color.colorWhite,null)))
+                .load(track.getThumbnail())
+                .into(repImgUsr);
     }
 
     @Override
@@ -78,9 +162,12 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        startStreamingService();
+
         backButtonLastPressTime = 0;
         backButtonPressed = false;
         initViews();
+        initViewsMiniMultimedia();
 
         detector = new GestureDetectorCompat(this, new OnSwipeListener() {
             @Override
@@ -94,6 +181,53 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
         requestPermissions();
     }
 
+    private void initViewsMiniMultimedia() {
+        repPlayStop = findViewById(R.id.mini_rep_playStop);
+        repPrev = findViewById(R.id.mini_rep_prev);
+        repNext = findViewById(R.id.mini_rep_next);
+
+        repPlayStop.setTag(STOP);
+        repPlayStop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(repPlayStop.getTag().equals(PLAY)){
+                    playSong();
+                }else{
+                    pauseSong();
+                }
+            }
+        });
+
+        repPrev.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                prevTrack();
+            }
+        });
+
+        repNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                nextTrack();
+            }
+        });
+
+
+        repSongArtist = findViewById(R.id.mini_rep_song_artist);
+        repSongTitle = findViewById(R.id.mini_rep_song_title);
+        repImgUsr = findViewById(R.id.mini_rep_user_img);
+        linearLayoutMiniplayer = findViewById(R.id.linearLayoutMiniplayer);
+
+        linearLayoutMiniplayer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: CLIKEEED!");
+            }
+        });
+        
+        
+    }
+
     private void initViews() {
         mFragmentManager = getSupportFragmentManager();
         mTransaction = mFragmentManager.beginTransaction();
@@ -102,8 +236,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
         social = (Button) findViewById(R.id.action_social);
         me = (Button) findViewById(R.id.action_me);
         search = (ImageView) findViewById(R.id.action_search);
-        linearLayoutMiniplayer = findViewById(R.id.linearLayoutMiniplayer);
-
+        
         home.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -255,12 +388,19 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
         replaceFragment(fragment);
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(mServiceConnection);
+    }
+
     /***
      * Al apretar el boton de atras de android, no queremos salir de la main activity.
      * Si el usuario aprieta back 2 veces en menos de 2 segundos se sale de la app.
      */
     @Override
     public void onBackPressed() {
+
         if(System.currentTimeMillis() - backButtonLastPressTime > 2000){
             //Han pasado 2 segundos.
             backButtonPressed = false;
@@ -341,6 +481,70 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
     public void onGenreClick(Genre genre) {
         Log.d(TAG, "onGenreClick: Genre name is " + genre.getName());
     }
+
+    @Override
+    public void onMusicPlayerPrepared() {
+        Log.d(TAG, "onMusicPlayerPrepared: !!");
+
+        repPlayStop.setImageResource(R.drawable.ic_pause_circle_40dp);
+        repPlayStop.setTag(STOP);
+    }
+
+    @Override
+    public void onSongFinishedPlaying() {
+
+    }
+
+    /** MiniReproductor Controls.*/
+
+    private void playSong() {
+        if(!mServiceBound){
+            Toast.makeText(MainActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mBoundService.playSong();
+
+        repPlayStop.setImageResource(R.drawable.ic_pause_circle_40dp);
+        repPlayStop.setTag(STOP);
+
+        Toast.makeText(this, "Playing Audio", Toast.LENGTH_SHORT).show();
+    }
+
+    private void pauseSong() {
+        if(!mServiceBound){
+            Toast.makeText(MainActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mBoundService.pauseSong();
+        repPlayStop.setImageResource(R.drawable.ic_play_circle_filled_40dp);
+        repPlayStop.setTag(PLAY);
+        Toast.makeText(this, "Pausing Audio", Toast.LENGTH_SHORT).show();
+    }
+
+    private void changeTrack(int offset){
+        if(!mServiceBound){
+            Toast.makeText(MainActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Track track = mBoundService.changeTrack(offset);
+        if(track == null){
+            //No hay una lista cargada.
+            Log.d(TAG, "changeTrack: No hay una lista cargada. Offset was " + offset);
+            return;
+        }
+
+        updateMiniReproductorUI(track);
+    }
+
+    private void nextTrack() {
+        changeTrack(1);
+    }
+
+    private void prevTrack() {
+        changeTrack(-1);
+    }
+
+
 }
 
 

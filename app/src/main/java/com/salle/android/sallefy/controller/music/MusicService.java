@@ -36,6 +36,11 @@ public class MusicService extends Service {
 
     //Comunicacion con el cliente.
     private MusicCallback mCallback;
+    private MusicCallback mCallbackMini;
+
+    public int getPlaylistSize() {
+        return mTracks != null ? mTracks.size() : 0;
+    }
 
     public class MusicBinder extends Binder {
         public MusicService getService(){
@@ -44,7 +49,14 @@ public class MusicService extends Service {
     }
 
     @Override
+    public void onDestroy() {
+        Log.d(TAG, "onDestroy: FUUK!");
+        super.onDestroy();
+    }
+
+    @Override
     public void onCreate() {
+        Log.d(TAG, "onCreate: CREATED");
         super.onCreate();
     }
 
@@ -61,6 +73,9 @@ public class MusicService extends Service {
     }
 
     //Interfaz que permite comunicar el servicio con el cliente.
+    public void setCallbackMini(MusicCallback callback) {
+        mCallbackMini = callback;
+    }
     public void setCallback(MusicCallback callback) {
         mCallback = callback;
     }
@@ -99,6 +114,7 @@ public class MusicService extends Service {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
                     if (mCallback != null) {
+                        mCallbackMini.onSongFinishedPlaying();
                         mCallback.onSongFinishedPlaying();
                     }
                 }
@@ -123,6 +139,7 @@ public class MusicService extends Service {
                     public void onPrepared(MediaPlayer mp) {
                         if (mCallback != null) {
                             mCallback.onMusicPlayerPrepared();
+                            mCallbackMini.onMusicPlayerPrepared();
                             playSong();
                         }
                     }

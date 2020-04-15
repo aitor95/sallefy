@@ -109,7 +109,7 @@
             android:paddingTop="10dp" >
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/user_img"
+                android:id="@+id/mini_rep_user_img"
                 android:layout_width="55dp"
                 android:layout_height="55dp"
                 android:src="@drawable/user_default_image"
@@ -127,14 +127,14 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:id="@+id/dynamic_title"
+                    android:id="@+id/mini_rep_song_title"
                     style="@style/SongMiniplayer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/default_track_title" />
 
                 <TextView
-                    android:id="@+id/dynamic_artist"
+                    android:id="@+id/mini_rep_song_artist"
                     style="@style/AuthorMiniplayer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -150,7 +150,7 @@
                 android:orientation="horizontal">
 
                 <ImageButton
-                    android:id="@+id/music_player_prev"
+                    android:id="@+id/mini_rep_prev"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -159,7 +159,7 @@
                     android:layout_marginEnd="5dp"/>
 
                 <ImageButton
-                    android:id="@+id/music_player_playStop"
+                    android:id="@+id/mini_rep_playStop"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -167,7 +167,7 @@
                     android:background="@null" />
 
                 <ImageButton
-                    android:id="@+id/music_player_next"
+                    android:id="@+id/mini_rep_next"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"

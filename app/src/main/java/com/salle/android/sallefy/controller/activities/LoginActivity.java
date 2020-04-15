@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -198,5 +199,6 @@ public class LoginActivity extends AppCompatActivity implements UserCallback {
     @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
+        Log.d(TAG, "onFailure: "  +throwable.getMessage());
     }
 }

@@ -124,12 +124,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         Log.d(TAG, "onDestroy: Destroying. ");
         mHandler.removeCallbacks(mSeekBarUpdater);
-        //TODO: TRY THIS (ARROYO)
-        //mBoundService.unbindService(mServiceConnection);
-        super.onDestroy();
-
+        unbindService(mServiceConnection);
     }
 
     @Override
@@ -174,6 +172,57 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         //Important to run this line here, we need the UI thread!
         mSeekBarUpdater.run();
     }
+
+    /**START MUSIC CONTROL ZONE*/
+    private void playSong() {
+        if(!mServiceBound){
+            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mBoundService.playSong();
+        updateSeekBar();
+
+        playPause.setImageResource(R.drawable.ic_pause_circle_64dp);
+        playPause.setTag(STOP);
+
+        Toast.makeText(this, "Playing Audio", Toast.LENGTH_SHORT).show();
+    }
+
+    private void pauseSong() {
+        if(!mServiceBound){
+            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        mBoundService.pauseSong();
+        playPause.setImageResource(R.drawable.ic_play_circle_filled_64dp);
+        playPause.setTag(PLAY);
+        Toast.makeText(this, "Pausing Audio", Toast.LENGTH_SHORT).show();
+    }
+
+    private void changeTrack(int offset){
+        if(!mServiceBound){
+            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Track track = mBoundService.changeTrack(offset);
+        if(track == null){
+            //No hay una lista cargada.
+            Log.d(TAG, "changeTrack: No hay una lista cargada. Offset was " + offset);
+            return;
+        }
+
+        updateUIDataBefore(track);
+    }
+
+    private void nextTrack() {
+        changeTrack(1);
+    }
+
+    private void prevTrack() {
+        changeTrack(-1);
+    }
+
+    /**END MUSIC CONTROL ZONE*/
 
     private void startStreamingService () {
         Intent intent = new Intent(this, MusicService.class);
@@ -265,72 +314,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         thumbnail = findViewById(R.id.music_player_thumbnail);
     }
 
-    private void tryToLike() {
-        if(!mServiceBound){
-            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Track track= mBoundService.getCurrentTrack();
-
-        //Se solicita un like. Si la respuesta es nais, se llama el callback onLikeSuccess()
-        //Es alli donde de actualiza la UI.
-        TrackManager.getInstance(getApplicationContext()).likeTrack(track.getId(),
-                like.getTag().equals("noFav"),
-                MusicPlayerActivity.this);
-    }
-
-    private void showMoreMenu() {
-        BottomMenuDialog dialog = new BottomMenuDialog(like.getTag().equals("Fav"));
-        dialog.show(getSupportFragmentManager(),"options");
-    }
-
-    private void playSong() {
-        if(!mServiceBound){
-            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        mBoundService.playSong();
-        updateSeekBar();
-
-        playPause.setImageResource(R.drawable.ic_pause_circle_64dp);
-        playPause.setTag(STOP);
-
-        Toast.makeText(this, "Playing Audio", Toast.LENGTH_SHORT).show();
-    }
-
-    private void pauseSong() {
-        if(!mServiceBound){
-            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        mBoundService.pauseSong();
-        playPause.setImageResource(R.drawable.ic_play_circle_filled_64dp);
-        playPause.setTag(PLAY);
-        Toast.makeText(this, "Pausing Audio", Toast.LENGTH_SHORT).show();
-    }
-
-    private void changeTrack(int offset){
-        if(!mServiceBound){
-            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
-            return;
-        }
-        Track track = mBoundService.changeTrack(offset);
-        if(track == null){
-            //No hay una lista cargada.
-            Log.d(TAG, "changeTrack: No hay una lista cargada. Offset was " + offset);
-            return;
-        }
-
-        updateUIDataBefore(track);
-    }
-
-    private void nextTrack() {
-        changeTrack(1);
-    }
-
-    private void prevTrack() {
-        changeTrack(-1);
-    }
 
     private void updateSeekBar(){
         if(!mServiceBound){
@@ -375,8 +358,30 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         playPause.setTag(STOP);
     }
 
+
+    private void tryToLike() {
+        if(!mServiceBound){
+            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Track track= mBoundService.getCurrentTrack();
+
+        //Se solicita un like. Si la respuesta es nais, se llama el callback onLikeSuccess()
+        //Es alli donde de actualiza la UI.
+        TrackManager.getInstance(getApplicationContext()).likeTrack(track.getId(),
+                like.getTag().equals("noFav"),
+                MusicPlayerActivity.this);
+    }
+
+    private void showMoreMenu() {
+        BottomMenuDialog dialog = new BottomMenuDialog(like.getTag().equals("Fav"));
+        dialog.show(getSupportFragmentManager(),"options");
+    }
+
+
     @Override
     public void onMusicPlayerPrepared() {
+        Log.d(TAG, "onMusicPlayerPrepared: !!!!!!");
         updateSongInfoAfterLoad();
     }
 

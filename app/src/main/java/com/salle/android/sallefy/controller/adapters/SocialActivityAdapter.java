@@ -62,7 +62,7 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
 
         Log.d(TAG, "onBindViewHolder: called. viewHolder hashcode: " + holder.hashCode());
 
-        holder.mLayout.setOnClickListener(v -> mCallback.onTrackSelected(track));
+        holder.mLayout.setOnClickListener(v -> mCallback.onTrackClicked(track));
 
         holder.username.setText(track.getUserLogin());
 

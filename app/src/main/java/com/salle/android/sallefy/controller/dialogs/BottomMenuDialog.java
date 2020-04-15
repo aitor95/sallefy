@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
@@ -21,7 +22,12 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
     private LinearLayout showArtist;
     private LinearLayout delete;
     private LinearLayout edit;
+    private ImageView likeImage;
+    private boolean songLiked;
 
+    public BottomMenuDialog(boolean songLiked){
+        this.songLiked = songLiked;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -34,10 +40,16 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.dialog_bottom_menu, container, false);
 
+        likeImage = v.findViewById(R.id.bottom_menu_like_image);
+
+        likeImage.setImageResource(songLiked ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
+
         like = v.findViewById(R.id.bottom_menu_a_like);
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                songLiked = !songLiked;
+                likeImage.setImageResource(songLiked ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
                 mListener.onButtonClicked("like");
                 dismiss();
             }

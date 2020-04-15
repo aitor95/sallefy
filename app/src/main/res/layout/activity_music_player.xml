@@ -36,7 +36,6 @@
                 android:id="@+id/music_player_thumbnail"
                 android:layout_width="232dp"
                 android:layout_height="232dp"
-                android:src="@drawable/music_player_image"
                 app:civ_border_width="0dp"
                 app:civ_border_color="#FF000000"/>
         </FrameLayout>

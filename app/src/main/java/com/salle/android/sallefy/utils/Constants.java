@@ -4,7 +4,8 @@ public class Constants {
     public static final String URL = "url";
 
     public interface INTENT_EXTRAS{
-        String SONG = "_EXTRA_SONG_";
+        String PLAYER_SONG = "_EXTRA_SONG_" ;
+        String isSongLikedBottomMenu = "_EXTRA_SONG_LIKED_";
     }
 
     public interface CALLBACKS {

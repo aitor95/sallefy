@@ -52,7 +52,7 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
         Log.d(TAG, "onBindViewHolder: called. viewHolder hashcode: " + holder.hashCode());
 
         Track track = mTracks.get(position);
-        holder.mLayout.setOnClickListener(v -> mCallback.onTrackSelected(track));
+        holder.mLayout.setOnClickListener(v -> mCallback.onTrackClicked(track));
 
         holder.tvTitle.setText(track.getName());
         adjustTextView(holder.tvTitle);

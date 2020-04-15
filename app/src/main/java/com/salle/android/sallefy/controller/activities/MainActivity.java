@@ -67,6 +67,13 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        //Volvemos del reproductor, actualizamos el mini reproductor.
+        Log.d(TAG, "onResume: Volviendo a la main activity");
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -85,11 +92,6 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
 
         enterHomeFragment();
         requestPermissions();
-
-        //Saca las siguientes lineas si no quieres testear el reproductor
-        //Intent intent = new Intent(this,MusicPlayerActivity.class);
-        //intent.putExtra(Constants.INTENT_EXTRAS.SONG,"");
-        //startActivity(intent);
     }
 
     private void initViews() {
@@ -318,13 +320,11 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
     }
 
     @Override
-    public void onTrackSelected(Track track) {
+    public void onTrackClicked(Track track) {
         Log.d(TAG, "onTrackSelected: Track is " + track.getName());
-    }
-
-    @Override
-    public void onTrackUpdated(Track track) {
-
+        Intent intent = new Intent(this, MusicPlayerActivity.class);
+        intent.putExtra(Constants.INTENT_EXTRAS.PLAYER_SONG,track);
+        startActivity(intent);
     }
 
     @Override

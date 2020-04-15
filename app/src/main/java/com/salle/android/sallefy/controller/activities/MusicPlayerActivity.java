@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -28,6 +29,7 @@ import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 
 import static com.salle.android.sallefy.utils.OnSwipeListener.Direction.up;
@@ -63,6 +65,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
     private ImageView thumbnail;
     private SeekBar seekBar;
+
+    //Guardamos la referencia a la cancion que abre el reproductor.
+    private Track initTrack;
+
 
     //Thread management para la seekbar
     private Handler mHandler;
@@ -106,20 +112,24 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             mBoundService = binder.getService();
             mBoundService.setCallback(MusicPlayerActivity.this);
             mServiceBound = true;
-
+            mBoundService.loadSong(initTrack);
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
             mServiceBound = false;
+            Log.d(TAG, "onServiceDisconnected: Service desconnected.");
         }
     };
 
-
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        Log.d(TAG, "onDestroy: Destroying. ");
         mHandler.removeCallbacks(mSeekBarUpdater);
+        //TODO: TRY THIS (ARROYO)
+        //mBoundService.unbindService(mServiceConnection);
+        super.onDestroy();
+
     }
 
     @Override
@@ -130,12 +140,23 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG, "onCreate: Created.");
         partyMode = false;
-
         startStreamingService();
         setContentView(R.layout.activity_music_player);
         atachButtons();
+
+
+        Track track = (Track) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYER_SONG);
+
+        if (track != null){
+            Log.d(TAG, "onCreate: TRACK RECEIVED! ! Name is " + track.getName());
+            updateUIDataBefore(track);
+            initTrack = track;
+        } else{
+            Log.d(TAG, "onCreate: El reproductor sha obert sense track de referencia.");
+        }
+
 
         detector = new GestureDetectorCompat(this, new OnSwipeListener() {
             @Override
@@ -149,6 +170,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         });
 
         mHandler = new Handler();
+
         //Important to run this line here, we need the UI thread!
         mSeekBarUpdater.run();
     }
@@ -206,7 +228,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                Log.d(TAG, "onStopTrackingTouch: Going to " + userSelectedPosition);
+                if(!mServiceBound){
+                    Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 mBoundService.setCurrentPosition(userSelectedPosition);
                 updateSeekBar();
             }
@@ -214,18 +239,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
 
         like = findViewById(R.id.music_player_fav);
-        like.setTag("Fav");
+
+        like.setTag("noFav");
 
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Track track= mBoundService.getCurrentTrack();
-
-                //Se solicita un like. Si la respuesta es nais, se llama el callback onLikeSuccess()
-                //Es alli donde de actualiza la UI.
-                TrackManager.getInstance(getApplicationContext()).likeTrack(track.getId(),
-                        !like.getTag().equals("Fav"),
-                        MusicPlayerActivity.this);
+                tryToLike();
             }
         });
 
@@ -233,8 +253,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         more.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                //getWindow().setNavigationBarColor(RED);
                 showMoreMenu();
             }
         });
@@ -247,12 +265,30 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         thumbnail = findViewById(R.id.music_player_thumbnail);
     }
 
+    private void tryToLike() {
+        if(!mServiceBound){
+            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+            return;
+        }
+        Track track= mBoundService.getCurrentTrack();
+
+        //Se solicita un like. Si la respuesta es nais, se llama el callback onLikeSuccess()
+        //Es alli donde de actualiza la UI.
+        TrackManager.getInstance(getApplicationContext()).likeTrack(track.getId(),
+                like.getTag().equals("noFav"),
+                MusicPlayerActivity.this);
+    }
+
     private void showMoreMenu() {
-        BottomMenuDialog dialog = new BottomMenuDialog();
+        BottomMenuDialog dialog = new BottomMenuDialog(like.getTag().equals("Fav"));
         dialog.show(getSupportFragmentManager(),"options");
     }
 
     private void playSong() {
+        if(!mServiceBound){
+            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+            return;
+        }
         mBoundService.playSong();
         updateSeekBar();
 
@@ -263,6 +299,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     }
 
     private void pauseSong() {
+        if(!mServiceBound){
+            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+            return;
+        }
         mBoundService.pauseSong();
         playPause.setImageResource(R.drawable.ic_play_circle_filled_64dp);
         playPause.setTag(PLAY);
@@ -270,6 +310,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     }
 
     private void changeTrack(int offset){
+        if(!mServiceBound){
+            Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
+            return;
+        }
         Track track = mBoundService.changeTrack(offset);
         if(track == null){
             //No hay una lista cargada.
@@ -289,7 +333,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     }
 
     private void updateSeekBar(){
-        if(!mServiceBound) return;
+        if(!mServiceBound){
+            return;
+        }
         currTrackTime.setText(getTimeFromSeconds(mBoundService.getCurrentPosition()));
         seekBar.setProgress(mBoundService.getCurrentPosition());
     }
@@ -298,19 +344,22 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         return time / 60 + ":" + time % 60;
     }
 
-    private void playSong(Track track) {
-        updateUIDataBefore(track);
-        mBoundService.loadSong(track.getUrl());
-    }
-
     private void updateUIDataBefore(Track track){
         songAuthor.setText(track.getUserLogin());
         songTitle.setText(track.getName());
 
+        if(track.isLiked()){
+            like.setTag("Fav");
+            like.setImageResource(R.drawable.ic_favorite_black_24dp);
+        }else{
+            like.setImageResource(R.drawable.ic_favourite_grey_24dp);
+            like.setTag("NoFav");
+        }
+
         //Modificar el thumbnail
         Glide.with(this)
                 .asBitmap()
-                .placeholder(R.drawable.ic_audiotrack)
+                .placeholder(new ColorDrawable(getResources().getColor(R.color.colorWhite,null)))
                 .load(track.getThumbnail())
                 .into(thumbnail);
     }
@@ -326,7 +375,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         playPause.setTag(STOP);
     }
 
-    //UpdateTrack pide una nueva track. Cuando este lista, se llama a este callback.
     @Override
     public void onMusicPlayerPrepared() {
         updateSongInfoAfterLoad();
@@ -368,6 +416,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         switch (text) {
             case "like":
                 Log.d(TAG, "onButtonClicked: LIKE!");
+                tryToLike();
                 break;
             case "addToPlaylist":
                 Log.d(TAG, "onButtonClicked: ADDTOPLAYLIST");

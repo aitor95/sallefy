@@ -72,19 +72,26 @@ public class MusicService extends Service {
         stopSelf();
     }
 
-    public void setSongList(ArrayList<Track> tracks){
-        this.mTracks = tracks;
+    public void loadSongs(ArrayList<Track> tracks){
+        mTracks = tracks;
+        loadSong(tracks.get(0));
     }
 
-    //Carga una cancion es streaming.
-    public void loadSong(String url) {
+    //Carga una cancion en streaming.
+
+    public void loadSong(Track track) {
         boolean mediaPlayerWasNull = (mediaPlayer == null);
         if (mediaPlayerWasNull) {
 
             //Init class values
-
             currentTrack = 0;
             playingBeforeInterruption = false;
+
+            //Crea una llista de reproduccio nova si no existeix
+            if(mTracks == null) {
+                mTracks = new ArrayList<>();
+                mTracks.add(track);
+            }
 
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -96,13 +103,17 @@ public class MusicService extends Service {
                     }
                 }
             });
+        }else{
+            //Clear the current playlist
+            mTracks.clear();
+            mTracks.add(track);
         }
 
         try {
             //Si ya existia el media player, resetealo.
             if(!mediaPlayerWasNull) mediaPlayer.reset();
 
-            mediaPlayer.setDataSource(url);
+            mediaPlayer.setDataSource(track.getUrl());
             mediaPlayer.prepare();
 
             //Como no existia el player, define el onPrepared listener.
@@ -111,8 +122,7 @@ public class MusicService extends Service {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         if (mCallback != null) {
-                            mCallback.
-                                    onMusicPlayerPrepared();
+                            mCallback.onMusicPlayerPrepared();
                             playSong();
                         }
                     }
@@ -150,7 +160,7 @@ public class MusicService extends Service {
         currentTrack = currentTrack < 0 ? (size - 1) : currentTrack;
 
         Track track = mTracks.get(currentTrack);
-        loadSong(track.getUrl());
+        loadSong(track);
 
         return track;
     }

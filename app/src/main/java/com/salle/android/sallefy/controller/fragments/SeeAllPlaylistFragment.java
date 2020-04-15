@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,7 +71,7 @@ public class SeeAllPlaylistFragment extends Fragment {
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 
-		v.findViewById(R.id.seeAllTitlePlaylists).setOnClickListener(view -> {
+		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
 			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 		});
 

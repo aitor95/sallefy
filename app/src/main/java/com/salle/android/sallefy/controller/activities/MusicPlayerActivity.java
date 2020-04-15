@@ -57,6 +57,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     private ImageButton nextTrack;
     private ImageButton prevTrack;
     private ImageButton like;
+    private ImageButton back;
     private ImageButton more;
     private TextView songTitle;
     private TextView songAuthor;
@@ -275,32 +276,19 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     private void atachButtons(){
         playPause = findViewById(R.id.music_player_playStop);
         playPause.setTag(PLAY);
-        playPause.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(playPause.getTag().equals(PLAY)){
-                    playSong();
-                }else{
-                    pauseSong();
-                }
+        playPause.setOnClickListener(view -> {
+            if(playPause.getTag().equals(PLAY)){
+                playSong();
+            }else{
+                pauseSong();
             }
         });
 
         nextTrack = findViewById(R.id.music_player_next);
-        nextTrack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               nextTrack();
-            }
-        });
+        nextTrack.setOnClickListener(view -> nextTrack());
 
         prevTrack = findViewById(R.id.music_player_prev);
-        prevTrack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                prevTrack();
-            }
-        });
+        prevTrack.setOnClickListener(view -> prevTrack());
 
         seekBar = findViewById(R.id.music_player_seekBar);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -334,20 +322,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
         like.setTag("noFav");
 
-        like.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                tryToLike();
-            }
-        });
+        like.setOnClickListener(view -> tryToLike());
 
         more = findViewById(R.id.music_player_more);
-        more.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showMoreMenu();
-            }
-        });
+        more.setOnClickListener(view -> showMoreMenu());
+
+        back = findViewById(R.id.new_playlist_nav);
+        back.setOnClickListener(view -> finish());
 
         songTitle = findViewById(R.id.music_player_title);
         songAuthor = findViewById(R.id.music_player_author);

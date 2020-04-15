@@ -63,7 +63,7 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 
-		v.findViewById(R.id.seeAllTitleUsers).setOnClickListener(view -> {
+		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
 			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 		});
 	}

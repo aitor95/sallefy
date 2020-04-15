@@ -53,7 +53,7 @@ public class CreateNotification {
                             createNotificationChannel(context);
 
                             // Get the layouts to use in the custom notification
-                            RemoteViews notificationLayout = new RemoteViews(context.getPackageName(), R.layout.mini_reproductor);
+                            RemoteViews notificationLayout = new RemoteViews(context.getPackageName(), R.layout.notificacion_reproductor);
 
                             notification = new NotificationCompat.Builder(context,CHANNEL_ID)
                                     .setSmallIcon(R.drawable.ic_sallefy)

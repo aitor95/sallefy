@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVerticalAdapter.ViewHolder> implements LikeCallback{
 
-    private static final String TAG = "TrackListAdapter";
+    private static final String TAG = TrackListVerticalAdapter.class.getName();
     private ArrayList<Track> mTracks;
     private Context mContext;
     private AdapterClickCallback mCallback;
@@ -117,6 +117,8 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
             if(t.getId() == songId){
                 t.setLiked(!t.isLiked());
                 boolean liked = t.isLiked();
+
+                Log.d(TAG, "onLikeSuccess: Song now is liked?" + t.isLiked());
                 likedHolder.likeImg.setImageResource((!liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
                 t.setLikes(t.getLikes() + ((liked) ? +1 : -1));
                 break;

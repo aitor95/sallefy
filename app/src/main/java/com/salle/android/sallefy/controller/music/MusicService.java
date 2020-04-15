@@ -42,6 +42,11 @@ public class MusicService extends Service {
         return mTracks != null ? mTracks.size() : 0;
     }
 
+    public void songUpdateLike(boolean isLiked) {
+        Track t = mTracks.get(currentTrack);
+        t.setLiked(isLiked);
+    }
+
     public class MusicBinder extends Binder {
         public MusicService getService(){
             return MusicService.this;
@@ -115,7 +120,11 @@ public class MusicService extends Service {
                 public void onCompletion(MediaPlayer mp) {
                     if (mCallback != null) {
                         mCallbackMini.onSongFinishedPlaying();
-                        mCallback.onSongFinishedPlaying();
+                        try {
+                            mCallback.onSongFinishedPlaying();
+                        }catch (Exception e){
+                            //Ignoramos. Simplemente la activity del callback ya no existe.
+                        }
                     }
                 }
             });
@@ -138,7 +147,12 @@ public class MusicService extends Service {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         if (mCallback != null) {
-                            mCallback.onMusicPlayerPrepared();
+                            try {
+                                mCallback.onMusicPlayerPrepared();
+                            }catch (Exception e){
+                                //Ignoramos. Simplemente la activity del callback ya no existe.
+                            }
+
                             mCallbackMini.onMusicPlayerPrepared();
                             playSong();
                         }

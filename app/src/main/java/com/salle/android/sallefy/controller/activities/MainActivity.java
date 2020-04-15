@@ -221,7 +221,8 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
         linearLayoutMiniplayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: CLIKEEED!");
+                Intent intent = new Intent(MainActivity.this, MusicPlayerActivity.class);
+                startActivity(intent);
             }
         });
         

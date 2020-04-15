@@ -27,7 +27,10 @@ import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog.BottomMenuD
 import com.salle.android.sallefy.controller.music.MusicCallback;
 import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
+import com.salle.android.sallefy.controller.restapi.callback.isLikedCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.model.Like;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
@@ -36,7 +39,7 @@ import static com.salle.android.sallefy.utils.OnSwipeListener.Direction.up;
 
 //Mirar https://developer.android.com/guide/components/bound-services?hl=es-419
 
-public class MusicPlayerActivity extends AppCompatActivity implements MusicCallback, LikeCallback, BottomMenuDialogInterf {
+public class MusicPlayerActivity extends AppCompatActivity implements MusicCallback, LikeCallback, BottomMenuDialogInterf, isLikedCallback {
 
     public static final String TAG = MusicPlayerActivity.class.getName();
 
@@ -69,6 +72,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     //Guardamos la referencia a la cancion que abre el reproductor.
     private Track initTrack;
 
+
+    //Definicion de los modos del sistema.
+    private Modo modo;
+    private enum Modo {
+        PLAY_SONG_FROM_ZERO,
+        OPEN_SONG,
+        PLAY_PLAYLIST_FROM_ZERO
+    }
 
     //Thread management para la seekbar
     private Handler mHandler;
@@ -112,7 +123,30 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             mBoundService = binder.getService();
             mBoundService.setCallback(MusicPlayerActivity.this);
             mServiceBound = true;
-            mBoundService.loadSong(initTrack);
+
+            if(modo != Modo.OPEN_SONG) {
+                Track currTrack = mBoundService.getCurrentTrack();
+
+                if(currTrack != null && currTrack.getId().intValue() == initTrack.getId()){
+
+
+                    //Actualizar current track con la info de initTrack
+                    mBoundService.songUpdateLike(initTrack.isLiked());
+
+                    updateUIDataBefore(currTrack);
+                    updateSongInfoAfterLoad();
+
+                }else{
+                    mBoundService.loadSong(initTrack);
+                }
+
+            }else{
+                Track t = mBoundService.getCurrentTrack();
+                //Hay que mirar si le han dado like.
+                TrackManager.getInstance(MusicPlayerActivity.this).isTrackLiked(t.getId(),MusicPlayerActivity.this);
+                updateUIDataBefore(t);
+                updateSongInfoAfterLoad();
+            }
         }
 
         @Override
@@ -140,21 +174,30 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: Created.");
         partyMode = false;
-        startStreamingService();
+
         setContentView(R.layout.activity_music_player);
         atachButtons();
 
+        ///Deduce el modo de trabajo de la classe.
+        Object trackOrPlaylist = getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYER_SONG);
+        if (trackOrPlaylist != null){
+            if(trackOrPlaylist instanceof Track){
+                Track track = (Track) trackOrPlaylist;
+                updateUIDataBefore(track);
+                initTrack = track;
+                modo = Modo.PLAY_SONG_FROM_ZERO;
+            }else if(trackOrPlaylist instanceof Playlist){
 
-        Track track = (Track) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYER_SONG);
+            }
 
-        if (track != null){
-            Log.d(TAG, "onCreate: TRACK RECEIVED! ! Name is " + track.getName());
-            updateUIDataBefore(track);
-            initTrack = track;
         } else{
+            modo = Modo.OPEN_SONG;
             Log.d(TAG, "onCreate: El reproductor sha obert sense track de referencia.");
+
         }
 
+
+        startStreamingService();
 
         detector = new GestureDetectorCompat(this, new OnSwipeListener() {
             @Override
@@ -390,23 +433,33 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     public void onSongFinishedPlaying() {
         nextTrack();
     }
-    /*
-    @Override
-    public void onTracksReceived(List<Track> tracks) {
-        mBoundService.setSongList((ArrayList<Track>) tracks);
-        playSong(tracks.get(0));
-        Log.d(TAG, "onTracksReceived: Got " + tracks.size() + " songs.");
-    }*/
 
 
     @Override
     public void onLikeSuccess(int songId) {
-        if(like.getTag().equals("Fav")){
+        boolean wasLikedBefore = like.getTag().equals("Fav");
+
+        if(wasLikedBefore){
             like.setImageResource(R.drawable.ic_favourite_grey_24dp);
             like.setTag("NoFav");
         }else{
             like.setTag("Fav");
             like.setImageResource(R.drawable.ic_favorite_black_24dp);
+        }
+
+        mBoundService.getCurrentTrack().setLiked(!wasLikedBefore);
+    }
+
+    @Override
+    public void onIsLiked(int songId, Like isLiked) {
+
+        mBoundService.songUpdateLike(isLiked.getLiked());
+        if(isLiked.getLiked()){
+            like.setTag("Fav");
+            like.setImageResource(R.drawable.ic_favorite_black_24dp);
+        }else{
+            like.setImageResource(R.drawable.ic_favourite_grey_24dp);
+            like.setTag("NoFav");
         }
     }
 

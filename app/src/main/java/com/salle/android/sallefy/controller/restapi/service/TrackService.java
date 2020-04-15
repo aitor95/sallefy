@@ -33,4 +33,9 @@ public interface TrackService {
 
     @PUT("tracks/{id}/like")
     Call<ResponseBody> likeTrack(@Path("id") int id, @Body Like like, @Header("Authorization") String token);
+
+    @GET("tracks/{id}/like")
+    Call<Like> isTrackLiked(@Path("id") int id, @Header("Authorization") String token);
+
+
 }

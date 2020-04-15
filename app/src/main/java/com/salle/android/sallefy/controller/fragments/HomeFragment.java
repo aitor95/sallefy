@@ -4,11 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,13 +21,16 @@ import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.PlaylistAdapterCallback;
 import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
+import com.salle.android.sallefy.controller.restapi.callback.SearchCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.model.SearchResult;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -37,6 +43,9 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
     private PlaylistListHorizontalAdapter playlistsAdapter;
     private TrackListVerticalAdapter tracksAdapter;
+
+    private ArrayList<Playlist> playlists;
+    private ArrayList<Track> tracks;
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -73,6 +82,30 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
         rvSongs = (RecyclerView) v.findViewById(R.id.songs_home);
         rvSongs.setLayoutManager(manager2);
         rvSongs.setAdapter(tracksAdapter);
+
+        TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
+        seeAllPlaylists.setOnClickListener(view -> {
+
+            Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists);
+            FragmentManager manager_seeAll = getFragmentManager();
+            FragmentTransaction transaction = manager_seeAll.beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
+            transaction.add(R.id.fragment_container,fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+
+        });
+
+        TextView seeAllSongs = v.findViewById(R.id.SeeAllSearchedSongs);
+        seeAllSongs.setOnClickListener(view -> {
+            Fragment fragment = SeeAllSongFragment.newInstance(tracks);
+            FragmentManager manager_seeAll = getFragmentManager();
+            FragmentTransaction transaction = manager_seeAll.beginTransaction();
+            transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
+            transaction.add(R.id.fragment_container,fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
     }
 
     private void getData() {
@@ -105,10 +138,22 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
     }
 
+    /**
+     * Función que obtiene todas las playlist y las ordena por orden descendente
+     * el numero de likes (followers) que tiene
+     * @param playlists Array que contiene todas las playlists
+     */
     @Override
     public void onAllList(ArrayList<Playlist> playlists) {
-        playlistsAdapter = new PlaylistListHorizontalAdapter(playlists, getContext(), this, R.layout.item_playlist_horizontal);
+        playlists.sort(Comparator.comparing(Playlist::getFollowers).reversed());
+        ArrayList<Playlist> topPlaylists = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            topPlaylists.add(playlists.get(i));
+        }
+        playlistsAdapter = new PlaylistListHorizontalAdapter(topPlaylists, getContext(), this, R.layout.item_playlist_horizontal);
         rvPlaylists.setAdapter(playlistsAdapter);
+
+        this.playlists = playlists;
     }
 
     @Override
@@ -158,8 +203,15 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
     @Override
     public void onTracksReceived(List<Track> tracks) {
-        tracksAdapter = new TrackListVerticalAdapter(this, getContext(), (ArrayList<Track>) tracks);
+        tracks.sort(Comparator.comparing(Track::getLikes).reversed());
+        ArrayList<Track> topTracks = new ArrayList<>();
+        for (int i = 0; i < 10; i++) {
+            topTracks.add(tracks.get(i));
+        }
+        tracksAdapter = new TrackListVerticalAdapter(this, getContext(), topTracks);
         rvSongs.setAdapter(tracksAdapter);
+
+        this.tracks = (ArrayList<Track>) tracks;
     }
 
     @Override
@@ -186,4 +238,5 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
     public void onUpdatedTrack() {
 
     }
+
 }

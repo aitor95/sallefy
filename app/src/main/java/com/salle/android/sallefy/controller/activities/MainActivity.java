@@ -30,6 +30,8 @@ import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
 
+import java.util.List;
+
 public class MainActivity extends FragmentActivity implements FragmentCallback {
 
     public static final String TAG = MainActivity.class.getName();
@@ -133,7 +135,6 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
 
         Fragment fragment = HomeFragment.getInstance();
         replaceFragment(fragment);
-
     }
 
     private void enterSocialFragment() {
@@ -246,6 +247,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
     @Override
     public void onChangeFragment(Fragment fragment) {
         replaceFragment(fragment);
+
     }
 
     /***

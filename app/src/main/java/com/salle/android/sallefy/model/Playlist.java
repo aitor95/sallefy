@@ -31,6 +31,9 @@ public class Playlist implements Serializable {
     @SerializedName("tracks")
     private List<Track> tracks = null;
 
+    @SerializedName("followers")
+    private Integer followers;
+
     private boolean followed;
 
     public Playlist(){
@@ -120,6 +123,10 @@ public class Playlist implements Serializable {
 
     public boolean isFollowed() {
         return followed;
+    }
+
+    public int getFollowers(){
+        return followers;
     }
 
     public void setFollowed(boolean followed) {

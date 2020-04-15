@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -131,13 +132,15 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             //TODO: [PLAYLISTS] Crear llistat de playlists
             Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists);
 	        FragmentManager manager = getFragmentManager();
-            assert manager != null;
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
 	        transaction.add(R.id.fragment_container,fragment);
 	        transaction.addToBackStack(null);
 	        transaction.commit();
+
         });
+
+
 
         LinearLayoutManager managerGenres = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
         mGenresAdapter = new GenresAdapter(null, R.layout.item_genre);

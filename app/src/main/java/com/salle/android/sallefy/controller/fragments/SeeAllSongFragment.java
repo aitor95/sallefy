@@ -63,7 +63,7 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 
-		v.findViewById(R.id.seeAllTitleSongs).setOnClickListener(view -> {
+		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
 			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
 		});
 	}

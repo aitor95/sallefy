@@ -115,6 +115,10 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
             transaction.addToBackStack(null);
             transaction.commit();
         });
+
+//        v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
+//            getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+//        });
     }
 
     private void getData() {

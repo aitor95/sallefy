@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
@@ -24,10 +24,10 @@ public class TrackListHorizontalAdapter extends RecyclerView.Adapter<TrackListHo
     private static final String TAG = "TrackListAdapter";
     private ArrayList<Track> mTracks;
     private Context mContext;
-    private TrackListCallback mCallback;
+    private AdapterClickCallback mCallback;
     private int NUM_VIEWHOLDERS = 0;
 
-    public TrackListHorizontalAdapter(TrackListCallback callback, Context context, ArrayList<Track> tracks ) {
+    public TrackListHorizontalAdapter(AdapterClickCallback callback, Context context, ArrayList<Track> tracks ) {
         mTracks = tracks;
         mContext = context;
         mCallback = callback;
@@ -46,21 +46,23 @@ public class TrackListHorizontalAdapter extends RecyclerView.Adapter<TrackListHo
     }
 
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        Log.d(TAG, "onBindViewHolder: called. viewHolder hashcode: " + holder.hashCode());
+        //Log.d(TAG, "onBindViewHolder: called. viewHolder hashcode: " + holder.hashCode());
 
-        holder.mLayout.setOnClickListener(v -> mCallback.onTrackSelected(position));
+        Track track = mTracks.get(position);
 
-        holder.tvTitle.setText(mTracks.get(position).getName());
+        holder.mLayout.setOnClickListener(v -> mCallback.onTrackSelected(track));
+
+        holder.tvTitle.setText(track.getName());
         adjustTextView(holder.tvTitle);
 
-        holder.tvAuthor.setText(mTracks.get(position).getUserLogin());
+        holder.tvAuthor.setText(track.getUserLogin());
         adjustTextView(holder.tvAuthor);
 
-        if (mTracks.get(position).getThumbnail() != null) {
+        if (track.getThumbnail() != null) {
             Glide.with(mContext)
                     .asBitmap()
                     .placeholder(R.drawable.ic_audiotrack)
-                    .load(mTracks.get(position).getThumbnail())
+                    .load(track.getThumbnail())
                     .into(holder.ivPicture);
         }
     }

@@ -184,10 +184,6 @@ public class LoginActivity extends AppCompatActivity implements UserCallback {
 
     }
 
-    @Override
-    public void onUserClicked(User user) {
-
-    }
 
     @Override
     public void onMeFollowingsReceived(List<UserPublicInfo> users) {

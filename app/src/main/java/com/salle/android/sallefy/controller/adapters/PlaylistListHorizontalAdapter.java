@@ -1,13 +1,9 @@
 package com.salle.android.sallefy.controller.adapters;
 
-import android.app.Activity;
 import android.content.Context;
-import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,10 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.callbacks.PlaylistAdapterCallback;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.model.Playlist;
 
-import java.security.PolicySpi;
 import java.util.ArrayList;
 
 public class PlaylistListHorizontalAdapter extends RecyclerView.Adapter<PlaylistListHorizontalAdapter.ViewHolder> {
@@ -28,10 +23,10 @@ public class PlaylistListHorizontalAdapter extends RecyclerView.Adapter<Playlist
     public static final String TAG = PlaylistListHorizontalAdapter.class.getName();
     private ArrayList<Playlist> mPlaylists;
     private Context mContext;
-    private PlaylistAdapterCallback mCallback;
+    private AdapterClickCallback mCallback;
     private int layoutId;
 
-    public PlaylistListHorizontalAdapter(ArrayList<Playlist> playlists, Context context, PlaylistAdapterCallback callback, int layoutId) {
+    public PlaylistListHorizontalAdapter(ArrayList<Playlist> playlists, Context context, AdapterClickCallback callback, int layoutId) {
         mPlaylists = playlists;
         mContext = context;
         mCallback = callback;

@@ -93,6 +93,7 @@
         app:layout_constraintTop_toBottomOf="@id/fragment_container"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="15dp"
+        android:visibility="gone"
         android:elevation="30dp"
         android:clipToPadding="false"
         >

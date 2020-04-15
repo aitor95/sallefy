@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Playlist;
@@ -27,6 +28,12 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<Playlist> mPlaylists;
+
+
+	private static AdapterClickCallback adapterClickCallback;
+	public static void setAdapterClickCallback(AdapterClickCallback callback){
+		adapterClickCallback = callback;
+	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -45,7 +52,7 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(null, getContext(), null, R.layout.item_playlist_vertical);
+		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(null, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 	}
@@ -68,7 +75,7 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
 	@Override
 	public void onAllList(ArrayList<Playlist> playlists) {
-		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(playlists, getContext(), null, R.layout.item_playlist_vertical);
+		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(playlists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setAdapter(adapter);
 	}
 

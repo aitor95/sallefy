@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.model.User;
 
 import java.util.ArrayList;
@@ -23,9 +25,12 @@ public class UserHorizontalAdapter extends RecyclerView.Adapter<UserHorizontalAd
     private ArrayList<User> mUsers;
     private Context mContext;
 
-    public UserHorizontalAdapter(ArrayList<User> users, Context context) {
+    private static AdapterClickCallback mCallback;
+
+    public UserHorizontalAdapter(ArrayList<User> users,AdapterClickCallback callback, Context context) {
         mUsers = users;
         mContext = context;
+        mCallback = callback;
     }
 
     @NonNull
@@ -37,12 +42,16 @@ public class UserHorizontalAdapter extends RecyclerView.Adapter<UserHorizontalAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvUsername.setText(mUsers.get(position).getLogin());
-        if (mUsers.get(position).getImageUrl() != null) {
+        User user = mUsers.get(position);
+        holder.tvUsername.setText(user.getLogin());
+
+        holder.item_playlist_layout.setOnClickListener(v->mCallback.onUserClick(user));
+
+        if (user.getImageUrl() != null) {
             Glide.with(mContext)
                     .asBitmap()
                     .placeholder(R.drawable.ic_user_thumbnail)
-                    .load(mUsers.get(position).getImageUrl())
+                    .load(user.getImageUrl())
                     .into(holder.ivPhoto);
         }
     }
@@ -56,11 +65,13 @@ public class UserHorizontalAdapter extends RecyclerView.Adapter<UserHorizontalAd
 
         TextView tvUsername;
         ImageView ivPhoto;
+        LinearLayout item_playlist_layout;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvUsername = (TextView) itemView.findViewById(R.id.item_user_name);
-            ivPhoto = (ImageView) itemView.findViewById(R.id.item_user_photo);
+            tvUsername           = itemView.findViewById(R.id.item_user_name_horizontal);
+            ivPhoto              = itemView.findViewById(R.id.item_user_photo_horizontal);
+            item_playlist_layout = itemView.findViewById(R.id.item_playlist_layout);
         }
     }
 }

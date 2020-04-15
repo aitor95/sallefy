@@ -18,15 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.PlaylistListHorizontalAdapter;
 import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
-import com.salle.android.sallefy.controller.callbacks.PlaylistAdapterCallback;
-import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
-import com.salle.android.sallefy.controller.restapi.callback.SearchCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Playlist;
-import com.salle.android.sallefy.model.SearchResult;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
@@ -35,7 +32,7 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 
-public class HomeFragment extends Fragment implements PlaylistAdapterCallback, PlaylistCallback, TrackListCallback, TrackCallback {
+public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCallback {
 
     public static final String TAG = HomeFragment.class.getName();
     private RecyclerView rvPlaylists;
@@ -46,6 +43,13 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
     private ArrayList<Playlist> playlists;
     private ArrayList<Track> tracks;
+
+
+    private static AdapterClickCallback adapterClickCallback;
+    public static void setAdapterClickCallback(AdapterClickCallback callback){
+        adapterClickCallback = callback;
+    }
+
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -72,13 +76,13 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
     private void initViews(View v) {
         LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
-        playlistsAdapter = new PlaylistListHorizontalAdapter(null, getContext(), this, R.layout.item_playlist_horizontal);
+        playlistsAdapter = new PlaylistListHorizontalAdapter(null, getContext(), adapterClickCallback, R.layout.item_playlist_horizontal);
         rvPlaylists = (RecyclerView) v.findViewById(R.id.home_new_playlists);
         rvPlaylists.setLayoutManager(manager);
         rvPlaylists.setAdapter(playlistsAdapter);
 
         LinearLayoutManager manager2 = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-        tracksAdapter = new TrackListVerticalAdapter( null, getContext(), null);
+        tracksAdapter = new TrackListVerticalAdapter( adapterClickCallback, getContext(), null);
         rvSongs = (RecyclerView) v.findViewById(R.id.songs_home);
         rvSongs.setLayoutManager(manager2);
         rvSongs.setAdapter(tracksAdapter);
@@ -87,6 +91,8 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
         seeAllPlaylists.setOnClickListener(view -> {
 
             Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists);
+            SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
+
             FragmentManager manager_seeAll = getFragmentManager();
             FragmentTransaction transaction = manager_seeAll.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
@@ -98,7 +104,10 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
 
         TextView seeAllSongs = v.findViewById(R.id.SeeAllSearchedSongs);
         seeAllSongs.setOnClickListener(view -> {
+
             Fragment fragment = SeeAllSongFragment.newInstance(tracks);
+            SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
+
             FragmentManager manager_seeAll = getFragmentManager();
             FragmentTransaction transaction = manager_seeAll.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
@@ -120,10 +129,6 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
         super.onPause();
     }
 
-    @Override
-    public void onPlaylistClick(Playlist playlist) {
-
-    }
 
     /**********************************************************************************************
      *   *   *   *   *   *   *   *   PlaylistCallback   *   *   *   *   *   *   *   *   *
@@ -150,7 +155,7 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
         for (int i = 0; i < 10; i++) {
             topPlaylists.add(playlists.get(i));
         }
-        playlistsAdapter = new PlaylistListHorizontalAdapter(topPlaylists, getContext(), this, R.layout.item_playlist_horizontal);
+        playlistsAdapter = new PlaylistListHorizontalAdapter(topPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_horizontal);
         rvPlaylists.setAdapter(playlistsAdapter);
 
         this.playlists = playlists;
@@ -187,28 +192,13 @@ public class HomeFragment extends Fragment implements PlaylistAdapterCallback, P
     }
 
     @Override
-    public void onTrackSelected(Track track) {
-
-    }
-
-    @Override
-    public void onTrackSelected(int index) {
-
-    }
-
-    @Override
-    public void onTrackUpdated(Track track) {
-        TrackManager.getInstance(getContext()).updateTrack(track, this);
-    }
-
-    @Override
     public void onTracksReceived(List<Track> tracks) {
         tracks.sort(Comparator.comparing(Track::getLikes).reversed());
         ArrayList<Track> topTracks = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             topTracks.add(tracks.get(i));
         }
-        tracksAdapter = new TrackListVerticalAdapter(this, getContext(), topTracks);
+        tracksAdapter = new TrackListVerticalAdapter(adapterClickCallback, getContext(), topTracks);
         rvSongs.setAdapter(tracksAdapter);
 
         this.tracks = (ArrayList<Track>) tracks;

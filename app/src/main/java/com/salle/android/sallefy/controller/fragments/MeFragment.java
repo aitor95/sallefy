@@ -17,6 +17,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.activities.SettingsActivity;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 
 public class MeFragment extends Fragment {
@@ -26,6 +27,11 @@ public class MeFragment extends Fragment {
     public static MeFragment getInstance() {
         return new MeFragment();
     }
+
+	private static AdapterClickCallback adapterClickCallback;
+	public static void setAdapterClickCallback(AdapterClickCallback callback){
+		adapterClickCallback = callback;
+	}
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +54,7 @@ public class MeFragment extends Fragment {
 		Button playlists = (Button) v.findViewById(R.id.action_me_playlists);
 
 		Fragment fragmentMeUsers = new MeUserFragment();
+		MeUserFragment.setAdapterClickCallback(adapterClickCallback);
 		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 		transaction.add(R.id.me_fragment_container, fragmentMeUsers).commit();
 
@@ -71,6 +78,7 @@ public class MeFragment extends Fragment {
 
 				// FRAGMENT INTO FRAGMENT
 				Fragment fragmentMeUsers = new MeUserFragment();
+				MeUserFragment.setAdapterClickCallback(adapterClickCallback);
 				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 				transaction.add(R.id.me_fragment_container, fragmentMeUsers).commit();
 			}
@@ -89,6 +97,7 @@ public class MeFragment extends Fragment {
 
 				// FRAGMENT INTO FRAGMENT
 				Fragment fragmentMeSongs = new MeSongFragment();
+				MeSongFragment.setAdapterClickCallback(adapterClickCallback);
 				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 				transaction.add(R.id.me_fragment_container, fragmentMeSongs).commit();
 			}
@@ -107,6 +116,7 @@ public class MeFragment extends Fragment {
 
 				// FRAGMENT INTO FRAGMENT
 				Fragment fragmentMePlaylists = new MePlaylistFragment();
+				MePlaylistFragment.setAdapterClickCallback(adapterClickCallback);
 				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 				transaction.add(R.id.me_fragment_container, fragmentMePlaylists).commit();
 

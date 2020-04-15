@@ -40,7 +40,7 @@
                     app:cardCornerRadius="46dp">
 
                     <ImageView
-                        android:id="@+id/item_user_photo"
+                        android:id="@+id/item_user_photo_horizontal"
                         android:layout_width="@dimen/item_horizontalRV_size"
                         android:layout_height="@dimen/item_horizontalRV_size"
                         android:src="@drawable/ic_user_thumbnail"
@@ -52,7 +52,7 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/item_user_name"
+            android:id="@+id/item_user_name_horizontal"
             android:layout_width="@dimen/item_horizontalRV_size"
             android:layout_height="wrap_content"
             android:textAlignment="center"

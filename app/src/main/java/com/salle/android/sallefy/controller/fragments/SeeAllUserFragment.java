@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.UserVerticalAdapter;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
@@ -29,6 +30,11 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<User> mUsers;
+
+	private static AdapterClickCallback adapterClickCallback;
+	public static void setAdapterClickCallback(AdapterClickCallback callback){
+		adapterClickCallback = callback;
+	}
 
 	public static Fragment getInstance() {
 		return new SeeAllUserFragment();
@@ -53,7 +59,7 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		UserVerticalAdapter adapter = new UserVerticalAdapter(null, getContext(), R.layout.item_user_vertical);
+		UserVerticalAdapter adapter = new UserVerticalAdapter(null,adapterClickCallback, getContext(), R.layout.item_user_vertical);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 
@@ -116,11 +122,6 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	}
 
 	@Override
-	public void onUserClicked(User user) {
-
-	}
-
-	@Override
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
 		for (User u: mUsers) {
 			u.setFollowedByUser(false);
@@ -128,7 +129,7 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
 		}
 
-		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), R.layout.item_user_vertical);
+		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers,adapterClickCallback, getContext(), R.layout.item_user_vertical);
 		mRecyclerView.setAdapter(adapter);
 	}
 

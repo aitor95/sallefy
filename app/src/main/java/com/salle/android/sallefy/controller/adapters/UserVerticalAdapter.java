@@ -15,32 +15,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserFollowCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
-import com.salle.android.sallefy.model.UserPublicInfo;
-import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapter.ViewHolder> implements UserCallback, UserFollowCallback {
+public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapter.ViewHolder> implements UserFollowCallback {
 
     public static final String TAG = UserVerticalAdapter.class.getName();
     private ArrayList<User> mUsers;
     private Context mContext;
-    private UserCallback mCallback;
+    private AdapterClickCallback mCallback;
     private int layoutId;
 
     //Guardamos la referencia del holder que le han dado follow
     private ViewHolder followHolder;
 
-    public UserVerticalAdapter(ArrayList<User> users, Context context,int layoutId) {
+    public UserVerticalAdapter(ArrayList<User> users, AdapterClickCallback callback, Context context, int layoutId) {
         mUsers = users;
         mContext = context;
         this.layoutId = layoutId;
         followHolder = null;
+        mCallback = callback;
     }
 
     @NonNull
@@ -61,7 +59,7 @@ public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapte
                 @Override
                 public void onClick(View v) {
                     if (mCallback != null)
-                        mCallback.onUserClicked(currUser);
+                        mCallback.onUserClick(currUser);
                 }
             });
 
@@ -136,57 +134,6 @@ public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapte
             }
         }
     }
-
-    @Override
-    public void onLoginSuccess(UserToken userToken) {
-
-    }
-
-    @Override
-    public void onLoginFailure(Throwable throwable) {
-
-    }
-
-    @Override
-    public void onRegisterSuccess() {
-
-    }
-
-    @Override
-    public void onRegisterFailure(Throwable throwable) {
-
-    }
-
-    @Override
-    public void onUserInfoReceived(User userData) {
-
-    }
-
-    @Override
-    public void onUsersReceived(List<User> users) {
-
-    }
-
-    @Override
-    public void onUsersFailure(Throwable throwable) {
-
-    }
-
-    @Override
-    public void onUserClicked(User user) {
-
-    }
-
-    @Override
-    public void onMeFollowingsReceived(List<UserPublicInfo> users) {
-
-    }
-
-    @Override
-    public void onIsFollowingResponseReceived(String login, Boolean isFollowing) {
-
-    }
-
 
     @Override
     public void onFailure(Throwable throwable) {

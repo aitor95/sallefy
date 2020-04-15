@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.SocialActivityAdapter;
-import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
@@ -28,17 +28,23 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-public class SocialFragment extends Fragment implements TrackCallback, TrackListCallback, UserCallback{
+public class SocialFragment extends Fragment implements TrackCallback, UserCallback{
+
+	public static final String TAG = SocialFragment.class.getName();
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
 	private ArrayList<UserPublicInfo> mFollowing;
 
-	public static final String TAG = SocialFragment.class.getName();
+	private static AdapterClickCallback adapterClickCallback;
+	public static void setAdapterClickCallback(AdapterClickCallback callback){
+		adapterClickCallback = callback;
+	}
 
 	public static Fragment getInstance() {
 		return new SocialFragment();
 	}
+
 
 	private TextView nitv;
 
@@ -59,7 +65,7 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		SocialActivityAdapter adapter = new SocialActivityAdapter(null, getContext(), null);
+		SocialActivityAdapter adapter = new SocialActivityAdapter(adapterClickCallback, getContext(), null);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 
@@ -98,7 +104,7 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 		mTracks.sort(Comparator.comparing(Track::getReleased).reversed());
 
 		if (mTracks.size() != 0) {
-			SocialActivityAdapter adapter = new SocialActivityAdapter(this, getContext(), mTracks);
+			SocialActivityAdapter adapter = new SocialActivityAdapter(adapterClickCallback, getContext(), mTracks);
 			mRecyclerView.setAdapter(adapter);
 		} else {
 			if (mFollowing.size() != 0) nitv.setText(R.string.no_tracks_on_social);
@@ -136,20 +142,6 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 
 	}
 
-	@Override
-	public void onTrackSelected(Track track) {
-
-	}
-
-	@Override
-	public void onTrackSelected(int index) {
-
-	}
-
-	@Override
-	public void onTrackUpdated(Track track) {
-
-	}
 
 	@Override
 	public void onLoginSuccess(UserToken userToken) {
@@ -185,8 +177,4 @@ public class SocialFragment extends Fragment implements TrackCallback, TrackList
 
 	}
 
-	@Override
-	public void onUserClicked(User user) {
-
-	}
 }

@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.model.Genre;
 
 import java.util.ArrayList;
@@ -20,13 +21,12 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
     private ArrayList<Genre> mGenres;
     private int viewId;
 
-    //public GenresAdapter(ArrayList<> genres) {
-    //    mGenres = genres;
-    //}
+    private AdapterClickCallback mCallback;
 
-    public GenresAdapter(ArrayList<Genre> genres, int viewId) {
+    public GenresAdapter(ArrayList<Genre> genres, AdapterClickCallback callback, int viewId) {
         mGenres = genres;
         this.viewId = viewId;
+        mCallback = callback;
     }
 
     @NonNull
@@ -38,7 +38,9 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.tvName.setText(mGenres.get(position).getName());
+        Genre genre = mGenres.get(position);
+        holder.tvName.setText(genre.getName());
+        holder.tvName.setOnClickListener(view -> mCallback.onGenreClick(genre));
     }
 
     @Override
@@ -53,9 +55,6 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             tvName = (TextView) itemView.findViewById(R.id.item_genre);
-            tvName.setOnClickListener(view -> {
-                //TODO: [GENRE] Anar a la llista de cançons del genere
-            });
         }
     }
 }

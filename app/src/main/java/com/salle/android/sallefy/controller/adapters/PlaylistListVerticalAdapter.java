@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.callbacks.PlaylistAdapterCallback;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistFollowCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Playlist;
@@ -27,13 +27,13 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
     public static final String TAG = PlaylistListVerticalAdapter.class.getName();
     private ArrayList<Playlist> mPlaylists;
     private Context mContext;
-    private PlaylistAdapterCallback mCallback;
+    private AdapterClickCallback mCallback;
     private int layoutId;
 
     //Guardamos la referencia del holder que le han dado follow
     private ViewHolder followHolder;
 
-    public PlaylistListVerticalAdapter(ArrayList<Playlist> playlists, Context context, PlaylistAdapterCallback callback, int layoutId) {
+    public PlaylistListVerticalAdapter(ArrayList<Playlist> playlists, Context context, AdapterClickCallback callback, int layoutId) {
         mPlaylists = playlists;
         mContext = context;
         mCallback = callback;

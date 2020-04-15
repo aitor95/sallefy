@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Genre;
@@ -31,13 +31,14 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
     private static final String TAG = "TrackListAdapter";
     private ArrayList<Track> mTracks;
     private Context mContext;
-    private TrackListCallback mCallback;
     private int NUM_VIEWHOLDERS = 0;
 
     //Guardamos la referencia del holder que le han dado like
     private ViewHolder likedHolder;
 
-    public SocialActivityAdapter(TrackListCallback callback, Context context, ArrayList<Track> tracks) {
+    private AdapterClickCallback mCallback;
+
+    public SocialActivityAdapter(AdapterClickCallback callback, Context context, ArrayList<Track> tracks) {
         mTracks = tracks;
         mContext = context;
         mCallback = callback;
@@ -53,15 +54,6 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
         ViewHolder vh = new SocialActivityAdapter.ViewHolder(v);
         Log.d(TAG, "onCreateViewHolder: called. viewHolder hashCode: " + vh.hashCode());
 
-        /*ImageView likeImg = v.findViewById(R.id.track_like_sa);
-        liked = false;
-
-        likeImg.setOnClickListener(view -> {
-            ((ImageView) view).setImageResource((liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
-            liked = !liked;
-            //TODO: Vincular el estado del like con la información real de la cuenta
-        });*/
-
         return vh;
     }
 
@@ -70,9 +62,11 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
 
         Log.d(TAG, "onBindViewHolder: called. viewHolder hashcode: " + holder.hashCode());
 
-        holder.mLayout.setOnClickListener(v -> mCallback.onTrackSelected(position));
+        holder.mLayout.setOnClickListener(v -> mCallback.onTrackSelected(track));
 
         holder.username.setText(track.getUserLogin());
+
+        holder.username.setOnClickListener(v-> mCallback.onUserClick(track.getUser()));
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss");
         holder.timeToGo.setText(new StringBuilder().append("posted a song ")
@@ -122,7 +116,7 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
         }
 
         LinearLayoutManager manager = new LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false);
-        GenresAdapter adapter = new GenresAdapter(genres, R.layout.item_genre_little);
+        GenresAdapter adapter = new GenresAdapter(genres, mCallback, R.layout.item_genre_little);
         holder.genres.setLayoutManager(manager);
         holder.genres.setAdapter(adapter);
 

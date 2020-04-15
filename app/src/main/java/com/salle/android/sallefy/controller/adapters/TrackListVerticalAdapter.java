@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.callbacks.TrackListCallback;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Track;
@@ -27,13 +27,12 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
     private static final String TAG = "TrackListAdapter";
     private ArrayList<Track> mTracks;
     private Context mContext;
-    private TrackListCallback mCallback;
-    private int NUM_VIEWHOLDERS = 0;
+    private AdapterClickCallback mCallback;
 
     //Guardamos la referencia del holder que le han dado like
     private ViewHolder likedHolder;
 
-    public TrackListVerticalAdapter(TrackListCallback callback, Context context, ArrayList<Track> tracks ) {
+    public TrackListVerticalAdapter(AdapterClickCallback callback, Context context, ArrayList<Track> tracks ) {
         mTracks = tracks;
         mContext = context;
         mCallback = callback;
@@ -43,11 +42,8 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        Log.d(TAG, "onCreateViewHolder: called. Num viewHolders: " + NUM_VIEWHOLDERS++);
-
         View itemView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_track_vertical, parent, false);
         ViewHolder vh = new TrackListVerticalAdapter.ViewHolder(itemView);
-        Log.d(TAG, "onCreateViewHolder: called. viewHolder hashCode: " + vh.hashCode());
 
         return vh;
     }
@@ -55,24 +51,24 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Log.d(TAG, "onBindViewHolder: called. viewHolder hashcode: " + holder.hashCode());
 
-        Track t = mTracks.get(position);
-        holder.mLayout.setOnClickListener(v -> mCallback.onTrackSelected(position));
+        Track track = mTracks.get(position);
+        holder.mLayout.setOnClickListener(v -> mCallback.onTrackSelected(track));
 
-        holder.tvTitle.setText(t.getName());
+        holder.tvTitle.setText(track.getName());
         adjustTextView(holder.tvTitle);
 
-        holder.tvAuthor.setText(t.getUserLogin());
+        holder.tvAuthor.setText(track.getUserLogin());
         adjustTextView(holder.tvAuthor);
 
-        if (t.getThumbnail() != null) {
+        if (track.getThumbnail() != null) {
             Glide.with(mContext)
                     .asBitmap()
                     .placeholder(R.drawable.ic_audiotrack)
-                    .load(t.getThumbnail())
+                    .load(track.getThumbnail())
                     .into(holder.ivPicture);
         }
 
-        holder.likeImg.setImageResource((!t.isLiked()) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
+        holder.likeImg.setImageResource((!track.isLiked()) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
 
         holder.likeImg.setOnClickListener(view -> {
             if(likedHolder == null) {

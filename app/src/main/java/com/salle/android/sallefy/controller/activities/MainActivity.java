@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -21,18 +22,21 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.callbacks.FragmentCallback;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
 import com.salle.android.sallefy.controller.fragments.SocialFragment;
+import com.salle.android.sallefy.model.Genre;
+import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
 
-import java.util.List;
-
-public class MainActivity extends FragmentActivity implements FragmentCallback {
+public class MainActivity extends FragmentActivity implements FragmentCallback, AdapterClickCallback {
 
     public static final String TAG = MainActivity.class.getName();
 
@@ -49,6 +53,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
     private Button social;
     private Button me;
     private ImageView search;
+    private LinearLayout linearLayoutMiniplayer;
 
     //Gesture detector.
     private GestureDetectorCompat detector;
@@ -65,6 +70,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         backButtonLastPressTime = 0;
         backButtonPressed = false;
         initViews();
@@ -77,13 +83,13 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
             }
         });
 
-        setInitialFragment();
+        enterHomeFragment();
         requestPermissions();
 
         //Saca las siguientes lineas si no quieres testear el reproductor
-        Intent intent = new Intent(this,MusicPlayerActivity.class);
+        //Intent intent = new Intent(this,MusicPlayerActivity.class);
         //intent.putExtra(Constants.INTENT_EXTRAS.SONG,"");
-        startActivity(intent);
+        //startActivity(intent);
     }
 
     private void initViews() {
@@ -94,6 +100,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         social = (Button) findViewById(R.id.action_social);
         me = (Button) findViewById(R.id.action_me);
         search = (ImageView) findViewById(R.id.action_search);
+        linearLayoutMiniplayer = findViewById(R.id.linearLayoutMiniplayer);
 
         home.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +109,6 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
             }
         });
 
-
         social.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,14 +116,12 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
             }
         });
 
-
         me.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 enterMeFragment();
             }
         });
-
 
         search.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,6 +138,9 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         search.setImageResource(R.drawable.ic_search);
 
         Fragment fragment = HomeFragment.getInstance();
+        HomeFragment.setAdapterClickCallback(this);
+
+
         replaceFragment(fragment);
     }
 
@@ -144,6 +151,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         search.setImageResource(R.drawable.ic_search);
 
         Fragment fragment = SocialFragment.getInstance();
+        SocialFragment.setAdapterClickCallback(this);
         replaceFragment(fragment);
     }
 
@@ -154,6 +162,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         search.setImageResource(R.drawable.ic_search);
 
         Fragment fragment = MeFragment.getInstance();
+        MeFragment.setAdapterClickCallback(this);
         replaceFragment(fragment);
     }
 
@@ -165,15 +174,10 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
         home.setTextAppearance(R.style.BottomNavigationView);
 
         Fragment fragment = SearchFragment.getInstance();
+        SearchFragment.setAdapterClickCallback(this);
         replaceFragment(fragment);
     }
 
-
-    private void setInitialFragment() {
-        mTransaction.add(R.id.fragment_container, HomeFragment.getInstance());
-        mTransaction.commit();
-        tagFragmentActivado = HomeFragment.TAG;
-    }
 
     private void requestPermissions() {
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
@@ -247,7 +251,6 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
     @Override
     public void onChangeFragment(Fragment fragment) {
         replaceFragment(fragment);
-
     }
 
     /***
@@ -312,6 +315,31 @@ public class MainActivity extends FragmentActivity implements FragmentCallback {
             }
         }
         return rtn;
+    }
+
+    @Override
+    public void onTrackSelected(Track track) {
+        Log.d(TAG, "onTrackSelected: Track is " + track.getName());
+    }
+
+    @Override
+    public void onTrackUpdated(Track track) {
+
+    }
+
+    @Override
+    public void onPlaylistClick(Playlist playlist) {
+        Log.d(TAG, "onPlaylistClick: Playlist is " + playlist.getName());
+    }
+
+    @Override
+    public void onUserClick(User user) {
+        Log.d(TAG, "onUserClick: User name is " + user.getLogin());
+    }
+
+    @Override
+    public void onGenreClick(Genre genre) {
+        Log.d(TAG, "onGenreClick: Genre name is " + genre.getName());
     }
 }
 

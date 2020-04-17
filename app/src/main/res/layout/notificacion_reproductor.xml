@@ -1,33 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--
+
+!!!!!!MIRAR ESTO!!!!!!
+
+https://stackoverflow.com/questions/41888161/how-to-create-a-custom-notification-layout-in-android
+
+-->
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/layout"
+    android:id="@+id/notif_main_layout"
     android:layout_width="fill_parent"
-    android:layout_height="200dp"
+    android:layout_height="150dp"
     android:padding="10dp" >
     <ImageView
+        android:id="@+id/notif_image"
         android:src="@drawable/ic_sallefy"
-        android:id="@+id/image"
-        android:layout_width="wrap_content"
+        android:layout_width="125dp"
         android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_marginRight="10dp" />
-    <TextView
-        android:textSize="25dp"
-        android:textColor="#000"
-        android:text="Testing"
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/image"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="10dp"
         />
     <TextView
-        android:textSize="13dp"
+        android:id="@+id/notif_song_title"
+        android:textSize="25sp"
+        android:textColor="#000"
+        android:text="Song title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+
+        android:ellipsize="end"
+        android:maxLines="1"
+
+        android:layout_toEndOf="@id/notif_image"
+        />
+    <TextView
+        android:id="@+id/notif_song_author"
+        android:textSize="13sp"
         android:textColor="#000"
         android:text="Testing is awecome"
-        android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/image"
-        android:layout_below="@id/title"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:layout_toEndOf="@id/notif_image"
+        android:layout_below="@id/notif_song_title"
         />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_toEndOf="@id/notif_image"
+        android:layout_below="@id/notif_song_author"
+        android:layout_marginTop="10dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/notif_prev"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_skip_previous_black_36dp"
+                android:background="@null"
+                android:layout_marginEnd="5dp"/>
+
+            <ImageButton
+                android:id="@+id/notif_play_pause"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_pause_not"
+                android:background="@null" />
+
+            <ImageButton
+                android:id="@+id/notif_next"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
+                android:background="@null"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_skip_next_black_36dp" />
+
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>

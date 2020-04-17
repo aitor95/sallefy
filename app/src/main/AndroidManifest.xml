@@ -27,7 +27,8 @@
             android:exported="true" />
 
         <activity android:name=".controller.activities.AddToPlaylistActivity" />
-        <activity android:name=".controller.activities.MainActivity" />
+        <activity android:name=".controller.activities.MainActivity"
+            android:launchMode="singleTask"/>
         <activity android:name=".controller.activities.SignUpActivity" />
         <activity android:name=".controller.activities.LoginActivity">
             <intent-filter>
@@ -41,6 +42,7 @@
         <activity android:name=".controller.activities.UploadSongActivity" />
         <activity android:name=".controller.activities.EditSongActivity" />
         <activity android:name=".controller.activities.PlaylistActivity" />
+        <receiver android:name=".controller.notifications.NotificationReceiver"/>
     </application>
 
 </manifest>

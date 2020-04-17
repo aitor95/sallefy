@@ -9,8 +9,8 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.salle.android.sallefy.controller.notifications.CreateNotification;
 import com.salle.android.sallefy.model.Track;
-import com.salle.android.sallefy.utils.CreateNotification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -103,7 +103,6 @@ public class MusicService extends Service {
     public void loadSong(Track track) {
         boolean mediaPlayerWasNull = (mediaPlayer == null);
         if (mediaPlayerWasNull) {
-            CreateNotification.createNotification(this,track);
             //Init class values
             currentTrack = 0;
             playingBeforeInterruption = false;
@@ -198,25 +197,6 @@ public class MusicService extends Service {
     }
 
 
-    private void nextTrack() {
-        int size = mTracks.size(); //Only query size once.
-        currentTrack = (currentTrack - 1) % size;
-
-        //Si nos pasamos por debajo, pon el indice al final.
-        currentTrack = currentTrack < 0 ? (mTracks.size() - 1) : currentTrack;
-        changeTrack(currentTrack);
-    }
-
-    private void prevTrack() {
-        int size = mTracks.size(); //Only query size once.
-        currentTrack = (currentTrack + 1) % size;
-
-        //Si nos pasamos por encima, pon el indice al inicio.
-        currentTrack = currentTrack >= size ? 0 : currentTrack;
-        changeTrack(currentTrack);
-    }
-
-
     public void pauseSong() {
         try {
             mediaPlayer.pause();
@@ -232,7 +212,7 @@ public class MusicService extends Service {
     public void playSong() {
         try {
             getAudioFocusAndPlay();
-            //showNotification();
+            CreateNotification.createNotification(this, getCurrentTrack());
         } catch (Exception e) {
             Log.d(TAG, "failed to start media player.");
         }

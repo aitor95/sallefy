@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -194,7 +193,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         } else{
             modo = Modo.OPEN_SONG;
             Log.d(TAG, "onCreate: El reproductor sha obert sense track de referencia.");
-
         }
 
 
@@ -361,6 +359,15 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         }else{
             like.setImageResource(R.drawable.ic_favourite_grey_24dp);
             like.setTag("NoFav");
+        }
+        if(mServiceBound){
+            if(mBoundService.isPlaying()){
+                playPause.setImageResource(R.drawable.ic_play_circle_filled_64dp);
+                playPause.setTag(PLAY);
+            }else{
+                playPause.setImageResource(R.drawable.ic_pause_circle_64dp);
+                playPause.setTag(STOP);
+            }
         }
 
         //Modificar el thumbnail

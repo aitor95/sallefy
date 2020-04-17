@@ -116,9 +116,12 @@
     <string name="upload_song">Upload Song</string>
     <string name="label_name">Name</string>
     <string name="label_artist">Artist</string>
+    <string name="label_file_btn">Choose audio file</string>
+    <string name="upload_song_not_complete">You have to add an audio file for your playlist!</string>
     <string name="label_genre">Genre</string>
     <string name="btn_upload">Upload</string>
     <string name="upload_genre_placeholder">Hardstyle</string>
+    <string name="upload_song_creation_success">Your track has been uploaded!</string>
     <!--  cambiar este placeholder dinamicamente  -->
 
     <!-- ACTIVITY [ Upload Song ] -->

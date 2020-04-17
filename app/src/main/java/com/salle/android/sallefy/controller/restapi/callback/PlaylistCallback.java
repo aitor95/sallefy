@@ -1,5 +1,6 @@
 package com.salle.android.sallefy.controller.restapi.callback;
 
+import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ public interface PlaylistCallback extends FailureCallback {
 
     void onPlaylistCreated();
 
-    void onUserFollows(ResponseBody follows);
+    void onUserFollows(Follow follows);
 
-    void onUpdateFollow(ResponseBody result);
+    void onUpdateFollow(Follow result);
 }

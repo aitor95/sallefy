@@ -32,6 +32,7 @@ import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.controller.restapi.manager.SearchManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
+import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.SearchResult;
@@ -252,12 +253,12 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     }
 
     @Override
-    public void onUserFollows(ResponseBody follows) {
+    public void onUserFollows(Follow follows) {
 
     }
 
     @Override
-    public void onUpdateFollow(ResponseBody result) {
+    public void onUpdateFollow(Follow result) {
 
     }
 

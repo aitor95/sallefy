@@ -18,8 +18,10 @@ import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,7 +53,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         mAddSongToPlaylistRecyclerView = (RecyclerView) findViewById(R.id.add_songs_to_playlist_recycler_view);
 
         Intent intent = getIntent();
-        this.pId = (Integer) intent.getSerializableExtra("playlistId");
+        this.pId = (Integer) intent.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
         initViews();
     }
 
@@ -143,12 +145,12 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     @Override
-    public void onUserFollows(ResponseBody follows) {
+    public void onUserFollows(Follow follows) {
 
     }
 
     @Override
-    public void onUpdateFollow(ResponseBody result) {
+    public void onUpdateFollow(Follow result) {
 
     }
 

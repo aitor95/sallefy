@@ -21,6 +21,7 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
+import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.utils.Constants;
 
@@ -58,7 +59,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         setContentView(R.layout.activity_edit_playlist);
 
         Intent intent = getIntent();
-        this.pId = (Integer) intent.getSerializableExtra("playlistId");
+        this.pId = (Integer) intent.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
         coverChosen = false;
         completed = true;
         saved = true;
@@ -112,7 +113,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(),AddSongsToPlaylistActivity.class);
-                intent.putExtra("playlistId", pId);
+                intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID, pId);
                 startActivity(intent);
             }
         });
@@ -123,7 +124,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         this.mPlaylist.setDescription(mDescription.getText().toString());
         this.saved = true;
         if(coverChosen){
-            CloudinaryManager.getInstance(this).uploadCoverImage(mUri, mFilename, EditPlaylistActivity.this);
+            CloudinaryManager.getInstance(this).uploadCoverImage(Constants.STORAGE.PLAYLIST_COVER_FOLDER, mUri, mFilename, EditPlaylistActivity.this);
             completed = false;
         }
 
@@ -217,12 +218,12 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
     }
 
     @Override
-    public void onUserFollows(ResponseBody follows) {
+    public void onUserFollows(Follow follows) {
 
     }
 
     @Override
-    public void onUpdateFollow(ResponseBody result) {
+    public void onUpdateFollow(Follow result) {
 
     }
 

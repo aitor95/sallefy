@@ -80,6 +80,19 @@
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/linearLayoutMiniplayer"
         app:layout_constraintTop_toBottomOf="@+id/bottom_navigation">
+        <Button
+            android:id="@+id/new_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/login_btn"
+            android:text="@string/new_playlist_button"
+            style="@style/buttonText"
+            android:layout_gravity="center"/>
     </FrameLayout>
 
     <!--REPRODUCTOR MINI-->

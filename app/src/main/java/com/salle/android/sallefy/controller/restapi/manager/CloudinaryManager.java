@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
+import com.salle.android.sallefy.controller.activities.UploadSongActivity;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.model.Genre;
@@ -38,12 +39,12 @@ public class CloudinaryManager extends AppCompatActivity {
         MediaManager.init(mContext, CloudinaryConfigs.getConfigurations());
     }
 
-    public synchronized void uploadAudioFile(Uri fileUri, String fileName, Genre genre, final UploadCallback uploadCallback) {
-        mGenre = genre;
+    public synchronized void uploadAudioFile(String folder, Uri fileUri, String fileName, final UploadCallback uploadCallback) {
+   //     mGenre = genre;
         mFileName = fileName;
         Map<String, Object> options = new HashMap<>();
         options.put("public_id", fileName);
-        options.put("folder", "sallefy/songs/mobile");
+        options.put("folder", folder);
         options.put("resource_type", "video");
 
         MediaManager.get().upload(fileUri)
@@ -53,11 +54,12 @@ public class CloudinaryManager extends AppCompatActivity {
                 .dispatch();
     }
 
-    public synchronized void uploadCoverImage(Uri fileUri, String fileName, final UploadCallback uploadCallback) {
+    public synchronized void uploadCoverImage(String folder, Uri fileUri, String fileName, final UploadCallback uploadCallback) {
+
         mFileName = fileName;
         Map<String, Object> options = new HashMap<>();
         options.put("public_id", fileName);
-        options.put("folder", "sallefy/covers/playlists");
+        options.put("folder", folder);
         options.put("resource_type", "image");
 
         MediaManager.get().upload(fileUri)
@@ -66,6 +68,9 @@ public class CloudinaryManager extends AppCompatActivity {
                 .callback(uploadCallback)
                 .dispatch();
     }
+
+    /*public void uploadAudioFile(Uri mUri, String mFilename, UploadSongActivity uploadSongActivity) {
+    }*/
 
     /*private class CloudCallback implements UploadCallback {
 

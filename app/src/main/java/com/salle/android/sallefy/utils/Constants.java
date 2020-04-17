@@ -6,6 +6,9 @@ public class Constants {
     public interface INTENT_EXTRAS{
         String PLAYER_SONG = "_EXTRA_SONG_" ;
         String isSongLikedBottomMenu = "_EXTRA_SONG_LIKED_";
+        String PLAYLIST_ID = "_PLAYLIST_ID_";
+        String PLAYLIST_TRACKS = "_PLAYLIST_TRACKS_";
+
     }
 
     public interface CALLBACKS {
@@ -39,6 +42,10 @@ public class Constants {
     public interface STORAGE {
         public static int SONG_SELECTED = 4;
         public static int IMAGE_SELECTED = 5;
+        public static String PLAYLIST_COVER_FOLDER = "sallefy/covers/playlists";
+        public static String TRACK_COVER_FOLDER = "sallefy/covers/songs";
+        public static String USER_PICTURE_FOLDER = "sallefy/users";
+        public static String TRACK_AUDIO_FOLDER = "sallefy/tracks";
 
     }
 }

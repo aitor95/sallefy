@@ -20,7 +20,7 @@
             android:orientation="vertical">
 
             <ImageButton
-                android:id="@+id/new_playlist_nav"
+                android:id="@+id/upload_song_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_back_arrow"
@@ -96,22 +96,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="25dp"
                 android:orientation="vertical">
 
                 <!-- Añadir el fragment de fragment_genre_songs -->
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/label_artist"
-                    style="@style/formLabel"/>
-
-                <EditText
-                    android:id="@+id/upload_song_artist"
-                    android:layout_width="match_parent"
-                    android:layout_height="41dp"
-                    android:layout_marginTop="14dp"
-                    android:background="@color/colorLoginGrey"/>
+                <Button
+                android:id="@+id/upload_song_file_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorLoginGrey"
+                android:paddingRight="20dp"
+                android:textAllCaps="false"
+                android:paddingLeft="20dp"
+                android:text="@string/label_file_btn"
+                android:textAlignment="textStart"
+                style="@style/formLabel"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:drawableRight="@android:drawable/ic_menu_upload"
+                android:drawableTint="@color/colorDarkGrey"
+                android:textSize="24sp"/>
 
             </LinearLayout>
 
@@ -147,7 +151,8 @@
                         android:layout_centerVertical="true"
                         android:foregroundGravity="center"
                         android:src="@drawable/ic_add_grey"
-                        android:backgroundTint="@color/colorLoginGrey"/>
+                        android:backgroundTint="@color/colorLoginGrey"
+                        android:onClick="checkGenres"/>
 
                 </RelativeLayout>
             </LinearLayout>

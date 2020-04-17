@@ -23,6 +23,7 @@ import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 
@@ -181,12 +182,12 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
     }
 
     @Override
-    public void onUserFollows(ResponseBody follows) {
+    public void onUserFollows(Follow follows) {
 
     }
 
     @Override
-    public void onUpdateFollow(ResponseBody result) {
+    public void onUpdateFollow(Follow result) {
 
     }
 

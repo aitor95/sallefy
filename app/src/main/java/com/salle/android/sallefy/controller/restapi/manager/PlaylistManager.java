@@ -6,6 +6,7 @@ import android.util.Log;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistFollowCallback;
 import com.salle.android.sallefy.controller.restapi.service.PlaylistService;
+import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
@@ -192,10 +193,10 @@ public class PlaylistManager {
      * Follows a playlist
      **********************/
     public synchronized void followPlaylist(Playlist playlist, Boolean isFollowing, final PlaylistFollowCallback playlistCallback){
-        Call<ResponseBody> call = mService.updateFollow(playlist.getId(), isFollowing,"Bearer " + userToken.getIdToken());
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<Follow> call = mService.updateFollow(playlist.getId(), isFollowing,"Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<Follow>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Follow> call, Response<Follow> response) {
                 int code = response.code();
                 if (response.isSuccessful()) {
                     playlistCallback.onFollowSuccess(playlist);
@@ -206,7 +207,7 @@ public class PlaylistManager {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Follow> call, Throwable t) {
                 Log.d(TAG, "Error Failure: " + t.getStackTrace());
                 playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
             }
@@ -244,10 +245,10 @@ public class PlaylistManager {
      * Checks if current user follows a playlist
      **********************/
     public void getUserFollows(Integer pId, PlaylistCallback playlistCallback) {
-        Call<ResponseBody> call = mService.getUserFollowing(pId, "Bearer " + userToken.getIdToken());
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<Follow> call = mService.getUserFollowing(pId, "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<Follow>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Follow> call, Response<Follow> response) {
                 int code = response.code();
                 if (response.isSuccessful()) {
                     playlistCallback.onUserFollows(response.body());
@@ -258,7 +259,7 @@ public class PlaylistManager {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Follow> call, Throwable t) {
                 Log.d(TAG, "Error Failure: " + t.getStackTrace());
                 playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
             }
@@ -269,10 +270,10 @@ public class PlaylistManager {
      * Current user follows/Unfollows playlist
      **********************/
     public void setUserFollows(Integer pId, Boolean followed, PlaylistCallback playlistCallback) {
-        Call<ResponseBody> call = mService.updateFollow(pId, followed, "Bearer " + userToken.getIdToken());
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<Follow> call = mService.updateFollow(pId, followed, "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<Follow>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Follow> call, Response<Follow> response) {
                 int code = response.code();
                 if (response.isSuccessful()) {
                     playlistCallback.onUpdateFollow(response.body());
@@ -283,7 +284,7 @@ public class PlaylistManager {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Follow> call, Throwable t) {
                 Log.d(TAG, "Error Failure: " + t.getStackTrace());
                 playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
             }

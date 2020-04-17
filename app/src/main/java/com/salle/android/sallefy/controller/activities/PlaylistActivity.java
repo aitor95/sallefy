@@ -25,7 +25,9 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.fragments.PlaylistSongFragment;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
+import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 
 
@@ -78,7 +80,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         setContentView(R.layout.activity_playlist);
 
         Intent intent = getIntent();
-        this.pId = (Integer) intent.getSerializableExtra("playlistId");
+        this.pId = (Integer) intent.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
         this.followed = false;
         this.shuffle = false;
         this.owner = false;
@@ -92,7 +94,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     @Override
     protected void onRestart() {
         super.onRestart();
-        getIntent().removeExtra("playlistTracks");
+        getIntent().removeExtra(Constants.INTENT_EXTRAS.PLAYLIST_TRACKS);
         PlaylistManager.getInstance(getApplicationContext())
                 .getPlaylistById(this.pId, PlaylistActivity.this);
     }
@@ -142,7 +144,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                     PlaylistManager.getInstance(getApplicationContext()).setUserFollows(pId, followed, PlaylistActivity.this);
                 }else{
                     Intent intent = new Intent(getApplicationContext(), EditPlaylistActivity.class);
-                    intent.putExtra("playlistId", pId);
+                    intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID, pId);
                     startActivity(intent);
                 }
 
@@ -302,7 +304,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
             this.mNoTracks.setVisibility(View.GONE);
         }
         //Send playlist tracks to PlaylistSongFragment
-        getIntent().putExtra("playlistTracks", (Serializable) this.mPlaylist.getTracks());
+        getIntent().putExtra(Constants.INTENT_EXTRAS.PLAYLIST_TRACKS, (Serializable) this.mPlaylist.getTracks());
         if (!this.fragmentCreated) {
             setInitialFragment();
             this.fragmentCreated = true;
@@ -345,35 +347,21 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     }
 
     @Override
-    public void onUserFollows(ResponseBody response) {
-        try {
+    public void onUserFollows(Follow response) {
 
-            Gson gson = new Gson();
-            JsonObject jsResponse = gson.fromJson(response.string(), JsonObject.class);
-            this.followed = jsResponse.get("followed").getAsBoolean();
-            //Update visual appearance of mFollowBtn
-            this.mFollowBtn.setBackgroundResource((this.followed) ? R.drawable.following_btn : R.drawable.login_btn);
-            mFollowBtn.setText((followed) ? R.string.playlist_following : R.string.playlist_follow );
+        this.followed = response.getFollow();
+        this.mFollowBtn.setBackgroundResource((this.followed) ? R.drawable.following_btn : R.drawable.login_btn);
+        mFollowBtn.setText((followed) ? R.string.playlist_following : R.string.playlist_follow );
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override
-    public void onUpdateFollow(ResponseBody response) {
-        try {
+    public void onUpdateFollow(Follow response) {
 
-            Gson gson = new Gson();
-            JsonObject jsResponse = gson.fromJson(response.string(), JsonObject.class);
-            this.followed = jsResponse.get("followed").getAsBoolean();
-            //Update visual appearance of mFollowBtn
-            this.mFollowBtn.setBackgroundResource((this.followed) ? R.drawable.following_btn : R.drawable.login_btn);
-            mFollowBtn.setText((followed) ? R.string.playlist_following : R.string.playlist_follow );
+        this.followed = response.getFollow();
+        this.mFollowBtn.setBackgroundResource((this.followed) ? R.drawable.following_btn : R.drawable.login_btn);
+        mFollowBtn.setText((followed) ? R.string.playlist_following : R.string.playlist_follow );
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

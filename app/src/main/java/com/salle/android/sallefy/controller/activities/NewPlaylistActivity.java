@@ -24,6 +24,7 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
+import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.utils.Constants;
 
@@ -101,10 +102,9 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
             mPlaylist.setName(mTitle.getText().toString());
 
             if (coverChosen) {
-                CloudinaryManager.getInstance(this).uploadCoverImage(mUri, mFilename, NewPlaylistActivity.this);
-            }
+                CloudinaryManager.getInstance(this).uploadCoverImage(Constants.STORAGE.PLAYLIST_COVER_FOLDER, mUri, mFilename, NewPlaylistActivity.this);
+            }else{
 
-            if (!coverChosen) {
                 PlaylistManager.getInstance(getApplicationContext())
                         .createPlaylist(mPlaylist, NewPlaylistActivity.this);
             }
@@ -173,12 +173,12 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     }
 
     @Override
-    public void onUserFollows(ResponseBody follows) {
+    public void onUserFollows(Follow follows) {
 
     }
 
     @Override
-    public void onUpdateFollow(ResponseBody result) {
+    public void onUpdateFollow(Follow result) {
 
     }
 

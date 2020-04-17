@@ -1,5 +1,6 @@
 package com.salle.android.sallefy.controller.restapi.service;
 
+import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 
 import java.util.List;
@@ -25,10 +26,10 @@ public interface PlaylistService {
     Call<List<Playlist>> getOwnPlaylists(@Header("Authorization") String token);
 
     @GET("playlists/{id}/follow")
-    Call<ResponseBody> getUserFollowing(@Path("id") Integer id, @Header("Authorization") String token);
+    Call<Follow> getUserFollowing(@Path("id") Integer id, @Header("Authorization") String token);
 
     @PUT("playlists/{id}/follow")
-    Call<ResponseBody> updateFollow(@Path("id") Integer id, @Body Boolean follow, @Header("Authorization") String token);
+    Call<Follow> updateFollow(@Path("id") Integer id, @Body Boolean follow, @Header("Authorization") String token);
 
     @GET("me/playlists/following")
     Call<List<Playlist>> getFollowingPlaylists(@Header("Authorization") String token);

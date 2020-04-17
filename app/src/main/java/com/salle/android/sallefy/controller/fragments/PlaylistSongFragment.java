@@ -18,6 +18,7 @@ import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +47,7 @@ public class PlaylistSongFragment extends Fragment implements TrackCallback {
 		initViews(v);
 		Intent i = getActivity().getIntent();
 
-		mTracks = (ArrayList<Track>) i.getSerializableExtra("playlistTracks");
+		mTracks = (ArrayList<Track>) i.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_TRACKS);
 		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), mTracks);
 		mRecyclerView.setAdapter(adapter);
 		//getData();

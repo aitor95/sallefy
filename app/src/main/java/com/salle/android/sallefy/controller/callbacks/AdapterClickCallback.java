@@ -7,7 +7,7 @@ import com.salle.android.sallefy.model.User;
 
 public interface AdapterClickCallback {
 
-    void onTrackClicked(Track track);
+    void onTrackClicked(Track track, Playlist playlist);
     void onPlaylistClick(Playlist playlist);
     void onUserClick(User user);
     void onGenreClick(Genre genre);

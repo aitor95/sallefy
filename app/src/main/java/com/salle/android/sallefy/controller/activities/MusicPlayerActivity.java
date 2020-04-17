@@ -76,8 +76,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     //Definicion de los modos del sistema.
     private Modo modo;
     private enum Modo {
+        //MusicPlayerActivity abierta porque el usuario ha pulsado una track
         PLAY_SONG_FROM_ZERO,
+        //MusicPlayerActivity abierta porque el usuario ha pulsado el miniReproductor
         OPEN_SONG,
+        //MusicPlayerActivity abierta porque el usuario ha pulsado una playlist
         PLAY_PLAYLIST_FROM_ZERO
     }
 
@@ -123,28 +126,47 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             mBoundService.setCallback(MusicPlayerActivity.this);
             mServiceBound = true;
 
-            if(modo != Modo.OPEN_SONG) {
-                Track currTrack = mBoundService.getCurrentTrack();
+            switch (modo){
+                case PLAY_SONG_FROM_ZERO:
+                    Track currTrack = mBoundService.getCurrentTrack();
+                    //Miramos si el usuario ha pulsado la track que se estava reproduciendo
+                    if(currTrack != null && currTrack.getId().intValue() == initTrack.getId()){
 
-                if(currTrack != null && currTrack.getId().intValue() == initTrack.getId()){
 
+                        //Actualizar current track con la info de initTrack (para los likes...)
+                        mBoundService.songUpdateLike(initTrack.isLiked());
 
-                    //Actualizar current track con la info de initTrack
-                    mBoundService.songUpdateLike(initTrack.isLiked());
+                        //Actualizamos la activity para cuadrar la progressbar y las imagenes y tutulos.
+                        //Pero no volvemos a cargar toda la cancion en streaming.
+                        updateUIDataBefore(currTrack);
+                        updateSongInfoAfterLoad();
+                    }else{
+                        //Track nueva, empezamos de zero.
+                        mBoundService.loadSong(initTrack);
+                    }
+                    break;
 
-                    updateUIDataBefore(currTrack);
+                case OPEN_SONG:
+                    Track t = mBoundService.getCurrentTrack();
+                    //Hay que mirar si le han dado like.
+                    TrackManager.getInstance(MusicPlayerActivity.this).isTrackLiked(t.getId(),MusicPlayerActivity.this);
+                    updateUIDataBefore(t);
                     updateSongInfoAfterLoad();
+                    break;
 
-                }else{
-                    mBoundService.loadSong(initTrack);
-                }
+                case PLAY_PLAYLIST_FROM_ZERO:
 
-            }else{
-                Track t = mBoundService.getCurrentTrack();
-                //Hay que mirar si le han dado like.
-                TrackManager.getInstance(MusicPlayerActivity.this).isTrackLiked(t.getId(),MusicPlayerActivity.this);
-                updateUIDataBefore(t);
-                updateSongInfoAfterLoad();
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + modo);
+            }
+
+            if(modo == Modo.PLAY_SONG_FROM_ZERO) {
+
+
+            }else if(modo == Modo.OPEN_SONG){
+
+
             }
         }
 
@@ -180,13 +202,15 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         ///Deduce el modo de trabajo de la classe.
         Object trackOrPlaylist = getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYER_SONG);
         if (trackOrPlaylist != null){
+            //Nos han pasado una track?
             if(trackOrPlaylist instanceof Track){
                 Track track = (Track) trackOrPlaylist;
                 updateUIDataBefore(track);
                 initTrack = track;
                 modo = Modo.PLAY_SONG_FROM_ZERO;
             }else if(trackOrPlaylist instanceof Playlist){
-
+                //Nos han pasado una playlist!
+                modo = Modo.PLAY_PLAYLIST_FROM_ZERO;
             }
 
         } else{
@@ -418,6 +442,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     //Al acabar de reproducirse una track, se llama este callback.
     @Override
     public void onSongFinishedPlaying() {
+        //TODO: MAYBE REMOVE THIS
         nextTrack();
     }
 

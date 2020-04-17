@@ -147,7 +147,7 @@
 
 
     <FrameLayout
-        android:id="@+id/fragment_container"
+        android:id="@+id/fragment_container_playlist"
         android:layout_width="match_parent"
         android:layout_height="380dp"
         android:background="@drawable/header_rounded_white"

@@ -18,6 +18,7 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
@@ -31,6 +32,7 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
 
     //Guardamos la referencia del holder que le han dado like
     private ViewHolder likedHolder;
+    private Playlist mPlaylist;
 
     public TrackListVerticalAdapter(AdapterClickCallback callback, Context context, ArrayList<Track> tracks ) {
         mTracks = tracks;
@@ -52,7 +54,7 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
         Log.d(TAG, "onBindViewHolder: called. viewHolder hashcode: " + holder.hashCode());
 
         Track track = mTracks.get(position);
-        holder.mLayout.setOnClickListener(v -> mCallback.onTrackClicked(track));
+        holder.mLayout.setOnClickListener(v -> mCallback.onTrackClicked(track, mPlaylist));
 
         holder.tvTitle.setText(track.getName());
         adjustTextView(holder.tvTitle);
@@ -130,6 +132,10 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
     @Override
     public void onFailure(Throwable throwable) {
 
+    }
+
+    public void setPlaylist(Playlist mPlaylist) {
+        this.mPlaylist = mPlaylist;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

@@ -15,20 +15,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
-import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
-import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
-import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.List;
 
-public class PlaylistSongFragment extends Fragment implements TrackCallback {
+public class PlaylistSongFragment extends Fragment {
 
 	public static final String TAG = PlaylistSongFragment.class.getName();
 
 	private RecyclerView mRecyclerView;
-	private ArrayList<Track> mTracks;
+	private Playlist mPlaylist;
 
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -46,11 +43,10 @@ public class PlaylistSongFragment extends Fragment implements TrackCallback {
 		View v = inflater.inflate(R.layout.fragment_playlist_song, container, false);
 		initViews(v);
 		Intent i = getActivity().getIntent();
-
-		mTracks = (ArrayList<Track>) i.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_TRACKS);
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), mTracks);
+		mPlaylist = (Playlist) i.getSerializableExtra("playlist_data");
+		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), (ArrayList<Track>) mPlaylist.getTracks());
+		adapter.setPlaylist(mPlaylist);
 		mRecyclerView.setAdapter(adapter);
-		//getData();
 		return v;
 	}
 
@@ -60,49 +56,5 @@ public class PlaylistSongFragment extends Fragment implements TrackCallback {
 		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), null);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
-	}
-
-	private void getData() {
-		//TODO: cambiar por cojer lascanciones que tocan
-		TrackManager.getInstance(getActivity()).getAllTracks(this);
-		mTracks = new ArrayList<>();
-	}
-
-	@Override
-	public void onTracksReceived(List<Track> tracks) {
-		mTracks = (ArrayList) tracks;
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), mTracks);
-		mRecyclerView.setAdapter(adapter);
-	}
-
-
-	@Override
-	public void onNoTracks(Throwable throwable) {
-
-	}
-
-	@Override
-	public void onPersonalTracksReceived(List<Track> tracks) {
-
-	}
-
-	@Override
-	public void onUserTracksReceived(List<Track> tracks) {
-
-	}
-
-	@Override
-	public void onCreateTrack() {
-
-	}
-
-	@Override
-	public void onUpdatedTrack() {
-
-	}
-
-	@Override
-	public void onFailure(Throwable throwable) {
-
 	}
 }

@@ -5,11 +5,13 @@ public class Constants {
 
     public interface INTENT_EXTRAS{
         String PLAYER_SONG = "_EXTRA_SONG_" ;
+        String PLAYER_PLAYLIST = "_EXTRA_PLAYLIST_" ;
         String isSongLikedBottomMenu = "_EXTRA_SONG_LIKED_";
-        String PLAYLIST_ID = "_PLAYLIST_ID_";
-        String PLAYLIST_TRACKS = "_PLAYLIST_TRACKS_";
+        String PLAYLIST = "_PLAYLIST_ID_";
+        String PLAYLIST_DATA = "_PLAYLIST_DATA_";
         String CURRENT_TRACK = "_CURRENT_TRACK_";
 
+        String PLAYLIST_ID = "_PLAYLIST_ID_";
     }
 
     public interface CALLBACKS {

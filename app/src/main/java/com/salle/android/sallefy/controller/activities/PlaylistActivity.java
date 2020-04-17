@@ -1,12 +1,5 @@
 package com.salle.android.sallefy.controller.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -16,12 +9,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.fragments.PlaylistSongFragment;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
@@ -30,13 +29,10 @@ import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 
-
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
-import okhttp3.ResponseBody;
 
 
 public class PlaylistActivity extends AppCompatActivity implements PlaylistCallback {
@@ -73,28 +69,35 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     private FragmentTransaction mTransaction;
     private Fragment playlistSongFragment;
 
+    private static AdapterClickCallback adapterClickCallback;
+    public static void setAdapterClickCallback(AdapterClickCallback callback){
+        adapterClickCallback = callback;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
 
+        /*
+        COdi antic
         Intent intent = getIntent();
         this.pId = (Integer) intent.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
         this.followed = false;
         this.shuffle = false;
         this.owner = false;
-        this.fragmentCreated = false;
-        PlaylistManager.getInstance(getApplicationContext())
-                .getPlaylistById(this.pId, PlaylistActivity.this);
-        initViews();
+        */
+        //Little hack to reduce code.
+        onPlaylistById((Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
 
+        this.fragmentCreated = false;
+        initViews();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
-        getIntent().removeExtra(Constants.INTENT_EXTRAS.PLAYLIST_TRACKS);
+        getIntent().removeExtra(Constants.INTENT_EXTRAS.PLAYLIST_DATA);
         PlaylistManager.getInstance(getApplicationContext())
                 .getPlaylistById(this.pId, PlaylistActivity.this);
     }
@@ -105,7 +108,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
         //Bottom sheet behavior
         mBSBehavior = BottomSheetBehavior.from(mBottomSheet);
-        mBSBehavior.setBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+        mBSBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int state) {
                 switch (state) {
@@ -144,7 +147,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                     PlaylistManager.getInstance(getApplicationContext()).setUserFollows(pId, followed, PlaylistActivity.this);
                 }else{
                     Intent intent = new Intent(getApplicationContext(), EditPlaylistActivity.class);
-                    intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID, pId);
+                    intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID , pId);
                     startActivity(intent);
                 }
 
@@ -181,18 +184,19 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         mDescription = findViewById(R.id.playlist_description);
         mFollowBtn = findViewById(R.id.playlist_view_follow);
         mShuffleBtn = findViewById(R.id.playlist_view_shuffle);
-        mBottomSheet = findViewById(R.id.fragment_container);
+        mBottomSheet = findViewById(R.id.fragment_container_playlist);
         mNoTracks = findViewById(R.id.playlist_no_tracks);
-        mNav = (ImageButton) findViewById(R.id.playlist_back);
-
+        mNav = findViewById(R.id.playlist_back);
     }
 
 
     private void setInitialFragment() {
         mFragmentManager = getSupportFragmentManager();
         mTransaction = mFragmentManager.beginTransaction();
+        PlaylistSongFragment.setAdapterClickCallback(adapterClickCallback);
         playlistSongFragment = new PlaylistSongFragment();
-        mTransaction.add(R.id.fragment_container, playlistSongFragment);
+
+        mTransaction.add(R.id.fragment_container_playlist, playlistSongFragment);
         mTransaction.commit();
     }
 
@@ -304,7 +308,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
             this.mNoTracks.setVisibility(View.GONE);
         }
         //Send playlist tracks to PlaylistSongFragment
-        getIntent().putExtra(Constants.INTENT_EXTRAS.PLAYLIST_TRACKS, (Serializable) this.mPlaylist.getTracks());
+        getIntent().putExtra(Constants.INTENT_EXTRAS.PLAYLIST_DATA, (Serializable) this.mPlaylist);
         if (!this.fragmentCreated) {
             setInitialFragment();
             this.fragmentCreated = true;

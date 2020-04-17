@@ -50,7 +50,7 @@ public class TrackListHorizontalAdapter extends RecyclerView.Adapter<TrackListHo
 
         Track track = mTracks.get(position);
 
-        holder.mLayout.setOnClickListener(v -> mCallback.onTrackClicked(track));
+        holder.mLayout.setOnClickListener(v -> mCallback.onTrackClicked(track, null));
 
         holder.tvTitle.setText(track.getName());
         adjustTextView(holder.tvTitle);

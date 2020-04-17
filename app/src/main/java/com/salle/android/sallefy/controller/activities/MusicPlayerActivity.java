@@ -104,7 +104,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     //Gesture detector.
     private GestureDetectorCompat detector;
 
-
     /** De la documentacion de Android:
      *
      * Un cliente se enlaza a un servicio llamando a bindService().
@@ -420,6 +419,18 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     @Override
     public void onSongFinishedPlaying() {
         nextTrack();
+    }
+
+    @Override
+    public void onUpdatePlayButton(){
+        Log.d(TAG, "onUpdatePlayButton: LMO");
+        if(!mBoundService.isPlaying()){
+            playPause.setImageResource(R.drawable.ic_play_circle_filled_64dp);
+            playPause.setTag(PLAY);
+        }else{
+            playPause.setImageResource(R.drawable.ic_pause_circle_64dp);
+            playPause.setTag(STOP);
+        }
     }
 
 

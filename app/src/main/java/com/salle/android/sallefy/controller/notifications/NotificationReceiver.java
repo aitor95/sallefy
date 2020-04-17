@@ -4,11 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.salle.android.sallefy.controller.activities.MusicPlayerActivity;
 import com.salle.android.sallefy.controller.music.MusicService;
-import com.salle.android.sallefy.model.Track;
 
 public class NotificationReceiver extends BroadcastReceiver {
 
@@ -29,13 +27,10 @@ public class NotificationReceiver extends BroadcastReceiver {
         IBinder service = peekService(context,musicService);
         MusicService.MusicBinder binder = (MusicService.MusicBinder)service;
         mBoundService = binder.getService();
-        Track t = mBoundService.getCurrentTrack();
 
         if(intent.getAction() == null)return;
-        Log.d(TAG, "onReceive: " + intent.getAction());
 
         boolean isPlaying = mBoundService.isPlaying();
-
         switch (intent.getAction()) {
             case PLAY_STOP_ACTION:
 
@@ -45,6 +40,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                     mBoundService.playSong();
                 }
                 CreateNotification.updateAndShow(context, isPlaying);
+                mBoundService.updatePlayButton();
                 break;
             case NEXT_ACTION:
                 mBoundService.changeTrack(1);

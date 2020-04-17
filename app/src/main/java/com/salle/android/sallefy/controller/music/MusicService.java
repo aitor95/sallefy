@@ -196,11 +196,19 @@ public class MusicService extends Service {
         return track;
     }
 
+    //Tell everyPlayer to update the button.
+    public void updatePlayButton(){
+        if(mCallback != null)
+           mCallback.onUpdatePlayButton();
+        if(mCallbackMini != null)
+            mCallbackMini.onUpdatePlayButton();
+    }
 
     public void pauseSong() {
         try {
             mediaPlayer.pause();
-           // showNotification();
+            CreateNotification.createNotification(this, getCurrentTrack(),false);
+
         } catch (Exception e) {
             Log.d(TAG, "failed to ic_pause media player.");
         }
@@ -212,7 +220,8 @@ public class MusicService extends Service {
     public void playSong() {
         try {
             getAudioFocusAndPlay();
-            CreateNotification.createNotification(this, getCurrentTrack());
+            CreateNotification.createNotification(this, getCurrentTrack(),true);
+
         } catch (Exception e) {
             Log.d(TAG, "failed to start media player.");
         }

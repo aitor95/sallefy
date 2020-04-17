@@ -494,6 +494,19 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
     }
 
     @Override
+    public void onUpdatePlayButton() {
+
+        if(mBoundService.isPlaying()){
+            repPlayStop.setImageResource(R.drawable.ic_pause_circle_40dp);
+            repPlayStop.setTag(STOP);
+        }else{
+            repPlayStop.setImageResource(R.drawable.ic_play_circle_filled_40dp);
+            repPlayStop.setTag(PLAY);
+        }
+
+    }
+
+    @Override
     public void onSongFinishedPlaying() {
 
     }

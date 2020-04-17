@@ -50,7 +50,7 @@ public class CreateNotification {
             notificationManager.createNotificationChannel(notificationChannel);
         }
     }
-    public static void createNotification(Context context, Track track){
+    public static void createNotification(Context context, Track track, boolean isPlaying){
         Log.d("ss", "createNotification: ");
         Glide.with(context)
                 .asBitmap()
@@ -59,7 +59,7 @@ public class CreateNotification {
                     @Override
                     public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
                         try {
-                            generateNotification(context,track,resource);
+                            generateNotification(context,track,resource,isPlaying);
                         }catch (Exception e){
                             e.printStackTrace();
                             Log.d("ss", "onResourceReady: " + e.getMessage());
@@ -73,7 +73,7 @@ public class CreateNotification {
                 });
     }
 
-    private static void generateNotification(Context context, Track track, Bitmap resource) {
+    private static void generateNotification(Context context, Track track, Bitmap resource,boolean isPlaying) {
         createNotificationChannel(context);
 
         // Get the layouts to use in the custom notification
@@ -102,6 +102,11 @@ public class CreateNotification {
         PendingIntent playPending = PendingIntent.getBroadcast(context,
                 0,playClick,0);
 
+        if(!isPlaying){
+            notificationLayout.setImageViewResource(R.id.notif_play_pause,R.drawable.ic_play_not);
+        }else{
+            notificationLayout.setImageViewResource(R.id.notif_play_pause,R.drawable.ic_pause_not);
+        }
 
         notificationLayout.setTextViewText(R.id.notif_song_title,track.getName());
         notificationLayout.setTextViewText(R.id.notif_song_author,track.getUserLogin());
@@ -123,11 +128,12 @@ public class CreateNotification {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(NOTIFICATION_ID, notification);
+
     }
 
-    public static void updateAndShow(Context context,boolean isPlaying) {
+    public static void updateAndShow(Context context,boolean isNotPlaying) {
 
-        if(isPlaying){
+        if(isNotPlaying){
             notificationLayout.setImageViewResource(R.id.notif_play_pause,R.drawable.ic_play_not);
         }else{
             notificationLayout.setImageViewResource(R.id.notif_play_pause,R.drawable.ic_pause_not);

@@ -252,29 +252,6 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
             }
         });
 
-        Button newBtn = findViewById(R.id.new_btn);
-        newBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int activity = 2;
-                switch (activity){
-                    case 0:
-                        Intent intent0 = new Intent(getApplicationContext(), PlaylistActivity.class);
-                        intent0.putExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID, 809);
-                        startActivity(intent0);
-                        break;
-                    case 1:
-                        Intent intent1 = new Intent(getApplicationContext(), NewPlaylistActivity.class);
-                        startActivity(intent1);
-                        break;
-                    case 2:
-                        Intent intent2 = new Intent(getApplicationContext(), UploadSongActivity.class);
-                        startActivity(intent2);
-                        break;
-                }
-            }
-        });
-
         me.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -19,14 +19,11 @@ import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
-import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.GenreManager;
-import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Genre;
-import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.Constants;
 
@@ -34,7 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
 
 public class UploadSongActivity extends AppCompatActivity implements TrackCallback, UploadCallback, GenreCallback {
 
@@ -52,6 +48,8 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     //Cover file
     private Uri mCoverUri;
     private String mCoverFilename;
+
+    //Audio file
     private Uri mAudioUri;
     private String mAudioFilename;
 

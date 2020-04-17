@@ -124,8 +124,9 @@
     <string name="upload_song_creation_success">Your track has been uploaded!</string>
     <!--  cambiar este placeholder dinamicamente  -->
 
-    <!-- ACTIVITY [ Upload Song ] -->
+    <!-- ACTIVITY [ Edit Song ] -->
     <string name="edit_song">Edit Song</string>
+    <string name="edit_song_update_success">Your changes have been saved!</string>
     <string name="btn_save">Save</string>
     <!-- FOLLOWING BUTTON -->
     <string name="ToFollowText">Follow</string>

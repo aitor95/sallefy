@@ -486,6 +486,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                 break;
             case "edit":
                 Log.d(TAG, "onButtonClicked: EDIT");
+                Intent intent = new Intent(this, EditSongActivity.class);
+                intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, mBoundService.getCurrentTrack());
+                startActivity(intent);
                 break;
         }
     }

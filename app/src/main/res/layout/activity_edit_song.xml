@@ -148,7 +148,8 @@
                         android:layout_centerVertical="true"
                         android:foregroundGravity="center"
                         android:src="@drawable/ic_add_grey"
-                        android:backgroundTint="@color/colorLoginGrey"/>
+                        android:backgroundTint="@color/colorLoginGrey"
+                        android:onClick="checkGenres"/>
 
                 </RelativeLayout>
             </LinearLayout>

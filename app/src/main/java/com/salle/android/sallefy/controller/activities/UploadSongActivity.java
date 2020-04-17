@@ -246,7 +246,6 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
 
     @Override
     public void onGenresReceive(ArrayList<Genre> genres) {
-        System.out.println("hellooooooooou");
         mAPIGenres = genres;
         for (int i = 0; i < genres.size(); i++) {
             mGenresMenu.getMenu().add(0, i, i, mAPIGenres.get(i).getName());
@@ -276,7 +275,6 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
 
     @Override
     public void onSuccess(String requestId, Map resultData) {
-        System.out.println("hellouuu");
         if(!audioSet){
             //Uploaded the audio file
             mTrack.setUrl((String)resultData.get("url"));
@@ -296,7 +294,6 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
                         .createTrack(mTrack, UploadSongActivity.this);
             }
         }
-
     }
 
     @Override

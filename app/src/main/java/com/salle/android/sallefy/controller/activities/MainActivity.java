@@ -524,12 +524,6 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
     }
 
     @Override
-    public void onSongFinishedPlaying() {
-        //TODO: MAYBE REMOVE THIS
-        Log.d(TAG, "onSongFinishedPlaying: ");
-    }
-
-    @Override
     public void onSongChanged() {
         updateIfBoundToService();
     }

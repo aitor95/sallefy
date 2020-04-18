@@ -44,6 +44,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
     public static final String TAG = MusicPlayerActivity.class.getName();
 
+
+    public enum LoopButtonState {
+        LOOP_NOT_ACTIVATED,
+        LOOP_PLAYLIST_ON,
+        LOOP_SONG_ON
+    }
+
     // Service
     private MusicService mBoundService;
     private boolean mServiceBound = false;
@@ -64,6 +71,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     private TextView songAuthor;
     private TextView currTrackTime;
     private TextView totalTrackTime;
+    private ImageButton shuffleBtn;
+    private ImageButton loopBtn;
 
     //Indica si se esta en el modo fiesta.
     private boolean partyMode;
@@ -128,10 +137,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             mBoundService = binder.getService();
             mBoundService.setCallback(MusicPlayerActivity.this);
             mServiceBound = true;
+            Track currTrack = mBoundService.getCurrentTrack();
 
             switch (modo){
                 case PLAY_SONG_FROM_ZERO:
-                    Track currTrack = mBoundService.getCurrentTrack();
+
                     //Miramos si el usuario ha pulsado la track que se estava reproduciendo
                     if(currTrack != null && currTrack.getId().intValue() == initTrack.getId()){
 
@@ -160,7 +170,17 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
                 case PLAY_PLAYLIST_FROM_ZERO:
                     updateUIDataBefore(initTrack);
-                    mBoundService.loadSongs((ArrayList<Track>) initPlaylist.getTracks(), initTrack);
+
+                    //Miramos si el usuario ha pulsado la track que se estava reproduciendo
+                    if(currTrack != null && currTrack.getId().intValue() == initTrack.getId()){
+                        //Actualizar current track con la info de initTrack (para los likes...)
+                        mBoundService.songUpdateLike(initTrack.isLiked());
+                        updateUIDataBefore(currTrack);
+                        updateSongInfoAfterLoad();
+                        mBoundService.loadSongs((ArrayList<Track>) initPlaylist.getTracks(), initTrack,false);
+                    }else{
+                        mBoundService.loadSongs((ArrayList<Track>) initPlaylist.getTracks(), initTrack,true);
+                    }
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + modo);
@@ -295,6 +315,51 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     }
 
     private void atachButtons(){
+
+
+        loopBtn = findViewById(R.id.music_player_loop);
+        loopBtn.setTag(LoopButtonState.LOOP_NOT_ACTIVATED);
+
+        loopBtn.setOnClickListener(v -> {
+            LoopButtonState loopState = (LoopButtonState)loopBtn.getTag();
+
+            switch (loopState) {
+                case LOOP_NOT_ACTIVATED:
+                    loopBtn.setImageResource(R.drawable.ic_repeat_activated);
+                    loopBtn.setTag(LoopButtonState.LOOP_PLAYLIST_ON);
+                    break;
+
+                case LOOP_PLAYLIST_ON:
+                    loopBtn.setImageResource(R.drawable.ic_repeat_one);
+                    loopBtn.setTag(LoopButtonState.LOOP_SONG_ON);
+                    break;
+
+                case LOOP_SONG_ON:
+                    loopBtn.setTag(LoopButtonState.LOOP_NOT_ACTIVATED);
+                    loopBtn.setImageResource(R.drawable.ic_repeat);
+                    break;
+            }
+            mBoundService.setLoopMode((LoopButtonState)loopBtn.getTag());
+        });
+
+        shuffleBtn = findViewById(R.id.music_player_shuffle);
+        shuffleBtn.setTag("DontPlayRandom");
+        shuffleBtn.setOnClickListener(v -> {
+            boolean shuffleActivated =shuffleBtn.getTag().equals("DontPlayRandom");
+
+            if(shuffleActivated){
+                shuffleBtn.setTag("playRandom");
+                shuffleBtn.setImageResource(R.drawable.ic_shuffle_active);
+            }else{
+                shuffleBtn.setTag("DontPlayRandom");
+                shuffleBtn.setImageResource(R.drawable.ic_shuffle);
+            }
+
+            mBoundService.setShuffle(shuffleActivated);
+        });
+
+
+
         playPause = findViewById(R.id.music_player_playStop);
         playPause.setTag(PLAY);
         playPause.setOnClickListener(view -> {
@@ -441,13 +506,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     public void onMusicPlayerPrepared() {
         Log.d(TAG, "onMusicPlayerPrepared: !!!!!!");
         updateSongInfoAfterLoad();
-    }
-
-    //Al acabar de reproducirse una track, se llama este callback.
-    @Override
-    public void onSongFinishedPlaying() {
-        //TODO: MAYBE REMOVE THIS
-        nextTrack();
     }
 
     @Override

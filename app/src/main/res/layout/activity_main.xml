@@ -129,6 +129,8 @@
                 <TextView
                     android:id="@+id/mini_rep_song_title"
                     style="@style/SongMiniplayer"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/default_track_title" />
@@ -136,6 +138,8 @@
                 <TextView
                     android:id="@+id/mini_rep_song_artist"
                     style="@style/AuthorMiniplayer"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/default_track_author" />

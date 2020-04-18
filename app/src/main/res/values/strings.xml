@@ -12,7 +12,7 @@
 
     <!-- MAIN MENU -->
     <string name="menu_home">Home</string>
-    <string name="menu_search">Search  songs, playlists or users...</string>
+    <string name="menu_search">Search  songs, playlists or users…</string>
     <string name="menu_me">Me</string>
     <string name="menu_social">Social</string>
 

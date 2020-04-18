@@ -20,6 +20,8 @@ import com.salle.android.sallefy.controller.activities.SettingsActivity;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class MeFragment extends Fragment {
 
 	public static final String TAG = MeFragment.class.getName();
@@ -129,6 +131,10 @@ public class MeFragment extends Fragment {
 			startActivity(intent);
 		});
 
+		CircleImageView user_img = v.findViewById(R.id.user_img);
+
+
+		//Sustituir por informacion real en la UI
 		TextView user_name = v.findViewById(R.id.user_name);
 		user_name.setText(PreferenceUtils.getUser(v.getContext()));
 	}

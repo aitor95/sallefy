@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,10 +19,9 @@ import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.utils.PreferenceUtils;
 
 import java.util.ArrayList;
-
-import okhttp3.ResponseBody;
 
 public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
@@ -29,6 +29,8 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<Playlist> mPlaylists;
+	private boolean playlistsAvailable;
+
 
 
 	private static AdapterClickCallback adapterClickCallback;
@@ -46,7 +48,11 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_me_lists, container, false);
 		initViews(v);
-		getData();
+		getData(v);
+		if(!playlistsAvailable) {
+			TextView text = v.findViewById(R.id.me_text_error);
+			text.setText(R.string.NoContentAvailable);
+		}
 		return v;
 	}
 
@@ -58,9 +64,8 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		mRecyclerView.setAdapter(adapter);
 	}
 
-	private void getData() {
-		//TODO: cambiar por coger las listas que tocan
-		PlaylistManager.getInstance(getActivity()).getListOfPlaylist(this);
+	private void getData(View v) {
+		PlaylistManager.getInstance(getActivity()).getPlaylistsByUser(PreferenceUtils.getUser(v.getContext()),this);
 		mPlaylists = new ArrayList<>();
 	}
 
@@ -77,6 +82,7 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	@Override
 	public void onAllList(ArrayList<Playlist> playlists) {
 		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(playlists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
+		this.playlistsAvailable = !playlists.isEmpty();
 		mRecyclerView.setAdapter(adapter);
 	}
 

@@ -134,7 +134,7 @@ public class MeFragment extends Fragment {
 		CircleImageView user_img = v.findViewById(R.id.user_img);
 
 
-		//Sustituir por informacion real en la UI
+		//TODO poner imagen real usuario
 		TextView user_name = v.findViewById(R.id.user_name);
 		user_name.setText(PreferenceUtils.getUser(v.getContext()));
 	}

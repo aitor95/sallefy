@@ -157,7 +157,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 ArrayList<Track> tracks = (ArrayList<Track>) mPlaylist.getTracks();
                 int size = tracks.size();
 
-                adapterClickCallback.onTrackClicked(tracks.get((int) (Math.random() * size)),mPlaylist);
+                adapterClickCallback.onTrackClicked(tracks.get((int) (Math.random() * size-1)),mPlaylist);
             }
         });
 

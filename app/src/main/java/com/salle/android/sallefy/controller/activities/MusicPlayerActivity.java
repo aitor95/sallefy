@@ -216,7 +216,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         partyMode = false;
 
         setContentView(R.layout.activity_music_player);
-        atachButtons();
 
         ///Deduce el modo de trabajo de la classe.
         Track track = (Track) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYER_SONG);
@@ -241,6 +240,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             }
         }
 
+
+        atachButtons();
         startStreamingService();
 
         detector = new GestureDetectorCompat(this, new OnSwipeListener() {
@@ -344,14 +345,17 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             mBoundService.setLoopMode((LoopButtonState)loopBtn.getTag());
         });
 
-        if(initPlaylist.getIsShuffleStart()){
+
+
+        shuffleBtn = findViewById(R.id.music_player_shuffle);
+
+        if(initPlaylist != null && initPlaylist.getIsShuffleStart()){
             shuffleBtn.setImageResource(R.drawable.ic_shuffle_active);
             shuffleBtn.setTag("playRandom");
         }else{
             shuffleBtn.setTag("DontPlayRandom");
         }
 
-        shuffleBtn = findViewById(R.id.music_player_shuffle);
         shuffleBtn.setOnClickListener(v -> {
             boolean shuffleActivated =shuffleBtn.getTag().equals("DontPlayRandom");
 

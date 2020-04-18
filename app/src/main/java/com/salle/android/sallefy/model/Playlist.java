@@ -37,6 +37,7 @@ public class Playlist implements Serializable {
     private Integer followers;
 
     private boolean followed;
+    private boolean isStartAsShuffle;
 
     public Playlist(){
 
@@ -56,6 +57,7 @@ public class Playlist implements Serializable {
 
     public Playlist(Playlist mPlaylist) {
         this.id = mPlaylist.id;
+
         this.name = mPlaylist.name;
         this.user = mPlaylist.user;
         this.description = mPlaylist.description;
@@ -64,6 +66,7 @@ public class Playlist implements Serializable {
         this.thumbnail = mPlaylist.thumbnail;
         this.followed = mPlaylist.followed;
         this.followers = mPlaylist.followers;
+        this.isStartAsShuffle = mPlaylist.isStartAsShuffle;
         //Duele a la vista, pero funciona.
         this.tracks = (ArrayList<Track>) ((ArrayList<Track>) mPlaylist.tracks).clone();
     }
@@ -161,5 +164,13 @@ public class Playlist implements Serializable {
     @Override
     public Object clone() throws CloneNotSupportedException {
         return super.clone();	// return shallow copy
+    }
+
+    public void startAsShuffle(boolean isStartAsShuffle) {
+        this.isStartAsShuffle = isStartAsShuffle;
+    }
+
+    public boolean getIsShuffleStart() {
+        return isStartAsShuffle;
     }
 }

@@ -181,6 +181,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                     }else{
                         mBoundService.loadSongs((ArrayList<Track>) initPlaylist.getTracks(), initTrack,true);
                     }
+
+                    mBoundService.setShuffle(initPlaylist.getIsShuffleStart());
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + modo);
@@ -342,8 +344,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             mBoundService.setLoopMode((LoopButtonState)loopBtn.getTag());
         });
 
+        if(initPlaylist.getIsShuffleStart()){
+            shuffleBtn.setImageResource(R.drawable.ic_shuffle_active);
+            shuffleBtn.setTag("playRandom");
+        }else{
+            shuffleBtn.setTag("DontPlayRandom");
+        }
+
         shuffleBtn = findViewById(R.id.music_player_shuffle);
-        shuffleBtn.setTag("DontPlayRandom");
         shuffleBtn.setOnClickListener(v -> {
             boolean shuffleActivated =shuffleBtn.getTag().equals("DontPlayRandom");
 

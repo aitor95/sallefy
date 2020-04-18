@@ -26,6 +26,7 @@ import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 
@@ -54,7 +55,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
     //Logic
     private boolean followed;
-    private boolean shuffle;
     private boolean owner;
     private boolean fragmentCreated;
     private int pId;
@@ -153,9 +153,11 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         mShuffleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                v.setBackgroundResource((shuffle) ? R.drawable.login_btn : R.drawable.following_btn);
-                shuffle = !shuffle;
+                mPlaylist.startAsShuffle(true);
+                ArrayList<Track> tracks = (ArrayList<Track>) mPlaylist.getTracks();
+                int size = tracks.size();
 
+                adapterClickCallback.onTrackClicked(tracks.get((int) (Math.random() * size)),mPlaylist);
             }
         });
 

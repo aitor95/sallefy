@@ -84,6 +84,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
         //Little hack to reduce code.
         onPlaylistById((Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
+
     }
 
     @Override
@@ -258,6 +259,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         @Override
     public void onPlaylistById(Playlist playlist) {
         this.mPlaylist = playlist;
+
+        this.pId = mPlaylist.getId();
 
         if (PreferenceUtils.getUser(this).equals(mPlaylist.getUserLogin())) {
             this.owner = true;

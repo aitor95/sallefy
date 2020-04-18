@@ -78,7 +78,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     //Definicion de los modos del sistema.
     private Modo modo;
 
-
     private enum Modo {
         //MusicPlayerActivity abierta porque el usuario ha pulsado una track
         PLAY_SONG_FROM_ZERO,

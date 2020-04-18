@@ -182,6 +182,7 @@
     <string name="error_like">Can\'t like now, try later…</string>
     <string name="error_follow">Can\'t follow now, try later…</string>
     <string name="ServiceNotLoadedError">Can\'t do that now, try again later...</string>
+    <string name="NoContentAvailable">There is no content available to show.</string>
 
 
 </resources>

@@ -29,6 +29,8 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<User> mUsers;
+	private ArrayList<User> mUsersFollowed;
+
 
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -102,13 +104,25 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
-		for (User u: mUsers) {
+
+		mUsersFollowed = new ArrayList<>();
+
+		for(User u: mUsers){
+			for(UserPublicInfo f: users){
+				if(u.getLogin().equals(f.getLogin())){
+					mUsersFollowed.add(u);
+					break;
+				}
+			}
+		}
+
+		for (User u: mUsersFollowed) {
 			u.setFollowedByUser(false);
 			for (UserPublicInfo upi: users)
 				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
 		}
 
-		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
+		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsersFollowed,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
 		mRecyclerView.setAdapter(adapter);
 	}
 

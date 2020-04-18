@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -29,6 +30,8 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	private ArrayList<Track> mTracks;
 
 	private static AdapterClickCallback adapterClickCallback;
+	private boolean tracksAvailable;
+
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
 	}
@@ -44,6 +47,10 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 		View v = inflater.inflate(R.layout.fragment_me_lists, container, false);
 		initViews(v);
 		getData();
+		if(!tracksAvailable) {
+			TextView text = v.findViewById(R.id.me_text_error);
+			text.setText(R.string.NoContentAvailable);
+		}
 		return v;
 	}
 
@@ -56,14 +63,14 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	}
 
 	private void getData() {
-		//TODO: cambiar por cojer lascanciones que tocan
-		TrackManager.getInstance(getActivity()).getAllTracks(this);
+		TrackManager.getInstance(getActivity()).getOwnTracks(this);
 		mTracks = new ArrayList<>();
 	}
 
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
 		mTracks = (ArrayList<Track>) tracks;
+		this.tracksAvailable = !tracks.isEmpty();
 		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), mTracks);
 		mRecyclerView.setAdapter(adapter);
 	}

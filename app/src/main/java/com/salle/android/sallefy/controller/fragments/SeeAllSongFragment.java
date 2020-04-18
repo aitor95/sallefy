@@ -15,7 +15,7 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
-import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
@@ -29,17 +29,23 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 	private RecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
 
+	private static Playlist mPlaylist;
+
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
 	}
 
+	public static void setPlaylist(Playlist playlist) {
+		mPlaylist = playlist;
+	}
 
 	public static Fragment getInstance() {
 		return new SeeAllSongFragment();
 	}
 
-	@Override
+
+    @Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 	}
@@ -52,6 +58,7 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 
 		mTracks = (ArrayList<Track>) getArguments().getSerializable(TAG_CONTENT);
 		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), mTracks);
+		adapter.setPlaylist(mPlaylist);
 		mRecyclerView.setAdapter(adapter);
 		return v;
 	}
@@ -75,12 +82,6 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		fragment.setArguments(bundle);
 
 		return fragment;
-	}
-
-	private void getData() {
-		//TODO: cambiar por coger lascanciones que tocan
-		TrackManager.getInstance(getActivity()).getAllTracks(this);
-		mTracks = new ArrayList<>();
 	}
 
 	@Override

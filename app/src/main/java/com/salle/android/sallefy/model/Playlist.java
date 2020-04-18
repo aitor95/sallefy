@@ -3,6 +3,8 @@ package com.salle.android.sallefy.model;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class Playlist implements Serializable {
@@ -47,6 +49,25 @@ public class Playlist implements Serializable {
         user.setLogin(author);
         this.thumbnail = thumbnail;
     }
+
+    public Playlist(ArrayList<Track> tracks) {
+        this.tracks = (ArrayList<Track>) tracks.clone();
+    }
+
+    public Playlist(Playlist mPlaylist) {
+        this.id = mPlaylist.id;
+        this.name = mPlaylist.name;
+        this.user = mPlaylist.user;
+        this.description = mPlaylist.description;
+        this.cover = mPlaylist.cover;
+        this.publicAccessible = mPlaylist.publicAccessible;
+        this.thumbnail = mPlaylist.thumbnail;
+        this.followed = mPlaylist.followed;
+        this.followers = mPlaylist.followers;
+        //Duele a la vista, pero funciona.
+        this.tracks = (ArrayList<Track>) ((ArrayList<Track>) mPlaylist.tracks).clone();
+    }
+
 
     public String getCover() {
         return cover;
@@ -131,5 +152,14 @@ public class Playlist implements Serializable {
 
     public void setFollowed(boolean followed) {
         this.followed = followed;
+    }
+
+    public void shuffle() {
+        Collections.shuffle(tracks);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();	// return shallow copy
     }
 }

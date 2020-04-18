@@ -127,13 +127,16 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
         super.onResume();
         //Volvemos del reproductor, actualizamos el mini reproductor.
         Log.d(TAG, "onResume: Volviendo a la main activity");
+        updateIfBoundToService();
+    }
+
+    private void updateIfBoundToService() {
         if(mServiceBound){
             Track track = mBoundService.getCurrentTrack();
             if(track != null){
                 updateMiniReproductorUI(track);
             }
         }
-
     }
 
     private void updateMiniReproductorUI(Track track) {
@@ -471,7 +474,10 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
             intent.putExtra(Constants.INTENT_EXTRAS.PLAYER_SONG,track);
             startActivity(intent);
         }else{
-            Log.d(TAG, "onTrackClicked: Pressed a song inside a playlist!");
+            Intent intent = new Intent(this, MusicPlayerActivity.class);
+            intent.putExtra(Constants.INTENT_EXTRAS.PLAYER_SONG,track);
+            intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST,playlist);
+            startActivity(intent);
         }
     }
 
@@ -507,7 +513,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
 
     @Override
     public void onUpdatePlayButton() {
-
+        
         if(mBoundService.isPlaying()){
             repPlayStop.setImageResource(R.drawable.ic_pause_circle_40dp);
             repPlayStop.setTag(STOP);
@@ -520,6 +526,12 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
     @Override
     public void onSongFinishedPlaying() {
         //TODO: MAYBE REMOVE THIS
+        Log.d(TAG, "onSongFinishedPlaying: ");
+    }
+
+    @Override
+    public void onSongChanged() {
+        updateIfBoundToService();
     }
 
     /** MiniReproductor Controls.*/

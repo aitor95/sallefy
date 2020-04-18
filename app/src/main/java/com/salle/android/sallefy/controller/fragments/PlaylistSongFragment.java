@@ -17,6 +17,7 @@ import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
 
@@ -27,9 +28,16 @@ public class PlaylistSongFragment extends Fragment {
 	private RecyclerView mRecyclerView;
 	private Playlist mPlaylist;
 
+	//Used to store is a shuffle is required when reproducing..
+	private static boolean mShuffle;
+
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
+	}
+
+	public static void setShuffled(boolean shuffle) {
+		mShuffle = shuffle;
 	}
 
 	@Override
@@ -43,9 +51,10 @@ public class PlaylistSongFragment extends Fragment {
 		View v = inflater.inflate(R.layout.fragment_playlist_song, container, false);
 		initViews(v);
 		Intent i = getActivity().getIntent();
-		mPlaylist = (Playlist) i.getSerializableExtra("playlist_data");
+		mPlaylist = (Playlist) i.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_DATA);
 		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), (ArrayList<Track>) mPlaylist.getTracks());
 		adapter.setPlaylist(mPlaylist);
+		adapter.setShuffle(mShuffle);
 		mRecyclerView.setAdapter(adapter);
 		return v;
 	}

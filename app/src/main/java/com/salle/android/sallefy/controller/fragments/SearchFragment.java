@@ -44,8 +44,6 @@ import com.salle.android.sallefy.model.UserToken;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
-
 public class SearchFragment extends Fragment implements PlaylistCallback, UserCallback, GenreCallback, TrackCallback, SearchCallback {
 
     public static final String TAG = SearchFragment.class.getName();
@@ -116,6 +114,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             //TODO: [USERS] Crear llistat de users
             Fragment fragment = SeeAllUserFragment.newInstance(users);
             FragmentManager manager = getFragmentManager();
+            SeeAllUserFragment.setAdapterClickCallback(adapterClickCallback);
             assert manager != null;
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
@@ -136,6 +135,9 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             //TODO: [PLAYLISTS] Crear llistat de playlists
             Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists);
 	        FragmentManager manager = getFragmentManager();
+
+            SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
+
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
 	        transaction.add(R.id.fragment_container,fragment);
@@ -169,6 +171,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             //TODO: [TRACKS] Afegir llistat de cançons
             Fragment fragment = SeeAllSongFragment.newInstance(tracks);
             FragmentManager manager = getFragmentManager();
+            SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
             assert manager != null;
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);

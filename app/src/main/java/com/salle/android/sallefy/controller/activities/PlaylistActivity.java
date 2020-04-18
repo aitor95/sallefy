@@ -79,19 +79,11 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_playlist);
 
-        /*
-        COdi antic
-        Intent intent = getIntent();
-        this.pId = (Integer) intent.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
-        this.followed = false;
-        this.shuffle = false;
-        this.owner = false;
-        */
-        //Little hack to reduce code.
-        onPlaylistById((Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
-
         this.fragmentCreated = false;
         initViews();
+
+        //Little hack to reduce code.
+        onPlaylistById((Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
     }
 
     @Override
@@ -160,7 +152,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
             public void onClick(View v) {
                 v.setBackgroundResource((shuffle) ? R.drawable.login_btn : R.drawable.following_btn);
                 shuffle = !shuffle;
-                // TODO: Logica de shuffle playlist
+                PlaylistSongFragment.setShuffled(shuffle);
             }
         });
 

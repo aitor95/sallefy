@@ -5,4 +5,5 @@ public interface MusicCallback {
     void onMusicPlayerPrepared();
     void onUpdatePlayButton();
     void onSongFinishedPlaying();
+    void onSongChanged();
 }

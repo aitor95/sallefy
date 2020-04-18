@@ -93,22 +93,35 @@ public class MusicService extends Service {
         stopSelf();
     }
 
-    public void loadSongs(ArrayList<Track> tracks){
-        mTracks = tracks;
-        loadSong(tracks.get(0));
+    public void loadSongs(ArrayList<Track> tracks, Track initTrack){
+        mTracks = (List<Track>) tracks.clone();
+
+        for (int i = mTracks.size() - 1; i >= 0; i--){
+            if(mTracks.get(i).getId().intValue() == initTrack.getId()){
+                currentTrack = i;
+                break;
+            }
+        }
+
+        Log.d(TAG, "loadSongs: ");
+        loadSong(initTrack);
+    }
+
+    public void removePlaylist(){
+        currentTrack = 0;
+        mTracks.clear();
     }
 
     //Carga una cancion en streaming.
-
     public void loadSong(Track track) {
         boolean mediaPlayerWasNull = (mediaPlayer == null);
         if (mediaPlayerWasNull) {
             //Init class values
-            currentTrack = 0;
             playingBeforeInterruption = false;
 
             //Crea una llista de reproduccio nova si no existeix
             if(mTracks == null) {
+                currentTrack = 0;
                 mTracks = new ArrayList<>();
                 mTracks.add(track);
             }
@@ -128,10 +141,6 @@ public class MusicService extends Service {
                     }
                 }
             });
-        }else{
-            //Clear the current playlist
-            mTracks.clear();
-            mTracks.add(track);
         }
 
         try {
@@ -178,10 +187,13 @@ public class MusicService extends Service {
     // Nota: offset puede ser negativo para reproducir canciones antiguas
     //       y puede ser positivo, para reproducir las siguientes de la lista.
     public Track changeTrack(int offset) {
-        if(mTracks == null) return null;
+        if(mTracks == null){
+            Log.d(TAG, "changeTrack: MTracks is null buddy!");
+            return null;
+        }
 
         int size = mTracks.size(); //Only query size once.
-
+        Log.d(TAG, "changeTrack: Size is " + size);
         currentTrack = (currentTrack + offset) % size;
 
         //Si nos pasamos por encima, pon el indice al inicio.
@@ -192,6 +204,7 @@ public class MusicService extends Service {
 
         Track track = mTracks.get(currentTrack);
         loadSong(track);
+        updateSongData();
 
         return track;
     }
@@ -199,10 +212,30 @@ public class MusicService extends Service {
     //Tell everyPlayer to update the button.
     public void updatePlayButton(){
         if(mCallback != null)
-           mCallback.onUpdatePlayButton();
+            mCallback.onUpdatePlayButton();
         if(mCallbackMini != null)
             mCallbackMini.onUpdatePlayButton();
     }
+
+    //Tell everyPlayer to update the song data(prev/skip buttons pressed).
+    public void updateSongData(){
+
+        try{
+            if(mCallback != null)
+                mCallback.onSongChanged();
+        }catch (Exception e){
+
+        }
+
+        try {
+            if(mCallbackMini != null)
+                mCallbackMini.onSongChanged();
+        }catch (Exception e){
+
+        }
+    }
+
+
 
     public void pauseSong() {
         try {
@@ -223,7 +256,8 @@ public class MusicService extends Service {
             CreateNotification.createNotification(this, getCurrentTrack(),true);
 
         } catch (Exception e) {
-            Log.d(TAG, "failed to start media player.");
+            Log.d(TAG, "failed to start media player." + e.getMessage() );
+            e.printStackTrace();
         }
     }
 
@@ -235,7 +269,7 @@ public class MusicService extends Service {
                 playSong();
             }
         }catch(Exception e) {
-            Log.d(TAG, "failed to toggle media player.");
+            Log.d(TAG, "failed to toggle media player." + e.getMessage());
         }
     }
 

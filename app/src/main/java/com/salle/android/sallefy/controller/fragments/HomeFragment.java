@@ -31,8 +31,6 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import okhttp3.ResponseBody;
-
 public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCallback {
 
     public static final String TAG = HomeFragment.class.getName();
@@ -84,6 +82,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
         LinearLayoutManager manager2 = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
         tracksAdapter = new TrackListVerticalAdapter( adapterClickCallback, getContext(), null);
+
         rvSongs = (RecyclerView) v.findViewById(R.id.songs_home);
         rvSongs.setLayoutManager(manager2);
         rvSongs.setAdapter(tracksAdapter);
@@ -108,7 +107,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
             Fragment fragment = SeeAllSongFragment.newInstance(tracks);
             SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
-
+            SeeAllSongFragment.setPlaylist(new Playlist((ArrayList<Track>) tracks));
             FragmentManager manager_seeAll = getFragmentManager();
             FragmentTransaction transaction = manager_seeAll.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
@@ -204,6 +203,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
             topTracks.add(tracks.get(i));
         }
         tracksAdapter = new TrackListVerticalAdapter(adapterClickCallback, getContext(), topTracks);
+        tracksAdapter.setPlaylist(new Playlist((ArrayList<Track>) tracks));
         rvSongs.setAdapter(tracksAdapter);
 
         this.tracks = (ArrayList<Track>) tracks;

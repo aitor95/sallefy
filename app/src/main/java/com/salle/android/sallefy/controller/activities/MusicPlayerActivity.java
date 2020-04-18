@@ -34,6 +34,8 @@ import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 
+import java.util.ArrayList;
+
 import static com.salle.android.sallefy.utils.OnSwipeListener.Direction.up;
 
 //Mirar https://developer.android.com/guide/components/bound-services?hl=es-419
@@ -69,12 +71,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     private ImageView thumbnail;
     private SeekBar seekBar;
 
-    //Guardamos la referencia a la cancion que abre el reproductor.
+    //Guardamos la referencia a la cancion/playlist que abre el reproductor.
     private Track initTrack;
-
+    private Playlist initPlaylist;
 
     //Definicion de los modos del sistema.
     private Modo modo;
+
+
     private enum Modo {
         //MusicPlayerActivity abierta porque el usuario ha pulsado una track
         PLAY_SONG_FROM_ZERO,
@@ -143,6 +147,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                     }else{
                         //Track nueva, empezamos de zero.
                         mBoundService.loadSong(initTrack);
+                        mBoundService.removePlaylist();
                     }
                     break;
 
@@ -155,18 +160,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                     break;
 
                 case PLAY_PLAYLIST_FROM_ZERO:
-
+                    updateUIDataBefore(initTrack);
+                    mBoundService.loadSongs((ArrayList<Track>) initPlaylist.getTracks(), initTrack);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + modo);
-            }
-
-            if(modo == Modo.PLAY_SONG_FROM_ZERO) {
-
-
-            }else if(modo == Modo.OPEN_SONG){
-
-
             }
         }
 
@@ -200,24 +198,27 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         atachButtons();
 
         ///Deduce el modo de trabajo de la classe.
-        Object trackOrPlaylist = getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYER_SONG);
-        if (trackOrPlaylist != null){
+        Track track = (Track) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYER_SONG);
+        Playlist playlist = (Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST);
+
+        if(playlist != null){
+            //Nos han pasado una playlist!
+            modo = Modo.PLAY_PLAYLIST_FROM_ZERO;
+            initPlaylist = playlist;
+            initTrack = track;
+        }else{
+
             //Nos han pasado una track?
-            if(trackOrPlaylist instanceof Track){
-                Track track = (Track) trackOrPlaylist;
+            if(track != null) {
                 updateUIDataBefore(track);
                 initTrack = track;
                 modo = Modo.PLAY_SONG_FROM_ZERO;
-            }else if(trackOrPlaylist instanceof Playlist){
-                //Nos han pasado una playlist!
-                modo = Modo.PLAY_PLAYLIST_FROM_ZERO;
+            }else{
+                //Han apretado el minireproductor.
+                modo = Modo.OPEN_SONG;
+                Log.d(TAG, "onCreate: El reproductor sha obert sense track de referencia.");
             }
-
-        } else{
-            modo = Modo.OPEN_SONG;
-            Log.d(TAG, "onCreate: El reproductor sha obert sense track de referencia.");
         }
-
 
         startStreamingService();
 
@@ -369,7 +370,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     }
 
     private String getTimeFromSeconds(int time) {
-        return time / 60 + ":" + time % 60;
+        int minutes = time / 60;
+        int seconds = time % 60;
+        String min = minutes < 10 ? "0"+minutes:""+minutes;
+        String sec = seconds < 10 ? "0"+seconds:""+seconds;
+        return min + ":" + sec;
     }
 
     private void updateUIDataBefore(Track track){
@@ -444,6 +449,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     public void onSongFinishedPlaying() {
         //TODO: MAYBE REMOVE THIS
         nextTrack();
+    }
+
+    @Override
+    public void onSongChanged() {
+        updateUIDataBefore(mBoundService.getCurrentTrack());
     }
 
     @Override

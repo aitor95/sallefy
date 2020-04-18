@@ -147,15 +147,18 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
             }
         });
 
+
+
         //Shuffle playlist button
         mShuffleBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 v.setBackgroundResource((shuffle) ? R.drawable.login_btn : R.drawable.following_btn);
                 shuffle = !shuffle;
-                PlaylistSongFragment.setShuffled(shuffle);
+
             }
         });
+
 
         //Back navigation button
         mNav.setOnClickListener(new View.OnClickListener() {

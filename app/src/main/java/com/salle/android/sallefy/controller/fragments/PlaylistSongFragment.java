@@ -28,17 +28,11 @@ public class PlaylistSongFragment extends Fragment {
 	private RecyclerView mRecyclerView;
 	private Playlist mPlaylist;
 
-	//Used to store is a shuffle is required when reproducing..
-	private static boolean mShuffle;
-
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
 	}
 
-	public static void setShuffled(boolean shuffle) {
-		mShuffle = shuffle;
-	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -54,7 +48,7 @@ public class PlaylistSongFragment extends Fragment {
 		mPlaylist = (Playlist) i.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_DATA);
 		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), (ArrayList<Track>) mPlaylist.getTracks());
 		adapter.setPlaylist(mPlaylist);
-		adapter.setShuffle(mShuffle);
+
 		mRecyclerView.setAdapter(adapter);
 		return v;
 	}

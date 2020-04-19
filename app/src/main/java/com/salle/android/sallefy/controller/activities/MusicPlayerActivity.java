@@ -221,6 +221,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         Track track = (Track) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYER_SONG);
         Playlist playlist = (Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST);
 
+
+        atachButtons();
         if(playlist != null){
             //Nos han pasado una playlist!
             modo = Modo.PLAY_PLAYLIST_FROM_ZERO;
@@ -240,8 +242,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             }
         }
 
-
-        atachButtons();
         startStreamingService();
 
         detector = new GestureDetectorCompat(this, new OnSwipeListener() {

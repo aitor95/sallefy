@@ -13,11 +13,15 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface TrackService {
 
     @GET("tracks")
     Call<List<Track>> getAllTracks(@Header("Authorization") String token);
+
+    @GET("tracks")
+    Call<List<Track>> getAllTracksSocial(@Header("Authorization") String token, @Query("size") int size, @Query("recent") boolean recent);
 
     @GET("me/tracks")
     Call<List<Track>> getOwnTracks(@Header("Authorization") String token);

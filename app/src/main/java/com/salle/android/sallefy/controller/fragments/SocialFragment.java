@@ -80,7 +80,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
 		mFollowing = new ArrayList<UserPublicInfo>();
 		mFollowing.addAll(users);
-		TrackManager.getInstance(getActivity()).getAllTracks(this);
+		TrackManager.getInstance(getActivity()).getAllTracksSocial(this);
 	}
 
 	@Override

@@ -93,6 +93,12 @@
         <item name="android:textColor">@color/colorBlack</item>
     </style>
 
+    <style name="me_aux_text">
+        <item name="android:fontFamily">@font/roboto_light</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#FF989898</item>
+    </style>
+
     <style name="MeNavigationView">
         <item name="android:textSize">14sp</item>
         <item name="android:textColor">@color/colorBlack</item>

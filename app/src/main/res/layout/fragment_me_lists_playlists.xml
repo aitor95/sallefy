@@ -12,6 +12,8 @@
         android:id="@+id/me_text_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        style="@style/me_aux_text"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/dynamic_recyclerView"
         app:layout_constraintLeft_toLeftOf="parent"

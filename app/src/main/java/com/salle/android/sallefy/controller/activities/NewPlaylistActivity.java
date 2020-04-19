@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.activities;
 
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,8 +52,6 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     //Logic
     private Playlist mPlaylist;
     private boolean coverChosen;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -169,7 +168,8 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     @Override
     public void onPlaylistCreated() {
         coverChosen = false;
-        Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_success, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_success, Toast.LENGTH_SHORT).show();
+        finish();
     }
 
     @Override

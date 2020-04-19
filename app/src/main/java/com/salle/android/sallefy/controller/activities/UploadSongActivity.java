@@ -3,6 +3,7 @@ package com.salle.android.sallefy.controller.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import com.bumptech.glide.Glide;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
@@ -25,6 +27,7 @@ import com.salle.android.sallefy.controller.restapi.manager.GenreManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
@@ -32,7 +35,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class UploadSongActivity extends AppCompatActivity implements TrackCallback, UploadCallback, GenreCallback {
+public class UploadSongActivity extends AppCompatActivity implements TrackCallback, UploadCallback, GenreCallback, BottomMenuDialog.BottomMenuDialogInterf {
 
     public static final String TAG = UploadSongActivity.class.getName();
 
@@ -304,5 +307,36 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     @Override
     public void onReschedule(String requestId, ErrorInfo error) {
 
+    }
+
+    private void tryToLike(TrackViewPack track) {
+        TrackManager.getInstance(this).likeTrack(track.getTrack().getId(),
+                !track.getTrack().isLiked(),
+                track.getCallback());
+    }
+
+    @Override
+    public void onButtonClicked(TrackViewPack track, String text) {
+        switch (text) {
+            case "like":
+                Log.d(TAG, "onButtonClicked: LIKE!");
+                tryToLike(track);
+                break;
+            case "addToPlaylist":
+                Log.d(TAG, "onButtonClicked: ADDTOPLAYLIST");
+                break;
+            case "showArtist":
+                Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
+                break;
+            case "delete":
+                Log.d(TAG, "onButtonClicked: DELETE");
+                break;
+            case "edit":
+                Log.d(TAG, "onButtonClicked: EDIT");
+                Intent intent = new Intent(this, EditSongActivity.class);
+                intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
+                startActivity(intent);
+                break;
+        }
     }
 }

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.AddSongsToPlayListAdapter;
+import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
@@ -21,6 +22,7 @@ import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
@@ -28,7 +30,7 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 
-public class AddSongsToPlaylistActivity extends AppCompatActivity implements PlaylistCallback, TrackCallback {
+public class AddSongsToPlaylistActivity extends AppCompatActivity implements PlaylistCallback, TrackCallback, BottomMenuDialog.BottomMenuDialogInterf {
 
     public static final String TAG = AddSongsToPlaylistActivity.class.getName();
 
@@ -185,5 +187,36 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     @Override
     public void onUpdatedTrack() {
 
+    }
+
+    private void tryToLike(TrackViewPack track) {
+        TrackManager.getInstance(this).likeTrack(track.getTrack().getId(),
+                !track.getTrack().isLiked(),
+                track.getCallback());
+    }
+
+    @Override
+    public void onButtonClicked(TrackViewPack track, String text) {
+        switch (text) {
+            case "like":
+                Log.d(TAG, "onButtonClicked: LIKE!");
+                tryToLike(track);
+                break;
+            case "addToPlaylist":
+                Log.d(TAG, "onButtonClicked: ADDTOPLAYLIST");
+                break;
+            case "showArtist":
+                Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
+                break;
+            case "delete":
+                Log.d(TAG, "onButtonClicked: DELETE");
+                break;
+            case "edit":
+                Log.d(TAG, "onButtonClicked: EDIT");
+                Intent intent = new Intent(this, EditSongActivity.class);
+                intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
+                startActivity(intent);
+                break;
+        }
     }
 }

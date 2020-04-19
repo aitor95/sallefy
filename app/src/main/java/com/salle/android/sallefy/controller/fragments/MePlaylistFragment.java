@@ -1,5 +1,6 @@
 package com.salle.android.sallefy.controller.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.activities.NewPlaylistActivity;
+import com.salle.android.sallefy.controller.activities.SettingsActivity;
 import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
@@ -62,10 +65,10 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 
-		Button addNew = v.findViewById(R.id.add_new_btn);
+		Button addNew = v.findViewById(R.id.me_add_new_playlist);
 		addNew.setOnClickListener(view -> {
-			//TODO: add new playlist
-
+			Intent intent = new Intent(getContext(), NewPlaylistActivity.class);
+			startActivity(intent);
 		});
 	}
 

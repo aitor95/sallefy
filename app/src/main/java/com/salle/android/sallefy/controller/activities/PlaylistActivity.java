@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -21,12 +22,15 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
+import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.fragments.PlaylistSongFragment;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
+import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 
@@ -36,7 +40,7 @@ import java.util.ArrayList;
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
-public class PlaylistActivity extends AppCompatActivity implements PlaylistCallback {
+public class PlaylistActivity extends AppCompatActivity implements PlaylistCallback, BottomMenuDialog.BottomMenuDialogInterf {
 
     public static final String TAG = PlaylistActivity.class.getName();
 
@@ -376,5 +380,35 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         Toast.makeText(getApplicationContext(), R.string.playlist_creation_failure, Toast.LENGTH_LONG).show();
     }
 
+    private void tryToLike(TrackViewPack track) {
+        TrackManager.getInstance(this).likeTrack(track.getTrack().getId(),
+                !track.getTrack().isLiked(),
+                track.getCallback());
+    }
+
+    @Override
+    public void onButtonClicked(TrackViewPack track, String text) {
+        switch (text) {
+            case "like":
+                Log.d(TAG, "onButtonClicked: LIKE!");
+                tryToLike(track);
+                break;
+            case "addToPlaylist":
+                Log.d(TAG, "onButtonClicked: ADDTOPLAYLIST");
+                break;
+            case "showArtist":
+                Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
+                break;
+            case "delete":
+                Log.d(TAG, "onButtonClicked: DELETE");
+                break;
+            case "edit":
+                Log.d(TAG, "onButtonClicked: EDIT");
+                Intent intent = new Intent(this, EditSongActivity.class);
+                intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
+                startActivity(intent);
+                break;
+        }
+    }
 
 }

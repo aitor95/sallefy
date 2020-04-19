@@ -465,8 +465,6 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
 
     @Override
     public void onTrackClicked(Track track, Playlist playlist) {
-
-
         if(playlist == null){
 
             Log.d(TAG, "onTrackSelected: Track is " + track.getName());
@@ -484,9 +482,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
     @Override
     public void onPlaylistClick(Playlist playlist) {
         Log.d(TAG, "onPlaylistClick: Playlist is " + playlist.getName());
-        /*Intent intent = new Intent(this, MusicPlayerActivity.class);
-        intent.putExtra(Constants.INTENT_EXTRAS.PLAYER_PLAYLIST, playlist);
-        startActivity(intent);*/
+
         Intent intent = new Intent(this, PlaylistActivity.class);
         PlaylistActivity.setAdapterClickCallback(this);
         intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, playlist);
@@ -521,12 +517,6 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
             repPlayStop.setImageResource(R.drawable.ic_play_circle_filled_40dp);
             repPlayStop.setTag(PLAY);
         }
-    }
-
-    @Override
-    public void onSongFinishedPlaying() {
-        //TODO: MAYBE REMOVE THIS
-        Log.d(TAG, "onSongFinishedPlaying: ");
     }
 
     @Override

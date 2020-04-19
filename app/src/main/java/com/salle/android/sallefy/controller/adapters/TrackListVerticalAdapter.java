@@ -33,7 +33,6 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
     //Guardamos la referencia del holder que le han dado like
     private ViewHolder likedHolder;
     private Playlist mPlaylist;
-    private boolean mShuffle;
 
     public TrackListVerticalAdapter(AdapterClickCallback callback, Context context, ArrayList<Track> tracks ) {
         mTracks = tracks;
@@ -56,13 +55,8 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
 
         Track track = mTracks.get(position);
         holder.mLayout.setOnClickListener(v -> {
-            Playlist p = mPlaylist;
 
-            if(mShuffle) {
-                p = new Playlist(p);
-                p.shuffle();
-            }
-            mCallback.onTrackClicked(track, p);
+            mCallback.onTrackClicked(track, mPlaylist);
         });
 
 
@@ -148,9 +142,6 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
         this.mPlaylist = mPlaylist;
     }
 
-    public void setShuffle(boolean mShuffle) {
-        this.mShuffle = mShuffle;
-    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 

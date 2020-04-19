@@ -9,10 +9,12 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.salle.android.sallefy.controller.activities.MusicPlayerActivity;
 import com.salle.android.sallefy.controller.notifications.CreateNotification;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -39,6 +41,20 @@ public class MusicService extends Service {
     private MusicCallback mCallback;
     private MusicCallback mCallbackMini;
 
+    //Define el comportamiento al acabar de reproducir una cancion
+    private MusicPlayerActivity.LoopButtonState loopMode = MusicPlayerActivity.LoopButtonState.LOOP_NOT_ACTIVATED;
+    private boolean shufflePlay = false;
+    private ArrayList<Integer> shufflePlaylistInices;
+
+    //Para controlar si hay que reproducir la primera cancion al finalizar la playlist.
+    private boolean loopPlaylist;
+
+    //Para controlar la reproduccion en loop de una sola cancion.
+    private boolean loopSong;
+
+    //Inidca si se esta gestionando el callback de songFinished.
+    private boolean songFinished;
+
     public int getPlaylistSize() {
         return mTracks != null ? mTracks.size() : 0;
     }
@@ -46,6 +62,45 @@ public class MusicService extends Service {
     public void songUpdateLike(boolean isLiked) {
         Track t = mTracks.get(currentTrack);
         t.setLiked(isLiked);
+    }
+
+    public void setLoopMode(MusicPlayerActivity.LoopButtonState mode) {
+        this.loopMode = mode;
+        //TODO: This could be optimized. Needs revision.
+        switch (loopMode) {
+            case LOOP_NOT_ACTIVATED:
+                //En el interior se controla si hay shuffle o no.
+                loopPlaylist = false;
+                loopSong = false;
+                break;
+
+            case LOOP_PLAYLIST_ON:
+                loopPlaylist = true;
+                loopSong = false;
+                break;
+
+            case LOOP_SONG_ON:
+                loopPlaylist = false;
+                loopSong = true;
+                break;
+        }
+        Log.d(TAG, "setLoopMode: Loop mode is " + loopMode.toString());
+    }
+
+    public void setShuffle(boolean shuffle) {
+        this.shufflePlay = shuffle;
+        shufflePlaylistInices = new ArrayList<Integer>();
+
+        int size = mTracks.size();
+
+        //Create the new list of indices
+        for(int i = size - 1; i >= 0; i--) shufflePlaylistInices.add(i);
+
+        //Remove the current track
+        shufflePlaylistInices.remove(size - 1 - currentTrack);
+
+        //Shuffle the playlist.
+        Collections.shuffle(shufflePlaylistInices);
     }
 
     public class MusicBinder extends Binder {
@@ -56,13 +111,11 @@ public class MusicService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d(TAG, "onDestroy: FUUK!");
         super.onDestroy();
     }
 
     @Override
     public void onCreate() {
-        Log.d(TAG, "onCreate: CREATED");
         super.onCreate();
     }
 
@@ -93,7 +146,7 @@ public class MusicService extends Service {
         stopSelf();
     }
 
-    public void loadSongs(ArrayList<Track> tracks, Track initTrack){
+    public void loadSongs(ArrayList<Track> tracks, Track initTrack, boolean startSong){
         mTracks = (List<Track>) tracks.clone();
 
         for (int i = mTracks.size() - 1; i >= 0; i--){
@@ -103,8 +156,9 @@ public class MusicService extends Service {
             }
         }
 
-        Log.d(TAG, "loadSongs: ");
-        loadSong(initTrack);
+        if(startSong) {
+            loadSong(initTrack);
+        }
     }
 
     public void removePlaylist(){
@@ -131,14 +185,7 @@ public class MusicService extends Service {
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
-                    if (mCallback != null) {
-                        mCallbackMini.onSongFinishedPlaying();
-                        try {
-                            mCallback.onSongFinishedPlaying();
-                        }catch (Exception e){
-                            //Ignoramos. Simplemente la activity del callback ya no existe.
-                        }
-                    }
+                    onSongFinished();
                 }
             });
         }
@@ -173,6 +220,29 @@ public class MusicService extends Service {
         }
     }
 
+    //Decide el comportamiento al acabar una cancion.
+    private void onSongFinished() {
+        songFinished = true;
+        switch (loopMode) {
+            case LOOP_NOT_ACTIVATED:
+                loopPlaylist = false;
+                loopSong = false;
+                break;
+
+            case LOOP_PLAYLIST_ON:
+                loopPlaylist = true;
+                loopSong = false;
+                break;
+
+            case LOOP_SONG_ON:
+                loopPlaylist = false;
+                loopSong = true;
+                break;
+        }
+        //En el interior se controla si hay shuffle o no.
+        changeTrack(1);
+    }
+
     public int getAudioSession() {
         return mediaPlayer.getAudioSessionId();
     }
@@ -191,20 +261,48 @@ public class MusicService extends Service {
             Log.d(TAG, "changeTrack: MTracks is null buddy!");
             return null;
         }
-
         int size = mTracks.size(); //Only query size once.
-        Log.d(TAG, "changeTrack: Size is " + size);
-        currentTrack = (currentTrack + offset) % size;
 
-        //Si nos pasamos por encima, pon el indice al inicio.
-        currentTrack = currentTrack >= size ? 0 : currentTrack;
+        if(!loopPlaylist && songFinished && currentTrack + offset >= size){
+            //Dont reproduce more songs.
+            pauseSong();
+            updateSongData();
+            updatePlayButton();
+            //We done!
+            return null;
+        }
 
-        //Si nos pasamos por debajo, pon el indice al final.
-        currentTrack = currentTrack < 0 ? (size - 1) : currentTrack;
+        int currentTrackMemorized = currentTrack;
+
+        if (shufflePlay && !loopSong) {
+            if(shufflePlaylistInices.isEmpty()){
+                ///Mini hack para llenar la lista random otra vez.
+                Log.d(TAG, "changeTrack: List empty, shuffling again!");
+                setShuffle(true);
+
+            }
+
+            currentTrack = shufflePlaylistInices.remove(0);
+            Log.d(TAG, "changeTrack: Track selected is " + currentTrack);
+
+        } else if(!loopSong){
+
+            Log.d(TAG, "changeTrack: Size is " + size);
+            currentTrack = (currentTrack + offset) % size;
+
+            //Si nos pasamos por encima, pon el indice al inicio.
+            currentTrack = currentTrack >= size ? 0 : currentTrack;
+
+            //Si nos pasamos por debajo, pon el indice al final.
+            currentTrack = currentTrack < 0 ? (size - 1) : currentTrack;
+        }
+
+        //Nota: En el caso de LoopSong, no modificamos la current track, asi que nos querdamos igual.
 
         Track track = mTracks.get(currentTrack);
         loadSong(track);
         updateSongData();
+        songFinished = false;
 
         return track;
     }

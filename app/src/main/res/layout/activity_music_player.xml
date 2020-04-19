@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -45,9 +46,12 @@
     <TextView
         android:id="@+id/music_player_title"
         style="@style/TitlesTheme"
-        android:layout_width="wrap_content"
+        android:layout_width="300dp"
+        android:gravity="center"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="@string/music_player_title" />
 
     <TextView
@@ -56,6 +60,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
+        android:ellipsize="end"
+        android:maxLines="1"
         android:text="@string/music_player_author" />
 
     <LinearLayout
@@ -124,9 +130,19 @@
         android:orientation="horizontal">
 
         <ImageButton
+            android:id="@+id/music_player_loop"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="37dp"
+            android:background="@null"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_repeat"
+            android:layout_weight="1" />
+
+        <ImageButton
             android:id="@+id/music_player_prev"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center"
             android:src="@drawable/ic_skip_previous_24dp"
             android:background="@null"
@@ -145,11 +161,21 @@
         <ImageButton
             android:id="@+id/music_player_next"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_marginStart="37dp"
             android:background="@null"
             android:layout_gravity="center"
             android:src="@drawable/ic_skip_next_24dp"
             android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/music_player_shuffle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginStart="37dp"
+            android:layout_weight="1"
+            android:background="@null"
+            android:src="@drawable/ic_shuffle" />
     </LinearLayout>
 </LinearLayout>

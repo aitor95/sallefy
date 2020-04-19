@@ -20,6 +20,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog.BottomMenuDialogInterf;
@@ -593,8 +594,29 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                 Log.d(TAG, "onButtonClicked: EDIT");
                 Intent intent = new Intent(this, EditSongActivity.class);
                 intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, mBoundService.getCurrentTrack());
-                startActivity(intent);
+                startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDIT);
                 break;
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Back from edit song!
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.EDIT_CONTENT.TRACK_EDIT && resultCode == RESULT_OK) {
+            //Update track information
+            boolean audioSet = data.getBooleanExtra("audioSet", false);
+            if(audioSet){
+                //Audio file was updated
+                mBoundService.loadSong((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
+                updateUIDataBefore((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
+
+            }else{
+                //Audio file was not updated
+                updateUIDataBefore((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
+                updateSongInfoAfterLoad();
+            }
+        }
+    }
+
 }

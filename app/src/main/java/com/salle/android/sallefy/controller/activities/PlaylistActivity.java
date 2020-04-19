@@ -33,6 +33,7 @@ import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
+import com.salle.android.sallefy.utils.Session;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -274,7 +275,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
         this.pId = mPlaylist.getId();
 
-        if (PreferenceUtils.getUser(this).equals(mPlaylist.getUserLogin())) {
+        if (Session.getInstance(this).getUser().getLogin().equals(mPlaylist.getUserLogin())) {
             this.owner = true;
         }
 

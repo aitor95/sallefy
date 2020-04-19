@@ -104,7 +104,12 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
 
         mBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { finish(); }
+            public void onClick(View v) {
+                Intent data = new Intent();
+                data.putExtra(Constants.INTENT_EXTRAS.TRACK, mTrack);
+                data.putExtra("audioSet", audioSet);
+                setResult(RESULT_OK, data);
+                finish(); }
         });
 
         mGenresMenu = new PopupMenu(this,mGenresBtn);

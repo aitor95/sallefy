@@ -29,6 +29,8 @@ import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.utils.PreferenceUtils;
+import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,6 +63,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     private boolean trackChosen;
     private boolean genresFetched;
     private boolean audioSet;
+    private boolean uploaded;
     private Track mTrack;
     private ArrayList<Genre> mAPIGenres;
     private ArrayList<Genre> mCurrentGenres;
@@ -78,6 +81,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         trackChosen = false;
         genresFetched = false;
         audioSet = false;
+        uploaded = false;
         mCurrentGenres = new ArrayList<Genre>();
     }
 
@@ -103,7 +107,14 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
 
         mBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { finish(); }
+            public void onClick(View v) {
+                //We return the edited playlist to PlaylistActivity
+                if(uploaded){
+                    Intent data = new Intent();
+                    data.putExtra(Constants.INTENT_EXTRAS.TRACK, mTrack);
+                    setResult(RESULT_OK, data);
+                }
+                finish(); }
         });
 
         mGenresMenu = new PopupMenu(this,mGenresBtn);
@@ -191,6 +202,8 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
             }else {
 
                 mTrack.setName(mName.getText().toString());
+               // mTrack.setUserLogin(new String(Session.getInstance(this).getUser().getLogin()));
+                mTrack.setUser(Session.getInstance(this).getUser());
 
                 if(mCurrentGenres.size() != 0){
                     mTrack.setGenres(mCurrentGenres);
@@ -230,6 +243,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
 
     @Override
     public void onCreateTrack() {
+        uploaded = true;
         Toast.makeText(getApplicationContext(), R.string.upload_song_creation_success, Toast.LENGTH_SHORT).show();
     }
 

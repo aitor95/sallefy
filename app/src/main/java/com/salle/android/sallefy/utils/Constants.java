@@ -8,6 +8,7 @@ public class Constants {
         String PLAYER_PLAYLIST = "_EXTRA_PLAYLIST_" ;
         String isSongLikedBottomMenu = "_EXTRA_SONG_LIKED_";
         String PLAYLIST = "_PLAYLIST_";
+        String TRACK = "_TRACK_";
         String PLAYLIST_DATA = "_PLAYLIST_DATA_";
         String CURRENT_TRACK = "_CURRENT_TRACK_";
         String PLAYLIST_ID = "_PLAYLIST_ID_";

@@ -97,6 +97,15 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.EDIT_CONTENT.TRACK_EDIT && resultCode == RESULT_OK) {
+            mTracks.add((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
+            mAdapter.notifyDataSetChanged();
+        }
+    }
+
+    @Override
     public void onPlaylistById(Playlist playlist) {
         this.mPlaylist = playlist;
         if(this.mPlaylist.getTracks()!=null){

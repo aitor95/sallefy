@@ -1,6 +1,8 @@
 package com.salle.android.sallefy.controller.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,14 +17,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.controller.activities.UploadSongActivity;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import jp.wasabeef.glide.transformations.BlurTransformation;
 
 
 public class AddSongsToPlayListAdapter extends RecyclerView.Adapter<AddSongsToPlayListAdapter.ViewHolder> {
@@ -31,6 +30,8 @@ public class AddSongsToPlayListAdapter extends RecyclerView.Adapter<AddSongsToPl
     private static final String TAG = "AddSongsToPlaylistAdapter";
     private ArrayList<Track> mTracks;
     private ArrayList<Track> mSelectedTracks;
+
+
 
     private Context mContext;
 
@@ -80,9 +81,6 @@ public class AddSongsToPlayListAdapter extends RecyclerView.Adapter<AddSongsToPl
                 }
             });
 
-            if(track.getName().equals("Avicii - Without you")){
-                System.out.println("hello");
-            }
             Glide.with(mContext)
                     .asBitmap()
                     .placeholder(R.drawable.ic_audiotrack)
@@ -118,10 +116,13 @@ public class AddSongsToPlayListAdapter extends RecyclerView.Adapter<AddSongsToPl
 
     }
 
-    void createTrack(){
-        //Todo: Crear una nueva track.
-        Log.d(TAG, "createPlaylist: Creating playlist...");
+    void createTrack( ){
+        Intent intent = new Intent(mContext, UploadSongActivity.class);
+        ((Activity)mContext).startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDIT);
     }
+
+
+
 
     @Override
     public int getItemCount() {

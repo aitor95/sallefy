@@ -47,7 +47,6 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
 
     //Logic
     private Playlist mPlaylist;
-    private Integer pId;
     private boolean coverChosen;
     private boolean saved;
     private boolean completed;
@@ -58,22 +57,11 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_playlist);
 
-        Intent intent = getIntent();
-        this.pId = (Integer) intent.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
         coverChosen = false;
         completed = true;
         saved = true;
         initViews();
     }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        if(!coverChosen){
-            PlaylistManager.getInstance(getApplicationContext())
-                    .getPlaylistById(this.pId, EditPlaylistActivity.this);
-        }
-     }
 
     private void initViews() {
         mImg = (ImageView) findViewById(R.id.edit_playlist_img);
@@ -81,13 +69,17 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         mTitle = (EditText) findViewById(R.id.edit_playlist_title);
         mImgBtn = (ImageButton) findViewById(R.id.edit_playlist_change_photo);
 
-        PlaylistManager.getInstance(getApplicationContext())
-                .getPlaylistById(this.pId, EditPlaylistActivity.this);
+        onPlaylistById((Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
 
         mNav = (ImageButton) findViewById(R.id.edit_playlist_nav);
         mNav.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) { finish(); }
+            public void onClick(View v) {
+                //We return the edited playlist to PlaylistActivity
+                Intent data = new Intent();
+                data.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
+                setResult(RESULT_OK, data);
+                finish(); }
         });
 
         mImg.setOnClickListener(new View.OnClickListener() {
@@ -113,8 +105,8 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getApplicationContext(),AddSongsToPlaylistActivity.class);
-                intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID, pId);
-                startActivity(intent);
+                intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
+                startActivityForResult(intent, Constants.EDIT_CONTENT.PLAYLIST_EDIT);
             }
         });
     }
@@ -158,6 +150,11 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
                 .override(400,400)
                 .into(mImg);
             coverChosen = true;
+        }else {
+            if (requestCode == Constants.EDIT_CONTENT.PLAYLIST_EDIT && resultCode == RESULT_OK) {
+                //Update playlist information
+                onPlaylistById((Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
+            }
         }
     }
 

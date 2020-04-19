@@ -10,7 +10,6 @@ public class Constants {
         String PLAYLIST = "_PLAYLIST_";
         String PLAYLIST_DATA = "_PLAYLIST_DATA_";
         String CURRENT_TRACK = "_CURRENT_TRACK_";
-
         String PLAYLIST_ID = "_PLAYLIST_ID_";
     }
 
@@ -31,6 +30,11 @@ public class Constants {
         public static String INDEX = "sendingIndex";
         public static String TRACK = "sendingTrack";
         public static String TRACKS = "sendingTracks";
+    }
+
+    public interface EDIT_CONTENT {
+        public static int PLAYLIST_EDIT = 8;
+        public static int TRACK_EDIT = 9;
     }
 
     public interface ACTION {

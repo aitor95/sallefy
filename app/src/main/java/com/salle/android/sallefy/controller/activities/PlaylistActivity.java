@@ -87,14 +87,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        getIntent().removeExtra(Constants.INTENT_EXTRAS.PLAYLIST_DATA);
-        PlaylistManager.getInstance(getApplicationContext())
-                .getPlaylistById(this.pId, PlaylistActivity.this);
-    }
-
     private void initViews() {
 
         initElements();
@@ -106,14 +98,15 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
             public void onStateChanged(@NonNull View view, int state) {
                 switch (state) {
                     case BottomSheetBehavior.STATE_COLLAPSED:
+                    case BottomSheetBehavior.STATE_HIDDEN:
+                    case BottomSheetBehavior.STATE_HALF_EXPANDED:
                         showSongInformation(true);
                         blurTransformation(1);
                         break;
+
                     case BottomSheetBehavior.STATE_DRAGGING:
-                        showSongInformation(false);
-                        blurTransformation(25);
-                        break;
                     case BottomSheetBehavior.STATE_EXPANDED:
+
                         showSongInformation(false);
                         blurTransformation(25);
                         break;
@@ -140,8 +133,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                     PlaylistManager.getInstance(getApplicationContext()).setUserFollows(pId, followed, PlaylistActivity.this);
                 }else{
                     Intent intent = new Intent(getApplicationContext(), EditPlaylistActivity.class);
-                    intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID , pId);
-                    startActivity(intent);
+                    intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
+                    startActivityForResult(intent, Constants.EDIT_CONTENT.PLAYLIST_EDIT);
                 }
 
             }
@@ -196,6 +189,16 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
         mTransaction.add(R.id.fragment_container_playlist, playlistSongFragment);
         mTransaction.commit();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //Back from edit playlist!
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.EDIT_CONTENT.PLAYLIST_EDIT && resultCode == RESULT_OK) {
+            //Update playlist information
+            onPlaylistById((Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
+        }
     }
 
     private void blurTransformation(int intensity) {

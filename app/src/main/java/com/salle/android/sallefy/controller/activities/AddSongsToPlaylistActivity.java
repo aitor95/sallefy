@@ -42,7 +42,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     private ImageButton backBtn;
 
     private Playlist mPlaylist;
-    private List<Track> mPlaylistTracks;
+    private List<Track> mEditedTracks;
     private ArrayList<Track> mTracks;
     private Integer pId;
 
@@ -51,9 +51,6 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_songs_to_playlist);
         mAddSongToPlaylistRecyclerView = (RecyclerView) findViewById(R.id.add_songs_to_playlist_recycler_view);
-
-        Intent intent = getIntent();
-        this.pId = (Integer) intent.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
         initViews();
     }
 
@@ -72,9 +69,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "AddToPlaylistOnClick: called. Size of selected is " + mSelectedSongs.size());
-                //TODO: Añadir la cancion a cada una de las playlists.
                 updatePlaylist();
-
             }
         });
 
@@ -83,6 +78,9 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent data = new Intent();
+                data.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
+                setResult(RESULT_OK, data);
                 finish();
             }
         });
@@ -93,8 +91,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         for (int i = 0; i < mSelectedSongs.size(); i++) {
             this.mPlaylist.getTracks().add(mSelectedSongs.get(i));
         }
-        PlaylistManager.getInstance(getApplicationContext())
-                .updatePlaylist(this.mPlaylist, AddSongsToPlaylistActivity.this);
+        Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_success, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -136,7 +133,6 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     @Override
     public void onPlaylistUpdated() {
-        Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_success, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -163,8 +159,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     @Override
     public void onTracksReceived(List<Track> tracks) {
         mTracks = (ArrayList)tracks;
-        PlaylistManager.getInstance(getApplicationContext())
-                .getPlaylistById(this.pId, AddSongsToPlaylistActivity.this);
+        onPlaylistById((Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
     }
 
     @Override

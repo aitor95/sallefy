@@ -173,6 +173,7 @@
     <string name="Back_from_menu_text">Settings</string>
     <string name="GotoSymbol"><![CDATA[>]]></string>
     <string name="optionViewStats">View Sallefy statistics</string>
+    <string name="optionModifyAccount">Modify user account</string>
     <string name="optionDeleteAccount">Delete user account</string>
     <string name="optionLogOut">Log Out</string>
     <string name="no_tracks_on_social">The people you follow hasn\'t uploaded anything yet</string>

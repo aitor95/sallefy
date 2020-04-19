@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
@@ -23,6 +22,11 @@ public class SettingsActivity extends AppCompatActivity {
         optionStats.setOnClickListener(view -> {
             Intent intent = new Intent(this, StatisticsActivity.class);
             startActivity(intent);
+        });
+
+        RelativeLayout optionModify = findViewById(R.id.settings_option_modify_user);
+        optionStats.setOnClickListener(view -> {
+           //TODO: ir a modificar usuario en un intent
         });
 
         RelativeLayout optionDelete = findViewById(R.id.settings_option_deleteAccount);

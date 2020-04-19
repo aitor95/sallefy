@@ -133,6 +133,34 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/settings_option_modify_user"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingBottom="12dp"
+            android:paddingTop="12dp">
+
+            <TextView
+                style="@style/SettingOptionStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:paddingStart="24dp"
+                android:text="@string/optionModifyAccount"
+                android:layout_alignParentStart="true"/>
+
+            <TextView
+                style="@style/SettingOptionStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:paddingEnd="35dp"
+                android:text="@string/GotoSymbol"
+                android:layout_alignParentEnd="true"/>
+
+        </RelativeLayout>
+
+        <RelativeLayout
             android:id="@+id/settings_option_deleteAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

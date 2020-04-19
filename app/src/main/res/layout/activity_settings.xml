@@ -20,7 +20,7 @@
         android:clipToPadding="false">
 
         <ImageButton
-            android:id="@+id/new_playlist_nav"
+            android:id="@+id/back_btn_settings"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_back_arrow"

@@ -3,6 +3,7 @@ package com.salle.android.sallefy.controller.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -37,7 +38,7 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        RelativeLayout backoption = findViewById(R.id.relativeLayoutSettingsTitle);
+        ImageButton backoption = findViewById(R.id.back_btn_settings);
         backoption.setOnClickListener(view -> {
             finish();
         });

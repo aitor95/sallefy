@@ -46,6 +46,8 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		v = inflater.inflate(R.layout.fragment_me_lists_song, container, false);
+		TextView text = v.findViewById(R.id.me_text_error);
+		text.setText(R.string.LoadingMe);
 		initViews(v);
 		getData();
 		return v;
@@ -78,9 +80,11 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	@Override
 	public void onPersonalTracksReceived(List<Track> tracks) {
 		mTracks = (ArrayList<Track>) tracks;
+		TextView text = v.findViewById(R.id.me_text_error);
 		if(tracks.isEmpty()){
-			TextView text = v.findViewById(R.id.me_text_error);
 			text.setText(R.string.NoContentAvailableMeSongs);
+		}else{
+			text.setText(null);
 		}
 		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), mTracks);
 		mRecyclerView.setAdapter(adapter);

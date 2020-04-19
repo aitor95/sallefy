@@ -187,5 +187,7 @@
     <string name="NoContentAvailableMeUsers">You don\'t follow any user.</string>
     <string name="NoContentAvailableMeSongs">You haven\'t uploaded any song.</string>
     <string name="NoContentAvailableMePlayists">You haven\'t created any playlist.</string>
+    <string name="LoadingMe">Loading...</string>
+
 
 </resources>

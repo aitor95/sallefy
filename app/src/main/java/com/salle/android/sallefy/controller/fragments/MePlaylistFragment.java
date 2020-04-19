@@ -47,6 +47,8 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		v = inflater.inflate(R.layout.fragment_me_lists_playlists, container, false);
+		TextView text = v.findViewById(R.id.me_text_error);
+		text.setText(R.string.LoadingMe);
 		initViews(v);
 		getData(v);
 		return v;
@@ -73,9 +75,11 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	@Override
 	public void onPlaylistsByUser(ArrayList<Playlist> playlists) {
 		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(playlists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
+		TextView text = v.findViewById(R.id.me_text_error);
 		if(playlists.isEmpty()) {
-			TextView text = v.findViewById(R.id.me_text_error);
 			text.setText(R.string.NoContentAvailableMePlayists);
+		}else{
+			text.setText(null);
 		}
 		mRecyclerView.setAdapter(adapter);
 	}

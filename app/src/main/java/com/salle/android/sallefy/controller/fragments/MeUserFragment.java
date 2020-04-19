@@ -49,6 +49,8 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		v = inflater.inflate(R.layout.fragment_me_lists_users, container, false);
+		TextView text = v.findViewById(R.id.me_text_error);
+		text.setText(R.string.LoadingMe);
 		initViews(v);
 		getData();
 		return v;
@@ -112,6 +114,9 @@ public class MeUserFragment extends Fragment implements UserCallback {
 			for (UserPublicInfo upi : mUsersPublic)
 				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
 		}
+
+		TextView text = v.findViewById(R.id.me_text_error);
+		text.setText(null);
 
 		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsersFollowed,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
 		mRecyclerView.setAdapter(adapter);

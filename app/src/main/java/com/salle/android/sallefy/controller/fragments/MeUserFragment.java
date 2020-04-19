@@ -31,6 +31,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	private RecyclerView mRecyclerView;
 	private ArrayList<User> mUsers;
 	private ArrayList<User> mUsersFollowed;
+	private ArrayList<UserPublicInfo> mUsersPublic;
 
 	private View v;
 
@@ -62,8 +63,10 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	}
 
 	private void getData() {
-		UserManager.getInstance(getActivity()).getUsersFragmentMe(this);
 		mUsers = new ArrayList<>();
+		mUsersPublic = new ArrayList<>();
+		mUsersFollowed = new ArrayList<>();
+		UserManager.getInstance(getContext()).getMeFollowing(this);
 	}
 
 	@Override
@@ -94,7 +97,24 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	@Override
 	public void onUsersReceived(List<User> users) {
 		mUsers = (ArrayList<User>) users;
-		UserManager.getInstance(getContext()).getMeFollowing(this);
+
+		for(User u: mUsers){
+			for(UserPublicInfo f: mUsersPublic){
+				if(u.getLogin().equals(f.getLogin())){
+					mUsersFollowed.add(u);
+					break;
+				}
+			}
+		}
+
+		for (User u : mUsersFollowed) {
+			u.setFollowedByUser(false);
+			for (UserPublicInfo upi : mUsersPublic)
+				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
+		}
+
+		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsersFollowed,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
+		mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override
@@ -105,30 +125,15 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
-		mUsersFollowed = new ArrayList<>();
-
-		for(User u: mUsers){
-			for(UserPublicInfo f: users){
-				if(u.getLogin().equals(f.getLogin())){
-					mUsersFollowed.add(u);
-					break;
-				}
-			}
-		}
-
-		if(mUsersFollowed.isEmpty()){
+		mUsersPublic = (ArrayList<UserPublicInfo>) users;
+		if(mUsersPublic.isEmpty()){
 			TextView text = v.findViewById(R.id.me_text_error);
 			text.setText(R.string.NoContentAvailableMeUsers);
-		} else {
-			for (User u : mUsersFollowed) {
-				u.setFollowedByUser(false);
-				for (UserPublicInfo upi : users)
-					if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
-			}
+			UserVerticalAdapter adapter = new UserVerticalAdapter(mUsersFollowed,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
+			mRecyclerView.setAdapter(adapter);
+		}else{
+			UserManager.getInstance(getActivity()).getUsersFragmentMe(this);
 		}
-
-		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsersFollowed,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
-		mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override

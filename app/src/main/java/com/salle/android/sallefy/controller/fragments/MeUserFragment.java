@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,6 +32,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	private ArrayList<User> mUsers;
 	private ArrayList<User> mUsersFollowed;
 
+	private View v;
 
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -45,7 +47,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_me_lists, container, false);
+		v = inflater.inflate(R.layout.fragment_me_lists, container, false);
 		initViews(v);
 		getData();
 		return v;
@@ -104,7 +106,6 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
-
 		mUsersFollowed = new ArrayList<>();
 
 		for(User u: mUsers){
@@ -116,10 +117,15 @@ public class MeUserFragment extends Fragment implements UserCallback {
 			}
 		}
 
-		for (User u: mUsersFollowed) {
-			u.setFollowedByUser(false);
-			for (UserPublicInfo upi: users)
-				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
+		if(mUsersFollowed.isEmpty()){
+			TextView text = v.findViewById(R.id.me_text_error);
+			text.setText(R.string.NoContentAvailableMeUsers);
+		} else {
+			for (User u : mUsersFollowed) {
+				u.setFollowedByUser(false);
+				for (UserPublicInfo upi : users)
+					if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
+			}
 		}
 
 		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsersFollowed,adapterClickCallback, getContext(),  R.layout.item_user_vertical);

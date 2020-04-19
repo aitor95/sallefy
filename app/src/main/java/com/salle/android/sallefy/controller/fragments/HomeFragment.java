@@ -81,7 +81,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         rvPlaylists.setAdapter(playlistsAdapter);
 
         LinearLayoutManager manager2 = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-        tracksAdapter = new TrackListVerticalAdapter( adapterClickCallback, getContext(), null);
+        tracksAdapter = new TrackListVerticalAdapter( adapterClickCallback, getContext(), getFragmentManager(), null);
 
         rvSongs = (RecyclerView) v.findViewById(R.id.songs_home);
         rvSongs.setLayoutManager(manager2);
@@ -202,7 +202,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         for (int i = 0; i < 10; i++) {
             topTracks.add(tracks.get(i));
         }
-        tracksAdapter = new TrackListVerticalAdapter(adapterClickCallback, getContext(), topTracks);
+        tracksAdapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity().getApplicationContext(), getFragmentManager(), topTracks);
         tracksAdapter.setPlaylist(new Playlist((ArrayList<Track>) tracks));
         rvSongs.setAdapter(tracksAdapter);
 

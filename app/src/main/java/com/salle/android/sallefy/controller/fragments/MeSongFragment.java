@@ -33,6 +33,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	private View v;
 
 	private static AdapterClickCallback adapterClickCallback;
+	private boolean tracksAvailable;
 
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
@@ -57,7 +58,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), null);
+		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), null);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 
@@ -75,7 +76,10 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
-
+		//mTracks = (ArrayList<Track>) tracks;
+		//this.tracksAvailable = !tracks.isEmpty();
+		//TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), mTracks);
+		//mRecyclerView.setAdapter(adapter);
 	}
 
 
@@ -93,7 +97,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 		}else{
 			text.setText(null);
 		}
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), mTracks);
+		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
 		mRecyclerView.setAdapter(adapter);
 	}
 

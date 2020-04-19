@@ -111,6 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_delete_black"
+            android:id="@+id/bottom_menu_a_delete_img"
             android:orientation="horizontal" />
 
         <TextView
@@ -136,6 +137,7 @@
 
         <ImageView
             android:layout_width="wrap_content"
+            android:id="@+id/bottom_menu_a_editSong_img"
             android:layout_height="wrap_content"
             android:background="@drawable/ic_edit"
             android:orientation="horizontal" />

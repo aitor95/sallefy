@@ -46,7 +46,7 @@ public class PlaylistSongFragment extends Fragment {
 		initViews(v);
 		Intent i = getActivity().getIntent();
 		mPlaylist = (Playlist) i.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_DATA);
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), (ArrayList<Track>) mPlaylist.getTracks());
+		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), (ArrayList<Track>) mPlaylist.getTracks());
 		adapter.setPlaylist(mPlaylist);
 
 		mRecyclerView.setAdapter(adapter);
@@ -56,7 +56,7 @@ public class PlaylistSongFragment extends Fragment {
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), null);
+		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), null);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
 	}

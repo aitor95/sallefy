@@ -31,6 +31,7 @@ import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 
@@ -43,7 +44,6 @@ import static com.salle.android.sallefy.utils.OnSwipeListener.Direction.up;
 public class MusicPlayerActivity extends AppCompatActivity implements MusicCallback, LikeCallback, BottomMenuDialogInterf, isLikedCallback {
 
     public static final String TAG = MusicPlayerActivity.class.getName();
-
 
     public enum LoopButtonState {
         LOOP_NOT_ACTIVATED,
@@ -510,7 +510,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     }
 
     private void showMoreMenu() {
-        BottomMenuDialog dialog = new BottomMenuDialog(like.getTag().equals("Fav"));
+        BottomMenuDialog dialog = new BottomMenuDialog(new TrackViewPack(mBoundService.getCurrentTrack(), null, null), this);
         dialog.show(getSupportFragmentManager(),"options");
     }
 
@@ -574,7 +574,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
     //On button clicked del dialog de opciones de cancion
     @Override
-    public void onButtonClicked(String text) {
+    public void onButtonClicked(TrackViewPack track, String text) {
         switch (text) {
             case "like":
                 Log.d(TAG, "onButtonClicked: LIKE!");

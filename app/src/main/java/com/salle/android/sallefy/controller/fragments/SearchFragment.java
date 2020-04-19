@@ -43,10 +43,13 @@ import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SearchFragment extends Fragment implements PlaylistCallback, UserCallback, GenreCallback, TrackCallback, SearchCallback {
 
     public static final String TAG = SearchFragment.class.getName();
+    public static final int ACTIVE_WRITING_TIMEOUT = 500;
 
     private RecyclerView mUsersView;
     private UserHorizontalAdapter mUserHorizontalAdapter;
@@ -63,6 +66,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     private ArrayList<Track> tracks;
     private ArrayList<User> users;
 
+    private Timer searchTimer;
 
     private static AdapterClickCallback adapterClickCallback;
     public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -89,6 +93,8 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         tracks = new ArrayList<>();
         users = new ArrayList<>();
 
+        searchTimer = new Timer();
+
         return v;
     }
 
@@ -111,7 +117,6 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllUsers = v.findViewById(R.id.SeeAllSearchedUsers);
         seeAllUsers.setOnClickListener(view -> {
-            //TODO: [USERS] Crear llistat de users
             Fragment fragment = SeeAllUserFragment.newInstance(users);
             FragmentManager manager = getFragmentManager();
             SeeAllUserFragment.setAdapterClickCallback(adapterClickCallback);
@@ -132,7 +137,6 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
         seeAllPlaylists.setOnClickListener(view -> {
-            //TODO: [PLAYLISTS] Crear llistat de playlists
             Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists);
 	        FragmentManager manager = getFragmentManager();
 
@@ -147,17 +151,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         });
 
 
-
         LinearLayoutManager managerGenres = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
         mGenresAdapter = new GenresAdapter(null, adapterClickCallback, R.layout.item_genre);
         mGenresView = (RecyclerView) v.findViewById(R.id.search_genres_recyclerview);
         mGenresView.setLayoutManager(managerGenres);
         mGenresView.setAdapter(mGenresAdapter);
-
-        /*TextView seeAllGenres = v.findViewById(R.id.SeeAllSearchedGenres);
-        seeAllGenres.setOnClickListener(view -> {
-            //TODO: [GENRES] Afegir llistat de generes
-        });*/
 
 
         LinearLayoutManager managerTracks = new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false);
@@ -168,11 +166,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllTracks = v.findViewById(R.id.SeeAllSearchedSongs);
         seeAllTracks.setOnClickListener(view -> {
-            //TODO: [TRACKS] Afegir llistat de cançons
             Fragment fragment = SeeAllSongFragment.newInstance(tracks);
             FragmentManager manager = getFragmentManager();
-            SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
-            assert manager != null;
+
+            SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
+
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
             transaction.add(R.id.fragment_container,fragment);
@@ -183,26 +181,46 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         EditText searchText = v.findViewById(R.id.searchText);
 
         SearchCallback scallback = this;
-        searchText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                ((EditText) view).setTextAppearance(R.style.SearchWritingText);
-                String text = ((EditText) view).getText().toString();
+        searchText.setOnKeyListener((view, i, keyEvent) -> {
+            ((EditText) view).setTextAppearance(R.style.SearchWritingText);
+            String text = ((EditText) view).getText().toString();
 
-                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                    ((EditText) view).setText(text.replace("\n", ""));
-                    if (text.equals("")) getData();
-                    else SearchManager.getInstance(getContext()).search(((EditText) view).getText().toString(), scallback);
-                }
-
+            if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                ((EditText) view).setText(text.replace("\n", ""));
                 if (text.equals("")) getData();
                 else SearchManager.getInstance(getContext()).search(((EditText) view).getText().toString(), scallback);
-
-                //SearchManager.getInstance(getContext()).search(((EditText) view).getText().toString(), scallback);
-                return false;
             }
+
+            searchTimer.cancel();
+            searchTimer.purge();
+
+            searchTimer = new Timer();
+            searchTimer.schedule(new SearchPerformer(((EditText) view).getText().toString(), scallback), ACTIVE_WRITING_TIMEOUT);
+
+            //if (text.equals("")) getData();
+            //else SearchManager.getInstance(getContext()).search(((EditText) view).getText().toString(), scallback);
+
+            //SearchManager.getInstance(getContext()).search(((EditText) view).getText().toString(), scallback);
+            return false;
         });
 
+    }
+
+    class SearchPerformer extends TimerTask {
+
+        String searchText;
+        SearchCallback searchCallback;
+
+        public SearchPerformer(String searchText, SearchCallback searchCallback) {
+            this.searchText = searchText;
+            this.searchCallback = searchCallback;
+        }
+
+        @Override
+        public void run() {
+            if (searchText.equals("")) getData();
+            else SearchManager.getInstance(getContext()).search(searchText, searchCallback);
+        }
     }
 
     private void getData() {

@@ -7,26 +7,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.model.TrackViewPack;
+import com.salle.android.sallefy.utils.Session;
 
 public class BottomMenuDialog extends BottomSheetDialogFragment {
 
     private BottomMenuDialogInterf mListener;
 
-    private LinearLayout like;
-    private LinearLayout addToPlaylist;
-    private LinearLayout showArtist;
-    private LinearLayout delete;
-    private LinearLayout edit;
     private ImageView likeImage;
     private boolean songLiked;
+    private boolean isOwned;
+    private TrackViewPack track;
 
-    public BottomMenuDialog(boolean songLiked){
-        this.songLiked = songLiked;
+    public BottomMenuDialog(TrackViewPack track, Context context){
+        this.track = track;
+        this.songLiked = track.getTrack().isLiked();
+        this.isOwned = track.getTrack().getUserLogin().equals(Session.getInstance(context).getUser().getLogin());
     }
 
     @Override
@@ -44,58 +46,64 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
 
         likeImage.setImageResource(songLiked ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
 
-        like = v.findViewById(R.id.bottom_menu_a_like);
+        LinearLayout like = v.findViewById(R.id.bottom_menu_a_like);
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 songLiked = !songLiked;
                 likeImage.setImageResource(songLiked ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
-                mListener.onButtonClicked("like");
+                mListener.onButtonClicked(track,"like");
                 dismiss();
             }
         });
 
-        addToPlaylist = v.findViewById(R.id.bottom_menu_a_addtoPlaylist);
+        LinearLayout addToPlaylist = v.findViewById(R.id.bottom_menu_a_addtoPlaylist);
         addToPlaylist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onButtonClicked("addToPlaylist");
+                mListener.onButtonClicked(track, "addToPlaylist");
                 dismiss();
             }
         });
 
-        showArtist = v.findViewById(R.id.bottom_menu_a_showArtist);
+        LinearLayout showArtist = v.findViewById(R.id.bottom_menu_a_showArtist);
         showArtist.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mListener.onButtonClicked("showArtist");
+                mListener.onButtonClicked(track, "showArtist");
                 dismiss();
             }
         });
 
-        delete = v.findViewById(R.id.bottom_menu_a_deleteSong);
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onButtonClicked("delete");
-                dismiss();
-            }
-        });
+        LinearLayout delete = v.findViewById(R.id.bottom_menu_a_deleteSong);
 
-        edit = v.findViewById(R.id.bottom_menu_a_editSong);
-        edit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mListener.onButtonClicked("edit");
+        if (!isOwned) {
+            ((TextView) v.findViewById(R.id.bottom_menu_a_delete_text)).setTextAppearance(R.style.primaryTextDisabled);
+            ((ImageView) v.findViewById(R.id.bottom_menu_a_delete_img)).setBackgroundResource(R.drawable.ic_delete_grey);
+        } else {
+            delete.setOnClickListener(view -> {
+                mListener.onButtonClicked(track, "delete");
                 dismiss();
-            }
-        });
+            });
+        }
+
+        LinearLayout edit = v.findViewById(R.id.bottom_menu_a_editSong);
+
+        if (!isOwned) {
+            ((TextView) v.findViewById(R.id.bottom_menu_a_editSong_text)).setTextAppearance(R.style.primaryTextDisabled);
+            ((ImageView) v.findViewById(R.id.bottom_menu_a_editSong_img)).setBackgroundResource(R.drawable.ic_edit_grey);
+        } else {
+            edit.setOnClickListener(view ->  {
+                mListener.onButtonClicked(track, "edit");
+                dismiss();
+            });
+        }
 
         return v;
     }
 
     public interface BottomMenuDialogInterf {
-        void onButtonClicked(String text);
+        void onButtonClicked(TrackViewPack track, String text);
     }
 
     @Override

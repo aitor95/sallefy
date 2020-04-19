@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,19 +12,28 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.activities.EditSongActivity;
+import com.salle.android.sallefy.controller.activities.MusicPlayerActivity;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
+import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
+import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog.BottomMenuDialogInterf;
 import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.model.TrackViewPack;
+import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
-public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVerticalAdapter.ViewHolder> implements LikeCallback{
+public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVerticalAdapter.ViewHolder> implements LikeCallback {
 
     private static final String TAG = TrackListVerticalAdapter.class.getName();
     private ArrayList<Track> mTracks;
@@ -33,12 +43,17 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
     //Guardamos la referencia del holder que le han dado like
     private ViewHolder likedHolder;
     private Playlist mPlaylist;
+    private FragmentManager fragmentManager;
+    private LinkedList<TrackViewPack> tracksToLikeOnDialog;
 
-    public TrackListVerticalAdapter(AdapterClickCallback callback, Context context, ArrayList<Track> tracks ) {
+    public TrackListVerticalAdapter(AdapterClickCallback callback, Context context, FragmentManager fragmentManager, ArrayList<Track> tracks) {
         mTracks = tracks;
         mContext = context;
+        this.fragmentManager = fragmentManager;
         mCallback = callback;
         likedHolder = null;
+
+        tracksToLikeOnDialog = new LinkedList<>();
     }
 
     @NonNull
@@ -86,8 +101,24 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
             }
         });
 
+        LikeCallback lc = this;
         holder.moreInfoImg.setOnClickListener(view -> {
-            //TODO: More Info track
+            TrackViewPack tvp = new TrackViewPack(track, holder, lc);
+            Boolean exists = false;
+            for (TrackViewPack t: tracksToLikeOnDialog) {
+                if (t.getTrack().getId().equals(track.getId())) {
+                    exists = true;
+                    t.setCallback(lc);
+                    t.setViewHolder(holder);
+                }
+            }
+
+            if (!exists) {
+                tracksToLikeOnDialog.add(tvp);
+            }
+
+            BottomMenuDialog dialog = new BottomMenuDialog(tvp, mContext);
+            dialog.show(fragmentManager,"options");
         });
     }
 
@@ -123,6 +154,10 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
             if(t.getId() == songId){
                 t.setLiked(!t.isLiked());
                 boolean liked = t.isLiked();
+
+                for (TrackViewPack tvp: tracksToLikeOnDialog) if (tvp.getTrack().getId().equals(songId)) {
+                    if (likedHolder == null) likedHolder = tvp.getViewHolder();
+                }
 
                 Log.d(TAG, "onLikeSuccess: Song now is liked?" + t.isLiked());
                 likedHolder.likeImg.setImageResource((!liked) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);

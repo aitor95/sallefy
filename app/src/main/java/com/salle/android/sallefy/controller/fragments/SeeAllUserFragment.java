@@ -22,6 +22,7 @@ import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class SeeAllUserFragment extends Fragment implements UserCallback {
 
@@ -64,7 +65,13 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 		mRecyclerView.setAdapter(adapter);
 
 		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
-			getActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+			Objects.requireNonNull(
+					getActivity()).
+					getSupportFragmentManager().
+					beginTransaction().
+					setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right).
+					remove(this).
+					commit();
 		});
 	}
 

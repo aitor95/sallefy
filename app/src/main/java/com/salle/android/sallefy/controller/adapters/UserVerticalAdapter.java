@@ -63,7 +63,7 @@ public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapte
                 }
             });
 
-            holder.mTitle.setText(currUser.getFirstName());
+            holder.mTitle.setText(currUser.getLogin());
             holder.mFollowers.setText(currUser.getFollowers() + " followers");
             if (currUser.getImageUrl() != null) {
                 Glide.with(mContext)

@@ -32,15 +32,18 @@ import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.callbacks.FragmentCallback;
+import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
 import com.salle.android.sallefy.controller.fragments.SocialFragment;
 import com.salle.android.sallefy.controller.music.MusicCallback;
 import com.salle.android.sallefy.controller.music.MusicService;
+import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
@@ -48,7 +51,7 @@ import com.salle.android.sallefy.utils.Session;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends FragmentActivity implements FragmentCallback, AdapterClickCallback, MusicCallback {
+public class MainActivity extends FragmentActivity implements FragmentCallback, AdapterClickCallback, MusicCallback, BottomMenuDialog.BottomMenuDialogInterf {
 
     public static final String TAG = MainActivity.class.getName();
 
@@ -573,7 +576,36 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
         changeTrack(-1);
     }
 
+    private void tryToLike(TrackViewPack track) {
+        TrackManager.getInstance(this).likeTrack(track.getTrack().getId(),
+                !track.getTrack().isLiked(),
+                track.getCallback());
+    }
 
+    @Override
+    public void onButtonClicked(TrackViewPack track, String text) {
+        switch (text) {
+            case "like":
+                Log.d(TAG, "onButtonClicked: LIKE!");
+                tryToLike(track);
+                break;
+            case "addToPlaylist":
+                Log.d(TAG, "onButtonClicked: ADDTOPLAYLIST");
+                break;
+            case "showArtist":
+                Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
+                break;
+            case "delete":
+                Log.d(TAG, "onButtonClicked: DELETE");
+                break;
+            case "edit":
+                Log.d(TAG, "onButtonClicked: EDIT");
+                Intent intent = new Intent(this, EditSongActivity.class);
+                intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
+                startActivity(intent);
+                break;
+        }
+    }
 }
 
 

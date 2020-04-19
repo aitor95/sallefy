@@ -1,6 +1,8 @@
 package com.salle.android.sallefy.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
+import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 
 import java.io.Serializable;
 import java.util.List;
@@ -40,9 +42,29 @@ public class Track implements Serializable {
 
     private int likes;
 
+    //private LikeCallback likeCallback;
+
+    //private TrackListVerticalAdapter.ViewHolder viewHolder;
+
     public int getLikes() {
         return likes;
     }
+
+    /*public TrackListVerticalAdapter.ViewHolder getViewHolder() {
+        return viewHolder;
+    }*/
+
+    /*public void setViewHolder(TrackListVerticalAdapter.ViewHolder viewHolder) {
+        this.viewHolder = viewHolder;
+    }*/
+
+    /*public LikeCallback getLikeCallback() {
+        return likeCallback;
+    }*/
+
+    /*public void setLikeCallback(LikeCallback likeCallback) {
+        this.likeCallback = likeCallback;
+    }*/
 
     public void setLikes(int likes) {
         this.likes = likes;

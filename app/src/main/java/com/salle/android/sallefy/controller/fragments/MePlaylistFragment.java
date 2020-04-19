@@ -31,6 +31,7 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	private ArrayList<Playlist> mPlaylists;
 	private boolean playlistsAvailable;
 
+	private View v;
 
 
 	private static AdapterClickCallback adapterClickCallback;
@@ -46,13 +47,9 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_me_lists, container, false);
+		v = inflater.inflate(R.layout.fragment_me_lists, container, false);
 		initViews(v);
 		getData(v);
-		if(!playlistsAvailable) {
-			TextView text = v.findViewById(R.id.me_text_error);
-			text.setText(R.string.NoContentAvailable);
-		}
 		return v;
 	}
 
@@ -76,14 +73,17 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
 	@Override
 	public void onPlaylistsByUser(ArrayList<Playlist> playlists) {
-
+		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(playlists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
+		if(playlists.isEmpty()) {
+			TextView text = v.findViewById(R.id.me_text_error);
+			text.setText(R.string.NoContentAvailable);
+		}
+		mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override
 	public void onAllList(ArrayList<Playlist> playlists) {
-		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(playlists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
-		this.playlistsAvailable = !playlists.isEmpty();
-		mRecyclerView.setAdapter(adapter);
+
 	}
 
 	@Override

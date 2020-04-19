@@ -9,12 +9,53 @@
     android:background="@color/colorWhite">
 
     <RelativeLayout
-        android:id="@+id/relativeLayoutSettingsTitle"
+        android:id="@+id/relativeLayoutStatisticsTitle"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:clipToPadding="false">
+
+        <ImageButton
+            android:id="@+id/stats_back_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_back_arrow"
+            android:tint="@color/colorBlack"
+            android:background="#00000000"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="0dp"
+            android:layout_gravity="start|start"/>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <TextView
+                style="@style/TitlesTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/Stats_title" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/textOptionNotAvailable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/relativeLayoutStatisticsTitle"
         android:padding="40dp">
 
         <TextView

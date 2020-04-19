@@ -170,7 +170,8 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
-    <string name="Back_from_menu_text">Settings</string>
+    <string name="Settings_title">Settings</string>
+    <string name="Stats_title">Statistics</string>
     <string name="GotoSymbol"><![CDATA[>]]></string>
     <string name="optionViewStats">View Sallefy statistics</string>
     <string name="optionModifyAccount">Modify user account</string>

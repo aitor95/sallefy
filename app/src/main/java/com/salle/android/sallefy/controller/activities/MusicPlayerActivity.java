@@ -228,6 +228,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             modo = Modo.PLAY_PLAYLIST_FROM_ZERO;
             initPlaylist = playlist;
             initTrack = track;
+
+            if(initPlaylist.getIsShuffleStart()){
+                shuffleBtn.setImageResource(R.drawable.ic_shuffle_active);
+                shuffleBtn.setTag("playRandom");
+            }else{
+                shuffleBtn.setTag("DontPlayRandom");
+            }
+
         }else{
 
             //Nos han pasado una track?
@@ -348,13 +356,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
 
         shuffleBtn = findViewById(R.id.music_player_shuffle);
-
-        if(initPlaylist != null && initPlaylist.getIsShuffleStart()){
-            shuffleBtn.setImageResource(R.drawable.ic_shuffle_active);
-            shuffleBtn.setTag("playRandom");
-        }else{
-            shuffleBtn.setTag("DontPlayRandom");
-        }
 
         shuffleBtn.setOnClickListener(v -> {
             boolean shuffleActivated =shuffleBtn.getTag().equals("DontPlayRandom");

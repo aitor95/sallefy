@@ -55,7 +55,7 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
 
         Track track = mTracks.get(position);
         holder.mLayout.setOnClickListener(v -> {
-
+            mPlaylist.startAsShuffle(false);
             mCallback.onTrackClicked(track, mPlaylist);
         });
 

@@ -20,6 +20,10 @@
     <string name="me_users">Users</string>
     <string name="me_songs">Songs</string>
     <string name="me_playlists">Playlists</string>
+    <string name="me_add_song">Upload Song</string>
+    <string name="me_add_playlist">Create playlist</string>
+
+
 
     <!-- FRAGMENTS (LABELS) -->
     <string name="fragment_playlists">Playlists</string>

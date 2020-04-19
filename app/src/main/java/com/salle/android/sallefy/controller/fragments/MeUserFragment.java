@@ -47,7 +47,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		v = inflater.inflate(R.layout.fragment_me_lists, container, false);
+		v = inflater.inflate(R.layout.fragment_me_lists_users, container, false);
 		initViews(v);
 		getData();
 		return v;
@@ -62,7 +62,6 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	}
 
 	private void getData() {
-		//TODO: cambiar por coger las listas que tocan
 		UserManager.getInstance(getActivity()).getUsers(this);
 		mUsers = new ArrayList<>();
 	}

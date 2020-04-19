@@ -233,7 +233,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onAllList(ArrayList<Playlist> playlists) {
-        mPlaylistAdapter = new PlaylistListHorizontalAdapter(playlists, getContext(), null, R.layout.item_playlist_horizontal);
+        mPlaylistAdapter = new PlaylistListHorizontalAdapter(playlists, getContext(), adapterClickCallback, R.layout.item_playlist_horizontal);
         mPlaylistsView.setAdapter(mPlaylistAdapter);
         //Toast.makeText(getContext(), "Playlists received", Toast.LENGTH_LONG).show();
 

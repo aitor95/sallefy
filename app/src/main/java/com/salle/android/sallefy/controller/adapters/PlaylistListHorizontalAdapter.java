@@ -30,6 +30,7 @@ public class PlaylistListHorizontalAdapter extends RecyclerView.Adapter<Playlist
         mPlaylists = playlists;
         mContext = context;
         mCallback = callback;
+
         this.layoutId = layoutId;
     }
 

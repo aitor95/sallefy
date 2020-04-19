@@ -29,8 +29,9 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	private RecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
 
+	private View v;
+
 	private static AdapterClickCallback adapterClickCallback;
-	private boolean tracksAvailable;
 
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
@@ -44,13 +45,9 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_me_lists, container, false);
+		v = inflater.inflate(R.layout.fragment_me_lists, container, false);
 		initViews(v);
 		getData();
-		if(!tracksAvailable) {
-			TextView text = v.findViewById(R.id.me_text_error);
-			text.setText(R.string.NoContentAvailable);
-		}
 		return v;
 	}
 
@@ -69,10 +66,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
-		mTracks = (ArrayList<Track>) tracks;
-		this.tracksAvailable = !tracks.isEmpty();
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), mTracks);
-		mRecyclerView.setAdapter(adapter);
+
 	}
 
 
@@ -83,7 +77,13 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 
 	@Override
 	public void onPersonalTracksReceived(List<Track> tracks) {
-
+		mTracks = (ArrayList<Track>) tracks;
+		if(tracks.isEmpty()){
+			TextView text = v.findViewById(R.id.me_text_error);
+			text.setText(R.string.NoContentAvailableMeSongs);
+		}
+		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), mTracks);
+		mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override

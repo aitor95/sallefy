@@ -75,7 +75,7 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(playlists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		if(playlists.isEmpty()) {
 			TextView text = v.findViewById(R.id.me_text_error);
-			text.setText(R.string.NoContentAvailable);
+			text.setText(R.string.NoContentAvailableMePlayists);
 		}
 		mRecyclerView.setAdapter(adapter);
 	}

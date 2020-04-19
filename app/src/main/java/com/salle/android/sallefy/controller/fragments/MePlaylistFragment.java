@@ -29,7 +29,6 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<Playlist> mPlaylists;
-	private boolean playlistsAvailable;
 
 	private View v;
 

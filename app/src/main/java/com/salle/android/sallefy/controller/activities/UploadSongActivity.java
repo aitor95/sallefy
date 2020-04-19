@@ -137,7 +137,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_GET_CONTENT);
         intent.setType("audio/*");
-        startActivityForResult(Intent.createChooser(intent, "Choose a cover image"), Constants.STORAGE.SONG_SELECTED);
+        startActivityForResult(Intent.createChooser(intent, "Choose an audio file"), Constants.STORAGE.SONG_SELECTED);
     }
 
     @Override

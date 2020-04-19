@@ -52,7 +52,7 @@ public class AddSongsToPlayListAdapter extends RecyclerView.Adapter<AddSongsToPl
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Track track = mTracks.get(position);
 
-        if(position != (mTracks.size()-1)){
+        if(position != 0){
             holder.mLayout.setOnClickListener(v -> {
                 holder.checkBox.toggle();
                 if (holder.checkBox.isChecked()) {

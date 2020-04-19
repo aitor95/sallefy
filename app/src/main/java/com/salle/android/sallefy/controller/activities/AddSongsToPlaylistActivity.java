@@ -112,7 +112,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         //Add last track for New Track row
         Track newTrack = new Track();
         newTrack.setName(getResources().getString(R.string.add_songs_to_playlist_lastitem_title));
-        this.mTracks.add(newTrack);
+        this.mTracks.add(0, newTrack);
 
         //Create RV tracks adapter
         mAdapter = new AddSongsToPlayListAdapter(this, (ArrayList) this.mTracks, mSelectedSongs);

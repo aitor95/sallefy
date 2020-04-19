@@ -3,7 +3,6 @@ package com.salle.android.sallefy.controller.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,11 +24,6 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        RelativeLayout optionModify = findViewById(R.id.settings_option_modify_user);
-        optionStats.setOnClickListener(view -> {
-           //TODO: ir a modificar usuario en un intent
-        });
-
         RelativeLayout optionDelete = findViewById(R.id.settings_option_deleteAccount);
         optionDelete.setOnClickListener(view -> {
             //TODO: Delete user
@@ -43,7 +37,7 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        ImageButton backoption = findViewById(R.id.back_btn_settings);
+        RelativeLayout backoption = findViewById(R.id.relativeLayoutSettingsTitle);
         backoption.setOnClickListener(view -> {
             finish();
         });

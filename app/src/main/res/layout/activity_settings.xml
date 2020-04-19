@@ -20,7 +20,7 @@
         android:clipToPadding="false">
 
         <ImageButton
-            android:id="@+id/back_btn_settings"
+            android:id="@+id/new_playlist_nav"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_back_arrow"
@@ -49,28 +49,28 @@
         </LinearLayout>
     </RelativeLayout>
 
-<!--    <RelativeLayout-->
-<!--       -->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        app:layout_constraintEnd_toEndOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        android:padding="24dp">-->
+    <!--    <RelativeLayout-->
+    <!--       -->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toTopOf="parent"-->
+    <!--        android:padding="24dp">-->
 
-<!--        <TextView-->
-<!--            xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--            style="@style/SectionName"-->
-<!--            android:text="@string/Back_from_menu_text"-->
-<!--            android:id="@+id/Back_from_settings"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentStart="true"-->
-<!--            android:layout_centerHorizontal="true"-->
+    <!--        <TextView-->
+    <!--            xmlns:app="http://schemas.android.com/apk/res-auto"-->
+    <!--            style="@style/SectionName"-->
+    <!--            android:text="@string/Back_from_menu_text"-->
+    <!--            android:id="@+id/Back_from_settings"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:layout_alignParentStart="true"-->
+    <!--            android:layout_centerHorizontal="true"-->
 
-<!--            android:src="@drawable/user_default_image" />-->
+    <!--            android:src="@drawable/user_default_image" />-->
 
-<!--    </RelativeLayout>-->
+    <!--    </RelativeLayout>-->
 
     <RelativeLayout
         android:id="@+id/relativeLayoutSettingsUserImg"
@@ -119,34 +119,6 @@
                 android:layout_marginBottom="6dp"
                 android:paddingStart="24dp"
                 android:text="@string/optionViewStats"
-                android:layout_alignParentStart="true"/>
-
-            <TextView
-                style="@style/SettingOptionStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:paddingEnd="35dp"
-                android:text="@string/GotoSymbol"
-                android:layout_alignParentEnd="true"/>
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/settings_option_modify_user"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingBottom="12dp"
-            android:paddingTop="12dp">
-
-            <TextView
-                style="@style/SettingOptionStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:paddingStart="24dp"
-                android:text="@string/optionModifyAccount"
                 android:layout_alignParentStart="true"/>
 
             <TextView

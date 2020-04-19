@@ -25,6 +25,11 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        RelativeLayout optionModify = findViewById(R.id.settings_modify_user);
+        optionModify.setOnClickListener(view -> {
+            //TODO: Modify user
+        });
+
         RelativeLayout optionDelete = findViewById(R.id.settings_option_deleteAccount);
         optionDelete.setOnClickListener(view -> {
             //TODO: Delete user

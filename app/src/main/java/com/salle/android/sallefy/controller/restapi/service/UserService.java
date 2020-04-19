@@ -15,6 +15,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface UserService {
 
@@ -23,6 +24,9 @@ public interface UserService {
 
     @GET("users")
     Call<List<User>> getAllUsers(@Header("Authorization") String token);
+
+    @GET("users")
+    Call<List<User>> getAllUsersMeFragment(@Header("Authorization") String token, @Query("size") int size);
 
     @POST("register")
     Call<ResponseBody> registerUser(@Body UserRegister user);

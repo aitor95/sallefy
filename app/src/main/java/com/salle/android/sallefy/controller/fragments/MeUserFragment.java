@@ -62,7 +62,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	}
 
 	private void getData() {
-		UserManager.getInstance(getActivity()).getUsers(this);
+		UserManager.getInstance(getActivity()).getUsersFragmentMe(this);
 		mUsers = new ArrayList<>();
 	}
 

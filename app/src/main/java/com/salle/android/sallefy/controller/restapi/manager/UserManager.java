@@ -217,6 +217,26 @@ public class UserManager {
         });
     }
 
+    public synchronized void getUsersFragmentMe (final UserCallback userCallback) {
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+        Call<List<User>> call = mService.getAllUsersMeFragment( "Bearer " + userToken.getIdToken(), 1000);
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful()) {
+                    userCallback.onUsersReceived(response.body());
+                } else {
+                    userCallback.onUsersFailure(new Throwable());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                userCallback.onFailure(t);
+            }
+        });
+    }
+
     /********************   GETTERS / SETTERS    ********************/
     public synchronized void getMeFollowing (final UserCallback userCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();

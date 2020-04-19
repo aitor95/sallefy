@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -60,6 +61,12 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(null, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
+
+		Button addNew = v.findViewById(R.id.add_new_btn);
+		addNew.setOnClickListener(view -> {
+			//TODO: add new playlist
+
+		});
 	}
 
 	private void getData(View v) {

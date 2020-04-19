@@ -8,13 +8,38 @@
     android:gravity="center"
     android:background="@color/colorWhite">
 
+    <RelativeLayout
+        android:id="@+id/add_new_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <Button
+            android:id="@+id/add_new_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:scaleType="fitXY"
+            android:text="@string/me_add_playlist"
+            android:background="@drawable/login_btn"
+            android:minWidth="180dp"
+            android:minHeight="40dp"
+            style="@style/buttonText"/>
+
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/me_text_error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="60dp"
         style="@style/me_aux_text"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/add_new_layout"
         app:layout_constraintBottom_toTopOf="@id/dynamic_recyclerView"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent">
@@ -26,6 +51,6 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/add_new_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

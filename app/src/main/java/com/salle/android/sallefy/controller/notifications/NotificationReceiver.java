@@ -57,10 +57,9 @@ public class NotificationReceiver extends BroadcastReceiver {
                 //Go to the player.
                 Intent goToPlayer = new Intent(context, MusicPlayerActivity.class);
                 goToPlayer.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                goToPlayer.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 context.startActivity(goToPlayer);
                 break;
-
         }
     }
-
 }

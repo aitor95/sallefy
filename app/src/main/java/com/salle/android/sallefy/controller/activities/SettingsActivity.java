@@ -40,7 +40,9 @@ public class SettingsActivity extends AppCompatActivity {
         optionLogOut.setOnClickListener(view -> {
             PreferenceUtils.resetValues(this);
             Session.getInstance(this).resetValues();
+
             Intent intent = new Intent(this, LoginActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
         });
 

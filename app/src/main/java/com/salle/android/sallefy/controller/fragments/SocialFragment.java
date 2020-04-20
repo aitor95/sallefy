@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,17 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 		mRecyclerView.setAdapter(adapter);
 
 		nitv = v.findViewById(R.id.no_info_aviable_on_social);
+
+		//DETECTAR SCROLL RV
+		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+				if (!recyclerView.canScrollVertically(1)) {
+					Log.d("esta abajo", "que fuerte");
+				}
+			}
+		});
 	}
 
 	private void getData() {

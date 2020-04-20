@@ -175,7 +175,7 @@ public class TrackManager {
     public synchronized void getAllTracksSocial(final TrackCallback trackCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<List<Track>> call = mTrackService.getAllTracksSocial( "Bearer " + userToken.getIdToken(), 200, true);
+        Call<List<Track>> call = mTrackService.getAllTracksSocial( "Bearer " + userToken.getIdToken(), 2000, true);
         call.enqueue(new Callback<List<Track>>() {
             @Override
             public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {

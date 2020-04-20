@@ -18,6 +18,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.activities.SettingsActivity;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
+import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -139,10 +140,14 @@ public class MeFragment extends Fragment {
 		user_name.setText(PreferenceUtils.getUser(v.getContext()));
 	}
 
+	public void updateSongInfo(Track track){
+		Fragment fragment = MeFragment.getInstance();
+		((MeSongFragment) fragment).updateSongInfo(track);
+		System.out.println("hellou");
+	}
+
     @Override
-    public void onResume() {
-        super.onResume();
-    }
+    public void onResume() { super.onResume(); }
 
     @Override
     public void onPause() {

@@ -97,6 +97,16 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 		mTracks = new ArrayList<>();
 	}
 
+	public void updateSongInfo(Track track){
+
+/*		for (int i = 0; i < mTracks.size(); i++) {
+			if(mTracks.get(i).getId() == track.getId()){
+				mTracks.set(i, track);
+			}
+		}*/
+		System.out.println("hellou");
+	}
+
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
 		//mTracks = (ArrayList<Track>) tracks;

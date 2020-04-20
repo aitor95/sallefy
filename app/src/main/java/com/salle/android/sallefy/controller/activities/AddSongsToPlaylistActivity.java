@@ -58,6 +58,16 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     private void initViews() {
         mAddSongToPlaylistRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //DETECTAR SCROLL RV
+        mAddSongToPlaylistRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1)) {
+                    System.out.println("what is going on");
+                }
+            }
+        });
 
         mSelectedSongs = new ArrayList<>();
 

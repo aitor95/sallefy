@@ -157,6 +157,7 @@ public class TrackManager {
                 int code = response.code();
 
                 if (response.isSuccessful()) {
+                    String nextPage = response.headers().get("next");
                     trackCallback.onTracksReceived(response.body());
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);

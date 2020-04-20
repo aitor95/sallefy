@@ -19,7 +19,7 @@ public interface PlaylistCallback extends FailureCallback {
 
     void onPlaylistUpdated();
 
-    void onPlaylistCreated();
+    void onPlaylistCreated(Playlist playlist);
 
     void onUserFollows(Follow follows);
 

@@ -79,12 +79,6 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
             @Override
             public void onClick(View view) {
                 Playlist playlist = createPlaylist();
-
-                Intent data = new Intent();
-                data.putExtra(EXTRA_NEW_PLAYLIST, playlist);
-                setResult(RESULT_OK, data);
-
-                finish();
             }
         });
         mImg.setOnClickListener(new View.OnClickListener() {
@@ -99,8 +93,6 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
         mPlaylist = new Playlist();
         mPlaylist.setDescription(mDescription.getText().toString());
         mPlaylist.setPublicAccessible(new Boolean(true));
-        mPlaylist.setUserLogin(Session.getInstance(this).getUser().getLogin());
-        mPlaylist.setUser(Session.getInstance(this).getUser());
         if(mTitle.getText().toString().equals("")){
 
             Toast.makeText(getApplicationContext(), R.string.new_playlist_not_complete, Toast.LENGTH_SHORT).show();
@@ -108,10 +100,6 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
         }else {
 
             mPlaylist.setName(mTitle.getText().toString());
-            mPlaylist.setUser(Session.getInstance(this).getUser());
-            mPlaylist.setUserLogin(Session.getInstance(this).getUser().getLogin());
-            mPlaylist.setFollowed(false);
-            mPlaylist.setTracks(new ArrayList<Track>());
 
             if (coverChosen) {
                 CloudinaryManager.getInstance(this).uploadCoverImage(Constants.STORAGE.PLAYLIST_COVER_FOLDER, mUri, mFilename, NewPlaylistActivity.this);
@@ -180,9 +168,12 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     }
 
     @Override
-    public void onPlaylistCreated() {
+    public void onPlaylistCreated(Playlist playlist) {
         coverChosen = false;
-        //Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_success, Toast.LENGTH_SHORT).show();
+
+        Intent data = new Intent();
+        data.putExtra(EXTRA_NEW_PLAYLIST, playlist);
+        setResult(RESULT_OK, data);
 
         finish();
     }
@@ -224,7 +215,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
 
     @Override
     public void onError(String requestId, ErrorInfo error) {
-        Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure_cloudinary, Toast.LENGTH_LONG).show();
     }
 
     @Override

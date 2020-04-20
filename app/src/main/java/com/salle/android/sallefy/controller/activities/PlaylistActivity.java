@@ -354,7 +354,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     }
 
     @Override
-    public void onPlaylistCreated() {
+    public void onPlaylistCreated(Playlist playlist) {
 
     }
 

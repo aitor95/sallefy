@@ -114,11 +114,6 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == EXTRA_NEW_PLAYLIST_CODE && resultCode == RESULT_OK) {
-			//Playlist playlist1 = (Playlist) data.getExtras().get(NewPlaylistActivity.EXTRA_NEW_PLAYLIST);
-			//Playlist playlist2 = (Playlist) data.getSerializableExtra(NewPlaylistActivity.EXTRA_NEW_PLAYLIST);
-
-			//Log.d("TAGG", playlist1.getName());
-			//Log.d("TAGG", playlist2.getUser().getLogin());
 			mPlaylists.add((Playlist) data.getSerializableExtra(NewPlaylistActivity.EXTRA_NEW_PLAYLIST));
 
 			PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
@@ -132,7 +127,7 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	}
 
 	@Override
-	public void onPlaylistCreated() {
+	public void onPlaylistCreated(Playlist playlist) {
 
 	}
 

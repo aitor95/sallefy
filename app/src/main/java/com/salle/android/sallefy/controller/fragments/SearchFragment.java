@@ -269,7 +269,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     }
 
     @Override
-    public void onPlaylistCreated() {
+    public void onPlaylistCreated(Playlist playlist) {
 
     }
 

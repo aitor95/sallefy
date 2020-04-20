@@ -208,7 +208,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
     }
 
     @Override
-    public void onPlaylistCreated() {
+    public void onPlaylistCreated(Playlist playlist) {
 
     }
 

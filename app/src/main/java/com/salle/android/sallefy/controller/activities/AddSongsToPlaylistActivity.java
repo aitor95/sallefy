@@ -151,7 +151,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     @Override
-    public void onPlaylistCreated() {
+    public void onPlaylistCreated(Playlist playlist) {
 
     }
 

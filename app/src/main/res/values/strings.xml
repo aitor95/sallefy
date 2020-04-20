@@ -192,6 +192,7 @@
     <string name="NoContentAvailableMeSongs">You haven\'t uploaded any song.</string>
     <string name="NoContentAvailableMePlayists">You haven\'t created any playlist.</string>
     <string name="LoadingMe">Loading...</string>
+    <string name="new_playlist_creation_failure_cloudinary">Something went wrong on Cloudinary Server</string>
 
 
 </resources>

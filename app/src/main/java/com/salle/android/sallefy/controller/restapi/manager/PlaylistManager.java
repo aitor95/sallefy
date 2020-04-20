@@ -224,8 +224,9 @@ public class PlaylistManager {
             @Override
             public void onResponse(Call<Playlist> call, Response<Playlist> response) {
                 int code = response.code();
+
                 if (response.isSuccessful()) {
-                    playlistCallback.onPlaylistCreated();
+                    playlistCallback.onPlaylistCreated(response.body());
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);
                     playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));

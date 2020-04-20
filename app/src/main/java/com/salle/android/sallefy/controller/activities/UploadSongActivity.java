@@ -44,6 +44,7 @@ import java.util.Map;
 public class UploadSongActivity extends AppCompatActivity implements TrackCallback, UploadCallback, GenreCallback, BottomMenuDialog.BottomMenuDialogInterf {
 
     public static final String TAG = UploadSongActivity.class.getName();
+    public static final String EXTRA_NEW_SONG = "EXTRA_NEW_SONG";
 
     //Layout
     private ImageView mImg;
@@ -72,6 +73,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     private ArrayList<Genre> mAPIGenres;
     private ArrayList<Genre> mCurrentGenres;
     private PopupMenu mGenresMenu;
+    private Boolean uploading;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -102,10 +104,15 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
             public void onClick(View v) { chooseAudioFile(); }
         });
 
+        uploading = false;
         mUploadSongBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadTrack();
+                if (!uploading) {
+                    uploadTrack();
+                    uploading = true;
+                    ((Button) v).setText("Uploading...");
+                }
             }
         });
 
@@ -191,7 +198,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         }
     }
 
-    private void uploadTrack() {
+    private Track uploadTrack() {
         mTrack = new Track();
 
         if(!trackChosen){
@@ -206,11 +213,12 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
             }else {
 
                 mTrack.setName(mName.getText().toString());
-               // mTrack.setUserLogin(new String(Session.getInstance(this).getUser().getLogin()));
-                //mTrack.setUser(Session.getInstance(this).getUser());
                 ZonedDateTime currentTime = ZonedDateTime.now();
                 mTrack.setReleased(currentTime.toString());
-                System.out.println(currentTime.toString());
+                //System.out.println(currentTime.toString());
+                mTrack.setLikes(0);
+                mTrack.setLiked(false);
+                mTrack.setColor("#3411EE");
 
                 if(mCurrentGenres.size() != 0){
                     mTrack.setGenres(mCurrentGenres);
@@ -221,6 +229,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
 
             }
         }
+        return mTrack;
     }
 
 
@@ -250,9 +259,16 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
 
     @Override
     public void onCreateTrack(Track track) {
+        Log.d("TAGG", "Track uploaded");
         uploaded = true;
         mTrack = track;
         Toast.makeText(getApplicationContext(), R.string.upload_song_creation_success, Toast.LENGTH_SHORT).show();
+
+        Intent data = new Intent();
+        data.putExtra(Constants.INTENT_EXTRAS.TRACK, mTrack);
+        setResult(RESULT_OK, data);
+
+        finish();
     }
 
     @Override
@@ -263,6 +279,8 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure, Toast.LENGTH_LONG).show();
+        mUploadSongBtn.setText("UPLOAD");
+        uploading = false;
     }
 
     /**********************************************************************************************
@@ -324,6 +342,8 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     @Override
     public void onError(String requestId, ErrorInfo error) {
         Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure, Toast.LENGTH_LONG).show();
+        mUploadSongBtn.setText("UPLOAD");
+        uploading = false;
     }
 
     @Override

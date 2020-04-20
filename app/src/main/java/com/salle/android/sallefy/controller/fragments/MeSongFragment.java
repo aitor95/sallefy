@@ -107,7 +107,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	}
 
 	@Override
-	public void onCreateTrack() {
+	public void onCreateTrack(Track track) {
 
 	}
 

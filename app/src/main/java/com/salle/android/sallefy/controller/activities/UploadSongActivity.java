@@ -32,7 +32,11 @@ import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
+import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -203,7 +207,10 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
 
                 mTrack.setName(mName.getText().toString());
                // mTrack.setUserLogin(new String(Session.getInstance(this).getUser().getLogin()));
-                mTrack.setUser(Session.getInstance(this).getUser());
+                //mTrack.setUser(Session.getInstance(this).getUser());
+                ZonedDateTime currentTime = ZonedDateTime.now();
+                mTrack.setReleased(currentTime.toString());
+                System.out.println(currentTime.toString());
 
                 if(mCurrentGenres.size() != 0){
                     mTrack.setGenres(mCurrentGenres);
@@ -242,8 +249,9 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     }
 
     @Override
-    public void onCreateTrack() {
+    public void onCreateTrack(Track track) {
         uploaded = true;
+        mTrack = track;
         Toast.makeText(getApplicationContext(), R.string.upload_song_creation_success, Toast.LENGTH_SHORT).show();
     }
 

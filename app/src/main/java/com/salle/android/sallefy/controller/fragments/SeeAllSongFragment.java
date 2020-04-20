@@ -120,7 +120,7 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 	}
 
 	@Override
-	public void onCreateTrack() {
+	public void onCreateTrack(Track track) {
 
 	}
 

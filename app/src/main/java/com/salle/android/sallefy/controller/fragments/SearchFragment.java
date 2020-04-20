@@ -384,7 +384,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     }
 
     @Override
-    public void onCreateTrack() {
+    public void onCreateTrack(Track track) {
 
     }
 

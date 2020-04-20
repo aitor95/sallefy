@@ -118,9 +118,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         if(coverChosen){
             CloudinaryManager.getInstance(this).uploadCoverImage(Constants.STORAGE.PLAYLIST_COVER_FOLDER, mUri, mFilename, EditPlaylistActivity.this);
             completed = false;
-        }
-
-        if(completed){
+        }else{
             PlaylistManager.getInstance(getApplicationContext())
                     .updatePlaylist(this.mPlaylist, EditPlaylistActivity.this);
         }

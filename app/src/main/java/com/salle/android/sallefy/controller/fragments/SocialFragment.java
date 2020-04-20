@@ -140,7 +140,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	}
 
 	@Override
-	public void onCreateTrack() {
+	public void onCreateTrack(Track track) {
 
 	}
 

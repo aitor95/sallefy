@@ -100,8 +100,10 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.EDIT_CONTENT.TRACK_EDIT && resultCode == RESULT_OK) {
-            mTracks.add((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
-            mAdapter.notifyDataSetChanged();
+            mTracks.add(1, (Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
+            //mAdapter.notifyDataSetChanged();
+            mAdapter = new AddSongsToPlayListAdapter(this, (ArrayList) this.mTracks, mSelectedSongs);
+            mAddSongToPlaylistRecyclerView.setAdapter(mAdapter);
         }
     }
 
@@ -189,7 +191,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     @Override
-    public void onCreateTrack() {
+    public void onCreateTrack(Track track) {
 
     }
 

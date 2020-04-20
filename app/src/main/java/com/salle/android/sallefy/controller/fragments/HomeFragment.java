@@ -225,7 +225,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
     }
 
     @Override
-    public void onCreateTrack() {
+    public void onCreateTrack(Track track) {
 
     }
 

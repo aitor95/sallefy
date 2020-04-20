@@ -183,6 +183,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     public void onPlaylistCreated() {
         coverChosen = false;
         //Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_success, Toast.LENGTH_SHORT).show();
+
         finish();
     }
 

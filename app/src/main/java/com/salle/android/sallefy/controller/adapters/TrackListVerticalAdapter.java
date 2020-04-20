@@ -1,7 +1,6 @@
 package com.salle.android.sallefy.controller.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,18 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.activities.EditSongActivity;
-import com.salle.android.sallefy.controller.activities.MusicPlayerActivity;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
-import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog.BottomMenuDialogInterf;
 import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
-import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
-import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -70,7 +64,9 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
 
         Track track = mTracks.get(position);
         holder.mLayout.setOnClickListener(v -> {
-            mPlaylist.startAsShuffle(false);
+            if(mPlaylist!=null){
+                mPlaylist.startAsShuffle(false);
+            }
             mCallback.onTrackClicked(track, mPlaylist);
         });
 

@@ -20,7 +20,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GestureDetectorCompat;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog.BottomMenuDialogInterf;
@@ -156,8 +155,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                         updateSongInfoAfterLoad();
                     }else{
                         //Track nueva, empezamos de zero.
-                        mBoundService.loadSong(initTrack);
                         mBoundService.removePlaylist();
+                        mBoundService.loadSong(initTrack);
                     }
                     break;
 

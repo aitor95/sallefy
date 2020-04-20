@@ -163,7 +163,8 @@ public class MusicService extends Service {
 
     public void removePlaylist(){
         currentTrack = 0;
-        mTracks.clear();
+        if(mTracks != null)
+            mTracks.clear();
     }
 
     //Carga una cancion en streaming.

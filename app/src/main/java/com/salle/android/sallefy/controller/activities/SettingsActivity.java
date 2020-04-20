@@ -11,6 +11,7 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.utils.PreferenceUtils;
+import com.salle.android.sallefy.utils.Session;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -38,7 +39,7 @@ public class SettingsActivity extends AppCompatActivity {
         Button optionLogOut = findViewById(R.id.btn_settings_logout);
         optionLogOut.setOnClickListener(view -> {
             PreferenceUtils.resetValues(this);
-
+            Session.getInstance(this).resetValues();
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
         });

@@ -49,6 +49,8 @@ import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
 
+import java.io.Serializable;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends FragmentActivity implements FragmentCallback, AdapterClickCallback, MusicCallback, BottomMenuDialog.BottomMenuDialogInterf {
@@ -58,6 +60,7 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
     //Fragment management
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
+    private Fragment mFragment;
 
     //Android Back button control variables.
     private boolean backButtonPressed;
@@ -92,6 +95,11 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
     // Service
     private MusicService mBoundService;
     private boolean mServiceBound = false;
+
+    //Track edit
+    private static TrackViewPack mTrackViewPack;
+
+
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
@@ -374,6 +382,14 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
         }
     }
 
+    public static TrackViewPack getmTrackViewPack() {
+        return mTrackViewPack;
+    }
+
+    public static void setmTrackViewPack(TrackViewPack mTrackViewPack) {
+        MainActivity.mTrackViewPack = mTrackViewPack;
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -576,6 +592,21 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
         changeTrack(-1);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.EDIT_CONTENT.TRACK_EDIT && resultCode == RESULT_OK) {
+            //Update playlist information
+            Track track = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
+
+            TrackViewPack tvp = getmTrackViewPack();
+            tvp.setTrack(track);
+            tvp.getViewHolder().updateViewHolder(track);
+
+        }
+    }
+
+
     private void tryToLike(TrackViewPack track) {
         TrackManager.getInstance(this).likeTrack(track.getTrack().getId(),
                 !track.getTrack().isLiked(),
@@ -600,9 +631,10 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
                 break;
             case "edit":
                 Log.d(TAG, "onButtonClicked: EDIT");
+                setmTrackViewPack(track);
                 Intent intent = new Intent(this, EditSongActivity.class);
                 intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
-                startActivity(intent);
+                startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDIT);
                 break;
         }
     }

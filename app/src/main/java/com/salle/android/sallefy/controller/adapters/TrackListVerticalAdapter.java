@@ -192,5 +192,18 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
             likeImg = (ImageView) itemView.findViewById(R.id.track_like);
             moreInfoImg = (ImageView) itemView.findViewById(R.id.track_moreInfo);
         }
+
+        public void updateViewHolder(Track track) {
+            tvTitle.setText(track.getName());
+            if (track.getThumbnail() != null) {
+                Glide.with(mContext)
+                        .asBitmap()
+                        .placeholder(R.drawable.ic_audiotrack)
+                        .load(track.getThumbnail())
+                        .into(ivPicture);
+
+            }
+        }
+
     }
 }

@@ -54,13 +54,13 @@ public class TrackManager {
     public synchronized void createTrack(Track track, final TrackCallback trackCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<ResponseBody> call = mTrackService.createTrack(track, "Bearer " + userToken.getIdToken());
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<Track> call = mTrackService.createTrack(track, "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<Track>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Track> call, Response<Track> response) {
                 int code = response.code();
                 if (response.isSuccessful()) {
-                    trackCallback.onCreateTrack();
+                    trackCallback.onCreateTrack((Track) response.body());
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);
                     trackCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
@@ -68,7 +68,7 @@ public class TrackManager {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Track> call, Throwable t) {
                 Log.d(TAG, "Error Failure: " + t.getStackTrace());
                 trackCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
             }
@@ -157,6 +157,7 @@ public class TrackManager {
                 int code = response.code();
 
                 if (response.isSuccessful()) {
+                    String nextPage = response.headers().get("next");
                     trackCallback.onTracksReceived(response.body());
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);

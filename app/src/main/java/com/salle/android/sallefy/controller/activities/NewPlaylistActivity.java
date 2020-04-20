@@ -27,10 +27,12 @@ import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -39,6 +41,7 @@ import okhttp3.ResponseBody;
 public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCallback, UploadCallback {
 
     public static final String TAG = NewPlaylistActivity.class.getName();
+    public static final String EXTRA_NEW_PLAYLIST = "EXTRA_NEW_PLAYLIST";
 
     //Layout
     private ImageButton mNav;
@@ -75,7 +78,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createPlaylist();
+                Playlist playlist = createPlaylist();
             }
         });
         mImg.setOnClickListener(new View.OnClickListener() {
@@ -86,12 +89,10 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
         });
     }
 
-    private void createPlaylist() {
+    private Playlist createPlaylist() {
         mPlaylist = new Playlist();
         mPlaylist.setDescription(mDescription.getText().toString());
         mPlaylist.setPublicAccessible(new Boolean(true));
-        mPlaylist.setUserLogin(Session.getInstance(this).getUser().getLogin());
-        mPlaylist.setUser(Session.getInstance(this).getUser());
         if(mTitle.getText().toString().equals("")){
 
             Toast.makeText(getApplicationContext(), R.string.new_playlist_not_complete, Toast.LENGTH_SHORT).show();
@@ -108,6 +109,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
                         .createPlaylist(mPlaylist, NewPlaylistActivity.this);
             }
         }
+        return mPlaylist;
     }
 
     private void chooseCoverImage() {
@@ -166,9 +168,13 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     }
 
     @Override
-    public void onPlaylistCreated() {
+    public void onPlaylistCreated(Playlist playlist) {
         coverChosen = false;
-        //Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_success, Toast.LENGTH_SHORT).show();
+
+        Intent data = new Intent();
+        data.putExtra(EXTRA_NEW_PLAYLIST, playlist);
+        setResult(RESULT_OK, data);
+
         finish();
     }
 
@@ -209,7 +215,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
 
     @Override
     public void onError(String requestId, ErrorInfo error) {
-        Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure, Toast.LENGTH_LONG).show();
+        Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure_cloudinary, Toast.LENGTH_LONG).show();
     }
 
     @Override

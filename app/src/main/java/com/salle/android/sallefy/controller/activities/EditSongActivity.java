@@ -238,7 +238,7 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     }
 
     @Override
-    public void onCreateTrack() {
+    public void onCreateTrack(Track track) {
 
     }
 

@@ -1,5 +1,6 @@
 package com.salle.android.sallefy.controller.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,18 +15,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.activities.NewPlaylistActivity;
+import com.salle.android.sallefy.controller.activities.UploadSongActivity;
+import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
 import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MeSongFragment extends Fragment implements TrackCallback {
 
 	public static final String TAG = MeSongFragment.class.getName();
+	private static final int EXTRA_NEW_SONG_CODE = 98;
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
@@ -64,14 +73,38 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 
 		Button addNew = v.findViewById(R.id.add_new_btn);
 		addNew.setOnClickListener(view -> {
-			//TODO: add new song
-
+			Intent intent = new Intent(getContext(), UploadSongActivity.class);
+			startActivityForResult(intent, EXTRA_NEW_SONG_CODE);
 		});
+	}
+
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == EXTRA_NEW_SONG_CODE && resultCode == RESULT_OK) {
+			mTracks.add((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
+
+
+
+			TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getContext(), getFragmentManager(), mTracks);
+			mRecyclerView.setAdapter(adapter);
+		}
 	}
 
 	private void getData() {
 		TrackManager.getInstance(getActivity()).getOwnTracks(this);
 		mTracks = new ArrayList<>();
+	}
+
+	public void updateSongInfo(Track track){
+
+/*		for (int i = 0; i < mTracks.size(); i++) {
+			if(mTracks.get(i).getId() == track.getId()){
+				mTracks.set(i, track);
+			}
+		}*/
+		System.out.println("hellou");
 	}
 
 	@Override
@@ -107,7 +140,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	}
 
 	@Override
-	public void onCreateTrack() {
+	public void onCreateTrack(Track track) {
 
 	}
 

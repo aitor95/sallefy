@@ -58,6 +58,16 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     private void initViews() {
         mAddSongToPlaylistRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        //DETECTAR SCROLL RV
+        mAddSongToPlaylistRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (!recyclerView.canScrollVertically(1)) {
+                    System.out.println("what is going on");
+                }
+            }
+        });
 
         mSelectedSongs = new ArrayList<>();
 
@@ -94,14 +104,18 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
             this.mPlaylist.getTracks().add(mSelectedSongs.get(i));
         }
         Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_success, Toast.LENGTH_SHORT).show();
+        PlaylistManager.getInstance(getApplicationContext())
+                .updatePlaylist(this.mPlaylist, AddSongsToPlaylistActivity.this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.EDIT_CONTENT.TRACK_EDIT && resultCode == RESULT_OK) {
-            mTracks.add((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
-            mAdapter.notifyDataSetChanged();
+            mTracks.add(1, (Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
+            //mAdapter.notifyDataSetChanged();
+            mAdapter = new AddSongsToPlayListAdapter(this, (ArrayList) this.mTracks, mSelectedSongs);
+            mAddSongToPlaylistRecyclerView.setAdapter(mAdapter);
         }
     }
 
@@ -147,7 +161,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     @Override
-    public void onPlaylistCreated() {
+    public void onPlaylistCreated(Playlist playlist) {
 
     }
 
@@ -189,7 +203,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     @Override
-    public void onCreateTrack() {
+    public void onCreateTrack(Track track) {
 
     }
 

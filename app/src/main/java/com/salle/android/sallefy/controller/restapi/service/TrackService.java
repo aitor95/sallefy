@@ -30,7 +30,7 @@ public interface TrackService {
     Call<List<Track>> getUserTracks(@Path("login") String login, @Header("Authorization") String token);
 
     @POST("tracks")
-    Call<ResponseBody> createTrack(@Body Track track, @Header("Authorization") String token);
+    Call<Track> createTrack(@Body Track track, @Header("Authorization") String token);
 
     @PUT("tracks")
     Call<ResponseBody> updateTrack(@Body Track track, @Header("Authorization") String token);

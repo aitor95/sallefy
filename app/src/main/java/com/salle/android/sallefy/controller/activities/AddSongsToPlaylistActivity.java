@@ -94,6 +94,8 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
             this.mPlaylist.getTracks().add(mSelectedSongs.get(i));
         }
         Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_success, Toast.LENGTH_SHORT).show();
+        PlaylistManager.getInstance(getApplicationContext())
+                .updatePlaylist(this.mPlaylist, AddSongsToPlaylistActivity.this);
     }
 
     @Override

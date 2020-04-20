@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +24,17 @@ import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 
 import java.util.ArrayList;
 
+import static android.app.Activity.RESULT_OK;
+
 public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
 	public static final String TAG = MePlaylistFragment.class.getName();
+	public static final int EXTRA_NEW_PLAYLIST_CODE = 99;
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<Playlist> mPlaylists;
@@ -68,7 +73,7 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		Button addNew = v.findViewById(R.id.me_add_new_playlist);
 		addNew.setOnClickListener(view -> {
 			Intent intent = new Intent(getContext(), NewPlaylistActivity.class);
-			startActivity(intent);
+			startActivityForResult(intent, EXTRA_NEW_PLAYLIST_CODE);
 		});
 	}
 
@@ -91,6 +96,7 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		}else{
 			text.setText(null);
 		}
+		mPlaylists = playlists;
 		mRecyclerView.setAdapter(adapter);
 	}
 
@@ -102,6 +108,22 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	@Override
 	public void onFollowingList(ArrayList<Playlist> playlists) {
 
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == EXTRA_NEW_PLAYLIST_CODE && resultCode == RESULT_OK) {
+			//Playlist playlist1 = (Playlist) data.getExtras().get(NewPlaylistActivity.EXTRA_NEW_PLAYLIST);
+			//Playlist playlist2 = (Playlist) data.getSerializableExtra(NewPlaylistActivity.EXTRA_NEW_PLAYLIST);
+
+			//Log.d("TAGG", playlist1.getName());
+			//Log.d("TAGG", playlist2.getUser().getLogin());
+			mPlaylists.add((Playlist) data.getSerializableExtra(NewPlaylistActivity.EXTRA_NEW_PLAYLIST));
+
+			PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
+			mRecyclerView.setAdapter(adapter);
+		}
 	}
 
 	@Override

@@ -27,10 +27,12 @@ import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
@@ -39,6 +41,7 @@ import okhttp3.ResponseBody;
 public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCallback, UploadCallback {
 
     public static final String TAG = NewPlaylistActivity.class.getName();
+    public static final String EXTRA_NEW_PLAYLIST = "EXTRA_NEW_PLAYLIST";
 
     //Layout
     private ImageButton mNav;
@@ -75,7 +78,13 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
         mCreateBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                createPlaylist();
+                Playlist playlist = createPlaylist();
+
+                Intent data = new Intent();
+                data.putExtra(EXTRA_NEW_PLAYLIST, playlist);
+                setResult(RESULT_OK, data);
+
+                finish();
             }
         });
         mImg.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +95,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
         });
     }
 
-    private void createPlaylist() {
+    private Playlist createPlaylist() {
         mPlaylist = new Playlist();
         mPlaylist.setDescription(mDescription.getText().toString());
         mPlaylist.setPublicAccessible(new Boolean(true));
@@ -99,6 +108,10 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
         }else {
 
             mPlaylist.setName(mTitle.getText().toString());
+            mPlaylist.setUser(Session.getInstance(this).getUser());
+            mPlaylist.setUserLogin(Session.getInstance(this).getUser().getLogin());
+            mPlaylist.setFollowed(false);
+            mPlaylist.setTracks(new ArrayList<Track>());
 
             if (coverChosen) {
                 CloudinaryManager.getInstance(this).uploadCoverImage(Constants.STORAGE.PLAYLIST_COVER_FOLDER, mUri, mFilename, NewPlaylistActivity.this);
@@ -108,6 +121,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
                         .createPlaylist(mPlaylist, NewPlaylistActivity.this);
             }
         }
+        return mPlaylist;
     }
 
     private void chooseCoverImage() {

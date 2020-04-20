@@ -169,7 +169,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             Fragment fragment = SeeAllSongFragment.newInstance(tracks);
             FragmentManager manager = getFragmentManager();
 
-            SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
+            SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
 
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);

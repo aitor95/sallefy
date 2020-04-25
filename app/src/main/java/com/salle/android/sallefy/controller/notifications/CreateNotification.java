@@ -41,13 +41,15 @@ public class CreateNotification {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = "Music Notificatons";
             String description = "Display a notification to control the audio outside the app";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_LOW;
 
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, importance);
             notificationChannel.setDescription(description);
+            notificationChannel.setSound(null, null);
 
             NotificationManager notificationManager = (NotificationManager) context.getSystemService( Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(notificationChannel);
+
         }
     }
     public static void createNotification(Context context, Track track, boolean isPlaying){
@@ -123,9 +125,12 @@ public class CreateNotification {
                 .setSmallIcon(R.drawable.ic_sallefy)
                 .setContent(notificationLayout)
                 .setShowWhen(false)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setSound(null)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
                 .setOngoing(true)
+
                 .build();
+
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(NOTIFICATION_ID, notification);

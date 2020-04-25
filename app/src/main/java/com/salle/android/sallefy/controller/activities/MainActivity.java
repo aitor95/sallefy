@@ -31,7 +31,6 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
-import com.salle.android.sallefy.controller.callbacks.FragmentCallback;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
@@ -49,11 +48,9 @@ import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
 
-import java.io.Serializable;
-
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends FragmentActivity implements FragmentCallback, AdapterClickCallback, MusicCallback, BottomMenuDialog.BottomMenuDialogInterf {
+public class MainActivity extends FragmentActivity implements AdapterClickCallback, MusicCallback, BottomMenuDialog.BottomMenuDialogInterf {
 
     public static final String TAG = MainActivity.class.getName();
 
@@ -404,11 +401,6 @@ public class MainActivity extends FragmentActivity implements FragmentCallback, 
             }
             return;
         }
-    }
-
-    @Override
-    public void onChangeFragment(Fragment fragment) {
-        replaceFragment(fragment);
     }
 
     @Override

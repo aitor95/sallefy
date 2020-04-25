@@ -1,8 +1,6 @@
 package com.salle.android.sallefy.controller.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,21 +8,16 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.activities.EditSongActivity;
 import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
-import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
-import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
+import com.salle.android.sallefy.controller.callbacks.SeeAllCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
-import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
-import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +31,11 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 	private ArrayList mTracks;
 
 	private static Playlist mPlaylist;
+
+	private static SeeAllCallback seeAllCallback;
+	public static void setSeeAllCallback(SeeAllCallback seeAllC){
+		seeAllCallback = seeAllC;
+	}
 
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -79,6 +77,8 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 
 		Fragment fragment = this;
 		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
+			if (seeAllCallback != null) seeAllCallback.onSeeAllClosed();
+
 			getActivity()
 					.getSupportFragmentManager()
 					.beginTransaction()

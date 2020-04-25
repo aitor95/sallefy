@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.salle.android.sallefy.controller.adapters.PlaylistListHorizontalAdapt
 import com.salle.android.sallefy.controller.adapters.TrackListHorizontalAdapter;
 import com.salle.android.sallefy.controller.adapters.UserHorizontalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
+import com.salle.android.sallefy.controller.callbacks.SeeAllCallback;
 import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.callback.SearchCallback;
@@ -46,7 +48,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SearchFragment extends Fragment implements PlaylistCallback, UserCallback, GenreCallback, TrackCallback, SearchCallback {
+public class SearchFragment extends Fragment implements PlaylistCallback, UserCallback, GenreCallback, TrackCallback, SearchCallback, SeeAllCallback {
 
     public static final String TAG = SearchFragment.class.getName();
     public static final int ACTIVE_WRITING_TIMEOUT = 500;
@@ -67,6 +69,8 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     private ArrayList<User> users;
 
     private Timer searchTimer;
+
+    private EditText searchText;
 
     private static AdapterClickCallback adapterClickCallback;
     public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -101,11 +105,13 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     @Override
     public void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume: resuming");
     }
 
     @Override
     public void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause: Pausing");
     }
 
     private void initViews(View v) {
@@ -120,6 +126,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             Fragment fragment = SeeAllUserFragment.newInstance(users);
             FragmentManager manager = getFragmentManager();
             SeeAllUserFragment.setAdapterClickCallback(adapterClickCallback);
+
+            //Search text enable/disable system
+            SeeAllPlaylistFragment.setSeeAllCallback(this);
+            searchText.setEnabled(false);
+
             assert manager != null;
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
@@ -141,6 +152,10 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 	        FragmentManager manager = getFragmentManager();
 
             SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
+
+            //Search text enable/disable system
+            SeeAllPlaylistFragment.setSeeAllCallback(this);
+            searchText.setEnabled(false);
 
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
@@ -171,6 +186,10 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
             SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
 
+            //Search text enable/disable system
+            SeeAllPlaylistFragment.setSeeAllCallback(this);
+            searchText.setEnabled(false);
+
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
             transaction.add(R.id.fragment_container,fragment);
@@ -178,9 +197,10 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             transaction.commit();
         });
 
-        EditText searchText = v.findViewById(R.id.searchText);
+        searchText = v.findViewById(R.id.searchText);
 
         SearchCallback scallback = this;
+
         searchText.setOnKeyListener((view, i, keyEvent) -> {
             ((EditText) view).setTextAppearance(R.style.SearchWritingText);
             String text = ((EditText) view).getText().toString();
@@ -204,6 +224,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             return false;
         });
 
+    }
+
+    @Override
+    public void onSeeAllClosed() {
+        searchText.setEnabled(true);
     }
 
     class SearchPerformer extends TimerTask {

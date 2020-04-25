@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
+import com.salle.android.sallefy.controller.callbacks.SeeAllCallback;
 import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
@@ -28,6 +28,10 @@ public class SeeAllPlaylistFragment extends Fragment {
 	private RecyclerView mRecyclerView;
 	private ArrayList<Playlist> mPlaylists;
 
+	private static SeeAllCallback seeAllCallback;
+	public static void setSeeAllCallback(SeeAllCallback seeAllC){
+		seeAllCallback = seeAllC;
+	}
 
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -51,6 +55,7 @@ public class SeeAllPlaylistFragment extends Fragment {
 		initViews(v);
 
 		mPlaylists = (ArrayList<Playlist>) getArguments().getSerializable(TAG_CONTENT);
+
 		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setAdapter(adapter);
 		return v;
@@ -73,6 +78,9 @@ public class SeeAllPlaylistFragment extends Fragment {
 		mRecyclerView.setAdapter(adapter);
 
 		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
+
+			if (seeAllCallback != null) seeAllCallback.onSeeAllClosed();
+
 			Objects.requireNonNull(getActivity()).
 					getSupportFragmentManager().
 					beginTransaction().

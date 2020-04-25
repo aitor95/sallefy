@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.UserVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
+import com.salle.android.sallefy.controller.callbacks.SeeAllCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
@@ -35,6 +36,10 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
+	}
+	private static SeeAllCallback seeAllCallback;
+	public static void setSeeAllCallback(SeeAllCallback seeAllC){
+		seeAllCallback = seeAllC;
 	}
 
 	public static Fragment getInstance() {
@@ -65,6 +70,7 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 		mRecyclerView.setAdapter(adapter);
 
 		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
+			if (seeAllCallback != null) seeAllCallback.onSeeAllClosed();
 			Objects.requireNonNull(
 					getActivity()).
 					getSupportFragmentManager().

@@ -51,7 +51,6 @@ public class PlaylistListHorizontalAdapter extends RecyclerView.Adapter<Playlist
             });
 
             holder.mTitle.setText(mPlaylists.get(position).getName());
-            adjustTextView(holder);
 
             holder.mAuthor.setText(mPlaylists.get(position).getUser().getLogin());
             if (mPlaylists.get(position).getThumbnail() != null) {
@@ -64,21 +63,6 @@ public class PlaylistListHorizontalAdapter extends RecyclerView.Adapter<Playlist
         }
     }
 
-    private void adjustTextView(ViewHolder holder) {
-        holder.mTitle.getViewTreeObserver();
-        holder.mTitle.measure(0, 0);
-
-        holder.mTitle.post(() -> {
-            int linesCount = holder.mTitle.getLineCount();
-
-            String titleTrack = (String) holder.mTitle.getText();
-            if (linesCount > 1) {
-                titleTrack = titleTrack.substring(0, titleTrack.length() - 4);
-                holder.mTitle.setText(titleTrack.concat("..."));
-                adjustTextView(holder);
-            }
-        });
-    }
 
     @Override
     public int getItemCount() {

@@ -25,6 +25,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 style="@style/SocialActivityMainName"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="@string/default_username"
                 android:layout_margin="3dp" />
 
@@ -89,6 +91,8 @@
                 <TextView
                     android:id="@+id/track_title_sa"
                     android:layout_width="190dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:layout_height="wrap_content"
                     android:textAlignment="textStart"
                     style="@style/TrackTheme"
@@ -97,6 +101,8 @@
                 <TextView
                     android:id="@+id/track_author_sa"
                     android:layout_width="190dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     style="@style/SubTitlesTheme"

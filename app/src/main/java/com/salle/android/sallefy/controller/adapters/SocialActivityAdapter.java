@@ -76,7 +76,6 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
                                 .replace("Z", ""), formatter))).toString());
 
         holder.trackTitle.setText(track.getName());
-        adjustTextView(holder.trackTitle);
 
         holder.trackArtist.setText(track.getUserLogin());                       //TODO: Buscar alternativa
 
@@ -147,22 +146,6 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
         } else {
             return "less than a second ago";
         }
-    }
-
-    private void adjustTextView(TextView tv) {
-        tv.getViewTreeObserver();
-        tv.measure(0, 0);
-
-        tv.post(() -> {
-            int linesCount = tv.getLineCount();
-
-            String titleTrack = (String) tv.getText();
-            if (linesCount > 1) {
-                titleTrack = titleTrack.substring(0, titleTrack.length() - 4);
-                tv.setText(titleTrack.concat("..."));
-                adjustTextView(tv);
-            }
-        });
     }
 
     @Override

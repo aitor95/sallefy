@@ -64,6 +64,8 @@
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
                 android:textAlignment="textStart"
+                android:ellipsize="end"
+                android:maxLines="1"
                 style="@style/TrackTheme"
                 android:text="@string/fragment_playlists"/>
 
@@ -71,6 +73,8 @@
                 android:id="@+id/item_playlist_author"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:layout_marginTop="3dp"
                 style="@style/SubTitlesTheme"
                 android:text="@string/default_track_author"/>

@@ -54,6 +54,8 @@
             android:layout_height="wrap_content"
             android:textAlignment="textStart"
             android:layout_marginTop="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             style="@style/TrackTheme"
             android:text="@string/fragment_playlists"/>
 
@@ -63,6 +65,8 @@
             android:layout_height="wrap_content"
             android:paddingTop=".5dp"
             android:paddingBottom="5dp"
+            android:ellipsize="end"
+            android:maxLines="1"
             style="@style/SubTitlesTheme"
             android:text="@string/default_track_author"/>
 

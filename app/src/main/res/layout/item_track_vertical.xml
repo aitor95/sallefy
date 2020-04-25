@@ -61,6 +61,8 @@
                 android:layout_width="190dp"
                 android:layout_height="wrap_content"
                 android:textAlignment="textStart"
+                android:ellipsize="end"
+                android:maxLines="1"
                 style="@style/TrackTheme"
                 android:text="@string/default_track_title"/>
 
@@ -70,6 +72,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 style="@style/SubTitlesTheme"
+                android:ellipsize="end"
+                android:maxLines="1"
                 android:text="@string/default_track_author"/>
 
         </LinearLayout>

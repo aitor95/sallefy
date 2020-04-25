@@ -124,6 +124,7 @@ public class CreateNotification {
                 .setContent(notificationLayout)
                 .setShowWhen(false)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setOngoing(true)
                 .build();
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);

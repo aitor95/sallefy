@@ -19,6 +19,7 @@ import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistFollowCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
 
@@ -75,25 +76,32 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
                         .into(holder.mPhoto);
             }
 
-            if (currPlaylist.isFollowed()) {
-                holder.followingButton.setTextAppearance(R.style.FollowingButton);
-                holder.followingButton.setBackgroundResource(R.drawable.round_corner_light);
-                holder.followingButton.setText(R.string.FollowingText);
-            } else {
-                holder.followingButton.setTextAppearance(R.style.ToFollowButton);
-                holder.followingButton.setBackgroundResource(R.drawable.round_corner);
-                holder.followingButton.setText(R.string.ToFollowText);
-            }
+            Log.d(TAG, "onBindViewHolder: Current playlist is " + currPlaylist.getName() + " " + currPlaylist.getUser().getLogin());
 
-            holder.followingButton.setOnClickListener(view -> {
-                if(followHolder == null) {
-                    followHolder = holder;
-                    PlaylistManager.getInstance(mContext).followPlaylist(currPlaylist, !currPlaylist.isFollowed(),  PlaylistListVerticalAdapter.this);
-                }else{
-                    //El sistema esta ocupado dando like a otro post.
-                    Toast.makeText(mContext, R.string.error_follow, Toast.LENGTH_SHORT).show();
+            if(currPlaylist.getUser().getId().intValue() != Session.getInstance(mContext).getUser().getId()) {
+                holder.followingButton.setVisibility(View.VISIBLE);
+                if (currPlaylist.isFollowed()) {
+                    holder.followingButton.setTextAppearance(R.style.FollowingButton);
+                    holder.followingButton.setBackgroundResource(R.drawable.round_corner_light);
+                    holder.followingButton.setText(R.string.FollowingText);
+                } else {
+                    holder.followingButton.setTextAppearance(R.style.ToFollowButton);
+                    holder.followingButton.setBackgroundResource(R.drawable.round_corner);
+                    holder.followingButton.setText(R.string.ToFollowText);
                 }
-            });
+
+                holder.followingButton.setOnClickListener(view -> {
+                    if (followHolder == null) {
+                        followHolder = holder;
+                        PlaylistManager.getInstance(mContext).followPlaylist(currPlaylist, !currPlaylist.isFollowed(), PlaylistListVerticalAdapter.this);
+                    } else {
+                        //El sistema esta ocupado dando like a otro post.
+                        Toast.makeText(mContext, R.string.error_follow, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }else{
+                holder.followingButton.setVisibility(View.GONE);
+            }
         }
     }
 

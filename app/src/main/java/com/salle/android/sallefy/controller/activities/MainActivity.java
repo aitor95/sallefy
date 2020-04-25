@@ -143,6 +143,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             Track track = mBoundService.getCurrentTrack();
             if(track != null){
                 updateMiniReproductorUI(track);
+            }else{
+                Log.d(TAG, "updateIfBoundToService: Track is null");
             }
         }
     }
@@ -340,6 +342,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     }
 
     private void replaceFragment(Fragment fragment) {
+
         String fragmentTag = getFragmentTag(fragment);
         tagFragmentActivado = fragmentTag;
         Fragment currentFragment = mFragmentManager.findFragmentByTag(fragmentTag);
@@ -488,6 +491,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST,playlist);
             startActivity(intent);
         }
+        Log.d(TAG, "onTrackClicked");
+
     }
 
     @Override
@@ -512,10 +517,13 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     @Override
     public void onMusicPlayerPrepared() {
-        Log.d(TAG, "onMusicPlayerPrepared: !!");
+        Track track = mBoundService.getCurrentTrack();
+        Log.d(TAG, "onMusicPlayerPrepared: track is null? "  + (track == null));
+
 
         repPlayStop.setImageResource(R.drawable.ic_pause_circle_40dp);
         repPlayStop.setTag(STOP);
+        updateIfBoundToService();
     }
 
     @Override
@@ -594,7 +602,6 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             TrackViewPack tvp = getmTrackViewPack();
             tvp.setTrack(track);
             tvp.getViewHolder().updateViewHolder(track);
-
         }
     }
 

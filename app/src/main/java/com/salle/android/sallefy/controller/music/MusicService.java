@@ -162,9 +162,8 @@ public class MusicService extends Service {
     }
 
     public void removePlaylist(){
-        currentTrack = 0;
-        if(mTracks != null)
-            mTracks.clear();
+        mTracks = null;
+        System.gc();
     }
 
     //Carga una cancion en streaming.
@@ -174,13 +173,6 @@ public class MusicService extends Service {
             //Init class values
             playingBeforeInterruption = false;
 
-            //Crea una llista de reproduccio nova si no existeix
-            if(mTracks == null) {
-                currentTrack = 0;
-                mTracks = new ArrayList<>();
-                mTracks.add(track);
-            }
-
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
@@ -189,6 +181,13 @@ public class MusicService extends Service {
                     onSongFinished();
                 }
             });
+        }
+
+        //Crea una llista de reproduccio nova si no existeix
+        if(mTracks == null) {
+            currentTrack = 0;
+            mTracks = new ArrayList<>();
+            mTracks.add(track);
         }
 
         try {
@@ -249,6 +248,8 @@ public class MusicService extends Service {
     }
 
     public Track getCurrentTrack() {
+
+
         if(mTracks == null) return null;
         return mTracks.size() > 0 ? mTracks.get(currentTrack):null;
     }

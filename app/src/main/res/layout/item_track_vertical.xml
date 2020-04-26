@@ -40,6 +40,7 @@
                         android:id="@+id/track_img"
                         android:layout_width="64dp"
                         android:layout_height="64dp"
+                        android:src="@drawable/ic_audiotrack"
                         android:scaleType="centerCrop"/>
 
                 </androidx.cardview.widget.CardView>

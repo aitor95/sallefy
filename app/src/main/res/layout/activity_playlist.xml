@@ -92,6 +92,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:text="Playlist author"
+                android:textAlignment="center"
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp"/>
 
@@ -99,9 +100,11 @@
                 android:id="@+id/playlist_description"
                 style="@style/SubTitlesTheme"
                 android:layout_width="wrap_content"
+                android:maxWidth="350dp"
                 android:layout_gravity="center"
                 android:layout_height="wrap_content"
                 android:text="-"
+                android:textAlignment="center"
                 android:textColor="@color/colorWhite"
                 android:textSize="20sp" />
 

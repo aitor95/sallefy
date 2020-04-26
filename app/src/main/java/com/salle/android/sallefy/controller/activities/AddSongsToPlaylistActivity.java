@@ -30,6 +30,8 @@ import java.util.List;
 
 import okhttp3.ResponseBody;
 
+import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
+
 public class AddSongsToPlaylistActivity extends AppCompatActivity implements PlaylistCallback, TrackCallback, BottomMenuDialog.BottomMenuDialogInterf {
 
     public static final String TAG = AddSongsToPlaylistActivity.class.getName();
@@ -37,6 +39,8 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     private RecyclerView mAddSongToPlaylistRecyclerView;
 
     private AddSongsToPlayListAdapter mAdapter;
+
+    private LinearLayoutManager mLinearLayoutManager;
 
     private ArrayList<Track> mSelectedSongs;
 
@@ -48,6 +52,13 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     private ArrayList<Track> mTracks;
     private Integer pId;
 
+    //Pagination
+    private boolean isLoading = false;
+    private boolean isLast = false;
+    private int currentPage = 0;
+
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,23 +68,39 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     private void initViews() {
-        mAddSongToPlaylistRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        //DETECTAR SCROLL RV
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mAddSongToPlaylistRecyclerView.setLayoutManager(mLinearLayoutManager);
+        //Charge more songs
         mAddSongToPlaylistRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (!recyclerView.canScrollVertically(1)) {
-                    System.out.println("what is going on");
+
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                int visibleItemCount = mLinearLayoutManager.getChildCount();
+                int totalItemCount = mLinearLayoutManager.getItemCount();
+                int firstVisibleItemPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+
+                if (!isLoading && !isLast) {
+                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+                            && firstVisibleItemPosition >= 0
+                            && totalItemCount >= PAGE_SIZE) {
+                        loadMoreItems();
+                    }
                 }
             }
+
         });
 
         mSelectedSongs = new ArrayList<>();
 
         mTracks = new ArrayList<>();
 
-        TrackManager.getInstance(getApplicationContext()).getAllTracks(this);
+        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 50);
 
 
         doneBtn = findViewById(R.id.add_songs_to_playlist_btn);
@@ -97,6 +124,17 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
             }
         });
     }
+
+
+    private void loadMoreItems() {
+        isLoading = true;
+
+        currentPage += 1;
+
+        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 50);
+
+    }
+
 
     private void updatePlaylist() {
         Log.d(TAG, "AddToPlaylistOnClick: called. Size of selected is " + mSelectedSongs.size());
@@ -131,7 +169,12 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
                 }
             }
         }
-        //Add last track for New Track row
+
+        if(this.mTracks.size() < PAGE_SIZE){
+            isLast = true;
+        }
+
+            //Add last track for New Track row
         Track newTrack = new Track();
         newTrack.setName(getResources().getString(R.string.add_songs_to_playlist_lastitem_title));
         this.mTracks.add(0, newTrack);
@@ -139,6 +182,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         //Create RV tracks adapter
         mAdapter = new AddSongsToPlayListAdapter(this, (ArrayList) this.mTracks, mSelectedSongs);
         mAddSongToPlaylistRecyclerView.setAdapter(mAdapter);
+
     }
 
     @Override

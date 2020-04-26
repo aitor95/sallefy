@@ -48,9 +48,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     private ImageButton backBtn;
 
     private Playlist mPlaylist;
-    private List<Track> mEditedTracks;
     private ArrayList<Track> mTracks;
-    private Integer pId;
 
     //Pagination
     private boolean isLoading = false;
@@ -99,8 +97,11 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         mSelectedSongs = new ArrayList<>();
 
         mTracks = new ArrayList<>();
+        Track newTrack = new Track();
+        newTrack.setName(getResources().getString(R.string.add_songs_to_playlist_lastitem_title));
+        this.mTracks.add(0, newTrack);
 
-        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 50);
+        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 10);
 
 
         doneBtn = findViewById(R.id.add_songs_to_playlist_btn);
@@ -131,7 +132,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
         currentPage += 1;
 
-        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 50);
+        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 10);
 
     }
 
@@ -144,6 +145,22 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_success, Toast.LENGTH_SHORT).show();
         PlaylistManager.getInstance(getApplicationContext())
                 .updatePlaylist(this.mPlaylist, AddSongsToPlaylistActivity.this);
+    }
+
+    private void checkExistingTracks(){
+        if(this.mPlaylist.getTracks()!=null){
+            for (int i = 1; i < this.mTracks.size(); i++) {
+                for (int j = 0; j < this.mPlaylist.getTracks().size(); j++) {
+                    if(this.mTracks.get(i).getId().intValue() == this.mPlaylist.getTracks().get(j).getId().intValue()){
+                        this.mTracks.remove(mTracks.get(i));
+                    }
+                }
+            }
+        }
+
+        if(this.mTracks.size() < PAGE_SIZE){
+            isLast = true;
+        }
     }
 
     @Override
@@ -160,25 +177,8 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     @Override
     public void onPlaylistById(Playlist playlist) {
         this.mPlaylist = playlist;
-        if(this.mPlaylist.getTracks()!=null){
-            for (int i = 0; i < this.mTracks.size(); i++) {
-                for (int j = 0; j < this.mPlaylist.getTracks().size(); j++) {
-                    if(this.mTracks.get(i).getId().intValue() == this.mPlaylist.getTracks().get(j).getId().intValue()){
-                        this.mTracks.remove(mTracks.get(i));
-                    }
-                }
-            }
-        }
-
-        if(this.mTracks.size() < PAGE_SIZE){
-            isLast = true;
-        }
-
-            //Add last track for New Track row
-        Track newTrack = new Track();
-        newTrack.setName(getResources().getString(R.string.add_songs_to_playlist_lastitem_title));
-        this.mTracks.add(0, newTrack);
-
+        //Add last track for New Track row
+        checkExistingTracks();
         //Create RV tracks adapter
         mAdapter = new AddSongsToPlayListAdapter(this, (ArrayList) this.mTracks, mSelectedSongs);
         mAddSongToPlaylistRecyclerView.setAdapter(mAdapter);
@@ -227,8 +227,14 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     @Override
     public void onTracksReceived(List<Track> tracks) {
-        mTracks = (ArrayList)tracks;
-        onPlaylistById((Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
+        mTracks.addAll((ArrayList)tracks);
+        if(isLoading){
+            isLoading = false;
+            checkExistingTracks();
+            mAdapter.notifyDataSetChanged();
+        }else{
+            onPlaylistById((Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
+        }
     }
 
     @Override

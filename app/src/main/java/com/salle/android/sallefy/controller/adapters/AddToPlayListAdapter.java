@@ -26,11 +26,11 @@ public class AddToPlayListAdapter extends RecyclerView.Adapter<AddToPlayListAdap
 
     private static final String TAG = "AddToPlaylistAdapter";
     private ArrayList<Playlist> mPlaylists;
-    private HashMap<Integer, Integer> mSelectedPlaylists;
+    private ArrayList<Playlist> mSelectedPlaylists;
 
     private Context mContext;
 
-    public AddToPlayListAdapter(Context context, ArrayList<Playlist> playlists, HashMap<Integer, Integer> selectedPlaylists) {
+    public AddToPlayListAdapter(Context context, ArrayList<Playlist> playlists, ArrayList<Playlist> selectedPlaylists) {
         mContext = context;
         mPlaylists = playlists;
         mSelectedPlaylists = selectedPlaylists;
@@ -57,9 +57,9 @@ public class AddToPlayListAdapter extends RecyclerView.Adapter<AddToPlayListAdap
         holder.mLayout.setOnClickListener(v -> {
             holder.checkBox.toggle();
             if (holder.checkBox.isChecked()) {
-                mSelectedPlaylists.put(holder.id, holder.id);
+                mSelectedPlaylists.add(playlist);
             } else {
-                mSelectedPlaylists.remove(holder.id);
+                mSelectedPlaylists.remove(playlist);
             }
         });
 
@@ -71,9 +71,9 @@ public class AddToPlayListAdapter extends RecyclerView.Adapter<AddToPlayListAdap
             @Override
             public void onClick(View view) {
                 if (holder.checkBox.isChecked()) {
-                    mSelectedPlaylists.put(holder.id, holder.id);
+                    mSelectedPlaylists.add(playlist);
                 } else {
-                    mSelectedPlaylists.remove(holder.id);
+                    mSelectedPlaylists.add(playlist);
                 }
             }
         });
@@ -89,7 +89,7 @@ public class AddToPlayListAdapter extends RecyclerView.Adapter<AddToPlayListAdap
         }
 
         //Es la ultima playlist? Significa que és la playlist para crear de nuevas.
-        if (position == mPlaylists.size() - 1) {
+        if (position == 0) {
             Log.d(TAG, "onBindViewHolder: WOW SOY POSITION "+position  + " DE: "+ mPlaylists.size());
             holder.title.setText(R.string.add_to_playlist_lastitem_title);
             holder.author.setText(R.string.add_to_playlist_lastitem_author);

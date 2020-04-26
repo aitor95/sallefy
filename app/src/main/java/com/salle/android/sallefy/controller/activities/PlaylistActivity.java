@@ -396,6 +396,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 break;
             case "addToPlaylist":
                 Log.d(TAG, "onButtonClicked: ADDTOPLAYLIST");
+                Intent intent1 = new Intent(this, AddToPlaylistActivity.class);
+                intent1.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
+                startActivity(intent1);
                 break;
             case "showArtist":
                 Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
@@ -405,9 +408,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 break;
             case "edit":
                 Log.d(TAG, "onButtonClicked: EDIT");
-                Intent intent = new Intent(this, EditSongActivity.class);
-                intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
-                startActivity(intent);
+                Intent intent2 = new Intent(this, EditSongActivity.class);
+                intent2.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
+                startActivity(intent2);
                 break;
         }
     }

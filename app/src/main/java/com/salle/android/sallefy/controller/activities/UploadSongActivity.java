@@ -111,6 +111,11 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
                 if (!uploading) {
                     uploadTrack();
                     uploading = true;
+                    mName.setEnabled(false);
+                    mFileBtn.setEnabled(false);
+                    mAddGenreBtn.setEnabled(false);
+                    mGenresBtn.setEnabled(false);
+                    mImg.setEnabled(false);
                     ((Button) v).setText("Uploading...");
                 }
             }
@@ -202,12 +207,20 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         mTrack = new Track();
 
         if(!trackChosen){
-
+            mName.setEnabled(true);
+            mFileBtn.setEnabled(true);
+            mAddGenreBtn.setEnabled(true);
+            mGenresBtn.setEnabled(true);
+            mImg.setEnabled(true);
             Toast.makeText(getApplicationContext(), R.string.upload_song_not_complete, Toast.LENGTH_SHORT).show();
 
         }else{
             if(mName.getText().toString().equals("")){
-
+                mName.setEnabled(true);
+                mFileBtn.setEnabled(true);
+                mAddGenreBtn.setEnabled(true);
+                mGenresBtn.setEnabled(true);
+                mImg.setEnabled(true);
                 Toast.makeText(getApplicationContext(), R.string.new_playlist_not_complete, Toast.LENGTH_SHORT).show();
 
             }else {
@@ -262,6 +275,11 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         Log.d("TAGG", "Track uploaded");
         uploaded = true;
         mTrack = track;
+        mName.setEnabled(true);
+        mFileBtn.setEnabled(true);
+        mAddGenreBtn.setEnabled(true);
+        mGenresBtn.setEnabled(true);
+        mImg.setEnabled(true);
         Toast.makeText(getApplicationContext(), R.string.upload_song_creation_success, Toast.LENGTH_SHORT).show();
 
         Intent data = new Intent();
@@ -280,6 +298,11 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure, Toast.LENGTH_LONG).show();
         mUploadSongBtn.setText("UPLOAD");
+        mName.setEnabled(true);
+        mFileBtn.setEnabled(true);
+        mAddGenreBtn.setEnabled(true);
+        mGenresBtn.setEnabled(true);
+        mImg.setEnabled(true);
         uploading = false;
     }
 
@@ -343,6 +366,11 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     public void onError(String requestId, ErrorInfo error) {
         Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure, Toast.LENGTH_LONG).show();
         mUploadSongBtn.setText("UPLOAD");
+        mName.setEnabled(true);
+        mFileBtn.setEnabled(true);
+        mAddGenreBtn.setEnabled(true);
+        mGenresBtn.setEnabled(true);
+        mImg.setEnabled(true);
         uploading = false;
     }
 

@@ -216,7 +216,7 @@ public class PlaylistManager {
     }
 
     /**********************
-     * Update info of a playlist
+     * Create a playlist
      **********************/
     public synchronized void createPlaylist(Playlist playlist, final PlaylistCallback playlistCallback){
         Call<Playlist> call = mService.createPlaylist(playlist,"Bearer " + userToken.getIdToken());
@@ -292,6 +292,30 @@ public class PlaylistManager {
         });
     }
 
+    /**********************
+     * Gets current user's own playlists
+     **********************/
+    public void getOwnPlaylists(PlaylistCallback playlistCallback){
+        Call<List<Playlist>> call = mService.getOwnPlaylists("Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<List<Playlist>>() {
+            @Override
+            public void onResponse(Call<List<Playlist>> call, Response<List<Playlist>> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    playlistCallback.onOwnList((ArrayList) response.body());
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Playlist>> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+    }
 
 
 }

@@ -13,6 +13,8 @@ public interface PlaylistCallback extends FailureCallback {
 
     void onPlaylistsByUser(ArrayList<Playlist> playlists);
 
+    void onOwnList(ArrayList<Playlist> playlists);
+
     void onAllList(ArrayList<Playlist> playlists);
 
     void onFollowingList(ArrayList<Playlist> playlists);

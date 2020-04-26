@@ -91,6 +91,7 @@ public class AddSongsToPlayListAdapter extends RecyclerView.Adapter<AddSongsToPl
 
 
         }else{
+            //Es la primera track? Significa que es la track para crear de nuevas.
             holder.title.setText(track.getName());
             holder.author.setText(R.string.add_songs_to_playlist_lastitem_author);
             Glide

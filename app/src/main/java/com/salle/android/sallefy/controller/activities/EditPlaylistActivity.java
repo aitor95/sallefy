@@ -193,6 +193,11 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
     }
 
     @Override
+    public void onOwnList(ArrayList<Playlist> playlists) {
+
+    }
+
+    @Override
     public void onAllList(ArrayList<Playlist> playlists) {
 
     }

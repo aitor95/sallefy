@@ -101,6 +101,11 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	}
 
 	@Override
+	public void onOwnList(ArrayList<Playlist> playlists) {
+
+	}
+
+	@Override
 	public void onAllList(ArrayList<Playlist> playlists) {
 
 	}

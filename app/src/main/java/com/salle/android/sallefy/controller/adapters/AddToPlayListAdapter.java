@@ -48,69 +48,63 @@ public class AddToPlayListAdapter extends RecyclerView.Adapter<AddToPlayListAdap
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         Playlist playlist = mPlaylists.get(position);
 
-        if(mSelectedPlaylists.get(playlist.getId()) != null){
-            holder.checkBox.setChecked(true);
-        }else{
-            holder.checkBox.setChecked(false);
-        }
-
-        holder.mLayout.setOnClickListener(v -> {
-            holder.checkBox.toggle();
-            if (holder.checkBox.isChecked()) {
-                mSelectedPlaylists.add(playlist);
-            } else {
-                mSelectedPlaylists.remove(playlist);
-            }
-        });
-
-        holder.title.setText(playlist.getName());
-        holder.author.setText(playlist.getUserLogin());
-        holder.id = playlist.getId();
-
-        holder.checkBox.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        if(position != 0){
+            holder.mLayout.setOnClickListener(v -> {
+                holder.checkBox.toggle();
                 if (holder.checkBox.isChecked()) {
                     mSelectedPlaylists.add(playlist);
                 } else {
-                    mSelectedPlaylists.add(playlist);
+                    mSelectedPlaylists.remove(playlist);
                 }
-            }
-        });
+            });
 
-
-        //TODO: Change placeholder.
-        if (playlist.getThumbnail() != null) {
+            holder.title.setText(playlist.getName());
+            holder.author.setText(playlist.getUserLogin());
+            holder.id = playlist.getId();
+            holder.checkBox.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (holder.checkBox.isChecked()) {
+                        mSelectedPlaylists.add(playlist);
+                    } else {
+                        mSelectedPlaylists.add(playlist);
+                    }
+                }
+            });
+          /*  if(mSelectedPlaylists.get(playlist.getId()) != null){
+                holder.checkBox.setChecked(true);
+            }else{
+                holder.checkBox.setChecked(false);
+            }*/
             Glide.with(mContext)
                     .asBitmap()
-                    .placeholder(R.drawable.ic_audiotrack)
+                    .placeholder(R.drawable.ic_playlist_cover)
                     .load(playlist.getThumbnail())
                     .into(holder.photo);
-        }
 
-        //Es la ultima playlist? Significa que és la playlist para crear de nuevas.
-        if (position == 0) {
-            Log.d(TAG, "onBindViewHolder: WOW SOY POSITION "+position  + " DE: "+ mPlaylists.size());
-            holder.title.setText(R.string.add_to_playlist_lastitem_title);
+            holder.checkBox.setButtonDrawable(R.drawable.checkbox_selector);
+
+        }else{
+            //Es la primera playlist? Significa que es la playlist para crear de nuevas.
+
+            holder.title.setText(playlist.getName());
             holder.author.setText(R.string.add_to_playlist_lastitem_author);
-            holder.photo.setImageResource(R.drawable.ic_chooseimage);
+            Glide
+                    .with(mContext)
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_playlist_cover)
+                    .load(R.drawable.ic_playlist_cover)
+                    .into(holder.photo);
 
+            holder.checkBox.setButtonDrawable(R.drawable.ic_checkbox_add_16dp);
             holder.checkBox.setButtonDrawable(R.drawable.ic_checkbox_add_16dp);
 
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    createPlaylist();
-                }
+                public void onClick(View view) { createPlaylist(); }
             });
-
-            holder.mLayout.setOnClickListener(v -> {
-                createPlaylist();
-            });
-        }else{
-            holder.checkBox.setButtonDrawable(R.drawable.checkbox_selector);
+            holder.mLayout.setOnClickListener(v -> { createPlaylist(); });
         }
-
     }
 
     void createPlaylist(){

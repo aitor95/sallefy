@@ -54,18 +54,13 @@ public class AddSongsToPlayListAdapter extends RecyclerView.Adapter<AddSongsToPl
         Track track = mTracks.get(position);
 
         if(position != 0){
-            holder.mLayout.setOnClickListener(v -> {
-                holder.checkBox.toggle();
-                if (holder.checkBox.isChecked()) {
-                    mSelectedTracks.add(track);
-                    holder.checkBox.setChecked(true);
+            if(mSelectedTracks.contains(track)){
+              //  mSelectedTracks.add(track);
+                holder.checkBox.setChecked(true);
+            }else{
+                holder.checkBox.setChecked(false);
+            }
 
-                } else {
-                    mSelectedTracks.remove(track);
-                    holder.checkBox.setChecked(false);
-
-                }
-            });
             holder.title.setText(track.getName());
             holder.author.setText(track.getUserLogin());
             holder.id = track.getId();
@@ -75,8 +70,11 @@ public class AddSongsToPlayListAdapter extends RecyclerView.Adapter<AddSongsToPl
                 public void onClick(View view) {
                     if (holder.checkBox.isChecked()) {
                         mSelectedTracks.add(track);
+                        holder.checkBox.setChecked(true);
+
                     } else {
                         mSelectedTracks.remove(track);
+                        holder.checkBox.setChecked(false);
                     }
                 }
             });

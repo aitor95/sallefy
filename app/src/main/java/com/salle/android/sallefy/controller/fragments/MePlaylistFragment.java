@@ -39,6 +39,7 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	private RecyclerView mRecyclerView;
 	private ArrayList<Playlist> mPlaylists;
 
+	private PlaylistListVerticalAdapter mAdapter;
 	private View v;
 
 
@@ -66,9 +67,9 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(null, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
+		mAdapter = new PlaylistListVerticalAdapter(null, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setLayoutManager(manager);
-		mRecyclerView.setAdapter(adapter);
+		mRecyclerView.setAdapter(mAdapter);
 
 		Button addNew = v.findViewById(R.id.me_add_new_playlist);
 		addNew.setOnClickListener(view -> {

@@ -49,14 +49,11 @@ public class AddToPlayListAdapter extends RecyclerView.Adapter<AddToPlayListAdap
         Playlist playlist = mPlaylists.get(position);
 
         if(position != 0){
-            holder.mLayout.setOnClickListener(v -> {
-                holder.checkBox.toggle();
-                if (holder.checkBox.isChecked()) {
-                    mSelectedPlaylists.add(playlist);
-                } else {
-                    mSelectedPlaylists.remove(playlist);
-                }
-            });
+            if(mSelectedPlaylists.contains(playlist)){
+                holder.checkBox.setChecked(true);
+            }else{
+                holder.checkBox.setChecked(false);
+            }
 
             holder.title.setText(playlist.getName());
             holder.author.setText(playlist.getUserLogin());
@@ -66,16 +63,15 @@ public class AddToPlayListAdapter extends RecyclerView.Adapter<AddToPlayListAdap
                 public void onClick(View view) {
                     if (holder.checkBox.isChecked()) {
                         mSelectedPlaylists.add(playlist);
+                        holder.checkBox.setChecked(true);
+
                     } else {
-                        mSelectedPlaylists.add(playlist);
+                        mSelectedPlaylists.remove(playlist);
+                        holder.checkBox.setChecked(false);
                     }
                 }
             });
-          /*  if(mSelectedPlaylists.get(playlist.getId()) != null){
-                holder.checkBox.setChecked(true);
-            }else{
-                holder.checkBox.setChecked(false);
-            }*/
+
             Glide.with(mContext)
                     .asBitmap()
                     .placeholder(R.drawable.ic_playlist_cover)

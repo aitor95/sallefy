@@ -68,13 +68,11 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
             holder.mTitle.setText(currPlaylist.getName());
             holder.mAuthor.setText(currPlaylist.getUser().getLogin());
 
-            if (currPlaylist.getThumbnail() != null) {
-                Glide.with(mContext)
-                        .asBitmap()
-                        .placeholder(R.drawable.ic_audiotrack)
-                        .load(currPlaylist.getThumbnail())
-                        .into(holder.mPhoto);
-            }
+            Glide.with(mContext)
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_playlist_cover)
+                    .load(currPlaylist.getThumbnail())
+                    .into(holder.mPhoto);
 
             Log.d(TAG, "onBindViewHolder: Current playlist is " + currPlaylist.getName() + " " + currPlaylist.getUser().getLogin());
 

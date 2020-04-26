@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
+import static android.nfc.tech.MifareUltralight.get;
 
 public class  AddToPlaylistActivity extends AppCompatActivity implements PlaylistCallback {
 
@@ -42,6 +44,7 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
     private Track mTrack;
     private ArrayList<Playlist> mPlaylists;
     private ArrayList<Playlist> mSelectedPlaylists;
+    private int currentPlaylist = 0;
 
 
     @Override
@@ -80,14 +83,15 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "AddToPlaylistOnClick: called. Size of selected is " + mSelectedPlaylists.size());
-                //TODO: Añadir la cancion a cada una de las playlists.
-                /*
-                for (Map.Entry<Integer, Integer> entry : mSelectedPlaylists.entrySet()) {
-                    s += entry.getKey() + " " + entry.getValue() + " ";
-                }
-                */
+                addSong(currentPlaylist);
             }
         });
+    }
+
+    private void addSong(int playlistNum) {
+        Playlist playlist = mSelectedPlaylists.get(playlistNum);
+        playlist.getTracks().add(this.mTrack);
+        PlaylistManager.getInstance(getApplicationContext()).updatePlaylist(playlist, this);
     }
 
     private void checkExistingPlaylists() {
@@ -95,6 +99,7 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
             for (int j = 0; j < mPlaylists.get(i).getTracks().size(); j++) {
                 if(this.mPlaylists.get(i).getTracks().get(j).getId().intValue() == this.mTrack.getId().intValue()){
                     this.mPlaylists.remove(mPlaylists.get(i));
+                    i--;
                 }
 
             }
@@ -138,7 +143,13 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
 
     @Override
     public void onPlaylistUpdated() {
-
+        Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_success, Toast.LENGTH_SHORT).show();
+        this.currentPlaylist++;
+        if(this.currentPlaylist != mSelectedPlaylists.size()){
+            addSong(this.currentPlaylist);
+        }else{
+            finish();
+        }
     }
 
     @Override
@@ -158,6 +169,7 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
 
     @Override
     public void onFailure(Throwable throwable) {
-
+        Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_failure, Toast.LENGTH_LONG).show();
+        Log.e(TAG, "onFailure: "+throwable.getMessage());
     }
 }

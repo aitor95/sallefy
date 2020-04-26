@@ -75,13 +75,12 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
       
         holder.tvAuthor.setText(track.getUserLogin());
 
-        if (track.getThumbnail() != null) {
-            Glide.with(mContext)
-                    .asBitmap()
-                    .placeholder(R.drawable.ic_audiotrack)
-                    .load(track.getThumbnail())
-                    .into(holder.ivPicture);
-        }
+        Glide.with(mContext)
+                .asBitmap()
+                .placeholder(R.drawable.ic_audiotrack)
+                .load(track.getThumbnail())
+                .into(holder.ivPicture);
+
 
         holder.likeImg.setImageResource((!track.isLiked()) ? R.drawable.ic_favorite_border_black_24dp : R.drawable.ic_favorite_black_24dp);
 

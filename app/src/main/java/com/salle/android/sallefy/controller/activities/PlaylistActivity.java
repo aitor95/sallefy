@@ -73,6 +73,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
     private Fragment playlistSongFragment;
+    private ArrayList<Playlist> mUpdatedPlaylist;
 
     private static AdapterClickCallback adapterClickCallback;
     public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -85,6 +86,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         setContentView(R.layout.activity_playlist);
 
         this.fragmentCreated = false;
+        mUpdatedPlaylist = new ArrayList<Playlist>();
         initViews();
 
         //Little hack to reduce code.
@@ -164,6 +166,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         mNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent data = new Intent();
+                data.putExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE, mUpdatedPlaylist);
+                setResult(RESULT_OK, data);
                 finish();
             }
         });
@@ -202,7 +207,12 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.EDIT_CONTENT.PLAYLIST_EDIT && resultCode == RESULT_OK) {
             //Update playlist information
+            mUpdatedPlaylist.add((Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
             onPlaylistById((Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
+        }else{
+            if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
+                mUpdatedPlaylist.addAll((ArrayList<Playlist>)data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE));
+            }
         }
     }
 
@@ -403,7 +413,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 Log.d(TAG, "onButtonClicked: ADDTOPLAYLIST");
                 Intent intent1 = new Intent(this, AddToPlaylistActivity.class);
                 intent1.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
-                startActivity(intent1);
+                startActivityForResult(intent1, Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE);
                 break;
             case "showArtist":
                 Log.d(TAG, "onButtonClicked: SHOW ARTIST!");

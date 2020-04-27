@@ -42,6 +42,8 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	private PlaylistListVerticalAdapter mAdapter;
 	private View v;
 
+	private boolean firstTime;
+
 
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -53,15 +55,11 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		super.onCreate(savedInstanceState);
 	}
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		getData(v);
-	}
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+		firstTime = true;
 		v = inflater.inflate(R.layout.fragment_me_lists_playlists, container, false);
 		TextView text = v.findViewById(R.id.me_text_error);
 		text.setText(R.string.LoadingMe);
@@ -87,6 +85,18 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	private void getData(View v) {
 		PlaylistManager.getInstance(getActivity()).getPlaylistsByUser(PreferenceUtils.getUser(v.getContext()),this);
 		mPlaylists = new ArrayList<>();
+	}
+
+	public void updateInfo(ArrayList<Playlist> playlists){
+		for (int i = 0; i < playlists.size(); i++) {
+			for (int j = 0; j < mPlaylists.size(); j++) {
+				if(mPlaylists.get(j).getId().intValue() == playlists.get(i).getId().intValue()){
+					mPlaylists.set(j, playlists.get(i));
+				}
+			}
+		}
+		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
+		mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override
@@ -157,4 +167,5 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	public void onFailure(Throwable throwable) {
 
 	}
+
 }

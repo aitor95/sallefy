@@ -34,6 +34,7 @@ import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
+import com.salle.android.sallefy.controller.fragments.MePlaylistFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
 import com.salle.android.sallefy.controller.fragments.SocialFragment;
 import com.salle.android.sallefy.controller.music.MusicCallback;
@@ -47,6 +48,8 @@ import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -502,7 +505,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         Intent intent = new Intent(this, PlaylistActivity.class);
         PlaylistActivity.setAdapterClickCallback(this);
         intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, playlist);
-        startActivity(intent);
+        startActivityForResult(intent, Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE);
     }
 
     @Override
@@ -596,12 +599,20 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.EDIT_CONTENT.TRACK_EDIT && resultCode == RESULT_OK) {
-            //Update playlist information
+            //Update track information
             Track track = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
 
             TrackViewPack tvp = getmTrackViewPack();
             tvp.setTrack(track);
             tvp.getViewHolder().updateViewHolder(track);
+        }else{
+            if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
+                ArrayList<Playlist> mUpdatedPlaylists = (ArrayList<Playlist>) data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE);
+                Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
+                if(fragment instanceof MeFragment){
+                    ((MeFragment) fragment).updatePlaylistInfo(mUpdatedPlaylists);
+                }
+            }
         }
     }
 

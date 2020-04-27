@@ -7,6 +7,7 @@ public class Constants {
         String PLAYER_SONG = "_EXTRA_SONG_" ;
         String PLAYER_PLAYLIST = "_EXTRA_PLAYLIST_" ;
         String isSongLikedBottomMenu = "_EXTRA_SONG_LIKED_";
+        String SELECTED_PLAYLIST_UPDATE = "_SELECTED_PLAYLIST_UPDATE_";
         String PLAYLIST = "_PLAYLIST_";
         String TRACK = "_TRACK_";
         String PLAYLIST_DATA = "_PLAYLIST_DATA_";
@@ -36,6 +37,7 @@ public class Constants {
     public interface EDIT_CONTENT {
         public static int PLAYLIST_EDIT = 8;
         public static int TRACK_EDIT = 9;
+        public static int SELECTED_PLAYLIST_UPDATE = 10;
     }
 
     public interface ACTION {

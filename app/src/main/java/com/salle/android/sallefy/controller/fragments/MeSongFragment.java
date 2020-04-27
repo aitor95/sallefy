@@ -104,7 +104,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 				mTracks.set(i, track);
 			}
 		}*/
-		System.out.println("hellou");
+
 	}
 
 	@Override

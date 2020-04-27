@@ -91,6 +91,7 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
     private void addSong(int playlistNum) {
         Playlist playlist = mSelectedPlaylists.get(playlistNum);
         playlist.getTracks().add(this.mTrack);
+        mSelectedPlaylists.set(playlistNum, playlist);
         PlaylistManager.getInstance(getApplicationContext()).updatePlaylist(playlist, this);
     }
 
@@ -150,6 +151,9 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
         if(this.currentPlaylist != mSelectedPlaylists.size()){
             addSong(this.currentPlaylist);
         }else{
+            Intent data = new Intent();
+            data.putExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE, mSelectedPlaylists);
+            setResult(RESULT_OK, data);
             finish();
         }
     }

@@ -18,14 +18,19 @@ import androidx.fragment.app.FragmentTransaction;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.activities.SettingsActivity;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.PreferenceUtils;
+
+import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MeFragment extends Fragment {
 
 	public static final String TAG = MeFragment.class.getName();
+
+	private MePlaylistFragment fragmentMePlaylists;
 
     public static MeFragment getInstance() {
         return new MeFragment();
@@ -118,7 +123,7 @@ public class MeFragment extends Fragment {
 				playlists.setBackgroundResource(R.drawable.round_corner_light);
 
 				// FRAGMENT INTO FRAGMENT
-				Fragment fragmentMePlaylists = new MePlaylistFragment();
+				fragmentMePlaylists = new MePlaylistFragment();
 				MePlaylistFragment.setAdapterClickCallback(adapterClickCallback);
 				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 				transaction.add(R.id.me_fragment_container, fragmentMePlaylists).commit();
@@ -143,7 +148,10 @@ public class MeFragment extends Fragment {
 	public void updateSongInfo(Track track){
 		Fragment fragment = MeFragment.getInstance();
 		((MeSongFragment) fragment).updateSongInfo(track);
-		System.out.println("hellou");
+	}
+
+	public void updatePlaylistInfo(ArrayList<Playlist> playlists){
+		fragmentMePlaylists.updateInfo(playlists);
 	}
 
     @Override

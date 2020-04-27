@@ -96,12 +96,14 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
 
     private void checkExistingPlaylists() {
         for (int i = 1; i < mPlaylists.size(); i++) {
-            for (int j = 0; j < mPlaylists.get(i).getTracks().size(); j++) {
-                if(this.mPlaylists.get(i).getTracks().get(j).getId().intValue() == this.mTrack.getId().intValue()){
-                    this.mPlaylists.remove(mPlaylists.get(i));
-                    i--;
+            if(i!=0){
+                for (int j = 0; j < mPlaylists.get(i).getTracks().size(); j++) {
+                    if(this.mPlaylists.get(i).getTracks().get(j).getId().intValue() == this.mTrack.getId().intValue()){
+                        this.mPlaylists.remove(mPlaylists.get(i));
+                        i--;
+                        break;
+                    }
                 }
-
             }
         }
     }

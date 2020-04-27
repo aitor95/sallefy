@@ -53,6 +53,12 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		super.onCreate(savedInstanceState);
 	}
 
+	@Override
+	public void onResume() {
+		super.onResume();
+		getData(v);
+	}
+
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

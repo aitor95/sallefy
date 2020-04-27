@@ -142,25 +142,33 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         for (int i = 0; i < mSelectedSongs.size(); i++) {
             this.mPlaylist.getTracks().add(mSelectedSongs.get(i));
         }
-        Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_success, Toast.LENGTH_SHORT).show();
         PlaylistManager.getInstance(getApplicationContext())
                 .updatePlaylist(this.mPlaylist, AddSongsToPlaylistActivity.this);
     }
 
     private void checkExistingTracks(){
+        if(this.mTracks.size() < PAGE_SIZE){
+            isLast = true;
+        }
+
         if(this.mPlaylist.getTracks()!=null){
             for (int i = 1; i < this.mTracks.size(); i++) {
-                for (int j = 0; j < this.mPlaylist.getTracks().size(); j++) {
-                    if(this.mTracks.get(i).getId().intValue() == this.mPlaylist.getTracks().get(j).getId().intValue()){
-                        this.mTracks.remove(mTracks.get(i));
+                if(i!=0){
+                    for (int j = 0; j < this.mPlaylist.getTracks().size(); j++) {
+                        if(this.mTracks.get(i).getId().intValue() == this.mPlaylist.getTracks().get(j).getId().intValue()){
+                            this.mTracks.remove(mTracks.get(i));
+                            i--;
+                            break;
+                        }
                     }
                 }
             }
         }
 
-        if(this.mTracks.size() < PAGE_SIZE){
-            isLast = true;
+        if(!isLast && this.mTracks.size() < PAGE_SIZE){
+            loadMoreItems();
         }
+
     }
 
     @Override
@@ -206,6 +214,11 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     @Override
     public void onPlaylistUpdated() {
+        Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_success, Toast.LENGTH_SHORT).show();
+        Intent data = new Intent();
+        data.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     @Override

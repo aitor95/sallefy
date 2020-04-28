@@ -26,6 +26,7 @@ android {
 
 
 repositories {
+    google()
     jcenter()
 }
 
@@ -73,5 +74,9 @@ dependencies {
 
     //Detalle cancion.
     implementation 'com.android.support:design:28.0.0'
+
+    //Paginacion
+    implementation 'jp.wasabeef:recyclerview-animators:3.0.0'
+
 
 }

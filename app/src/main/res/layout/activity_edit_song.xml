@@ -86,6 +86,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="41dp"
                     android:layout_marginTop="14dp"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:background="@color/colorLoginGrey"/>
 
             </LinearLayout>

@@ -619,5 +619,4 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             }
         }
     }
-
 }

@@ -1,5 +1,6 @@
 package com.salle.android.sallefy.controller.dialogs;
 
+import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
 import android.view.View;
@@ -9,8 +10,13 @@ import android.widget.TextView;
 
 import com.salle.android.sallefy.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class StateDialog {
+
+    public static final String TAG = StateDialog.class.getName();
 
     private static StateDialog sManager;
     private static Object mutex = new Object();
@@ -57,7 +63,20 @@ public class StateDialog {
         } else {
             inProgressTask();
         }
-        mDialog.show();
+        ArrayList<String> runningactivities = new ArrayList<String>();
+
+        ActivityManager activityManager = (ActivityManager)mContext.getSystemService (Context.ACTIVITY_SERVICE);
+
+        List<ActivityManager.RunningTaskInfo> services = activityManager.getRunningTasks(Integer.MAX_VALUE);
+
+        for (int i1 = 0; i1 < services.size(); i1++) {
+            runningactivities.add(0,services.get(i1).topActivity.toString());
+        }
+
+        if(runningactivities.contains("ComponentInfo{com.salle.sallefy/com.salle.android.sallefy.controller.activities.EditSongActivity}") ||
+                runningactivities.contains("ComponentInfo{com.salle.sallefy/com.salle.android.sallefy.controller.activities.UploadSongActivity}")){
+            mDialog.show();
+        }
     }
 
 
@@ -80,6 +99,8 @@ public class StateDialog {
     }
 
     public void close() {
+
         mDialog.cancel();
+        sManager = null;
     }
 }

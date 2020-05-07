@@ -15,10 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.dialogs.StateDialog;
 import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
@@ -63,6 +63,9 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     private ArrayList<Genre> mCurrentGenres;
     private PopupMenu mGenresMenu;
 
+    //Dialogo para indicar el processo de carga.
+    StateDialog stateDialog;
+
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_song);
@@ -105,11 +108,8 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
         mBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent data = new Intent();
-                data.putExtra(Constants.INTENT_EXTRAS.TRACK, mTrack);
-                data.putExtra("audioSet", audioSet);
-                setResult(RESULT_OK, data);
-                finish(); }
+                exitEditing();
+            }
         });
 
         mGenresMenu = new PopupMenu(this,mGenresBtn);
@@ -126,7 +126,7 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     }
 
     private void initTrackInfo() {
-        mName.setText(mTrack.getName());
+        mName.setText(mTrack.getName().replace("\n", ""));
         Glide.with(getApplicationContext())
                 .load(mTrack.getThumbnail())
                 .centerCrop()
@@ -198,6 +198,9 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
 
         mTrack.setName(mName.getText().toString());
         mTrack.setGenres(mCurrentGenres);
+        stateDialog = StateDialog.getInstance(this);
+        stateDialog.showStateDialog(false);
+
         if(trackChosen){
             CloudinaryManager.getInstance(this)
                     .uploadAudioFile(Constants.STORAGE.TRACK_AUDIO_FOLDER, mAudioUri, mAudioFilename, EditSongActivity.this);
@@ -244,6 +247,8 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
 
     @Override
     public void onUpdatedTrack() {
+        if(stateDialog != null)
+            stateDialog.close();
         Toast.makeText(getApplicationContext(), R.string.edit_song_update_success, Toast.LENGTH_SHORT).show();
     }
 
@@ -295,6 +300,7 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
             //Uploaded the audio file
             mTrack.setUrl((String)resultData.get("url"));
             audioSet = true;
+            trackChosen = false;
             if (coverChosen) {
                 CloudinaryManager.getInstance(this)
                         .uploadCoverImage(Constants.STORAGE.TRACK_COVER_FOLDER, mCoverUri, mCoverFilename, EditSongActivity.this);
@@ -306,8 +312,10 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
             if(coverChosen){
                 //Uploaded the cover file
                 mTrack.setThumbnail((String)resultData.get("url"));
+
                 TrackManager.getInstance(this)
                         .updateTrack(mTrack, EditSongActivity.this);
+                coverChosen = false;
             }
         }
     }
@@ -320,5 +328,13 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     @Override
     public void onReschedule(String requestId, ErrorInfo error) {
 
+    }
+
+    private void exitEditing() {
+        Intent data = new Intent();
+        data.putExtra(Constants.INTENT_EXTRAS.TRACK, mTrack);
+        data.putExtra("audioSet", audioSet);
+        setResult(RESULT_OK, data);
+        finish();
     }
 }

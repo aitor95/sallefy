@@ -434,9 +434,23 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mTracksView.setAdapter(adapter);
         this.tracks = tracks;
 
+        TextView tvSeeAllTracks = getView().findViewById(R.id.SeeAllSearchedSongs);
+        if(this.tracks.isEmpty()){
+            tvSeeAllTracks.setVisibility(View.INVISIBLE);
+        }else{
+            tvSeeAllTracks.setVisibility(View.VISIBLE);
+        }
+
         mPlaylistAdapter = new PlaylistListHorizontalAdapter(playlists, getContext(), adapterClickCallback, R.layout.item_playlist_horizontal);
         mPlaylistsView.setAdapter(mPlaylistAdapter);
         this.playlists = playlists;
+
+        TextView tvSeeAllPlaylists = getView().findViewById(R.id.SeeAllSearchedPlaylists);
+        if(this.playlists.isEmpty()){
+            tvSeeAllPlaylists.setVisibility(View.INVISIBLE);
+        }else{
+            tvSeeAllPlaylists.setVisibility(View.VISIBLE);
+        }
 
         mGenresAdapter = new GenresAdapter(genres,adapterClickCallback, R.layout.item_genre);
         mGenresView.setAdapter(mGenresAdapter);
@@ -444,5 +458,12 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mUserHorizontalAdapter = new UserHorizontalAdapter(users,adapterClickCallback, getContext());
         mUsersView.setAdapter(mUserHorizontalAdapter);
         this.users = users;
+
+        TextView tvSeeAllUsers = getView().findViewById(R.id.SeeAllSearchedUsers);
+        if(this.users.isEmpty()){
+            tvSeeAllUsers.setVisibility(View.INVISIBLE);
+        }else{
+            tvSeeAllUsers.setVisibility(View.VISIBLE);
+        }
     }
 }

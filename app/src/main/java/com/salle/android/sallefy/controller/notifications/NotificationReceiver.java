@@ -39,7 +39,7 @@ public class NotificationReceiver extends BroadcastReceiver {
                 }else{
                     mBoundService.playSong();
                 }
-                CreateNotification.updateAndShow(context, isPlaying);
+                CustomNotification.updateAndShow(context, isPlaying);
                 mBoundService.updatePlayButton();
                 break;
             case NEXT_ACTION:

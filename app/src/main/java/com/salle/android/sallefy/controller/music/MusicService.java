@@ -10,7 +10,7 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.salle.android.sallefy.controller.activities.MusicPlayerActivity;
-import com.salle.android.sallefy.controller.notifications.CreateNotification;
+import com.salle.android.sallefy.controller.notifications.CustomNotification;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
@@ -139,9 +139,13 @@ public class MusicService extends Service {
         mCallback = callback;
     }
 
-    public void stopService() {
-        pauseSong();
 
+    public void stopMusic(){
+        pauseSong();
+        CustomNotification.close();
+    }
+    public void stopService() {
+        stopMusic();
         //Finaliza el servicio
         stopSelf();
     }
@@ -340,7 +344,7 @@ public class MusicService extends Service {
     public void pauseSong() {
         try {
             mediaPlayer.pause();
-            CreateNotification.createNotification(this, getCurrentTrack(),false);
+            CustomNotification.createNotification(this, getCurrentTrack(),false);
 
         } catch (Exception e) {
             Log.d(TAG, "failed to ic_pause media player.");
@@ -353,7 +357,7 @@ public class MusicService extends Service {
     public void playSong() {
         try {
             getAudioFocusAndPlay();
-            CreateNotification.createNotification(this, getCurrentTrack(),true);
+            CustomNotification.createNotification(this, getCurrentTrack(),true);
 
         } catch (Exception e) {
             Log.d(TAG, "failed to start media player." + e.getMessage() );

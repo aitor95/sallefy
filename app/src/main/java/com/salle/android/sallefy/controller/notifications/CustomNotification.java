@@ -1,6 +1,5 @@
 package com.salle.android.sallefy.controller.notifications;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -29,13 +28,14 @@ import static com.salle.android.sallefy.controller.notifications.NotificationRec
 import static com.salle.android.sallefy.controller.notifications.NotificationReceiver.PREV_ACTION;
 
 
-public class CreateNotification {
+public class CustomNotification {
     private static final String CHANNEL_ID = "music_notifications";
-    public static final int NOTIFICATION_ID = 1;
 
-    public static Notification notification;
+    private static final int NOTIFICATION_ID = 1;
+    private static android.app.Notification notification;
 
-    public static RemoteViews notificationLayout;
+    private static RemoteViews notificationLayout;
+    private static NotificationManager notificationManager;
 
     private static void createNotificationChannel(Context context){
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -47,9 +47,8 @@ public class CreateNotification {
             notificationChannel.setDescription(description);
             notificationChannel.setSound(null, null);
 
-            NotificationManager notificationManager = (NotificationManager) context.getSystemService( Context.NOTIFICATION_SERVICE);
+            notificationManager = (NotificationManager) context.getSystemService( Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(notificationChannel);
-
         }
     }
     public static void createNotification(Context context, Track track, boolean isPlaying){
@@ -154,5 +153,9 @@ public class CreateNotification {
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
         notificationManagerCompat.notify(NOTIFICATION_ID, notification);
+    }
+
+    public static void close(){
+        notificationManager.cancelAll();
     }
 }

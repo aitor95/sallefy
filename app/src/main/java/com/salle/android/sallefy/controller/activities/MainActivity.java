@@ -34,7 +34,6 @@ import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
-import com.salle.android.sallefy.controller.fragments.MePlaylistFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
 import com.salle.android.sallefy.controller.fragments.SocialFragment;
 import com.salle.android.sallefy.controller.music.MusicCallback;
@@ -357,14 +356,14 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 }
                 mFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, currentFragment, fragmentTag)
-                        .addToBackStack(null)
+                        //.addToBackStack(null)
                         .commit();
 
             }
         } else {
             mFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment, fragmentTag)
-                    .addToBackStack(null)
+                    //.addToBackStack(null)
                     .commit();
         }
     }
@@ -422,20 +421,26 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     @Override
     public void onBackPressed() {
 
-        if(System.currentTimeMillis() - backButtonLastPressTime > 2000){
-            //Han pasado 2 segundos.
-            backButtonPressed = false;
-            backButtonLastPressTime = System.currentTimeMillis();
-        }
+        int count = getSupportFragmentManager().getBackStackEntryCount();
 
-        if(backButtonPressed) {
-            Intent intent = new Intent(Intent.ACTION_MAIN);
-            intent.addCategory(Intent.CATEGORY_HOME);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            startActivity(intent);
+        if (count == 0) {
+            if(System.currentTimeMillis() - backButtonLastPressTime > 2000){
+                //Han pasado 2 segundos.
+                backButtonPressed = false;
+                backButtonLastPressTime = System.currentTimeMillis();
+            }
+
+            if(backButtonPressed) {
+                Intent intent = new Intent(Intent.ACTION_MAIN);
+                intent.addCategory(Intent.CATEGORY_HOME);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(intent);
+            } else {
+                Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
+                backButtonPressed = true;
+            }
         } else {
-            Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
-        //    backButtonPressed = true;
+            getSupportFragmentManager().popBackStack();
         }
     }
 

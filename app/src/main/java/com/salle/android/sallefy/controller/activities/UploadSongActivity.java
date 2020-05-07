@@ -19,7 +19,6 @@ import com.bumptech.glide.Glide;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.dialogs.StateDialog;
 import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
@@ -37,7 +36,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class UploadSongActivity extends AppCompatActivity implements TrackCallback, UploadCallback, GenreCallback, BottomMenuDialog.BottomMenuDialogInterf {
+public class UploadSongActivity extends AppCompatActivity implements TrackCallback, UploadCallback, GenreCallback {
 
     public static final String TAG = UploadSongActivity.class.getName();
     public static final String EXTRA_NEW_SONG = "EXTRA_NEW_SONG";
@@ -386,30 +385,5 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         TrackManager.getInstance(this).likeTrack(track.getTrack().getId(),
                 !track.getTrack().isLiked(),
                 track.getCallback());
-    }
-
-    @Override
-    public void onButtonClicked(TrackViewPack track, String text) {
-        switch (text) {
-            case "like":
-                Log.d(TAG, "onButtonClicked: LIKE!");
-                tryToLike(track);
-                break;
-            case "addToPlaylist":
-                Log.d(TAG, "onButtonClicked: ADDTOPLAYLIST");
-                break;
-            case "showArtist":
-                Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
-                break;
-            case "delete":
-                Log.d(TAG, "onButtonClicked: DELETE");
-                break;
-            case "edit":
-                Log.d(TAG, "onButtonClicked: EDIT");
-                Intent intent = new Intent(this, EditSongActivity.class);
-                intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
-                startActivity(intent);
-                break;
-        }
     }
 }

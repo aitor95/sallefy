@@ -86,8 +86,9 @@
 
 
     <!-- INFO STATE -->
-    <string name="state_wait">Porfavor espere..</string>
-    <string name="state_task_in_progress">Tarea en proceso</string>
+    <string name="state_wait">Please wait..</string>
+    <string name="state_task_in_progress">Task in process</string>
+
     <string name="state_error_connexion">Error de conexión!</string>
     <string name="state_success_title">Éxito</string>
     <string name="state_task_completed">Tarea completada con éxito!</string>

@@ -20,6 +20,7 @@ import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
+import com.salle.android.sallefy.controller.dialogs.StateDialog;
 import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
@@ -29,14 +30,9 @@ import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Constants;
-import com.salle.android.sallefy.utils.PreferenceUtils;
-import com.salle.android.sallefy.utils.Session;
 
-import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -74,6 +70,9 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     private ArrayList<Genre> mCurrentGenres;
     private PopupMenu mGenresMenu;
     private Boolean uploading;
+
+    //Dialogo para indicar el processo de carga.
+    StateDialog stateDialog;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -237,6 +236,9 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
                     mTrack.setGenres(mCurrentGenres);
                 }
 
+                stateDialog = StateDialog.getInstance(this);
+                stateDialog.showStateDialog(false);
+
                 CloudinaryManager.getInstance(this)
                         .uploadAudioFile(Constants.STORAGE.TRACK_AUDIO_FOLDER, mAudioUri, mAudioFilename, UploadSongActivity.this);
 
@@ -273,6 +275,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     @Override
     public void onCreateTrack(Track track) {
         Log.d("TAGG", "Track uploaded");
+        stateDialog.close();
         uploaded = true;
         mTrack = track;
         mName.setEnabled(true);

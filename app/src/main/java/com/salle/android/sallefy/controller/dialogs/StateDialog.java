@@ -78,4 +78,8 @@ public class StateDialog {
     public boolean isDialogShown() {
         return mDialog.isShowing();
     }
+
+    public void close() {
+        mDialog.cancel();
+    }
 }

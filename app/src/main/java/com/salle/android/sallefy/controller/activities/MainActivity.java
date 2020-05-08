@@ -610,6 +610,13 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             TrackViewPack tvp = getmTrackViewPack();
             tvp.setTrack(track);
             tvp.getViewHolder().updateViewHolder(track);
+
+            setmTrackViewPack(tvp);
+
+            Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
+            if(fragment instanceof MeFragment){
+                ((MeFragment) fragment).updateSongInfo(track);
+            }
         }else{
             if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
                 ArrayList<Playlist> mUpdatedPlaylists = (ArrayList<Playlist>) data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE);

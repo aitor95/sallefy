@@ -81,6 +81,7 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
         mCurrentGenres = new ArrayList<Genre>();
         Intent intent = getIntent();
         mTrack = (Track) intent.getSerializableExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK);
+
         mCurrentGenres = (ArrayList<Genre>) mTrack.getGenres();
     }
 

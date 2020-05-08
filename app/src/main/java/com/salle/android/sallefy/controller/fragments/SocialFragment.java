@@ -20,14 +20,18 @@ import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
+import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+
+import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
 
 public class SocialFragment extends Fragment implements TrackCallback, UserCallback{
 
@@ -36,6 +40,15 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	private RecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
 	private ArrayList<UserPublicInfo> mFollowing;
+
+	//Pagination
+	private boolean isLoading = false;
+	private boolean isLast = false;
+	private int currentPage = 0;
+
+	private LinearLayoutManager mLinearLayoutManager;
+
+	private SocialActivityAdapter adapter;
 
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -65,9 +78,10 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
-		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		SocialActivityAdapter adapter = new SocialActivityAdapter(adapterClickCallback, getContext(), null);
-		mRecyclerView.setLayoutManager(manager);
+		mLinearLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+		mTracks = new ArrayList<>();
+		adapter = new SocialActivityAdapter(adapterClickCallback, getContext(), mTracks);
+		mRecyclerView.setLayoutManager(mLinearLayoutManager);
 		mRecyclerView.setAdapter(adapter);
 
 		nitv = v.findViewById(R.id.no_info_aviable_on_social);
@@ -77,12 +91,37 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
-				if (!recyclerView.canScrollVertically(1)) {
-					Log.d("esta abajo", "que fuerte");
+
+			}
+
+			@Override
+			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+				super.onScrolled(recyclerView, dx, dy);
+				int visibleItemCount = mLinearLayoutManager.getChildCount();
+				int totalItemCount = mLinearLayoutManager.getItemCount();
+				int firstVisibleItemPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+
+				if (!isLoading && !isLast) {
+					if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
+							&& firstVisibleItemPosition >= 0
+							&& totalItemCount >= PAGE_SIZE) {
+						loadMoreItems();
+					}
 				}
 			}
 		});
+
 	}
+
+	private void loadMoreItems() {
+		isLoading = true;
+
+		currentPage += 1;
+
+		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10);
+
+	}
+
 
 	private void getData() {
 		UserManager.getInstance(this.getContext()).getMeFollowing(this);
@@ -92,7 +131,8 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
 		mFollowing = new ArrayList<UserPublicInfo>();
 		mFollowing.addAll(users);
-		TrackManager.getInstance(getActivity()).getAllTracksSocial(this);
+		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10);
+		//TrackManager.getInstance(getActivity()).getAllTracksSocial(this);
 	}
 
 	@Override
@@ -103,7 +143,10 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
 
-		mTracks = new ArrayList<Track>();
+		if(tracks.size() < PAGE_SIZE){
+			isLast = true;
+		}
+
 		for (int i = 0; i < tracks.size(); i++){
 			if (!("" + tracks.get(i).getReleased()).equals("null")) {
 				for (int j = 0; j < this.mFollowing.size(); j++) {
@@ -113,14 +156,24 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 				}
 			}
 		}
+
 		mTracks.sort(Comparator.comparing(Track::getReleased).reversed());
 
-		if (mTracks.size() != 0) {
-			SocialActivityAdapter adapter = new SocialActivityAdapter(adapterClickCallback, getContext(), mTracks);
-			mRecyclerView.setAdapter(adapter);
-		} else {
-			if (mFollowing.size() != 0) nitv.setText(R.string.no_tracks_on_social);
-			else nitv.setText(R.string.no_users_on_social);
+
+		//Es el ultimo y mtracks sigue siendo 0 --> texto
+		//Es el ultimo y mtracks no es 0 --> simplemente actualizar
+		//No es el ultimo y mtracks no llega a PAGE_SIZE --> carga mas
+		//No es el ultimo y mtracks llega a PAGE_SIZE--> actualiza
+		if(!isLast && this.mTracks.size() < PAGE_SIZE){
+			loadMoreItems();
+		}else{
+			if(isLast && mTracks.size() == 0){
+				if (mFollowing.size() != 0) nitv.setText(R.string.no_tracks_on_social);
+				else nitv.setText(R.string.no_users_on_social);
+			}else{
+				if (isLoading){ isLoading = false; }
+				this.adapter.notifyDataSetChanged();
+			}
 		}
 	}
 

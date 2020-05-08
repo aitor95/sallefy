@@ -31,8 +31,10 @@ public class MeFragment extends Fragment {
 	public static final String TAG = MeFragment.class.getName();
 
 	private MePlaylistFragment fragmentMePlaylists;
+	private MeSongFragment fragmentMeSongs;
 
-    public static MeFragment getInstance() {
+
+	public static MeFragment getInstance() {
         return new MeFragment();
     }
 
@@ -104,7 +106,7 @@ public class MeFragment extends Fragment {
 				playlists.setBackgroundResource(0);
 
 				// FRAGMENT INTO FRAGMENT
-				Fragment fragmentMeSongs = new MeSongFragment();
+				fragmentMeSongs = new MeSongFragment();
 				MeSongFragment.setAdapterClickCallback(adapterClickCallback);
 				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 				transaction.add(R.id.me_fragment_container, fragmentMeSongs).commit();
@@ -146,8 +148,7 @@ public class MeFragment extends Fragment {
 	}
 
 	public void updateSongInfo(Track track){
-		Fragment fragment = MeFragment.getInstance();
-		((MeSongFragment) fragment).updateSongInfo(track);
+		fragmentMeSongs.updateSongInfo(track);
 	}
 
 	public void updatePlaylistInfo(ArrayList<Playlist> playlists){

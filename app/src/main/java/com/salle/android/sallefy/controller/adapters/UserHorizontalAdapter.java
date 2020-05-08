@@ -47,13 +47,12 @@ public class UserHorizontalAdapter extends RecyclerView.Adapter<UserHorizontalAd
 
         holder.item_playlist_layout.setOnClickListener(v->mCallback.onUserClick(user));
 
-        if (user.getImageUrl() != null) {
-            Glide.with(mContext)
-                    .asBitmap()
-                    .placeholder(R.drawable.ic_user_thumbnail)
-                    .load(user.getImageUrl())
-                    .into(holder.ivPhoto);
-        }
+        Glide.with(mContext)
+                .asBitmap()
+                .placeholder(R.drawable.ic_user_thumbnail)
+                .load(user.getImageUrl())
+                .into(holder.ivPhoto);
+
     }
 
     @Override

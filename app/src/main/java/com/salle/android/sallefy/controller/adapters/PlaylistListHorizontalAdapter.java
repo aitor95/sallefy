@@ -53,13 +53,13 @@ public class PlaylistListHorizontalAdapter extends RecyclerView.Adapter<Playlist
             holder.mTitle.setText(mPlaylists.get(position).getName());
 
             holder.mAuthor.setText(mPlaylists.get(position).getUser().getLogin());
-            if (mPlaylists.get(position).getThumbnail() != null) {
-                Glide.with(mContext)
-                        .asBitmap()
-                        .placeholder(R.drawable.ic_audiotrack)
-                        .load(mPlaylists.get(position).getThumbnail())
-                        .into(holder.mPhoto);
-            }
+
+            Glide.with(mContext)
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_audiotrack)
+                    .load(mPlaylists.get(position).getThumbnail())
+                    .into(holder.mPhoto);
+
         }
     }
 

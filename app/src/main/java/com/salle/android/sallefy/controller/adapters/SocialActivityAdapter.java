@@ -98,13 +98,12 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
             }
         });
 
-        if (mTracks.get(position).getThumbnail() != null) {
-            Glide.with(mContext)
-                    .asBitmap()
-                    .placeholder(R.drawable.ic_audiotrack)
-                    .load(mTracks.get(position).getThumbnail())
-                    .into(holder.ivPicture);
-        }
+        Glide.with(mContext)
+                .asBitmap()
+                .placeholder(R.drawable.ic_audiotrack)
+                .load(mTracks.get(position).getThumbnail())
+                .into(holder.ivPicture);
+
 
         ArrayList<Genre> genres = new ArrayList<>();
         if (track.getGenres().size() > 3) {

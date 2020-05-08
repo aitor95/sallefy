@@ -132,7 +132,6 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 		mFollowing = new ArrayList<UserPublicInfo>();
 		mFollowing.addAll(users);
 		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10);
-		//TrackManager.getInstance(getActivity()).getAllTracksSocial(this);
 	}
 
 	@Override

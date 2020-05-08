@@ -56,13 +56,12 @@ public class TrackListHorizontalAdapter extends RecyclerView.Adapter<TrackListHo
 
         holder.tvAuthor.setText(track.getUserLogin());
 
-        if (track.getThumbnail() != null) {
-            Glide.with(mContext)
-                    .asBitmap()
-                    .placeholder(R.drawable.ic_audiotrack)
-                    .load(track.getThumbnail())
-                    .into(holder.ivPicture);
-        }
+        Glide.with(mContext)
+                .asBitmap()
+                .placeholder(R.drawable.ic_audiotrack)
+                .load(track.getThumbnail())
+                .into(holder.ivPicture);
+
     }
 
 

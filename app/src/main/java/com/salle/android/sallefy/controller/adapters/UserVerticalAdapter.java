@@ -65,13 +65,12 @@ public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapte
 
             holder.mTitle.setText(currUser.getLogin());
             holder.mFollowers.setText(currUser.getFollowers() + " followers");
-            if (currUser.getImageUrl() != null) {
-                Glide.with(mContext)
-                        .asBitmap()
-                        .placeholder(R.drawable.ic_audiotrack)
-                        .load(currUser.getImageUrl())
-                        .into(holder.mPhoto);
-            }
+            Glide.with(mContext)
+                    .asBitmap()
+                    .placeholder(R.drawable.ic_user_thumbnail)
+                    .load(currUser.getImageUrl())
+                    .into(holder.mPhoto);
+
 
 
             //isFollowing = currUser.getFollowedByUser();

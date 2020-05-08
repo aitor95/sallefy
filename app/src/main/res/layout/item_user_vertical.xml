@@ -39,6 +39,7 @@
 
                     <ImageView
                         android:id="@+id/item_user_photo"
+                        android:background="#FF777777"
                         android:layout_width="64dp"
                         android:layout_height="64dp"
                         android:scaleType="centerCrop" />

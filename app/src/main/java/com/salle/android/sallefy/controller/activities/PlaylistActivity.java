@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.activities;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -98,7 +99,11 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         initElements();
 
         //Bottom sheet behavior
+        int x = 0;
         mBSBehavior = BottomSheetBehavior.from(mBottomSheet);
+        mBSBehavior.setPeekHeight((int)(Resources.getSystem().getDisplayMetrics().heightPixels / 3));
+        mBSBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        //mBSBehavior.setPeekHeight(600 + x);
         mBSBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
             @Override
             public void onStateChanged(@NonNull View view, int state) {
@@ -112,7 +117,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
                     case BottomSheetBehavior.STATE_DRAGGING:
                     case BottomSheetBehavior.STATE_EXPANDED:
-
+                        //Modify expanded height of BottomSheet to half of the screen
+                        mBottomSheet.getLayoutParams().height = (int)(Resources.getSystem().getDisplayMetrics().heightPixels / 2);
                         showSongInformation(false);
                         blurTransformation(25);
                         break;

@@ -607,12 +607,6 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             //Update track information
             Track track = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
 
-            TrackViewPack tvp = getmTrackViewPack();
-            tvp.setTrack(track);
-            tvp.getViewHolder().updateViewHolder(track);
-
-            setmTrackViewPack(tvp);
-
             Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
             if(fragment instanceof MeFragment){
                 ((MeFragment) fragment).updateSongInfo(track);

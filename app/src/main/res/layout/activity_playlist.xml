@@ -156,7 +156,7 @@
         android:background="@drawable/header_rounded_white"
         app:layout_behavior="@string/bottom_sheet_behavior"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="200dp"
+        app:behavior_peekHeight="50dp"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:layout_marginStart="0dp"

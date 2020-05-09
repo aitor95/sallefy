@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserFollowCallback;
+import com.salle.android.sallefy.controller.restapi.callback.UserLogInAndRegisterCallback;
 import com.salle.android.sallefy.controller.restapi.service.UserService;
 import com.salle.android.sallefy.controller.restapi.service.UserTokenService;
 import com.salle.android.sallefy.model.Follow;
@@ -58,7 +59,7 @@ public class UserManager {
 
 
     /********************   LOGIN    ********************/
-    public synchronized void loginAttempt (String username, String password, final UserCallback userCallback) {
+    public synchronized void loginAttempt (String username, String password, final UserLogInAndRegisterCallback userCallback) {
 
         Call<UserToken> call = mTokenService.loginUser(new UserLogin(username, password, true));
 
@@ -87,7 +88,7 @@ public class UserManager {
 
 
     /********************   USER INFO    ********************/
-    public synchronized void getUserData (String login, final UserCallback userCallback) {
+    public synchronized void getUserData (String login, final UserLogInAndRegisterCallback userCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
         Call<User> call = mService.getUserById(login, "Bearer " + userToken.getIdToken());
         call.enqueue(new Callback<User>() {
@@ -113,7 +114,7 @@ public class UserManager {
 
 
     /********************   REGISTRATION    ********************/
-    public synchronized void registerAttempt (String email, String username, String password, final UserCallback userCallback) {
+    public synchronized void registerAttempt (String email, String username, String password, final UserLogInAndRegisterCallback userCallback) {
 
         Call<ResponseBody> call = mService.registerUser(new UserRegister(email, username, password));
 
@@ -209,7 +210,7 @@ public class UserManager {
                 } else {
                     try {
 
-                        userCallback.onRegisterFailure(new Throwable("ERROR " + code + ", " + response.errorBody().string()));
+                        userCallback.onFailure(new Throwable("ERROR " + code + ", " + response.errorBody().string()));
                     } catch (IOException e){
                         e.printStackTrace();
                     }

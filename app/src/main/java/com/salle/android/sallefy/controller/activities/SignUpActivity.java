@@ -11,16 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
+import com.salle.android.sallefy.controller.restapi.callback.UserLogInAndRegisterCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
-import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 
-import java.util.List;
-
-public class SignUpActivity extends AppCompatActivity implements UserCallback {
+public class SignUpActivity extends AppCompatActivity implements UserLogInAndRegisterCallback {
 
     public static final String TAG = SignUpActivity.class.getName();
 
@@ -95,31 +92,6 @@ public class SignUpActivity extends AppCompatActivity implements UserCallback {
 
     @Override
     public void onUserInfoReceived(User userData) {
-
-    }
-
-    @Override
-    public void onUsersReceived(List<User> users) {
-
-    }
-
-    @Override
-    public void onUsersFailure(Throwable throwable) {
-
-    }
-
-    @Override
-    public void onMeFollowingsReceived(List<UserPublicInfo> users) {
-
-    }
-
-    @Override
-    public void onIsFollowingResponseReceived(String login, Boolean isFollowed) {
-
-    }
-
-    @Override
-    public void onUpdateUser() {
 
     }
 

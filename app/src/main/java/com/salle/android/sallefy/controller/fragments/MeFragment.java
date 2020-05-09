@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,7 +30,6 @@ import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
-import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
@@ -215,27 +212,6 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
         super.onDestroy();
     }
 
-	@Override
-	public void onLoginSuccess(UserToken userToken) {
-
-	}
-
-	@Override
-	public void onLoginFailure(Throwable throwable) {
-
-	}
-
-	@Override
-	public void onRegisterSuccess() {
-
-	}
-
-	@Override
-	public void onRegisterFailure(Throwable throwable) {
-
-	}
-
-
 
 	@Override
 	public void onUsersReceived(List<User> users) {
@@ -249,11 +225,6 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 
 	@Override
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
-
-	}
-
-	@Override
-	public void onUserInfoReceived(User userData) {
 
 	}
 

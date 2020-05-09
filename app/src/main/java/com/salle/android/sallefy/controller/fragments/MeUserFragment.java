@@ -19,7 +19,6 @@ import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
-import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,31 +68,6 @@ public class MeUserFragment extends Fragment implements UserCallback {
 		mUsersPublic = new ArrayList<>();
 		mUsersFollowed = new ArrayList<>();
 		UserManager.getInstance(getContext()).getMeFollowing(this);
-
-	}
-
-	@Override
-	public void onLoginSuccess(UserToken userToken) {
-
-	}
-
-	@Override
-	public void onLoginFailure(Throwable throwable) {
-
-	}
-
-	@Override
-	public void onRegisterSuccess() {
-
-	}
-
-	@Override
-	public void onRegisterFailure(Throwable throwable) {
-
-	}
-
-	@Override
-	public void onUserInfoReceived(User userData) {
 
 	}
 

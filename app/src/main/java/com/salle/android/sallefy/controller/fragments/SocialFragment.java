@@ -22,7 +22,6 @@ import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
-import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -222,31 +221,6 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	@Override
 	public void onFailure(Throwable throwable) {
 
-	}
-
-
-	@Override
-	public void onLoginSuccess(UserToken userToken) {
-
-	}
-
-	@Override
-	public void onLoginFailure(Throwable throwable) {
-
-	}
-
-	@Override
-	public void onRegisterSuccess() {
-
-	}
-
-	@Override
-	public void onRegisterFailure(Throwable throwable) {
-
-	}
-
-	@Override
-	public void onUserInfoReceived(User userData) {
 	}
 
 	@Override

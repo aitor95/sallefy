@@ -502,8 +502,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         }
         Track track= mBoundService.getCurrentTrack();
 
-
-
         //Se solicita un like. Si la respuesta es nais, se llama el callback onLikeSuccess()
         //Es alli donde de actualiza la UI.
         TrackManager.getInstance(getApplicationContext()).likeTrack(track.getId(),
@@ -520,7 +518,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     @Override
     public void onMusicPlayerPrepared() {
         updateSongInfoAfterLoad();
-
     }
 
     @Override

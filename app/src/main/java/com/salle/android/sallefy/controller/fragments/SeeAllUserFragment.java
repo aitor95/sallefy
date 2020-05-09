@@ -19,7 +19,6 @@ import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
-import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -94,31 +93,6 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 		//TODO: cambiar por coger las listas que tocan
 		UserManager.getInstance(getActivity()).getUsers(this);
 		mUsers = new ArrayList<>();
-	}
-
-	@Override
-	public void onLoginSuccess(UserToken userToken) {
-
-	}
-
-	@Override
-	public void onLoginFailure(Throwable throwable) {
-
-	}
-
-	@Override
-	public void onRegisterSuccess() {
-
-	}
-
-	@Override
-	public void onRegisterFailure(Throwable throwable) {
-
-	}
-
-	@Override
-	public void onUserInfoReceived(User userData) {
-
 	}
 
 	@Override

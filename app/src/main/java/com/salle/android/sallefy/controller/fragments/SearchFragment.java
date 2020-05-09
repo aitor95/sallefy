@@ -41,7 +41,6 @@ import com.salle.android.sallefy.model.SearchResult;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
-import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -327,31 +326,6 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     /**********************************************************************************************
      *   *   *   *   *   *   *   *   UserCallback   *   *   *   *   *   *   *   *   *
      **********************************************************************************************/
-
-    @Override
-    public void onLoginSuccess(UserToken userToken) {
-
-    }
-
-    @Override
-    public void onLoginFailure(Throwable throwable) {
-
-    }
-
-    @Override
-    public void onRegisterSuccess() {
-
-    }
-
-    @Override
-    public void onRegisterFailure(Throwable throwable) {
-
-    }
-
-    @Override
-    public void onUserInfoReceived(User userData) {
-
-    }
 
     @Override
     public void onUsersReceived(List<User> users) {

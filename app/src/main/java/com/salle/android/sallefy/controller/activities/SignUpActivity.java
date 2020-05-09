@@ -119,6 +119,11 @@ public class SignUpActivity extends AppCompatActivity implements UserCallback {
     }
 
     @Override
+    public void onUpdateUser() {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
 
     }

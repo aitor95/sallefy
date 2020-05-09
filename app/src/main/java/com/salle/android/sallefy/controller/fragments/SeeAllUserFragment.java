@@ -152,6 +152,11 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	}
 
 	@Override
+	public void onUpdateUser() {
+
+	}
+
+	@Override
 	public void onFailure(Throwable throwable) {
 
 	}

@@ -208,11 +208,8 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
     @Override
     public void onTracksReceived(List<Track> tracks) {
         tracks.sort(Comparator.comparing(Track::getLikes).reversed());
-        ArrayList<Track> topTracks = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            topTracks.add(tracks.get(i));
-        }
-        tracksAdapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity().getApplicationContext(), getFragmentManager(), topTracks);
+        tracks.stream().limit(10);
+        tracksAdapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity().getApplicationContext(), getFragmentManager(), (ArrayList<Track>) tracks);
         tracksAdapter.setPlaylist(new Playlist((ArrayList<Track>) tracks));
         rvSongs.setAdapter(tracksAdapter);
 

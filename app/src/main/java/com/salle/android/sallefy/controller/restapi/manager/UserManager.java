@@ -179,7 +179,6 @@ public class UserManager {
                     userFollowCallback.onFollowSuccess(userLogin);
                 } else {
                     try {
-                        assert response.errorBody() != null;
                         userFollowCallback.onFailure(new Throwable("ERROR " + code + ", " + response.errorBody().string()));
                     } catch (IOException e){
                         e.printStackTrace();
@@ -204,12 +203,12 @@ public class UserManager {
                 int code = response.code();
 
                 if (response.isSuccessful()) {
-                    if (response.body() != null) {
+
                         userCallback.onIsFollowingResponseReceived(userLogin, response.body().getFollow());
-                    }
+
                 } else {
                     try {
-                        assert response.errorBody() != null;
+
                         userCallback.onRegisterFailure(new Throwable("ERROR " + code + ", " + response.errorBody().string()));
                     } catch (IOException e){
                         e.printStackTrace();

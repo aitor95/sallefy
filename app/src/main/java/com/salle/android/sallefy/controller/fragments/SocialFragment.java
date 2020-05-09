@@ -148,6 +148,11 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	}
 
 	@Override
+	public void onUpdateUser() {
+
+	}
+
+	@Override
 	public void onTracksReceived(List<Track> tracks) {
 
 		if(tracks.size() < PAGE_SIZE){

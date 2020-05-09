@@ -39,7 +39,7 @@ public class Playlist implements Serializable {
     private boolean followed;
     private boolean isStartAsShuffle;
     private boolean isDeleted;
-
+    private boolean isLocalPlaylist;
     public Playlist(){
 
     }
@@ -51,10 +51,12 @@ public class Playlist implements Serializable {
         user.setLogin(author);
         this.thumbnail = thumbnail;
         isDeleted = false;
+        isLocalPlaylist = false;
     }
 
     public Playlist(ArrayList<Track> tracks) {
         this.tracks = (ArrayList<Track>) tracks.clone();
+        isLocalPlaylist = true;
         isDeleted = false;
     }
 
@@ -73,6 +75,7 @@ public class Playlist implements Serializable {
         //Duele a la vista, pero funciona.
         this.tracks = (ArrayList<Track>) ((ArrayList<Track>) mPlaylist.tracks).clone();
         isDeleted = false;
+        isLocalPlaylist = false;
     }
 
 
@@ -184,5 +187,13 @@ public class Playlist implements Serializable {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    public boolean isLocalPlaylist() {
+        return isLocalPlaylist;
+    }
+
+    public void setLocalPlaylist(boolean localPlaylist) {
+        isLocalPlaylist = localPlaylist;
     }
 }

@@ -636,8 +636,13 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     }
 
     private boolean currentSongDeleted(ArrayList<Playlist> mUpdatedPlaylists) {
+        Playlist currentPlaylist = mBoundService.getPlaylist();
+        if(currentPlaylist.isLocalPlaylist()){
+            return false;
+        }
+        int id = currentPlaylist.getId();
         for(Playlist p : mUpdatedPlaylists){
-            if(p.getId() == mBoundService.getPlaylistId() && p.isDeleted()){
+            if(p.getId() ==  id && p.isDeleted()){
                 return true;
             }else{
                 return false;

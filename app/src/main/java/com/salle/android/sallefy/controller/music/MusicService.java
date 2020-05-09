@@ -112,8 +112,8 @@ public class MusicService extends Service {
         mPlaylist = null;
     }
 
-    public int getPlaylistId() {
-        return mPlaylist.getId();
+    public Playlist getPlaylist() {
+        return mPlaylist;
     }
 
     public class MusicBinder extends Binder {
@@ -206,6 +206,7 @@ public class MusicService extends Service {
 
         //Crea una llista de reproduccio nova si no existeix
         if(mTracks == null) {
+            mPlaylist = null;
             currentTrack = 0;
             mTracks = new ArrayList<>();
             mTracks.add(track);

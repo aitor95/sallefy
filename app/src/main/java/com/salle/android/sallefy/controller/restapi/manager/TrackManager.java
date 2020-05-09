@@ -172,10 +172,10 @@ public class TrackManager {
         });
     }
 
-    public synchronized void getAllTracksPagination(final TrackCallback trackCallback, int currentPage, int size) {
+    public synchronized void getAllTracksPagination(final TrackCallback trackCallback, int currentPage, int size, boolean recent) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<List<Track>> call = mTrackService.getAllTracksPagination( "Bearer " + userToken.getIdToken(), currentPage, size);
+        Call<List<Track>> call = mTrackService.getAllTracksPagination( "Bearer " + userToken.getIdToken(), currentPage, size, recent);
         call.enqueue(new Callback<List<Track>>() {
             @Override
             public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {

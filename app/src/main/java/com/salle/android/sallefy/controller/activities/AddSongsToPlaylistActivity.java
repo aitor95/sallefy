@@ -99,7 +99,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         newTrack.setName(getResources().getString(R.string.add_songs_to_playlist_lastitem_title));
         this.mTracks.add(0, newTrack);
 
-        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 10);
+        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 10, false);
 
 
         doneBtn = findViewById(R.id.add_songs_to_playlist_btn);
@@ -130,7 +130,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
         currentPage += 1;
 
-        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 10);
+        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 10, false);
 
     }
 

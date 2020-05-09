@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +30,7 @@ import java.util.List;
 
 import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
 
-public class SocialFragment extends Fragment implements TrackCallback, UserCallback{
+public class SocialFragment extends Fragment implements TrackCallback, UserCallback {
 
 	public static final String TAG = SocialFragment.class.getName();
 
@@ -87,17 +88,6 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
-
-				int visibleItemCount = mLinearLayoutManager.getChildCount();
-				int totalItemCount = mLinearLayoutManager.getItemCount();
-				int firstVisibleItemPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
-
-/*				if((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && !isLast){
-					// End of the list is here.
-					Log.i(TAG, "End of list");
-					loadMoreItems();
-
-				}*/
 			}
 
 			@Override
@@ -110,7 +100,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 				if (!isLoading && !isLast) {
 					if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-							&& firstVisibleItemPosition >= 0
+					&& firstVisibleItemPosition >= 0
 							&& totalItemCount >= PAGE_SIZE) {
 						loadMoreItems();
 					}
@@ -125,7 +115,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 		currentPage += 1;
 
-		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10);
+		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, true);
 
 	}
 
@@ -138,7 +128,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
 		mFollowing = new ArrayList<UserPublicInfo>();
 		mFollowing.addAll(users);
-		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10);
+		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, true);
 	}
 
 	@Override
@@ -154,15 +144,21 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
 
+		int newSongs = 0;
+
 		if(tracks.size() < PAGE_SIZE){
 			isLast = true;
 		}
 
 		for (int i = 0; i < tracks.size(); i++){
 			if (!("" + tracks.get(i).getReleased()).equals("null")) {
+				if(tracks.get(i).getUserLogin().equals("alexinter")){
+					System.out.println("aqui");
+				}
 				for (int j = 0; j < this.mFollowing.size(); j++) {
 					if (tracks.get(i).getUser().getLogin().equals(this.mFollowing.get(j).getLogin())){
 						mTracks.add(tracks.get(i));
+						newSongs++;
 					}
 				}
 			}
@@ -175,7 +171,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 		//Es el ultimo y mtracks no es 0 --> simplemente actualizar
 		//No es el ultimo y mtracks no llega a PAGE_SIZE --> carga mas
 		//No es el ultimo y mtracks llega a PAGE_SIZE--> actualiza
-		if(!isLast && this.mTracks.size() < PAGE_SIZE){
+		if(!isLast && (this.mTracks.size() < PAGE_SIZE || newSongs == 0)){
 			loadMoreItems();
 		}else{
 			if(isLast && mTracks.size() == 0){
@@ -183,7 +179,9 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 				else nitv.setText(R.string.no_users_on_social);
 			}else{
 				if (isLoading) isLoading = false;
+				Parcelable parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
 				this.adapter.notifyDataSetChanged();
+				mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
 			}
 		}
 	}
@@ -191,6 +189,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	@Override
 	public void onNoTracks(Throwable throwable) {
 
+		isLast = true;
 	}
 
 	@Override
@@ -232,5 +231,4 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	public void onUsersFailure(Throwable throwable) {
 
 	}
-
 }

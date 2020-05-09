@@ -45,6 +45,7 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
         likedHolder = null;
     }
 
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

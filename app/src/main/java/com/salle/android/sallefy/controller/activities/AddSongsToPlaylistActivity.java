@@ -282,6 +282,11 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     }
 
+    @Override
+    public void onTrackDeleted() {
+
+    }
+
     private void tryToLike(TrackViewPack track) {
         TrackManager.getInstance(this).likeTrack(track.getTrack().getId(),
                 !track.getTrack().isLiked(),

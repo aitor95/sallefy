@@ -123,7 +123,13 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
             }
         });
 
-
+        Button mDeleteButton = findViewById(R.id.edit_song_btn_delete);
+        mDeleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TrackManager.getInstance(EditSongActivity.this).deleteTrack(mTrack.getId(),EditSongActivity.this);
+            }
+        });
     }
 
     private void initTrackInfo() {
@@ -139,7 +145,7 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     private void initElements() {
         mImg = findViewById(R.id.song_photo);
         mBackBtn = findViewById(R.id.edit_song_back_btn);
-        mSaveBtn = findViewById(R.id.edit_song_btn_action);
+        mSaveBtn = findViewById(R.id.edit_song_btn_save);
         mAddGenreBtn = findViewById(R.id.add_new_genre);
         mName = findViewById(R.id.edit_song_name);
         mFileBtn = findViewById(R.id.edit_song_file_btn);
@@ -251,6 +257,12 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
         if(stateDialog != null)
             stateDialog.close();
         Toast.makeText(getApplicationContext(), R.string.edit_song_update_success, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onTrackDeleted() {
+        mTrack.setDeleted(true);
+        exitEditing();
     }
 
     @Override

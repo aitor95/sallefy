@@ -130,6 +130,11 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 	}
 
 	@Override
+	public void onTrackDeleted() {
+
+	}
+
+	@Override
 	public void onFailure(Throwable throwable) {
 
 	}

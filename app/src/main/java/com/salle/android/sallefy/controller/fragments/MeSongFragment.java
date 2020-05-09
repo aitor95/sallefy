@@ -152,6 +152,11 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	}
 
 	@Override
+	public void onTrackDeleted() {
+
+	}
+
+	@Override
 	public void onFailure(Throwable throwable) {
 
 	}

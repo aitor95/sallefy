@@ -128,7 +128,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             SeeAllUserFragment.setAdapterClickCallback(adapterClickCallback);
 
             //Search text enable/disable system
-            SeeAllPlaylistFragment.setSeeAllCallback(this);
+            SeeAllUserFragment.setSeeAllCallback(SearchFragment.this);
             searchText.setEnabled(false);
 
             assert manager != null;
@@ -154,7 +154,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
 
             //Search text enable/disable system
-            SeeAllPlaylistFragment.setSeeAllCallback(this);
+            SeeAllPlaylistFragment.setSeeAllCallback(SearchFragment.this);
             searchText.setEnabled(false);
 
             FragmentTransaction transaction = manager.beginTransaction();
@@ -162,7 +162,6 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 	        transaction.add(R.id.fragment_container,fragment);
 	        transaction.addToBackStack(null);
 	        transaction.commit();
-
         });
 
 
@@ -187,7 +186,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
 
             //Search text enable/disable system
-            SeeAllPlaylistFragment.setSeeAllCallback(this);
+            SeeAllSongFragment.setSeeAllCallback(SearchFragment.this);
             searchText.setEnabled(false);
 
             FragmentTransaction transaction = manager.beginTransaction();
@@ -425,6 +424,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onUpdatedTrack() {
+
+    }
+
+    @Override
+    public void onTrackDeleted() {
 
     }
 

@@ -297,6 +297,11 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     }
 
     @Override
+    public void onTrackDeleted() {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure, Toast.LENGTH_LONG).show();
         mUploadSongBtn.setText("UPLOAD");

@@ -244,4 +244,9 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
     }
 
+    @Override
+    public void onTrackDeleted() {
+
+    }
+
 }

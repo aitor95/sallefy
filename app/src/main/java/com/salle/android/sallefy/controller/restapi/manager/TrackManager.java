@@ -271,4 +271,30 @@ public class TrackManager {
         });
     }
 
+
+    /***
+     * DELETES THE TRACK
+     */
+    public void deleteTrack(int id, TrackCallback trackCallback) {
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+        Call<ResponseBody> call = mTrackService.deleteTrack(id,"Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    trackCallback.onTrackDeleted();
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    trackCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                trackCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+    }
 }

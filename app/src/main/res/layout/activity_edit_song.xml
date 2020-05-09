@@ -170,9 +170,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+                <Button
+                    android:id="@+id/edit_song_btn_delete"
+                    style="@style/buttonText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:background="@drawable/delete_btn"
+                    android:minWidth="200dp"
+                    android:text="@string/delete_btn"
+                    android:textColor="@color/colorWhite" />
 
                 <Button
-                    android:id="@+id/edit_song_btn_action"
+                    android:id="@+id/edit_song_btn_save"
                     style="@style/buttonText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

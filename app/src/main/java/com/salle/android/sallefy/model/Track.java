@@ -1,8 +1,6 @@
 package com.salle.android.sallefy.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
-import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 
 import java.io.Serializable;
 import java.util.List;
@@ -41,6 +39,8 @@ public class Track implements Serializable {
     private boolean liked;
 
     private int likes;
+
+    private boolean isDeleted;
 
     //private LikeCallback likeCallback;
 
@@ -164,5 +164,13 @@ public class Track implements Serializable {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

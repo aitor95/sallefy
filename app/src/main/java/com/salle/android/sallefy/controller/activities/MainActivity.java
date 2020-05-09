@@ -384,13 +384,6 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         }
     }
 
-    public static TrackViewPack getmTrackViewPack() {
-        return mTrackViewPack;
-    }
-
-    public static void setmTrackViewPack(TrackViewPack mTrackViewPack) {
-        MainActivity.mTrackViewPack = mTrackViewPack;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -603,19 +596,25 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+
         if (requestCode == Constants.EDIT_CONTENT.TRACK_EDIT && resultCode == RESULT_OK) {
             //Update track information
             Track track = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
 
-            TrackViewPack tvp = getmTrackViewPack();
-            tvp.setTrack(track);
-            tvp.getViewHolder().updateViewHolder(track);
+            if(track.isDeleted()){
 
-            setmTrackViewPack(tvp);
+            }else{
 
-            Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
-            if(fragment instanceof MeFragment){
-                ((MeFragment) fragment).updateSongInfo(track);
+                TrackViewPack tvp = mTrackViewPack;
+                tvp.setTrack(track);
+                tvp.getViewHolder().updateViewHolder(track);
+
+                mTrackViewPack = tvp;
+
+                /*Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
+                if(fragment instanceof MeFragment){
+                    ((MeFragment) fragment).updateSongInfo(track);
+                }*/
             }
         }else{
             if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
@@ -637,7 +636,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     private boolean currentSongDeleted(ArrayList<Playlist> mUpdatedPlaylists) {
         Playlist currentPlaylist = mBoundService.getPlaylist();
-        if(currentPlaylist.isLocalPlaylist()){
+
+        if(currentPlaylist == null || currentPlaylist.isLocalPlaylist()){
             return false;
         }
         int id = currentPlaylist.getId();
@@ -676,7 +676,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 break;
             case "edit":
                 Log.d(TAG, "onButtonClicked: EDIT");
-                setmTrackViewPack(track);
+                mTrackViewPack = track;
                 Intent intent = new Intent(this, EditSongActivity.class);
                 intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
                 startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDIT);

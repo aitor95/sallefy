@@ -40,6 +40,7 @@ public class Playlist implements Serializable {
     private boolean isStartAsShuffle;
     private boolean isDeleted;
     private boolean isLocalPlaylist;
+
     public Playlist(){
 
     }

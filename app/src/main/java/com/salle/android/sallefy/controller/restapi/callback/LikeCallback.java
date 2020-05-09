@@ -1,6 +1,5 @@
 package com.salle.android.sallefy.controller.restapi.callback;
 
-public interface LikeCallback {
+public interface LikeCallback extends FailureCallback{
     void onLikeSuccess(int songId);
-    void onFailure(Throwable throwable);
 }

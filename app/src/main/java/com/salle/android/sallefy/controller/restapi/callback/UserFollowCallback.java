@@ -1,8 +1,6 @@
 package com.salle.android.sallefy.controller.restapi.callback;
 
 
-public interface UserFollowCallback {
-
+public interface UserFollowCallback extends FailureCallback{
     void onFollowSuccess(String userLogin);
-    void onFailure(Throwable throwable);
 }

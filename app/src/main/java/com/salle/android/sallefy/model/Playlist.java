@@ -38,6 +38,7 @@ public class Playlist implements Serializable {
 
     private boolean followed;
     private boolean isStartAsShuffle;
+    private boolean isDeleted;
 
     public Playlist(){
 
@@ -49,10 +50,12 @@ public class Playlist implements Serializable {
         this.user = new User();
         user.setLogin(author);
         this.thumbnail = thumbnail;
+        isDeleted = false;
     }
 
     public Playlist(ArrayList<Track> tracks) {
         this.tracks = (ArrayList<Track>) tracks.clone();
+        isDeleted = false;
     }
 
     public Playlist(Playlist mPlaylist) {
@@ -69,6 +72,7 @@ public class Playlist implements Serializable {
         this.isStartAsShuffle = mPlaylist.isStartAsShuffle;
         //Duele a la vista, pero funciona.
         this.tracks = (ArrayList<Track>) ((ArrayList<Track>) mPlaylist.tracks).clone();
+        isDeleted = false;
     }
 
 
@@ -172,5 +176,13 @@ public class Playlist implements Serializable {
 
     public boolean getIsShuffleStart() {
         return isStartAsShuffle;
+    }
+
+    public boolean isDeleted() {
+        return isDeleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        isDeleted = deleted;
     }
 }

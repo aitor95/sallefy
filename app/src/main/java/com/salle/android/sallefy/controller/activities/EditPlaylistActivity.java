@@ -107,6 +107,14 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
                 startActivityForResult(intent, Constants.EDIT_CONTENT.PLAYLIST_EDIT);
             }
         });
+        Button mDeletePlaylist = (Button) findViewById(R.id.edit_playlist_delete);
+        mDeletePlaylist.setOnClickListener(new View.OnClickListener(){
+
+            @Override
+            public void onClick(View v) {
+                PlaylistManager.getInstance(EditPlaylistActivity.this).deletePlaylist(mPlaylist.getId(),EditPlaylistActivity.this);
+            }
+        });
     }
 
     private void updatePlaylist() {
@@ -227,7 +235,13 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
 
     @Override
     public void onPlaylistDeleted() {
+        //We return with a null playlist
 
+        mPlaylist.setDeleted(true);
+        Intent data = new Intent();
+        data.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     @Override

@@ -620,12 +620,30 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         }else{
             if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
                 ArrayList<Playlist> mUpdatedPlaylists = (ArrayList<Playlist>) data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE);
+                //If Playlist gone! Stop player and mini player.
+
+                if(currentSongDeleted(mUpdatedPlaylists)){
+                    linearLayoutMiniplayer.setVisibility(View.GONE);
+                    mBoundService.playlistOrSongDeleted();
+                }
+
                 Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
-                if(fragment instanceof MeFragment){
+                if (fragment instanceof MeFragment) {
                     ((MeFragment) fragment).updatePlaylistInfo(mUpdatedPlaylists);
                 }
             }
         }
+    }
+
+    private boolean currentSongDeleted(ArrayList<Playlist> mUpdatedPlaylists) {
+        for(Playlist p : mUpdatedPlaylists){
+            if(p.getId() == mBoundService.getPlaylistId() && p.isDeleted()){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        return false;
     }
 
 

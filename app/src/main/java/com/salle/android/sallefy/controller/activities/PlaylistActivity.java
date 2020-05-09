@@ -206,8 +206,18 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.EDIT_CONTENT.PLAYLIST_EDIT && resultCode == RESULT_OK) {
             //Update playlist information
-            mUpdatedPlaylist.add((Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
-            onPlaylistById((Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
+            Playlist playlist = (Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST);
+            if(!playlist.isDeleted()) {
+                mUpdatedPlaylist.add(playlist);
+                onPlaylistById(playlist);
+            }else{
+                mUpdatedPlaylist.add(playlist);
+
+                data = new Intent();
+                data.putExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE, mUpdatedPlaylist);
+                setResult(RESULT_OK, data);
+                finish();
+            }
         }else{
             if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
                 mUpdatedPlaylist.addAll((ArrayList<Playlist>)data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE));

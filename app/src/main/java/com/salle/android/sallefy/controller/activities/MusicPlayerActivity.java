@@ -35,8 +35,6 @@ import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 
-import java.util.ArrayList;
-
 import static com.salle.android.sallefy.utils.OnSwipeListener.Direction.up;
 
 //Mirar https://developer.android.com/guide/components/bound-services?hl=es-419
@@ -177,9 +175,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                         mBoundService.songUpdateLike(initTrack.isLiked());
                         updateUIDataBefore(currTrack);
                         updateSongInfoAfterLoad();
-                        mBoundService.loadSongs((ArrayList<Track>) initPlaylist.getTracks(), initTrack,false);
+                        mBoundService.loadSongs(initPlaylist, initTrack,false);
                     }else{
-                        mBoundService.loadSongs((ArrayList<Track>) initPlaylist.getTracks(), initTrack,true);
+                        mBoundService.loadSongs(initPlaylist, initTrack,true);
                     }
 
                     mBoundService.setShuffle(initPlaylist.getIsShuffleStart());

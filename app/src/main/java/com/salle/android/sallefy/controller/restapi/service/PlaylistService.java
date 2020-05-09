@@ -24,7 +24,7 @@ public interface PlaylistService {
     Call<List<Playlist>> getAllPlaylists(@Header("Authorization") String token);
 
     @DELETE("playlists/{id}")
-    Call<ResponseBody> deletePlaylist(@Header("Authorization") String token);
+    Call<ResponseBody> deletePlaylist(@Path("id") Integer id, @Header("Authorization") String token);
 
     @GET("me/playlists")
     Call<List<Playlist>> getOwnPlaylists(@Header("Authorization") String token);

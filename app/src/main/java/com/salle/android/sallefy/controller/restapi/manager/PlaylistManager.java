@@ -320,8 +320,8 @@ public class PlaylistManager {
     /***
      * DELETES THE PLAYLIST
      */
-    public void deletePlaylist(PlaylistCallback playlistCallback) {
-        Call<ResponseBody> call = mService.deletePlaylist("Bearer " + userToken.getIdToken());
+    public void deletePlaylist(int id, PlaylistCallback playlistCallback) {
+        Call<ResponseBody> call = mService.deletePlaylist(id,"Bearer " + userToken.getIdToken());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

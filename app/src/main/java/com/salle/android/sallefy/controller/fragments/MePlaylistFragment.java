@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,15 +86,20 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	}
 
 	public void updateInfo(ArrayList<Playlist> playlists){
+
 		for (int i = 0; i < playlists.size(); i++) {
 			for (int j = 0; j < mPlaylists.size(); j++) {
-				if(mPlaylists.get(j).getId().intValue() == playlists.get(i).getId().intValue()){
-					mPlaylists.set(j, playlists.get(i));
+				if (mPlaylists.get(j).getId().intValue() == playlists.get(i).getId().intValue()) {
+						mPlaylists.set(j, playlists.get(i));
 				}
 			}
 		}
+
+		mPlaylists.removeIf(Playlist::isDeleted);
+		showInformativeMessageIfNecessary(mPlaylists);
 		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setAdapter(adapter);
+
 	}
 
 	@Override
@@ -104,12 +110,7 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	@Override
 	public void onPlaylistsByUser(ArrayList<Playlist> playlists) {
 		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(playlists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
-		TextView text = v.findViewById(R.id.me_text_error);
-		if(playlists.isEmpty()) {
-			text.setText(R.string.NoContentAvailableMePlayists);
-		}else{
-			text.setText(null);
-		}
+		showInformativeMessageIfNecessary(playlists);
 		mPlaylists = playlists;
 		mRecyclerView.setAdapter(adapter);
 	}
@@ -134,15 +135,22 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == EXTRA_NEW_PLAYLIST_CODE && resultCode == RESULT_OK) {
 			mPlaylists.add((Playlist) data.getSerializableExtra(NewPlaylistActivity.EXTRA_NEW_PLAYLIST));
-			TextView text = v.findViewById(R.id.me_text_error);
-			if(mPlaylists.isEmpty()) {
-				text.setText(R.string.NoContentAvailableMePlayists);
-			}else{
-				text.setText(null);
-			}
+			showInformativeMessageIfNecessary(mPlaylists);
 			PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 			mRecyclerView.setAdapter(adapter);
+		}else{
+			Log.d(TAG, "onActivityResult: NOT DEFINED!");
 		}
+	}
+
+	private void showInformativeMessageIfNecessary(ArrayList<Playlist> playlists) {
+		TextView text = v.findViewById(R.id.me_text_error);
+		if(playlists.isEmpty()) {
+			text.setText(R.string.NoContentAvailableMePlayists);
+		}else{
+			text.setText(null);
+		}
+
 	}
 
 	@Override

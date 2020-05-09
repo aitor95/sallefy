@@ -11,6 +11,7 @@ import android.util.Log;
 
 import com.salle.android.sallefy.controller.activities.MusicPlayerActivity;
 import com.salle.android.sallefy.controller.notifications.CustomNotification;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
@@ -54,6 +55,7 @@ public class MusicService extends Service {
 
     //Inidca si se esta gestionando el callback de songFinished.
     private boolean songFinished;
+    private Playlist mPlaylist;
 
     public int getPlaylistSize() {
         return mTracks != null ? mTracks.size() : 0;
@@ -103,6 +105,17 @@ public class MusicService extends Service {
         Collections.shuffle(shufflePlaylistInices);
     }
 
+    public void playlistOrSongDeleted() {
+        stopMusic();
+        mTracks.clear();
+        mTracks = null;
+        mPlaylist = null;
+    }
+
+    public int getPlaylistId() {
+        return mPlaylist.getId();
+    }
+
     public class MusicBinder extends Binder {
         public MusicService getService(){
             return MusicService.this;
@@ -150,7 +163,10 @@ public class MusicService extends Service {
         stopSelf();
     }
 
-    public void loadSongs(ArrayList<Track> tracks, Track initTrack, boolean startSong){
+    public void loadSongs(Playlist playlist, Track initTrack, boolean startSong){
+        mPlaylist = playlist;
+        ArrayList<Track> tracks = (ArrayList<Track>) playlist.getTracks();
+
         mTracks = (List<Track>) tracks.clone();
 
         for (int i = mTracks.size() - 1; i >= 0; i--){
@@ -167,6 +183,7 @@ public class MusicService extends Service {
 
     public void removePlaylist(){
         mTracks = null;
+        mPlaylist = null;
         System.gc();
     }
 

@@ -89,6 +89,16 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
 
+				int visibleItemCount = mLinearLayoutManager.getChildCount();
+				int totalItemCount = mLinearLayoutManager.getItemCount();
+				int firstVisibleItemPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+
+/*				if((visibleItemCount + firstVisibleItemPosition) >= totalItemCount && firstVisibleItemPosition >= 0 && !isLast){
+					// End of the list is here.
+					Log.i(TAG, "End of list");
+					loadMoreItems();
+
+				}*/
 			}
 
 			@Override
@@ -97,6 +107,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 				int visibleItemCount = mLinearLayoutManager.getChildCount();
 				int totalItemCount = mLinearLayoutManager.getItemCount();
 				int firstVisibleItemPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
+
 
 				if (!isLoading && !isLast) {
 					if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
@@ -167,7 +178,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 				if (mFollowing.size() != 0) nitv.setText(R.string.no_tracks_on_social);
 				else nitv.setText(R.string.no_users_on_social);
 			}else{
-				if (isLoading){ isLoading = false; }
+				if (isLoading) isLoading = false;
 				this.adapter.notifyDataSetChanged();
 			}
 		}

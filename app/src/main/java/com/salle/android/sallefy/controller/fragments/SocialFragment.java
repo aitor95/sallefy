@@ -23,6 +23,7 @@ import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
+import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,13 +35,11 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 	public static final String TAG = SocialFragment.class.getName();
 
-	private RecyclerView mRecyclerView;
+	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
 	private ArrayList<UserPublicInfo> mFollowing;
 
 	//Pagination
-	private boolean isLoading = false;
-	private boolean isLast = false;
 	private int currentPage = 0;
 
 	private LinearLayoutManager mLinearLayoutManager;
@@ -74,17 +73,24 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	}
 
 	private void initViews(View v) {
-		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
-		mLinearLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
+		mRecyclerView = (PaginatedRecyclerView) v.findViewById(R.id.dynamic_recyclerView);
+		//mLinearLayoutManager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
 		mTracks = new ArrayList<>();
 		adapter = new SocialActivityAdapter(adapterClickCallback, getContext(), mTracks);
-		mRecyclerView.setLayoutManager(mLinearLayoutManager);
+		//mRecyclerView.setLayoutManager(mLinearLayoutManager);
 		mRecyclerView.setAdapter(adapter);
 
 		nitv = v.findViewById(R.id.no_info_aviable_on_social);
 
+		mRecyclerView.setListener(new PaginatedRecyclerView.PaginatedRecyclerViewListener() {
+			@Override
+			public void onPageLoaded() {
+				loadMoreItems();
+			}
+		});
+
 		//DETECTAR SCROLL RV
-		mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+		/*mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
 			@Override
 			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
 				super.onScrollStateChanged(recyclerView, newState);
@@ -106,12 +112,12 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 					}
 				}
 			}
-		});
+		});*/
 
 	}
 
 	private void loadMoreItems() {
-		isLoading = true;
+		mRecyclerView.setLoading(true);
 
 		currentPage += 1;
 
@@ -147,7 +153,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 		int newSongs = 0;
 
 		if(tracks.size() < PAGE_SIZE){
-			isLast = true;
+			mRecyclerView.setLast(true);
 		}
 
 		for (int i = 0; i < tracks.size(); i++){
@@ -171,14 +177,14 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 		//Es el ultimo y mtracks no es 0 --> simplemente actualizar
 		//No es el ultimo y mtracks no llega a PAGE_SIZE --> carga mas
 		//No es el ultimo y mtracks llega a PAGE_SIZE--> actualiza
-		if(!isLast && (this.mTracks.size() < PAGE_SIZE || newSongs == 0)){
+		if(!mRecyclerView.isLast() && (this.mTracks.size() < PAGE_SIZE || newSongs == 0)){
 			loadMoreItems();
 		}else{
-			if(isLast && mTracks.size() == 0){
+			if(mRecyclerView.isLast() && mTracks.size() == 0){
 				if (mFollowing.size() != 0) nitv.setText(R.string.no_tracks_on_social);
 				else nitv.setText(R.string.no_users_on_social);
 			}else{
-				if (isLoading) isLoading = false;
+				if (mRecyclerView.isLoading()) mRecyclerView.setLoading(false);
 				Parcelable parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
 				this.adapter.notifyDataSetChanged();
 				mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
@@ -189,7 +195,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	@Override
 	public void onNoTracks(Throwable throwable) {
 
-		isLast = true;
+		mRecyclerView.setLast(true);
 	}
 
 	@Override

@@ -69,6 +69,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 		mUsersPublic = new ArrayList<>();
 		mUsersFollowed = new ArrayList<>();
 		UserManager.getInstance(getContext()).getMeFollowing(this);
+
 	}
 
 	@Override
@@ -143,6 +144,11 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onIsFollowingResponseReceived(String login, Boolean isFollowed) {
+
+	}
+
+	@Override
+	public void onUpdateUser() {
 
 	}
 

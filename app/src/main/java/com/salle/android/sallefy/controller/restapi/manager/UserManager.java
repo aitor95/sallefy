@@ -17,6 +17,7 @@ import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.Session;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -105,7 +106,7 @@ public class UserManager {
             @Override
             public void onFailure(Call<User> call, Throwable t) {
                 Log.d(TAG, "Error: " + t.getMessage());
-                userCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+                userCallback.onFailure(new Throwable("ERROR " + Arrays.toString(t.getStackTrace())));
             }
         });
     }
@@ -136,6 +137,31 @@ public class UserManager {
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 userCallback.onFailure(t);
+            }
+        });
+    }
+
+    public synchronized void updateProfile(User user, final UserCallback userCallback){
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+
+        Call<ResponseBody> call = mService.updateProfile(user, "Bearer " + userToken.getIdToken());
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int code = response.code();
+                if (response.isSuccessful()){
+                    userCallback.onUpdateUser();
+                } else {
+                    Log.d(TAG, "Can't upload image to API " + code);
+                    userCallback.onFailure(new Throwable("Error " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + Arrays.toString(t.getStackTrace()));
+                userCallback.onFailure(new Throwable("ERROR " + Arrays.toString(t.getStackTrace())));
             }
         });
     }
@@ -178,7 +204,9 @@ public class UserManager {
                 int code = response.code();
 
                 if (response.isSuccessful()) {
-                    userCallback.onIsFollowingResponseReceived(userLogin, response.body().getFollow());
+                    if (response.body() != null) {
+                        userCallback.onIsFollowingResponseReceived(userLogin, response.body().getFollow());
+                    }
                 } else {
                     try {
                         assert response.errorBody() != null;
@@ -236,6 +264,7 @@ public class UserManager {
             }
         });
     }
+
 
     /********************   GETTERS / SETTERS    ********************/
     public synchronized void getMeFollowing (final UserCallback userCallback) {

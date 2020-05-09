@@ -14,10 +14,14 @@ import android.widget.RelativeLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
+import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.music.MusicService;
+import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -25,6 +29,13 @@ public class SettingsActivity extends AppCompatActivity {
 
     private MusicService mBoundService;
     private Intent intent;
+
+    private RelativeLayout optionStats;
+    private ImageButton backoption;
+    private  CircleImageView user_img;
+    private RelativeLayout optionModify;
+    private RelativeLayout optionDelete;
+    private  Button optionLogOut;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -39,6 +50,8 @@ public class SettingsActivity extends AppCompatActivity {
             Log.d(TAG, "onServiceDisconnected: Service desconnected.");
         }
     };
+    private User mUser;
+
     private void startStreamingService () {
         intent = new Intent(this, MusicService.class);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
@@ -48,24 +61,35 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         startStreamingService();
         setContentView(R.layout.activity_settings);
+        mUser = Session.getInstance(getApplicationContext()).getUser();
+        initViews();
+    }
 
-        RelativeLayout optionStats = findViewById(R.id.settings_option_stats);
+    private void initViews(){
+        initElements();
+
         optionStats.setOnClickListener(view -> {
             Intent intent = new Intent(this, StatisticsActivity.class);
             startActivity(intent);
         });
 
-        RelativeLayout optionModify = findViewById(R.id.settings_modify_user);
+        Glide.with(
+                getApplicationContext()
+                        .getApplicationContext())
+                .load(mUser.getImageUrl().toString())
+                .centerCrop()
+                .override(400,400)
+                .placeholder(R.drawable.user_default_image)
+                .into(user_img);
+
         optionModify.setOnClickListener(view -> {
             //TODO: Modify user
         });
 
-        RelativeLayout optionDelete = findViewById(R.id.settings_option_deleteAccount);
         optionDelete.setOnClickListener(view -> {
             //TODO: Delete user
         });
 
-        Button optionLogOut = findViewById(R.id.btn_settings_logout);
         optionLogOut.setOnClickListener(view -> {
             PreferenceUtils.resetValues(this);
             Session.getInstance(this).resetValues();
@@ -79,10 +103,19 @@ public class SettingsActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        ImageButton backoption = findViewById(R.id.back_btn_settings);
+
         backoption.setOnClickListener(view -> {
             finish();
         });
+    }
+
+    private void initElements(){
+        backoption = findViewById(R.id.back_btn_settings);
+        optionStats = findViewById(R.id.settings_option_stats);
+        user_img = findViewById(R.id.user_img);
+        optionModify = findViewById(R.id.settings_modify_user);
+        optionDelete = findViewById(R.id.settings_option_deleteAccount);
+        optionLogOut = findViewById(R.id.btn_settings_logout);
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {

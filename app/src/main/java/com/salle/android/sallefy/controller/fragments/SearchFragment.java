@@ -205,9 +205,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
             String text = ((EditText) view).getText().toString();
 
             if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-                ((EditText) view).setText(text.replace("\n", ""));
+                EditText t = ((EditText) view);
+                t.setText(text.replace("\n", ""));
                 if (text.equals("")) getData();
-                else SearchManager.getInstance(getContext()).search(((EditText) view).getText().toString(), scallback);
+                else SearchManager.getInstance(getContext()).search(t.getText().toString(), scallback);
+                t.setSelection(t.getText().length());
             }
 
             searchTimer.cancel();

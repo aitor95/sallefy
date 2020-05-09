@@ -317,5 +317,29 @@ public class PlaylistManager {
         });
     }
 
+    /***
+     * DELETES THE PLAYLIST
+     */
+    public void deletePlaylist(PlaylistCallback playlistCallback) {
+        Call<ResponseBody> call = mService.deletePlaylist("Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    playlistCallback.onPlaylistDeleted();
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+    }
 
 }

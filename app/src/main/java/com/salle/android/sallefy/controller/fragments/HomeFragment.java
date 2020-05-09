@@ -196,6 +196,11 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
     }
 
     @Override
+    public void onPlaylistDeleted() {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getContext(), "Something went wrong", Toast.LENGTH_LONG).show();
     }

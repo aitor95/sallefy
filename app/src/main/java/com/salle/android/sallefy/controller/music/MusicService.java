@@ -441,11 +441,7 @@ public class MusicService extends Service {
         @Override
         public void onAudioFocusChange(int focusChange) {
             if (focusChange == AudioManager.AUDIOFOCUS_LOSS_TRANSIENT) {
-                if (mediaPlayer.isPlaying()) {
-                    playingBeforeInterruption = true;
-                } else {
-                    playingBeforeInterruption = false;
-                }
+                playingBeforeInterruption = mediaPlayer.isPlaying();
                 pauseSong();
             } else if (focusChange == AudioManager.AUDIOFOCUS_GAIN) {
                 if (playingBeforeInterruption) {

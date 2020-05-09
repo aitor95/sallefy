@@ -28,8 +28,6 @@ import com.salle.android.sallefy.utils.Constants;
 import java.util.ArrayList;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
-
 public class EditPlaylistActivity extends AppCompatActivity implements PlaylistCallback, UploadCallback {
 
     public static final String TAG = EditPlaylistActivity.class.getName();
@@ -224,6 +222,11 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
 
     @Override
     public void onUpdateFollow(Follow result) {
+
+    }
+
+    @Override
+    public void onPlaylistDeleted() {
 
     }
 

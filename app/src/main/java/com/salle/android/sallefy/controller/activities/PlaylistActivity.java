@@ -32,7 +32,6 @@ import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Constants;
-import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
 import java.io.Serializable;
@@ -388,6 +387,11 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         this.followed = response.getFollow();
         this.mFollowBtn.setBackgroundResource((this.followed) ? R.drawable.following_btn : R.drawable.login_btn);
         mFollowBtn.setText((followed) ? R.string.playlist_following : R.string.playlist_follow );
+
+    }
+
+    @Override
+    public void onPlaylistDeleted() {
 
     }
 

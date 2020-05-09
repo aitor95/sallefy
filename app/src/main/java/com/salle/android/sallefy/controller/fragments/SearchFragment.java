@@ -314,6 +314,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     }
 
     @Override
+    public void onPlaylistDeleted() {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
 
     }

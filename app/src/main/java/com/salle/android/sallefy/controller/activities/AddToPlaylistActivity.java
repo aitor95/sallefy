@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.AddToPlayListAdapter;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
@@ -23,10 +22,6 @@ import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
-import static android.nfc.tech.MifareUltralight.get;
 
 public class  AddToPlaylistActivity extends AppCompatActivity implements PlaylistCallback {
 
@@ -170,6 +165,11 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
 
     @Override
     public void onUpdateFollow(Follow result) {
+
+    }
+
+    @Override
+    public void onPlaylistDeleted() {
 
     }
 

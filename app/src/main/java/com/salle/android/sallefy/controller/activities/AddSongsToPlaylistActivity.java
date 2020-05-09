@@ -28,8 +28,6 @@ import com.salle.android.sallefy.utils.Constants;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
-
 import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
 
 public class AddSongsToPlaylistActivity extends AppCompatActivity implements PlaylistCallback, TrackCallback, BottomMenuDialog.BottomMenuDialogInterf {
@@ -233,6 +231,11 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     @Override
     public void onUpdateFollow(Follow result) {
+
+    }
+
+    @Override
+    public void onPlaylistDeleted() {
 
     }
 

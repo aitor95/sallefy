@@ -15,14 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.activities.NewPlaylistActivity;
 import com.salle.android.sallefy.controller.activities.UploadSongActivity;
-import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
 import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
-import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.Constants;
 
@@ -85,9 +82,12 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == EXTRA_NEW_SONG_CODE && resultCode == RESULT_OK) {
 			mTracks.add((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
-
-
-
+			TextView text = v.findViewById(R.id.me_text_error);
+			if(mTracks.isEmpty()){
+				text.setText(R.string.NoContentAvailableMeSongs);
+			}else{
+				text.setText(null);
+			}
 			TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getContext(), getFragmentManager(), mTracks);
 			mRecyclerView.setAdapter(adapter);
 		}

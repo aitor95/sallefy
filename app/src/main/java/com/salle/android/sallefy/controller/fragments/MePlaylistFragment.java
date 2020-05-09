@@ -2,7 +2,6 @@ package com.salle.android.sallefy.controller.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,14 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.activities.NewPlaylistActivity;
-import com.salle.android.sallefy.controller.activities.SettingsActivity;
 import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
-import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 
 import java.util.ArrayList;
@@ -137,7 +134,12 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == EXTRA_NEW_PLAYLIST_CODE && resultCode == RESULT_OK) {
 			mPlaylists.add((Playlist) data.getSerializableExtra(NewPlaylistActivity.EXTRA_NEW_PLAYLIST));
-
+			TextView text = v.findViewById(R.id.me_text_error);
+			if(mPlaylists.isEmpty()) {
+				text.setText(R.string.NoContentAvailableMePlayists);
+			}else{
+				text.setText(null);
+			}
 			PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 			mRecyclerView.setAdapter(adapter);
 		}
@@ -160,6 +162,11 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
 	@Override
 	public void onUpdateFollow(Follow result) {
+
+	}
+
+	@Override
+	public void onPlaylistDeleted() {
 
 	}
 

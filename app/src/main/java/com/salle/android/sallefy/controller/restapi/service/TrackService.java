@@ -22,7 +22,7 @@ public interface TrackService {
     Call<List<Track>> getAllTracks(@Header("Authorization") String token);
 
     @GET("tracks")
-    Call<List<Track>> getAllTracksPagination(@Header("Authorization") String token, @Query("page") int page, @Query("size") int size);
+    Call<List<Track>> getAllTracksPagination(@Header("Authorization") String token, @Query("page") int page, @Query("size") int size, @Query("recent") boolean recent);
 
     @GET("tracks")
     Call<List<Track>> getAllTracksSocial(@Header("Authorization") String token, @Query("size") int size, @Query("recent") boolean recent);

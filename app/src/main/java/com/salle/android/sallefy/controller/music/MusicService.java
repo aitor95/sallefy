@@ -225,14 +225,16 @@ public class MusicService extends Service {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
                         if (mCallback != null) {
+                            playSong();
                             try {
                                 mCallback.onMusicPlayerPrepared();
+
                             }catch (Exception e){
                                 //Ignoramos. Simplemente la activity del callback ya no existe.
                             }
 
                             mCallbackMini.onMusicPlayerPrepared();
-                            playSong();
+
                         }
                     }
                 });

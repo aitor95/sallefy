@@ -42,6 +42,7 @@ public class FilenameHelper {
     }
 
     public static String extractPublicIdFromUri(String fileUri) {
+        Log.d("TEST", "extractPublicIdFromUri: EXTRACTING PUBLIC ID FROM " + fileUri);
         String decoded = Uri.decode(fileUri);
         int lastBar = decoded.lastIndexOf("/");
         String result = removeTail(decoded.substring(lastBar + 1));

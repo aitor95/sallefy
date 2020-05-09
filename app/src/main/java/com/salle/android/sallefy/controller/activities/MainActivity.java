@@ -601,29 +601,27 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             //Update track information
             Track track = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
 
-            if(track.isDeleted()){
-
-            }else{
-
-                TrackViewPack tvp = mTrackViewPack;
-                tvp.setTrack(track);
-                tvp.getViewHolder().updateViewHolder(track);
-
-                mTrackViewPack = tvp;
-
-                /*Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
-                if(fragment instanceof MeFragment){
-                    ((MeFragment) fragment).updateSongInfo(track);
-                }*/
+            if(mBoundService.isPlaying()) {
+                if (mBoundService.getCurrentTrack().getId() == track.getId().intValue() && track.isDeleted()) {
+                    linearLayoutMiniplayer.setVisibility(View.GONE);
+                    mBoundService.playlistOrSongDeleted();
+                }
             }
+
+            Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
+            if(fragment instanceof MeFragment){
+                ((MeFragment) fragment).updateSongInfo(track);
+            }
+
         }else{
             if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
                 ArrayList<Playlist> mUpdatedPlaylists = (ArrayList<Playlist>) data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE);
                 //If Playlist gone! Stop player and mini player.
-
-                if(currentSongDeleted(mUpdatedPlaylists)){
-                    linearLayoutMiniplayer.setVisibility(View.GONE);
-                    mBoundService.playlistOrSongDeleted();
+                if(mBoundService.isPlaying()) {
+                    if (currentSongInPlaylistDeleted(mUpdatedPlaylists)) {
+                        linearLayoutMiniplayer.setVisibility(View.GONE);
+                        mBoundService.playlistOrSongDeleted();
+                    }
                 }
 
                 Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
@@ -634,7 +632,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         }
     }
 
-    private boolean currentSongDeleted(ArrayList<Playlist> mUpdatedPlaylists) {
+    private boolean currentSongInPlaylistDeleted(ArrayList<Playlist> mUpdatedPlaylists) {
         Playlist currentPlaylist = mBoundService.getPlaylist();
 
         if(currentPlaylist == null || currentPlaylist.isLocalPlaylist()){
@@ -660,6 +658,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     @Override
     public void onButtonClicked(TrackViewPack track, String text) {
+
         switch (text) {
             case "like":
                 Log.d(TAG, "onButtonClicked: LIKE!");

@@ -53,25 +53,31 @@ public class CustomNotification {
     }
     public static void createNotification(Context context, Track track, boolean isPlaying){
         Log.d("ss", "createNotification: ");
-        Glide.with(context)
-                .asBitmap()
-                .load(track.getThumbnail())
-                .into(new CustomTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                        try {
-                            generateNotification(context,track,resource,isPlaying);
-                        }catch (Exception e){
-                            e.printStackTrace();
-                            Log.d("ss", "onResourceReady: " + e.getMessage());
+        if(track.getThumbnail() == null){
+            generateNotification(context,track,null,isPlaying);
+        }else{
+
+            Glide.with(context)
+                    .asBitmap()
+                    .load(track.getThumbnail())
+                    .into(new CustomTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                            try {
+                                generateNotification(context,track,resource,isPlaying);
+                            }catch (Exception e){
+                                e.printStackTrace();
+                                Log.d("ss", "onResourceReady: " + e.getMessage());
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
 
-                    }
-                });
+                        }
+                    });
+
+        }
     }
 
     private static void generateNotification(Context context, Track track, Bitmap resource,boolean isPlaying) {
@@ -156,6 +162,7 @@ public class CustomNotification {
     }
 
     public static void close(){
-        notificationManager.cancelAll();
+        if(notificationManager != null)
+            notificationManager.cancelAll();
     }
 }

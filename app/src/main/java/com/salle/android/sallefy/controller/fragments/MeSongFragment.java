@@ -82,16 +82,21 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (requestCode == EXTRA_NEW_SONG_CODE && resultCode == RESULT_OK) {
 			mTracks.add((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
-			TextView text = v.findViewById(R.id.me_text_error);
-			if(mTracks.isEmpty()){
-				text.setText(R.string.NoContentAvailableMeSongs);
-			}else{
-				text.setText(null);
-			}
+			showInformativeMessageIfNecessary(mTracks);
 			TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getContext(), getFragmentManager(), mTracks);
 			mRecyclerView.setAdapter(adapter);
 		}
 	}
+
+	private void showInformativeMessageIfNecessary(ArrayList<Track> tracks) {
+		TextView text = v.findViewById(R.id.me_text_error);
+		if(tracks.isEmpty()){
+			text.setText(R.string.NoContentAvailableMeSongs);
+		}else{
+			text.setText(null);
+		}
+	}
+
 
 	private void getData() {
 		TrackManager.getInstance(getActivity()).getOwnTracks(this);
@@ -105,6 +110,8 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 				mTracks.set(i, track);
 			}
 		}
+		mTracks.removeIf(Track::isDeleted);
+		showInformativeMessageIfNecessary(mTracks);
 		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
 		mRecyclerView.setAdapter(adapter);
 	}
@@ -126,12 +133,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	@Override
 	public void onPersonalTracksReceived(List<Track> tracks) {
 		mTracks = (ArrayList<Track>) tracks;
-		TextView text = v.findViewById(R.id.me_text_error);
-		if(tracks.isEmpty()){
-			text.setText(R.string.NoContentAvailableMeSongs);
-		}else{
-			text.setText(null);
-		}
+		showInformativeMessageIfNecessary((ArrayList<Track>) tracks);
 		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
 		mRecyclerView.setAdapter(adapter);
 	}

@@ -27,6 +27,7 @@ import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.utils.FilenameHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -127,6 +128,11 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                CloudinaryManager m = CloudinaryManager.getInstance(EditSongActivity.this);
+
+                m.deleteAudioFile(mTrack.getUrl());
+                m.deleteCoverImage(mTrack.getThumbnail(),true);
+
                 TrackManager.getInstance(EditSongActivity.this).deleteTrack(mTrack.getId(),EditSongActivity.this);
             }
         });
@@ -172,7 +178,7 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.STORAGE.IMAGE_SELECTED && resultCode == RESULT_OK) {
             mCoverUri = data.getData();
-            mCoverFilename = mCoverUri.toString();
+            mCoverFilename = FilenameHelper.extractFromUri(mCoverUri,this);
             Glide
                     .with(getApplicationContext())
                     .load(mCoverUri.toString())
@@ -184,12 +190,14 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
         }else{
             if (requestCode == Constants.STORAGE.SONG_SELECTED && resultCode == RESULT_OK) {
                 mAudioUri = data.getData();
-                mAudioFilename = mAudioUri.toString();
+                mAudioFilename = FilenameHelper.extractFromUri(mAudioUri,this);
                 mFileBtn.setText(mAudioFilename);
+                mName.setText(mAudioFilename);
                 trackChosen = true;
             }
         }
     }
+
 
     public void checkGenres(View v){
         if(!genresFetched){

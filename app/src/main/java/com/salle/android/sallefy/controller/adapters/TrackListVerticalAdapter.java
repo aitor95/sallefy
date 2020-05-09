@@ -133,8 +133,10 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
                 t.setLiked(!t.isLiked());
                 boolean liked = t.isLiked();
 
-                for (TrackViewPack tvp: tracksToLikeOnDialog) if (tvp.getTrack().getId().equals(songId)) {
-                    if (likedHolder == null) likedHolder = tvp.getViewHolder();
+                for (TrackViewPack tvp: tracksToLikeOnDialog) {
+                    if (tvp.getTrack().getId().equals(songId)) {
+                        if (likedHolder == null) likedHolder = tvp.getViewHolder();
+                    }
                 }
 
                 Log.d(TAG, "onLikeSuccess: Song now is liked?" + t.isLiked());

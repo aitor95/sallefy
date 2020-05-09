@@ -24,6 +24,7 @@ import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.utils.FilenameHelper;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -143,7 +144,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.STORAGE.IMAGE_SELECTED && resultCode == RESULT_OK) {
             mUri = data.getData();
-            mFilename = mUri.toString();
+            mFilename = FilenameHelper.extractFromUri(mUri,this);
             System.out.println("this is the uri " + mUri.toString());
             saved = false;
             Glide.with(getApplicationContext())
@@ -236,7 +237,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
     @Override
     public void onPlaylistDeleted() {
         //We return with a null playlist
-
+        CloudinaryManager.getInstance(this).deleteCoverImage(mPlaylist.getThumbnail(),false);
         mPlaylist.setDeleted(true);
         Intent data = new Intent();
         data.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
@@ -248,6 +249,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_failure, Toast.LENGTH_LONG).show();
         Log.e(TAG, "onFailure: "+throwable.getMessage());
+        CloudinaryManager.getInstance(this).deleteCoverImage(mPlaylist.getThumbnail(),false);
     }
 
     /**********************************************************************************************
@@ -275,6 +277,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
     @Override
     public void onError(String requestId, ErrorInfo error) {
         Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure, Toast.LENGTH_LONG).show();
+        CloudinaryManager.getInstance(this).deleteCoverImage(mPlaylist.getThumbnail(),false);
     }
 
     @Override

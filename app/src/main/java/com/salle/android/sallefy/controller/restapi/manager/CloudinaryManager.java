@@ -2,29 +2,26 @@ package com.salle.android.sallefy.controller.restapi.manager;
 
 import android.content.Context;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.cloudinary.android.MediaManager;
-import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
-import com.salle.android.sallefy.controller.activities.UploadSongActivity;
-import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
-import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
-import com.salle.android.sallefy.model.Genre;
-import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.CloudinaryConfigs;
+import com.salle.android.sallefy.utils.FilenameHelper;
 
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class CloudinaryManager extends AppCompatActivity {
 
+    public static final String TAG = CloudinaryManager.class.getName();
+
     private static CloudinaryManager sManager;
     private Context mContext;
-    private String mFileName;
-    private Genre mGenre;
 
 
     public static CloudinaryManager getInstance(Context context) {
@@ -40,9 +37,9 @@ public class CloudinaryManager extends AppCompatActivity {
     }
 
     public synchronized void uploadAudioFile(String folder, Uri fileUri, String fileName, final UploadCallback uploadCallback) {
-   //     mGenre = genre;
-        mFileName = fileName;
         Map<String, Object> options = new HashMap<>();
+
+        Log.d("TEST", "SENDING AUDIO FILE: \'" + fileName + "\'");
         options.put("public_id", fileName);
         options.put("folder", folder);
         options.put("resource_type", "video");
@@ -56,11 +53,11 @@ public class CloudinaryManager extends AppCompatActivity {
 
     public synchronized void uploadCoverImage(String folder, Uri fileUri, String fileName, final UploadCallback uploadCallback) {
 
-        mFileName = fileName;
         Map<String, Object> options = new HashMap<>();
         options.put("public_id", fileName);
         options.put("folder", folder);
         options.put("resource_type", "image");
+
 
         MediaManager.get().upload(fileUri)
                 .unsigned(fileName)
@@ -69,42 +66,50 @@ public class CloudinaryManager extends AppCompatActivity {
                 .dispatch();
     }
 
-    /*public void uploadAudioFile(Uri mUri, String mFilename, UploadSongActivity uploadSongActivity) {
-    }*/
+    public synchronized void deleteAudioFile(String fileUri){
+        Log.d(TAG, "DELETING AUDIO FILE WITH URI: \'" + fileUri + "\'");
 
-    /*private class CloudCallback implements UploadCallback {
+        Map<String, Object> options = new HashMap<>();
+        options.put("invalidate","true");
+        options.put("resource_type", "video");
 
-        @Override
-        public void onStart(String requestId) {
+        new DeleteConnection().execute("sallefy/tracks/"+FilenameHelper.extractPublicIdFromUri(fileUri),options);
+    }
+
+    public synchronized void deleteCoverImage(String fileUri ,boolean isTrack){
+        Log.d(TAG, "DELETING CoverImage FILE WITH URI: \'" + fileUri + "\'");
+
+        Map<String, Object> options = new HashMap<>();
+        options.put("invalidate","true");
+        options.put("resource_type", "image");
+
+        String path =  isTrack ? "sallefy/covers/songs/" : "sallefy/covers/playlists/";
+
+        new DeleteConnection().execute(path + FilenameHelper.extractPublicIdFromUri(fileUri), options);
+    }
+
+    public synchronized void deleteUserImage(){
+
+    }
+
+}
+
+class DeleteConnection extends AsyncTask{
+    @Override
+    protected Object doInBackground(Object[] objects) {
+        try {
+            Log.d(CloudinaryManager.TAG, "doInBackground: DELETING NAME " + (String)objects[0]);
+            Map a = MediaManager.get().getCloudinary().uploader().destroy((String)objects[0],(Map)objects[1]);
+
+            Object res = a.get("result");
+
+            if( res instanceof String){
+                Log.d(CloudinaryManager.TAG, "Cloudinary delete response is " + res);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
         }
-
-        @Override
-        public void onProgress(String requestId, long bytes, long totalBytes) {
-            Double progress = (double) bytes/totalBytes;
-        }
-
-        @Override
-        public void onSuccess(String requestId, Map resultData) {
-            Track track = new Track();
-            track.setId(null);
-            track.setName(mFileName);
-            //track.setUser(Session.getInstance(mContext).getUser());
-            //track.setUserLogin(Session.getInstance(mContext).getUser().getLogin());
-            track.setUrl((String) resultData.get("url"));
-            ArrayList<Genre> genres = new ArrayList<>();
-            genres.add(mGenre);
-            track.setGenres(genres);
-            TrackManager.getInstance(mContext).createTrack(track, mCallback);
-        }
-
-        @Override
-        public void onError(String requestId, ErrorInfo error) {
-
-        }
-
-        @Override
-        public void onReschedule(String requestId, ErrorInfo error) {
-
-        }
-    }*/
+        return null;
+    }
 }

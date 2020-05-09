@@ -29,6 +29,7 @@ import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.utils.FilenameHelper;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -107,14 +108,15 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
             @Override
             public void onClick(View v) {
                 if (!uploading) {
-                    uploadTrack();
+                    ((Button) v).setText("Uploading...");
+
                     uploading = true;
                     mName.setEnabled(false);
                     mFileBtn.setEnabled(false);
                     mAddGenreBtn.setEnabled(false);
                     mGenresBtn.setEnabled(false);
                     mImg.setEnabled(false);
-                    ((Button) v).setText("Uploading...");
+                    uploadTrack();
                 }
             }
         });
@@ -173,7 +175,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.STORAGE.IMAGE_SELECTED && resultCode == RESULT_OK) {
             mCoverUri = data.getData();
-            mCoverFilename = mCoverUri.toString();
+            mCoverFilename = FilenameHelper.extractFromUri(mCoverUri,this);
             Glide
                     .with(getApplicationContext())
                     .load(mCoverUri.toString())
@@ -185,8 +187,9 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         }else{
             if (requestCode == Constants.STORAGE.SONG_SELECTED && resultCode == RESULT_OK) {
                 mAudioUri = data.getData();
-                mAudioFilename = mAudioUri.toString();
+                mAudioFilename = FilenameHelper.extractFromUri(mAudioUri,this);
                 mFileBtn.setText(mAudioFilename);
+                mName.setText(mAudioFilename);
                 trackChosen = true;
             }
         }
@@ -210,8 +213,10 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
             mAddGenreBtn.setEnabled(true);
             mGenresBtn.setEnabled(true);
             mImg.setEnabled(true);
-            Toast.makeText(getApplicationContext(), R.string.upload_song_not_complete, Toast.LENGTH_SHORT).show();
 
+            uploading = false;
+            Toast.makeText(getApplicationContext(), R.string.upload_song_not_complete, Toast.LENGTH_SHORT).show();
+            mUploadSongBtn.setText("UPLOAD");
         }else{
             if(mName.getText().toString().equals("")){
                 mName.setEnabled(true);
@@ -220,7 +225,8 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
                 mGenresBtn.setEnabled(true);
                 mImg.setEnabled(true);
                 Toast.makeText(getApplicationContext(), R.string.new_playlist_not_complete, Toast.LENGTH_SHORT).show();
-
+                mUploadSongBtn.setText("UPLOAD");
+                uploading = false;
             }else {
 
                 mTrack.setName(mName.getText().toString());
@@ -311,6 +317,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         mGenresBtn.setEnabled(true);
         mImg.setEnabled(true);
         uploading = false;
+        removeAllDataFromCloudinary();
     }
 
     /**********************************************************************************************
@@ -351,6 +358,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         if(!audioSet){
             //Uploaded the audio file
             mTrack.setUrl((String)resultData.get("url"));
+            Log.d("TEST", "onSuccess: URL RESPONSE IS " + mTrack.getUrl());
             audioSet = true;
             if (coverChosen) {
                 CloudinaryManager.getInstance(this)
@@ -379,6 +387,8 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         mGenresBtn.setEnabled(true);
         mImg.setEnabled(true);
         uploading = false;
+        removeAllDataFromCloudinary();
+
     }
 
     @Override
@@ -390,5 +400,12 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         TrackManager.getInstance(this).likeTrack(track.getTrack().getId(),
                 !track.getTrack().isLiked(),
                 track.getCallback());
+    }
+
+    private void removeAllDataFromCloudinary(){
+        CloudinaryManager m = CloudinaryManager.getInstance(this);
+
+        m.deleteAudioFile(mTrack.getUrl());
+        m.deleteCoverImage(mTrack.getThumbnail(),true);
     }
 }

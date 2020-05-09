@@ -23,6 +23,7 @@ import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.utils.FilenameHelper;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -92,6 +93,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
 
             if (coverChosen) {
                 CloudinaryManager.getInstance(this).uploadCoverImage(Constants.STORAGE.PLAYLIST_COVER_FOLDER, mUri, mFilename, NewPlaylistActivity.this);
+
             }else{
 
                 PlaylistManager.getInstance(getApplicationContext())
@@ -113,7 +115,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.STORAGE.IMAGE_SELECTED && resultCode == RESULT_OK) {
             mUri = data.getData();
-            mFilename = mUri.toString();
+            mFilename = FilenameHelper.extractFromUri(mUri,this);
             Glide
                     .with(getApplicationContext())
                     .load(mUri.toString())
@@ -190,6 +192,7 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure, Toast.LENGTH_LONG).show();
+        CloudinaryManager.getInstance(this).deleteCoverImage(mPlaylist.getThumbnail(),false);
     }
 
     /**********************************************************************************************
@@ -215,6 +218,8 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
     @Override
     public void onError(String requestId, ErrorInfo error) {
         Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure_cloudinary, Toast.LENGTH_LONG).show();
+
+        CloudinaryManager.getInstance(this).deleteCoverImage(mPlaylist.getThumbnail(),false);
     }
 
     @Override

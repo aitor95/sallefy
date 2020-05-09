@@ -464,13 +464,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
             like.setTag("NoFav");
         }
         if(mServiceBound){
-            if(mBoundService.isPlaying()){
-                playPause.setImageResource(R.drawable.ic_play_circle_filled_64dp);
-                playPause.setTag(PLAY);
-            }else{
-                playPause.setImageResource(R.drawable.ic_pause_circle_64dp);
-                playPause.setTag(STOP);
-            }
+            updatePlayButton();
         }
 
         //Modificar el thumbnail
@@ -481,15 +475,23 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                 .into(thumbnail);
     }
 
+    private void updatePlayButton() {
+        if(!mBoundService.isPlaying()){
+            playPause.setImageResource(R.drawable.ic_play_circle_filled_64dp);
+            playPause.setTag(PLAY);
+        }else{
+            playPause.setImageResource(R.drawable.ic_pause_circle_64dp);
+            playPause.setTag(STOP);
+        }
+    }
+
     private void updateSongInfoAfterLoad(){
         //Update seekbar data:
         totalTrackTime.setText(getTimeFromSeconds(mBoundService.getMaxDuration()));
         seekBar.setMax(mBoundService.getMaxDuration());
         updateSeekBar();
 
-        //Asi que modificamos el icono de playPause acorde.
-        playPause.setImageResource(R.drawable.ic_pause_circle_64dp);
-        playPause.setTag(STOP);
+        updatePlayButton();
     }
 
 
@@ -517,8 +519,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
     @Override
     public void onMusicPlayerPrepared() {
-        Log.d(TAG, "onMusicPlayerPrepared: !!!!!!");
         updateSongInfoAfterLoad();
+
     }
 
     @Override
@@ -529,13 +531,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     @Override
     public void onUpdatePlayButton(){
         Log.d(TAG, "onUpdatePlayButton: LMO");
-        if(!mBoundService.isPlaying()){
-            playPause.setImageResource(R.drawable.ic_play_circle_filled_64dp);
-            playPause.setTag(PLAY);
-        }else{
-            playPause.setImageResource(R.drawable.ic_pause_circle_64dp);
-            playPause.setTag(STOP);
-        }
+        updatePlayButton();
     }
 
 

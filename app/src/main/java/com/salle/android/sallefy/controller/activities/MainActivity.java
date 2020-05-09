@@ -38,6 +38,8 @@ import com.salle.android.sallefy.controller.fragments.SearchFragment;
 import com.salle.android.sallefy.controller.fragments.SocialFragment;
 import com.salle.android.sallefy.controller.music.MusicCallback;
 import com.salle.android.sallefy.controller.music.MusicService;
+import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
+import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Playlist;
@@ -49,6 +51,7 @@ import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -601,17 +604,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             //Update track information
             Track track = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
 
-            if(mBoundService.isPlaying()) {
-                if (mBoundService.getCurrentTrack().getId() == track.getId().intValue() && track.isDeleted()) {
-                    linearLayoutMiniplayer.setVisibility(View.GONE);
-                    mBoundService.playlistOrSongDeleted();
-                }
-            }
+            updateTrackDataFromEverywhere(track);
 
-            Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
-            if(fragment instanceof MeFragment){
-                ((MeFragment) fragment).updateSongInfo(track);
-            }
 
         }else{
             if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
@@ -629,6 +623,22 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                     ((MeFragment) fragment).updatePlaylistInfo(mUpdatedPlaylists);
                 }
             }
+        }
+    }
+
+    private void updateTrackDataFromEverywhere(Track track) {
+        if(mBoundService.isPlaying()) {
+            if (mBoundService.getCurrentTrack().getId() == track.getId().intValue() && track.isDeleted()) {
+                linearLayoutMiniplayer.setVisibility(View.GONE);
+                mBoundService.playlistOrSongDeleted();
+            }
+        }
+
+        //TODO: ACABAR EL DELETE DE LA PLAYLIST I EL DELETE DE LAS TRACKS.
+        Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
+        //Log.d(TAG, "updateTrackDataFromEverywhere: FRAGMENT ACTTIVADO IS " + fragment.toString());
+        if(fragment instanceof MeFragment){
+            ((MeFragment) fragment).updateSongInfo(track);
         }
     }
 
@@ -672,6 +682,48 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 break;
             case "delete":
                 Log.d(TAG, "onButtonClicked: DELETE");
+
+                TrackManager.getInstance(this).deleteTrack(track.getTrack().getId(), new TrackCallback() {
+                    @Override
+                    public void onTracksReceived(List<Track> tracks) {
+
+                    }
+                    @Override
+                    public void onNoTracks(Throwable throwable) {
+
+                    }
+                    @Override
+                    public void onPersonalTracksReceived(List<Track> tracks) {
+
+                    }
+                    @Override
+                    public void onUserTracksReceived(List<Track> tracks) {
+
+                    }
+                    @Override
+                    public void onCreateTrack(Track track) {
+
+                    }
+                    @Override
+                    public void onUpdatedTrack() {
+
+                    }
+
+                    @Override
+                    public void onTrackDeleted() {
+                        Track t = track.getTrack();
+                        t.setDeleted(true);
+
+                        updateTrackDataFromEverywhere(t);
+                        CloudinaryManager.getInstance(MainActivity.this).deleteCoverImage(t.getThumbnail(),true);
+                    }
+
+                    @Override
+                    public void onFailure(Throwable throwable) {
+                        Log.d(TAG, "onFailure: CANT DELETE TRACK!");
+                    }
+                });
+
                 break;
             case "edit":
                 Log.d(TAG, "onButtonClicked: EDIT");

@@ -77,6 +77,8 @@ public class CloudinaryManager extends AppCompatActivity {
     }
 
     public synchronized void deleteCoverImage(String fileUri ,boolean isTrack){
+        if(fileUri == null) return;
+
         Log.d(TAG, "DELETING CoverImage FILE WITH URI: \'" + fileUri + "\'");
 
         Map<String, Object> options = new HashMap<>();

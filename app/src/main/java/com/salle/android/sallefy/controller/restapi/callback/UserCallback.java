@@ -16,4 +16,5 @@ public interface UserCallback extends FailureCallback {
     void onUsersFailure(Throwable throwable);
     void onMeFollowingsReceived(List<UserPublicInfo> users);
     void onIsFollowingResponseReceived(String login, Boolean isFollowed);
+    void onUpdateUser();
 }

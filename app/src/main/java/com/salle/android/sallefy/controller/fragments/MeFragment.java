@@ -1,7 +1,10 @@
 package com.salle.android.sallefy.controller.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,24 +12,38 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.activities.SettingsActivity;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
+import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
+import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
+import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.model.User;
+import com.salle.android.sallefy.model.UserPublicInfo;
+import com.salle.android.sallefy.model.UserToken;
+import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
+import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MeFragment extends Fragment {
+public class MeFragment extends Fragment implements UserCallback, UploadCallback {
 
 	public static final String TAG = MeFragment.class.getName();
 
@@ -39,6 +56,16 @@ public class MeFragment extends Fragment {
     }
 
 	private static AdapterClickCallback adapterClickCallback;
+    private CircleImageView user_img;
+    private boolean profileImageChoosen;
+    private String mLoginName;
+	private User mUser;
+
+    // Url file
+    private Uri mUri;
+
+    // String profile image name
+    private String mFilename;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
 	}
@@ -52,9 +79,16 @@ public class MeFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_me, container, false);
-		initViews(v);
+		mLoginName = PreferenceUtils.getUser(v.getContext());
+		initLogic();
+        initViews(v);
         return v;
     }
+
+	private void initLogic() {
+		profileImageChoosen = false;
+		mUser = Session.getInstance(getContext()).getUser();
+	}
 
 	private void initViews(View v) {
 
@@ -62,6 +96,7 @@ public class MeFragment extends Fragment {
 		Button users = (Button) v.findViewById(R.id.action_me_users);
 		Button songs = (Button) v.findViewById(R.id.action_me_songs);
 		Button playlists = (Button) v.findViewById(R.id.action_me_playlists);
+		user_img = v.findViewById(R.id.user_img);
 
 		Fragment fragmentMeUsers = new MeUserFragment();
 		MeUserFragment.setAdapterClickCallback(adapterClickCallback);
@@ -70,9 +105,7 @@ public class MeFragment extends Fragment {
 
 		changePhoto.setOnClickListener(new View.OnClickListener() {
 			@Override
-			public void onClick(View view) {
-				//TODO Hacer el cambio de foto de usuario
-			}
+			public void onClick(View view) { chooseProfileImage(); }
 		});
 
 		users.setOnClickListener(new View.OnClickListener() {
@@ -141,10 +174,24 @@ public class MeFragment extends Fragment {
 
 		CircleImageView user_img = v.findViewById(R.id.user_img);
 
+//        Glide.with(
+//                getActivity()
+//                        .getApplicationContext())
+//                .load(mUser.getImageUrl().toString())
+//                .centerCrop()
+//                .override(400,400)
+//                .placeholder(R.drawable.user_default_image)
+//                .into(user_img);
 
-		//TODO poner imagen real usuario
 		TextView user_name = v.findViewById(R.id.user_name);
-		user_name.setText(PreferenceUtils.getUser(v.getContext()));
+		user_name.setText(mLoginName);
+	}
+
+	private void chooseProfileImage(){
+		Intent intent = new Intent();
+		intent.setAction(Intent.ACTION_GET_CONTENT);
+		intent.setType("image/*");
+		startActivityForResult(Intent.createChooser(intent, "Choose a cover image"), Constants.STORAGE.IMAGE_SELECTED);
 	}
 
 	public void updateSongInfo(Track track){
@@ -167,4 +214,114 @@ public class MeFragment extends Fragment {
     public void onDestroy() {
         super.onDestroy();
     }
+
+	@Override
+	public void onLoginSuccess(UserToken userToken) {
+
+	}
+
+	@Override
+	public void onLoginFailure(Throwable throwable) {
+
+	}
+
+	@Override
+	public void onRegisterSuccess() {
+
+	}
+
+	@Override
+	public void onRegisterFailure(Throwable throwable) {
+
+	}
+
+
+
+	@Override
+	public void onUsersReceived(List<User> users) {
+
+	}
+
+	@Override
+	public void onUsersFailure(Throwable throwable) {
+
+	}
+
+	@Override
+	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
+
+	}
+
+	@Override
+	public void onUserInfoReceived(User userData) {
+
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == Constants.STORAGE.IMAGE_SELECTED && resultCode == Activity.RESULT_OK){
+			mUri = data.getData();
+			Glide.with(getActivity().getApplicationContext())
+					.load(mUri.toString())
+					.centerCrop()
+					.override(100,100)
+					.placeholder(R.drawable.user_default_image)
+					.into(user_img);
+
+            profileImageChoosen = true;
+            uploadProfileImage();
+		}
+	}
+
+	private void uploadProfileImage() {
+	    if (profileImageChoosen){
+		    CloudinaryManager.getInstance(this.getContext()).uploadCoverImage(Constants.STORAGE.USER_PICTURE_FOLDER, mUri, mLoginName, MeFragment.this);
+        }
+
+	}
+
+	@Override
+	public void onIsFollowingResponseReceived(String login, Boolean isFollowed) {
+
+	}
+
+	@Override
+	public void onUpdateUser() {
+
+	}
+
+	@Override
+	public void onFailure(Throwable throwable) {
+
+	}
+
+	@Override
+	public void onStart(String requestId) {
+
+	}
+
+	@Override
+	public void onProgress(String requestId, long bytes, long totalBytes) {
+
+	}
+
+	@Override
+	public void onSuccess(String requestId, Map resultData) {
+        if (profileImageChoosen){
+            mUser.setImageUrl((String)resultData.get("url"));
+            UserManager.getInstance(getActivity()).updateProfile(mUser, MeFragment.this);
+            profileImageChoosen = false;
+        }
+	}
+
+	@Override
+	public void onError(String requestId, ErrorInfo error) {
+
+	}
+
+	@Override
+	public void onReschedule(String requestId, ErrorInfo error) {
+
+	}
 }

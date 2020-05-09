@@ -39,4 +39,8 @@ public interface UserService {
 
     @GET("users/{login}/follow")
     Call<Follow> isFollowingUser(@Path("login") String userLogin, @Header("Authorization") String token);
+
+    @POST("account")
+    Call<ResponseBody> updateProfile(@Body User user, @Header("Authorization") String token);
+
 }

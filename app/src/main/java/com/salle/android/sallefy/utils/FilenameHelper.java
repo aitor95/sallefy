@@ -36,9 +36,11 @@ public class FilenameHelper {
     }
 
     private static String removeTail(String in){
-        if (in.indexOf(".") > 0)
-            return in.substring(0, in.lastIndexOf("."));
-        return in;
+        String inn = in.replace("&","").replace("#","");
+
+        if (inn.indexOf(".") > 0)
+            return inn.substring(0, inn.lastIndexOf("."));
+        return inn;
     }
 
     public static String extractPublicIdFromUri(String fileUri) {

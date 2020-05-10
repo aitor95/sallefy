@@ -65,18 +65,17 @@ public class AddSongsToPlayListAdapter extends RecyclerView.Adapter<AddSongsToPl
             holder.author.setText(track.getUserLogin());
             holder.id = track.getId();
 
+            holder.mLayout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    holder.checkBox.setChecked(!holder.checkBox.isChecked());
+                    selectCheckbox(holder, track);
+                }
+            });
+
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view) {
-                    if (holder.checkBox.isChecked()) {
-                        mSelectedTracks.add(track);
-                        holder.checkBox.setChecked(true);
-
-                    } else {
-                        mSelectedTracks.remove(track);
-                        holder.checkBox.setChecked(false);
-                    }
-                }
+                public void onClick(View view) { selectCheckbox(holder, track);}
             });
 
             Glide.with(mContext)
@@ -120,7 +119,16 @@ public class AddSongsToPlayListAdapter extends RecyclerView.Adapter<AddSongsToPl
         ((Activity)mContext).startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDIT);
     }
 
+    void selectCheckbox(ViewHolder holder, Track track){
+        if (holder.checkBox.isChecked()) {
+            mSelectedTracks.add(track);
+            holder.checkBox.setChecked(true);
 
+        } else {
+            mSelectedTracks.remove(track);
+            holder.checkBox.setChecked(false);
+        }
+    }
 
 
     @Override

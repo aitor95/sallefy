@@ -163,9 +163,6 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 		for (int i = 0; i < tracks.size(); i++){
 			if (!("" + tracks.get(i).getReleased()).equals("null")) {
-				if(tracks.get(i).getUserLogin().equals("alexinter")){
-					System.out.println("aqui");
-				}
 				for (int j = 0; j < this.mFollowing.size(); j++) {
 					if (tracks.get(i).getUser().getLogin().equals(this.mFollowing.get(j).getLogin())){
 						mTracks.add(tracks.get(i));

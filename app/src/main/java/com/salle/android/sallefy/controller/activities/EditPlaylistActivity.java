@@ -73,12 +73,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         mNav = (ImageButton) findViewById(R.id.edit_playlist_nav);
         mNav.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                //We return the edited playlist to PlaylistActivity
-                Intent data = new Intent();
-                data.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
-                setResult(RESULT_OK, data);
-                finish(); }
+            public void onClick(View v) { exitEditing(); }
         });
 
         mImg.setOnClickListener(new View.OnClickListener() {
@@ -138,6 +133,18 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         intent.setType("image/*");
         startActivityForResult(Intent.createChooser(intent, "Choose a cover image"), Constants.STORAGE.IMAGE_SELECTED);
     }
+
+    private void exitEditing(){
+        //We return the edited playlist to PlaylistActivity
+        Intent data = new Intent();
+        data.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+
+    @Override
+    public void onBackPressed() { exitEditing(); }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

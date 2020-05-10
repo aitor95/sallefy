@@ -21,6 +21,7 @@ import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
@@ -33,6 +34,9 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	public static final String TAG = MeSongFragment.class.getName();
 	private static final int EXTRA_NEW_SONG_CODE = 98;
 
+	private final User mUser;
+	private boolean isOwner;
+
 	private RecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
 
@@ -42,7 +46,12 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	private static AdapterClickCallback adapterClickCallback;
 	private boolean tracksAvailable;
 
-	public static void setAdapterClickCallback(AdapterClickCallback callback){
+	public MeSongFragment(User mUser, boolean isOwner) {
+		this.mUser = mUser;
+		this.isOwner = isOwner;
+	}
+
+    public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
 	}
 
@@ -70,10 +79,15 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 		mRecyclerView.setAdapter(adapter);
 
 		Button addNew = v.findViewById(R.id.add_new_btn);
-		addNew.setOnClickListener(view -> {
-			Intent intent = new Intent(getContext(), UploadSongActivity.class);
-			startActivityForResult(intent, EXTRA_NEW_SONG_CODE);
-		});
+		if(isOwner) {
+			addNew.setVisibility(View.VISIBLE);
+			addNew.setOnClickListener(view -> {
+				Intent intent = new Intent(getContext(), UploadSongActivity.class);
+				startActivityForResult(intent, EXTRA_NEW_SONG_CODE);
+			});
+		}else{
+			addNew.setVisibility(View.GONE);
+		}
 	}
 
 
@@ -91,7 +105,10 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	private void showInformativeMessageIfNecessary(ArrayList<Track> tracks) {
 		TextView text = v.findViewById(R.id.me_text_error);
 		if(tracks.isEmpty()){
-			text.setText(R.string.NoContentAvailableMeSongs);
+			if(isOwner)
+				text.setText(R.string.NoContentAvailableMeSongs);
+			else
+				text.setText(R.string.User_has_no_songs);
 		}else{
 			text.setText(null);
 		}
@@ -99,7 +116,10 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 
 
 	private void getData() {
-		TrackManager.getInstance(getActivity()).getOwnTracks(this);
+		if(isOwner)
+			TrackManager.getInstance(getActivity()).getOwnTracks(this);
+		else
+			TrackManager.getInstance(getActivity()).getUserTracks(mUser.getLogin(),this);
 		mTracks = new ArrayList<>();
 	}
 
@@ -140,7 +160,10 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 
 	@Override
 	public void onUserTracksReceived(List<Track> tracks) {
-
+		mTracks = (ArrayList<Track>) tracks;
+		showInformativeMessageIfNecessary((ArrayList<Track>) tracks);
+		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
+		mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override

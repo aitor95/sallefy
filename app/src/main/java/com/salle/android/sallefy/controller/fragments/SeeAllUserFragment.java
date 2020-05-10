@@ -131,6 +131,11 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	}
 
 	@Override
+	public void onMeFollowersReceived(List<UserPublicInfo> body) {
+
+	}
+
+	@Override
 	public void onFailure(Throwable throwable) {
 
 	}

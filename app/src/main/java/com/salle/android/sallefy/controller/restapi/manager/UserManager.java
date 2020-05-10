@@ -177,7 +177,7 @@ public class UserManager {
 
                 int code = response.code();
                 if (response.isSuccessful()) {
-                    userFollowCallback.onFollowSuccess(userLogin);
+                    userFollowCallback.onFollowUnfollowSuccess(userLogin);
                 } else {
                     try {
                         userFollowCallback.onFailure(new Throwable("ERROR " + code + ", " + response.errorBody().string()));
@@ -289,6 +289,25 @@ public class UserManager {
         });
     }
 
+    public synchronized void getMeFollowers (final UserCallback userCallback) {
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+        Call<List<UserPublicInfo>> call = mService.getMeFollowers( "Bearer " + userToken.getIdToken());
 
+        call.enqueue(new Callback<List<UserPublicInfo>>() {
+            @Override
+            public void onResponse(Call<List<UserPublicInfo>> call, Response<List<UserPublicInfo>> response) {
 
+                if (response.isSuccessful()) {
+                    userCallback.onMeFollowersReceived(response.body());
+                } else {
+                    userCallback.onUsersFailure(new Throwable());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<UserPublicInfo>> call, Throwable t) {
+                userCallback.onFailure(t);
+            }
+        });
+    }
 }

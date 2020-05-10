@@ -31,7 +31,6 @@ import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.utils.Constants;
-import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
@@ -43,10 +42,10 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MeFragment extends Fragment implements UserCallback, UploadCallback {
 
 	public static final String TAG = MeFragment.class.getName();
+	public static final String TAG_CONTENT = MeFragment.class.getName();
 
 	private MePlaylistFragment fragmentMePlaylists;
 	private MeSongFragment fragmentMeSongs;
-
 
 	public static MeFragment getInstance() {
         return new MeFragment();
@@ -54,15 +53,17 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 
 	private static AdapterClickCallback adapterClickCallback;
     private CircleImageView user_img;
-    private boolean profileImageChoosen;
-    private String mLoginName;
+	private TextView followers;
+	private TextView following;
+
+	private boolean profileImageChoosen;
+
 	private User mUser;
+	private boolean isOwner;
 
     // Url file
     private Uri mUri;
 
-    // String profile image name
-    private String mFilename;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
 	}
@@ -76,34 +77,38 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_me, container, false);
-		mLoginName = PreferenceUtils.getUser(v.getContext());
-		initLogic();
+
+		mUser = (User) getArguments().getSerializable(TAG_CONTENT);
+
+		User localUser = Session.getInstance(getContext()).getUser();
+
+		isOwner = (mUser == localUser);
+
+		profileImageChoosen = false;
         initViews(v);
+
         return v;
     }
 
-	private void initLogic() {
-		profileImageChoosen = false;
-		mUser = Session.getInstance(getContext()).getUser();
-	}
-
 	private void initViews(View v) {
 
-    	ImageButton changePhoto = (ImageButton) v.findViewById(R.id.action_change_photo);
 		Button users = (Button) v.findViewById(R.id.action_me_users);
 		Button songs = (Button) v.findViewById(R.id.action_me_songs);
 		Button playlists = (Button) v.findViewById(R.id.action_me_playlists);
+
+		following = v.findViewById(R.id.me_number_following);
+		followers = v.findViewById(R.id.me_number_followers);
+
+		followers.setText(String.valueOf( mUser.getFollowers()));
+		followers.setText(String.valueOf( mUser.getFollowing()));
+
+
 		user_img = v.findViewById(R.id.user_img);
 
-		Fragment fragmentMeUsers = new MeUserFragment();
+		Fragment fragmentMeUsers = new MeUserFragment(mUser,isOwner);
 		MeUserFragment.setAdapterClickCallback(adapterClickCallback);
 		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 		transaction.add(R.id.me_fragment_container, fragmentMeUsers).commit();
-
-		changePhoto.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View view) { chooseProfileImage(); }
-		});
 
 		users.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -117,7 +122,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 				playlists.setBackgroundResource(0);
 
 				// FRAGMENT INTO FRAGMENT
-				Fragment fragmentMeUsers = new MeUserFragment();
+				Fragment fragmentMeUsers = new MeUserFragment(mUser, isOwner);
 				MeUserFragment.setAdapterClickCallback(adapterClickCallback);
 				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 				transaction.add(R.id.me_fragment_container, fragmentMeUsers).commit();
@@ -136,7 +141,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 				playlists.setBackgroundResource(0);
 
 				// FRAGMENT INTO FRAGMENT
-				fragmentMeSongs = new MeSongFragment();
+				fragmentMeSongs = new MeSongFragment(mUser,isOwner);
 				MeSongFragment.setAdapterClickCallback(adapterClickCallback);
 				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 				transaction.add(R.id.me_fragment_container, fragmentMeSongs).commit();
@@ -155,7 +160,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 				playlists.setBackgroundResource(R.drawable.round_corner_light);
 
 				// FRAGMENT INTO FRAGMENT
-				fragmentMePlaylists = new MePlaylistFragment();
+				fragmentMePlaylists = new MePlaylistFragment(mUser,isOwner);
 				MePlaylistFragment.setAdapterClickCallback(adapterClickCallback);
 				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 				transaction.add(R.id.me_fragment_container, fragmentMePlaylists).commit();
@@ -163,18 +168,12 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 			}
 		});
 
-		ImageView configButton = v.findViewById(R.id.config_button);
-		configButton.setOnClickListener(view -> {
-			Intent intent = new Intent(getContext(), SettingsActivity.class);
-			startActivity(intent);
-		});
-
 		CircleImageView user_img = v.findViewById(R.id.user_img);
 
 		if (!mUser.getImageUrl().isEmpty()){
 			Glide.with(
 					getActivity()
-							.getApplicationContext())
+					.getApplicationContext())
 					.load(mUser.getImageUrl().toString())
 					.centerCrop()
 					.override(400,400)
@@ -182,10 +181,41 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 					.into(user_img);
 		}
 
-
 		TextView user_name = v.findViewById(R.id.user_name);
-		user_name.setText(mLoginName);
+		user_name.setText(mUser.getLogin());
+
+		ImageView configButton = v.findViewById(R.id.config_button);
+		ImageButton changePhoto = (ImageButton) v.findViewById(R.id.action_change_photo);
+
+		if(isOwner) {
+
+			configButton.setOnClickListener(view -> {
+				Intent intent = new Intent(getContext(), SettingsActivity.class);
+				startActivity(intent);
+			});
+
+			changePhoto.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View view) {
+					chooseProfileImage();
+				}
+			});
+		}else{
+			configButton.setVisibility(View.GONE);
+			changePhoto.setVisibility(View.GONE);
+		}
 	}
+
+
+	public static MeFragment newInstance(User user) {
+		MeFragment fragment = new MeFragment();
+		Bundle bundle = new Bundle();
+		bundle.putSerializable(TAG_CONTENT, user);
+		fragment.setArguments(bundle);
+
+		return fragment;
+	}
+
 
 	private void chooseProfileImage(){
 		Intent intent = new Intent();
@@ -202,20 +232,6 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 		fragmentMePlaylists.updateInfo(playlists);
 	}
 
-    @Override
-    public void onResume() { super.onResume(); }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
-
 	@Override
 	public void onUsersReceived(List<User> users) {
 
@@ -228,7 +244,10 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 
 	@Override
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
+	}
 
+	@Override
+	public void onMeFollowersReceived(List<UserPublicInfo> users) {
 	}
 
 	@Override
@@ -249,10 +268,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 	}
 
 	private void uploadProfileImage() {
-	    if (profileImageChoosen){
-		    CloudinaryManager.getInstance(this.getContext()).uploadCoverImage(Constants.STORAGE.USER_PICTURE_FOLDER, mUri, mLoginName, MeFragment.this);
-        }
-
+		CloudinaryManager.getInstance(this.getContext()).uploadCoverImage(Constants.STORAGE.USER_PICTURE_FOLDER, mUri, mUser.getLogin(), MeFragment.this);
 	}
 
 	@Override
@@ -265,10 +281,12 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 
 	}
 
+
 	@Override
 	public void onFailure(Throwable throwable) {
 
 	}
+
 
 	@Override
 	public void onStart(String requestId) {

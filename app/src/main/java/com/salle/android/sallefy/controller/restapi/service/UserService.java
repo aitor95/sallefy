@@ -31,9 +31,6 @@ public interface UserService {
     @POST("register")
     Call<ResponseBody> registerUser(@Body UserRegister user);
 
-    @GET("me/followings")
-    Call<List<UserPublicInfo>> getMeFollowings(@Header("Authorization") String token);
-
     @PUT("users/{login}/follow")
     Call<ResponseBody> followUser(@Path("login") String userLogin, @Body Boolean isFollowing, @Header("Authorization") String token);
 
@@ -43,4 +40,9 @@ public interface UserService {
     @POST("account")
     Call<ResponseBody> updateProfile(@Body User user, @Header("Authorization") String token);
 
+    @GET("me/followings")
+    Call<List<UserPublicInfo>> getMeFollowings(@Header("Authorization") String token);
+
+    @GET("me/followers")
+    Call<List<UserPublicInfo>> getMeFollowers(@Header("Authorization") String token);
 }

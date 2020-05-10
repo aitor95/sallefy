@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,9 +35,17 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	private View v;
 
+	private User mUser;
+	private boolean isOwner;
+
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
+	}
+
+	public MeUserFragment(User user, boolean isOwner){
+		mUser = user;
+		this.isOwner = isOwner;
 	}
 
 	@Override
@@ -48,8 +57,14 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		v = inflater.inflate(R.layout.fragment_me_lists_users, container, false);
-		TextView text = v.findViewById(R.id.me_text_error);
-		text.setText(R.string.LoadingMe);
+        TextView text = v.findViewById(R.id.me_text_error);
+		if(isOwner)
+		    text.setText(R.string.LoadingMe);
+        else{
+            text.setText("Backend doesn't provide this information for the moment");
+        }
+		Log.d("TEST", "onCreateView: User is "+ mUser.getLogin());
+
 		initViews(v);
 		getData();
 		return v;
@@ -67,8 +82,8 @@ public class MeUserFragment extends Fragment implements UserCallback {
 		mUsers = new ArrayList<>();
 		mUsersPublic = new ArrayList<>();
 		mUsersFollowed = new ArrayList<>();
-		UserManager.getInstance(getContext()).getMeFollowing(this);
-
+        if(isOwner)
+		    UserManager.getInstance(getContext()).getMeFollowing(this);
 	}
 
 	@Override
@@ -123,6 +138,11 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onUpdateUser() {
+
+	}
+
+	@Override
+	public void onMeFollowersReceived(List<UserPublicInfo> body) {
 
 	}
 

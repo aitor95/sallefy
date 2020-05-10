@@ -109,7 +109,7 @@ public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapte
 
 
     @Override
-    public void onFollowSuccess(String userLogin) {
+    public void onFollowUnfollowSuccess(String userLogin) {
         for(User currUser : mUsers){
             if(currUser.getLogin().equals(userLogin)){
                 currUser.setFollowedByUser(!currUser.getFollowedByUser());

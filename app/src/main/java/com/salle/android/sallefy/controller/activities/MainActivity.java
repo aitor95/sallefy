@@ -86,6 +86,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     private TextView repSongTitle;
     private CircleImageView repImgUsr;
 
+    private boolean isMeUserTheOwner ;
 
     //Gesture detector.
     private GestureDetectorCompat detector;
@@ -182,6 +183,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
         startStreamingService();
 
+        isMeUserTheOwner = false;
         backButtonLastPressTime = 0;
         backButtonPressed = false;
         initViews();
@@ -273,7 +275,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         me.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                enterMeFragment();
+                enterMeFragmentOfOwner();
             }
         });
 
@@ -309,15 +311,32 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         replaceFragment(fragment);
     }
 
-    private void enterMeFragment() {
+    private void enterMeFragmentOfOwner() {
         social.setTextAppearance(R.style.BottomNavigationView);
         me.setTextAppearance(R.style.BottomNavigationView_Active);
         home.setTextAppearance(R.style.BottomNavigationView);
         search.setImageResource(R.drawable.ic_search);
 
-        Fragment fragment = MeFragment.getInstance();
+        Fragment fragment = MeFragment.newInstance(Session.getInstance(MainActivity.this).getUser());
         MeFragment.setAdapterClickCallback(this);
         replaceFragment(fragment);
+    }
+
+    private void enterMeFragmentOfOtherUser(User user){
+        isMeUserTheOwner = false;
+        social.setTextAppearance(R.style.BottomNavigationView);
+        me.setTextAppearance(R.style.BottomNavigationView);
+        home.setTextAppearance(R.style.BottomNavigationView);
+        search.setImageResource(R.drawable.ic_search);
+
+        Fragment fragment = MeFragment.newInstance(user);
+        MeFragment.setAdapterClickCallback(this);
+
+        tagFragmentActivado = MeFragment.TAG;
+        mFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment,  MeFragment.TAG)
+            //.addToBackStack(null)
+            .commit();
     }
 
     private void enterSearchFragment() {
@@ -350,18 +369,23 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
         String fragmentTag = getFragmentTag(fragment);
         tagFragmentActivado = fragmentTag;
+
         Fragment currentFragment = mFragmentManager.findFragmentByTag(fragmentTag);
+
         if (currentFragment != null) {
-            if (!currentFragment.isVisible()) {
+            if (!currentFragment.isVisible() || (currentFragment.getTag() != null && currentFragment.getTag().equalsIgnoreCase(MeFragment.TAG))) {
 
                 if (fragment.getArguments() != null) {
                     currentFragment.setArguments(fragment.getArguments());
                 }
-                mFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, currentFragment, fragmentTag)
-                        //.addToBackStack(null)
-                        .commit();
 
+                if(!isMeUserTheOwner) {
+                    mFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment, fragmentTag)
+                            //.addToBackStack(null)
+                            .commit();
+                    isMeUserTheOwner = true;
+                }
             }
         } else {
             mFragmentManager.beginTransaction()
@@ -432,8 +456,15 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(intent);
             } else {
-                Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
-                backButtonPressed = true;
+                if(!isMeUserTheOwner) {
+                    //Miramos si el usuario esta en me.
+                    if(tagFragmentActivado.equals(MeFragment.TAG)){
+                        enterMeFragmentOfOwner();
+                    }
+                }else {
+                    Toast.makeText(this, "Press the back button once again to close the application.", Toast.LENGTH_SHORT).show();
+                    backButtonPressed = true;
+                }
             }
         } else {
             getSupportFragmentManager().popBackStack();
@@ -467,12 +498,12 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                         enterHomeFragment();
                         rtn = true;
                     } else if(direction == OnSwipeListener.Direction.left) {
-                        enterMeFragment();
+                        enterMeFragmentOfOwner();
                         rtn = true;
                     }
                 } else {
                     if(direction == OnSwipeListener.Direction.right) {
-                        enterMeFragment();
+                        enterMeFragmentOfOwner();
                         rtn = true;
                     }
                 }
@@ -512,6 +543,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     @Override
     public void onUserClick(User user) {
         Log.d(TAG, "onUserClick: User name is " + user.getLogin());
+        enterMeFragmentOfOtherUser(user);
     }
 
     @Override

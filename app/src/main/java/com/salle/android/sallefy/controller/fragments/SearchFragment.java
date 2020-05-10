@@ -355,6 +355,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     }
 
+    @Override
+    public void onMeFollowersReceived(List<UserPublicInfo> body) {
+
+    }
+
     /**********************************************************************************************
      *   *   *   *   *   *   *   *   GenreCallback   *   *   *   *   *   *   *   *   *
      **********************************************************************************************/

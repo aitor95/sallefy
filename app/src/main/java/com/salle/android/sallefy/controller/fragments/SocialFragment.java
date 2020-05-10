@@ -142,6 +142,11 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	}
 
 	@Override
+	public void onMeFollowersReceived(List<UserPublicInfo> body) {
+
+	}
+
+	@Override
 	public void onTracksReceived(List<Track> tracks) {
 
 		int newSongs = 0;

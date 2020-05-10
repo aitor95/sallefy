@@ -23,7 +23,8 @@ import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
-import com.salle.android.sallefy.utils.PreferenceUtils;
+import com.salle.android.sallefy.model.User;
+import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
 
@@ -33,6 +34,8 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
 	public static final String TAG = MePlaylistFragment.class.getName();
 	public static final int EXTRA_NEW_PLAYLIST_CODE = 99;
+	private final boolean isOwner;
+	private final User mUser;
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<Playlist> mPlaylists;
@@ -44,7 +47,13 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
 
 	private static AdapterClickCallback adapterClickCallback;
-	public static void setAdapterClickCallback(AdapterClickCallback callback){
+
+	public MePlaylistFragment(User mUser, boolean isOwner) {
+		this.mUser = mUser;
+		this.isOwner = isOwner;
+	}
+
+    public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
 	}
 
@@ -74,14 +83,23 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		mRecyclerView.setAdapter(mAdapter);
 
 		Button addNew = v.findViewById(R.id.me_add_new_playlist);
-		addNew.setOnClickListener(view -> {
-			Intent intent = new Intent(getContext(), NewPlaylistActivity.class);
-			startActivityForResult(intent, EXTRA_NEW_PLAYLIST_CODE);
-		});
+		if(isOwner) {
+			addNew.setVisibility(View.VISIBLE);
+			addNew.setOnClickListener(view -> {
+				Intent intent = new Intent(getContext(), NewPlaylistActivity.class);
+				startActivityForResult(intent, EXTRA_NEW_PLAYLIST_CODE);
+			});
+		}else{
+			addNew.setVisibility(View.GONE);
+		}
 	}
 
 	private void getData(View v) {
-		PlaylistManager.getInstance(getActivity()).getPlaylistsByUser(PreferenceUtils.getUser(v.getContext()),this);
+		if(isOwner){
+			PlaylistManager.getInstance(getActivity()).getPlaylistsByUser(Session.getInstance(getContext()).getUser().getLogin(),this);
+		}else{
+			PlaylistManager.getInstance(getActivity()).getPlaylistsByUser(mUser.getLogin(),this);
+		}
 		mPlaylists = new ArrayList<>();
 	}
 

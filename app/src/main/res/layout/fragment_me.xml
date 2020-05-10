@@ -78,6 +78,30 @@
             android:src="@drawable/ic_settings_black_24dp"
             android:textAppearance="@style/username_me_text" />
 
+        <TextView
+            android:id="@+id/me_number_followers"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/config_button"
+            android:layout_centerVertical="true"
+            android:includeFontPadding="false"
+            android:scaleType="fitXY"
+            android:text="0"
+            android:textAppearance="@style/username_me_text" />
+
+        <TextView
+            android:id="@+id/me_number_following"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/me_number_followers"
+            android:layout_centerVertical="true"
+            android:includeFontPadding="false"
+            android:scaleType="fitXY"
+            android:text="0"
+            android:textAppearance="@style/username_me_text" />
+
 
     </RelativeLayout>
 

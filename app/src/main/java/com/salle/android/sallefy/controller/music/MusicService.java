@@ -116,6 +116,10 @@ public class MusicService extends Service {
         return mPlaylist;
     }
 
+    public boolean hasTrack() {
+        return false;
+    }
+
     public class MusicBinder extends Binder {
         public MusicService getService(){
             return MusicService.this;

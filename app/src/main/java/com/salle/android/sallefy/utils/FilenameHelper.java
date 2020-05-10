@@ -36,7 +36,11 @@ public class FilenameHelper {
     }
 
     private static String removeTail(String in){
-        String inn = in.replace("&","").replace("#","");
+        String inn = in.replace("&","")
+                .replace("#","")
+                .replace("/","")
+                .replace("$","")
+                .replace(".","");
 
         if (inn.indexOf(".") > 0)
             return inn.substring(0, inn.lastIndexOf("."));

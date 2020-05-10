@@ -638,7 +638,6 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
             updateTrackDataFromEverywhere(track);
 
-
         }else{
             if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
                 ArrayList<Playlist> mUpdatedPlaylists = (ArrayList<Playlist>) data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE);
@@ -659,7 +658,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     }
 
     private void updateTrackDataFromEverywhere(Track track) {
-        if(mBoundService.isPlaying()) {
+        if(mBoundService.hasTrack()) {
             if (mBoundService.getCurrentTrack().getId() == track.getId().intValue() && track.isDeleted()) {
                 linearLayoutMiniplayer.setVisibility(View.GONE);
                 mBoundService.playlistOrSongDeleted();

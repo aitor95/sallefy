@@ -18,7 +18,6 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 
 public class AddToPlayListAdapter extends RecyclerView.Adapter<AddToPlayListAdapter.ViewHolder> {
@@ -61,14 +60,18 @@ public class AddToPlayListAdapter extends RecyclerView.Adapter<AddToPlayListAdap
             holder.checkBox.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if (holder.checkBox.isChecked()) {
-                        mSelectedPlaylists.add(playlist);
-                        holder.checkBox.setChecked(true);
+                    selectCheckbox(holder,playlist);
 
-                    } else {
-                        mSelectedPlaylists.remove(playlist);
-                        holder.checkBox.setChecked(false);
-                    }
+                }
+            });
+
+            holder.mLayout.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View v) {
+                    holder.checkBox.setChecked(!holder.checkBox.isChecked());
+
+                    selectCheckbox(holder,playlist);
                 }
             });
 
@@ -102,6 +105,21 @@ public class AddToPlayListAdapter extends RecyclerView.Adapter<AddToPlayListAdap
             holder.mLayout.setOnClickListener(v -> { createPlaylist(); });
         }
     }
+
+
+
+    private void selectCheckbox(ViewHolder holder, Playlist playlist) {
+        if (holder.checkBox.isChecked()) {
+            mSelectedPlaylists.add(playlist);
+            holder.checkBox.setChecked(true);
+
+        } else {
+            mSelectedPlaylists.remove(playlist);
+            holder.checkBox.setChecked(false);
+        }
+    }
+
+
 
     void createPlaylist(){
         //Todo: Crear una nueva playlist.

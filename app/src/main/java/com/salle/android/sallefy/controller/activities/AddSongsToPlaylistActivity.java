@@ -24,6 +24,7 @@ import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +35,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     public static final String TAG = AddSongsToPlaylistActivity.class.getName();
 
-    private RecyclerView mAddSongToPlaylistRecyclerView;
+    private PaginatedRecyclerView mAddSongToPlaylistRecyclerView;
 
     private AddSongsToPlayListAdapter mAdapter;
 
@@ -49,8 +50,6 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     private ArrayList<Track> mTracks;
 
     //Pagination
-    private boolean isLoading = false;
-    private boolean isLast = false;
     private int currentPage = 0;
 
 
@@ -59,38 +58,17 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_songs_to_playlist);
-        mAddSongToPlaylistRecyclerView = (RecyclerView) findViewById(R.id.add_songs_to_playlist_recycler_view);
+        mAddSongToPlaylistRecyclerView = (PaginatedRecyclerView) findViewById(R.id.add_songs_to_playlist_recycler_view);
+        mAddSongToPlaylistRecyclerView.setListener(new PaginatedRecyclerView.PaginatedRecyclerViewListener() {
+            @Override
+            public void onPageLoaded() {
+                loadMoreItems();
+            }
+        });
         initViews();
     }
 
     private void initViews() {
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mAddSongToPlaylistRecyclerView.setLayoutManager(mLinearLayoutManager);
-        //Charge more songs
-        mAddSongToPlaylistRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-
-            }
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-                int visibleItemCount = mLinearLayoutManager.getChildCount();
-                int totalItemCount = mLinearLayoutManager.getItemCount();
-                int firstVisibleItemPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
-
-                if (!isLoading && !isLast) {
-                    if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-                            && firstVisibleItemPosition >= 0
-                            && totalItemCount >= PAGE_SIZE) {
-                        loadMoreItems();
-                    }
-                }
-            }
-
-        });
 
         mSelectedSongs = new ArrayList<>();
 
@@ -126,7 +104,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
 
     private void loadMoreItems() {
-        isLoading = true;
+        mAddSongToPlaylistRecyclerView.setLoading(true);
 
         currentPage += 1;
 
@@ -146,7 +124,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     private void checkExistingTracks(){
         if(this.mTracks.size() < PAGE_SIZE){
-            isLast = true;
+            mAddSongToPlaylistRecyclerView.setLast(true);
         }
 
         if(this.mPlaylist.getTracks()!=null){
@@ -163,7 +141,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
             }
         }
 
-        if(!isLast && this.mTracks.size() < PAGE_SIZE){
+        if(!mAddSongToPlaylistRecyclerView.isLast() && this.mTracks.size() < PAGE_SIZE){
             loadMoreItems();
         }
 
@@ -248,8 +226,8 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     @Override
     public void onTracksReceived(List<Track> tracks) {
         mTracks.addAll((ArrayList)tracks);
-        if(isLoading){
-            isLoading = false;
+        if(mAddSongToPlaylistRecyclerView.isLoading()){
+            mAddSongToPlaylistRecyclerView.setLoading(false);
             checkExistingTracks();
             mAdapter.notifyDataSetChanged();
         }else{

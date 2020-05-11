@@ -3,6 +3,8 @@ package com.salle.android.sallefy.controller.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -13,11 +15,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.adapters.GenresAdapter;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.dialogs.StateDialog;
 import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
@@ -25,7 +31,9 @@ import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.GenreManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Genre;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.FilenameHelper;
 
@@ -33,7 +41,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class EditSongActivity extends AppCompatActivity implements TrackCallback, UploadCallback, GenreCallback {
+public class EditSongActivity extends AppCompatActivity implements TrackCallback, UploadCallback, GenreCallback, AdapterClickCallback {
 
     public static final String TAG = EditSongActivity.class.getName();
 
@@ -64,14 +72,21 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     private ArrayList<Genre> mCurrentGenres;
     private PopupMenu mGenresMenu;
 
+    private GenresAdapter mGenresAdapter;
+    private RecyclerView mGenresView;
+
     //Dialogo para indicar el processo de carga.
     StateDialog stateDialog;
 
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_song);
+
         initLogic();
         initViews();
+
+        GenreManager.getInstance(this)
+                .getAllGenres(EditSongActivity.this);
     }
 
     private void initLogic() {
@@ -114,12 +129,16 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
             }
         });
 
+        AdapterClickCallback callback = this;
         mGenresMenu = new PopupMenu(this,mGenresBtn);
         mGenresMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 mCurrentGenres.add(mAPIGenres.get(item.getItemId()));
                 mGenresMenu.getMenu().removeItem(item.getItemId());
+
+                mGenresAdapter = new GenresAdapter(mCurrentGenres, callback, R.layout.item_genre);
+                mGenresView.setAdapter(mGenresAdapter);
                 return false;
             }
         });
@@ -136,6 +155,12 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
                 TrackManager.getInstance(EditSongActivity.this).deleteTrack(mTrack.getId(),EditSongActivity.this);
             }
         });
+
+        LinearLayoutManager managerGenres = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+        mGenresAdapter = new GenresAdapter(mCurrentGenres, this, R.layout.item_genre);
+        mGenresView = findViewById(R.id.edit_song_genre_list);
+        mGenresView.setLayoutManager(managerGenres);
+        mGenresView.setAdapter(mGenresAdapter);
     }
 
     private void initTrackInfo() {
@@ -289,14 +314,16 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     public void onGenresReceive(ArrayList<Genre> genres) {
         mAPIGenres = genres;
         for (int i = 0; i < genres.size(); i++) {
-            for (int j = 0; j < mCurrentGenres.size(); j++) {
-                if(!mCurrentGenres.get(j).getId().equals(mAPIGenres.get(i).getId())){
-                    mGenresMenu.getMenu().add(0, i, i, mAPIGenres.get(i).getName());
-                }
-            }
+            Boolean found = false;
+
+            for (int j = 0; j < mCurrentGenres.size(); j++)
+                if(mCurrentGenres.get(j).getName().equals(mAPIGenres.get(i).getName())) found = true;
+
+            if (!found) mGenresMenu.getMenu().add(0, i, i, mAPIGenres.get(i).getName());
         }
-        mGenresMenu.show();
+
         genresFetched = true;
+        //    mGenresMenu.show();
     }
 
     @Override
@@ -360,5 +387,31 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
         data.putExtra("audioSet", audioSet);
         setResult(RESULT_OK, data);
         finish();
+    }
+
+    @Override
+    public void onTrackClicked(Track track, Playlist playlist) {
+
+    }
+
+    @Override
+    public void onPlaylistClick(Playlist playlist) {
+
+    }
+
+    @Override
+    public void onUserClick(User user) {
+
+    }
+
+    @Override
+    public void onGenreClick(Genre genre) {
+        mCurrentGenres.remove(genre);
+        int index = -1;
+        for (int i = 0; i < mAPIGenres.size(); i++) if (genre.getName().equals(mAPIGenres.get(i).getName())) index = i;
+        mGenresMenu.getMenu().add(Menu.NONE, index, Menu.NONE, genre.getName());
+
+        mGenresAdapter = new GenresAdapter(mCurrentGenres, this, R.layout.item_genre);
+        mGenresView.setAdapter(mGenresAdapter);
     }
 }

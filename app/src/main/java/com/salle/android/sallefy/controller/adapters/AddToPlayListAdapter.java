@@ -1,6 +1,8 @@
 package com.salle.android.sallefy.controller.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +17,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.activities.NewPlaylistActivity;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -104,8 +108,8 @@ public class AddToPlayListAdapter extends RecyclerView.Adapter<AddToPlayListAdap
     }
 
     void createPlaylist(){
-        //Todo: Crear una nueva playlist.
-        Log.d(TAG, "createPlaylist: Creating playlist...");
+        Intent intent = new Intent(mContext, NewPlaylistActivity.class);
+        ((Activity)mContext).startActivityForResult(intent, Constants.EDIT_CONTENT.PLAYLIST_EDIT);
     }
 
     @Override

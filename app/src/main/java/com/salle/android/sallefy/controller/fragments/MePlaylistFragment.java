@@ -105,12 +105,18 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
 	public void updateInfo(ArrayList<Playlist> playlists){
 
+		boolean found = false;
+
 		for (int i = 0; i < playlists.size(); i++) {
+			found = false;
 			for (int j = 0; j < mPlaylists.size(); j++) {
 				if (mPlaylists.get(j).getId().intValue() == playlists.get(i).getId().intValue()) {
 						mPlaylists.set(j, playlists.get(i));
+						found = true;
 				}
 			}
+			if(!found) mPlaylists.add(playlists.get(i));
+
 		}
 
 		mPlaylists.removeIf(Playlist::isDeleted);

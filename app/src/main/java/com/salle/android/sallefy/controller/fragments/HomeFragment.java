@@ -90,7 +90,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
         seeAllPlaylists.setOnClickListener(view -> {
 
-            Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists);
+            Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists, true);
             SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
 
             FragmentManager manager_seeAll = getFragmentManager();
@@ -105,7 +105,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         TextView seeAllSongs = v.findViewById(R.id.SeeAllSearchedSongs);
         seeAllSongs.setOnClickListener(view -> {
 
-            Fragment fragment = SeeAllSongFragment.newInstance(tracks);
+            Fragment fragment = SeeAllSongFragment.newInstance(tracks, true);
             SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
             SeeAllSongFragment.setPlaylist(new Playlist((ArrayList<Track>) tracks));
             FragmentManager manager_seeAll = getFragmentManager();

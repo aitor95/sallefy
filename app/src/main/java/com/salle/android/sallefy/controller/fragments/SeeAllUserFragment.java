@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,18 +20,25 @@ import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
+import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+
+import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
 
 public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 	public static final String TAG = SeeAllUserFragment.class.getName();
 	public static final String TAG_CONTENT = SeeAllUserFragment.class.getName();
 
-	private RecyclerView mRecyclerView;
+	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<User> mUsers;
+
+	private UserVerticalAdapter mAdapter;
+
+	private int currentPage = 0;
 
 	private static AdapterClickCallback adapterClickCallback;
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -62,11 +70,15 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	}
 
 	private void initViews(View v) {
-		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
+		mRecyclerView = (PaginatedRecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		UserVerticalAdapter adapter = new UserVerticalAdapter(null,adapterClickCallback, getContext(), R.layout.item_user_vertical);
+		mAdapter = new UserVerticalAdapter(null,adapterClickCallback, getContext(), R.layout.item_user_vertical);
 		mRecyclerView.setLayoutManager(manager);
-		mRecyclerView.setAdapter(adapter);
+		mRecyclerView.setAdapter(mAdapter);
+		mRecyclerView.setListener(new PaginatedRecyclerView.PaginatedRecyclerViewListener() {
+			@Override
+			public void onPageLoaded() { loadMoreItems(); }
+		});
 
 		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
 			if (seeAllCallback != null) seeAllCallback.onSeeAllClosed();
@@ -89,18 +101,31 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 		return fragment;
 	}
 
+	private void loadMoreItems() {
+		mRecyclerView.setLoading(true);
+
+		currentPage += 1;
+
+		UserManager.getInstance(getActivity()).getUsersPagination(this, currentPage, 10);
+
+	}
+
 	private void getData() {
-		//TODO: cambiar por coger las listas que tocan
-		UserManager.getInstance(getActivity()).getUsers(this);
+		UserManager.getInstance(getActivity()).getUsersPagination(this, currentPage, 10);
 		mUsers = new ArrayList<>();
 	}
 
 	@Override
 	public void onUsersReceived(List<User> users) {
-		mUsers = (ArrayList<User>) users;
+		if(users.size() < PAGE_SIZE){
+			mRecyclerView.setLast(true);
+		}
+		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);
+		mUsers.addAll(users);
+		Parcelable parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
+		this.mAdapter.notifyDataSetChanged();
+		mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
 
-		//UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, getContext(), this, R.layout.item_user_vertical);
-		//mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override
@@ -116,8 +141,8 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
 		}
 
-		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers,adapterClickCallback, getContext(), R.layout.item_user_vertical);
-		mRecyclerView.setAdapter(adapter);
+		mAdapter = new UserVerticalAdapter(mUsers,adapterClickCallback, getContext(), R.layout.item_user_vertical);
+		mRecyclerView.setAdapter(mAdapter);
 	}
 
 	@Override

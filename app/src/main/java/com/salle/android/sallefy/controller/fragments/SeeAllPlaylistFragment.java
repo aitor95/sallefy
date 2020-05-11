@@ -30,13 +30,17 @@ import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
 public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback {
 
 	public static final String TAG = SeeAllPlaylistFragment.class.getName();
-	public static final String TAG_CONTENT = "TAG_LIST";
+	public static final String TAG_CONTENT_POPULAR = SeeAllPlaylistFragment.class.getName() + "_popular";
+	public static final String TAG_CONTENT_DATA = SeeAllPlaylistFragment.class.getName() + "_data";
+
 
 	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<Playlist> mPlaylists;
 
 	//Pagination
 	private int currentPage = 0;
+
+	private boolean popular;
 
 	private PlaylistListVerticalAdapter mAdapter;
 
@@ -66,17 +70,19 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 		View v = inflater.inflate(R.layout.fragment_see_all_playlists, container, false);
 		initViews(v);
 
-		mPlaylists = (ArrayList<Playlist>) getArguments().getSerializable(TAG_CONTENT);
+		mPlaylists = (ArrayList<Playlist>) getArguments().getSerializable(TAG_CONTENT_DATA);
+		popular = (boolean) getArguments().getSerializable(TAG_CONTENT_POPULAR);
 
 		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setAdapter(adapter);
 		return v;
 	}
 
-	public static SeeAllPlaylistFragment newInstance(ArrayList<Playlist> playlists) {
+	public static SeeAllPlaylistFragment newInstance(ArrayList<Playlist> playlists, boolean popular) {
 		SeeAllPlaylistFragment fragment = new SeeAllPlaylistFragment();
 		Bundle bundle = new Bundle();
-		bundle.putSerializable(TAG_CONTENT, playlists);
+		bundle.putSerializable(TAG_CONTENT_DATA, playlists);
+		bundle.putSerializable(TAG_CONTENT_POPULAR, popular);
 		fragment.setArguments(bundle);
 
 		return fragment;
@@ -111,7 +117,7 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 
 		currentPage += 1;
 
-		PlaylistManager.getInstance(getActivity()).getListOfPlaylistPagination(this, currentPage, 20, true);
+		PlaylistManager.getInstance(getActivity()).getListOfPlaylistPagination(this, currentPage, 20, popular);
 
 	}
 

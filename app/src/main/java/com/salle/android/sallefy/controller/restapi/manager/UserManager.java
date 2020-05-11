@@ -245,6 +245,26 @@ public class UserManager {
         });
     }
 
+    public synchronized void getUsersPagination (final UserCallback userCallback, int currentPage, int size) {
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+        Call<List<User>> call = mService.getAllUsersPagination( "Bearer " + userToken.getIdToken(), currentPage, size);
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+                if (response.isSuccessful()) {
+                    userCallback.onUsersReceived(response.body());
+                } else {
+                    userCallback.onUsersFailure(new Throwable());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                userCallback.onFailure(t);
+            }
+        });
+    }
+
     public synchronized void getUsersFragmentMe (final UserCallback userCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
         Call<List<User>> call = mService.getAllUsersMeFragment( "Bearer " + userToken.getIdToken(), 1000);

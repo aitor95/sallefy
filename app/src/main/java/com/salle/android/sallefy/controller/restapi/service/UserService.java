@@ -26,6 +26,9 @@ public interface UserService {
     Call<List<User>> getAllUsers(@Header("Authorization") String token);
 
     @GET("users")
+    Call<List<User>> getAllUsersPagination(@Header("Authorization") String token, @Query("page") int page, @Query("size") int size);
+
+    @GET("users")
     Call<List<User>> getAllUsersMeFragment(@Header("Authorization") String token, @Query("size") int size);
 
     @POST("register")

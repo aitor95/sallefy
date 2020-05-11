@@ -147,7 +147,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
         seeAllPlaylists.setOnClickListener(view -> {
-            Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists);
+            Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists, false);
 	        FragmentManager manager = getFragmentManager();
 
             SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
@@ -179,7 +179,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllTracks = v.findViewById(R.id.SeeAllSearchedSongs);
         seeAllTracks.setOnClickListener(view -> {
-            Fragment fragment = SeeAllSongFragment.newInstance(tracks);
+            Fragment fragment = SeeAllSongFragment.newInstance(tracks, false);
             FragmentManager manager = getFragmentManager();
 
             SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
@@ -252,7 +252,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         PlaylistManager.getInstance(getContext())
                 .getListOfPlaylist(this);
         UserManager.getInstance(getContext())
-                .getUsers(this);
+                .getUsersPagination(this, 0, 10);
         GenreManager.getInstance(getContext())
                 .getAllGenres(this);
         TrackManager.getInstance(getContext())

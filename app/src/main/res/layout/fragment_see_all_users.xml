@@ -44,7 +44,7 @@
     </LinearLayout>
 
 
-    <androidx.recyclerview.widget.RecyclerView
+    <com.salle.android.sallefy.utils.PaginatedRecyclerView
         android:id="@+id/dynamic_recyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"

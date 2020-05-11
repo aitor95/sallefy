@@ -31,7 +31,9 @@ import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
 public class SeeAllSongFragment extends Fragment implements TrackCallback {
 
 	public static final String TAG = SeeAllSongFragment.class.getName();
-	public static final String TAG_CONTENT = SeeAllSongFragment.class.getName();
+	public static final String TAG_CONTENT_POPULAR = SeeAllSongFragment.class.getName() + "_popular";
+	public static final String TAG_CONTENT_DATA = SeeAllSongFragment.class.getName() + "_data";
+
 
 	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList mTracks;
@@ -40,6 +42,8 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 
 	//Pagination
 	private int currentPage = 0;
+
+	private boolean popular;
 
 	private TrackListVerticalAdapter mAdapter;
 
@@ -72,7 +76,8 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		View v = inflater.inflate(R.layout.fragment_see_all_songs, container, false);
 		initViews(v);
 
-		mTracks = (ArrayList<Track>) getArguments().getSerializable(TAG_CONTENT);
+		popular = (boolean) getArguments().getSerializable(TAG_CONTENT_POPULAR);
+		mTracks = (ArrayList<Track>) getArguments().getSerializable(TAG_CONTENT_DATA);
 		mAdapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
 		mAdapter.setPlaylist(mPlaylist);
 		mRecyclerView.setAdapter(mAdapter);
@@ -103,10 +108,11 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		});
 	}
 
-	public static SeeAllSongFragment newInstance(ArrayList<Track> tracks) {
+	public static SeeAllSongFragment newInstance(ArrayList<Track> tracks, boolean popular) {
 		SeeAllSongFragment fragment = new SeeAllSongFragment();
 		Bundle bundle = new Bundle();
-		bundle.putSerializable(TAG_CONTENT, tracks);
+		bundle.putSerializable(TAG_CONTENT_DATA, tracks);
+		bundle.putSerializable(TAG_CONTENT_POPULAR, popular);
 		fragment.setArguments(bundle);
 
 		return fragment;
@@ -117,7 +123,7 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 
 		currentPage += 1;
 
-		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, false, true);
+		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, false, popular);
 
 	}
 

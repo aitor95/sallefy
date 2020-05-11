@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +16,29 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.callbacks.SeeAllCallback;
+import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
+import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
+import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-public class SeeAllPlaylistFragment extends Fragment {
+import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
+
+public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback {
 
 	public static final String TAG = SeeAllPlaylistFragment.class.getName();
 	public static final String TAG_CONTENT = "TAG_LIST";
 
-	private RecyclerView mRecyclerView;
+	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<Playlist> mPlaylists;
+
+	//Pagination
+	private int currentPage = 0;
+
+	private PlaylistListVerticalAdapter mAdapter;
 
 	private static SeeAllCallback seeAllCallback;
 	public static void setSeeAllCallback(SeeAllCallback seeAllC){
@@ -71,11 +83,15 @@ public class SeeAllPlaylistFragment extends Fragment {
 	}
 
 	private void initViews(View v) {
-		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
+		mRecyclerView = (PaginatedRecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(null, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
+		mAdapter = new PlaylistListVerticalAdapter(null, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setLayoutManager(manager);
-		mRecyclerView.setAdapter(adapter);
+		mRecyclerView.setAdapter(mAdapter);
+		mRecyclerView.setListener(new PaginatedRecyclerView.PaginatedRecyclerViewListener() {
+			@Override
+			public void onPageLoaded() { loadMoreItems(); }
+		});
 
 		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
 
@@ -90,4 +106,74 @@ public class SeeAllPlaylistFragment extends Fragment {
 
 	}
 
+	private void loadMoreItems() {
+		mRecyclerView.setLoading(true);
+
+		currentPage += 1;
+
+		PlaylistManager.getInstance(getActivity()).getListOfPlaylistPagination(this, currentPage, 20, true);
+
+	}
+
+	@Override
+	public void onPlaylistById(Playlist playlist) {
+
+	}
+
+	@Override
+	public void onPlaylistsByUser(ArrayList<Playlist> playlists) {
+
+	}
+
+	@Override
+	public void onOwnList(ArrayList<Playlist> playlists) {
+
+	}
+
+	@Override
+	public void onAllList(ArrayList<Playlist> playlists) {
+		if(playlists.size() < PAGE_SIZE){
+			mRecyclerView.setLast(true);
+		}
+		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);
+		mPlaylists.addAll(playlists);
+		Parcelable parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
+		this.mAdapter.notifyDataSetChanged();
+		mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
+	}
+
+	@Override
+	public void onFollowingList(ArrayList<Playlist> playlists) {
+
+	}
+
+	@Override
+	public void onPlaylistUpdated() {
+
+	}
+
+	@Override
+	public void onPlaylistCreated(Playlist playlist) {
+
+	}
+
+	@Override
+	public void onUserFollows(Follow follows) {
+
+	}
+
+	@Override
+	public void onUpdateFollow(Follow result) {
+
+	}
+
+	@Override
+	public void onPlaylistDeleted() {
+
+	}
+
+	@Override
+	public void onFailure(Throwable throwable) {
+
+	}
 }

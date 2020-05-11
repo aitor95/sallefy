@@ -14,6 +14,7 @@ import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface PlaylistService {
 
@@ -22,6 +23,9 @@ public interface PlaylistService {
 
     @GET("playlists")
     Call<List<Playlist>> getAllPlaylists(@Header("Authorization") String token);
+
+    @GET("playlists")
+    Call<List<Playlist>> getAllPlaylistsPagination(@Header("Authorization") String token, @Query("page") int page, @Query("size") int size, @Query("popular") boolean popular);
 
     @DELETE("playlists/{id}")
     Call<ResponseBody> deletePlaylist(@Path("id") Integer id, @Header("Authorization") String token);

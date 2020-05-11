@@ -123,9 +123,9 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
     private void getData() {
         PlaylistManager.getInstance(getContext())
-                .getListOfPlaylist(this);
+                .getListOfPlaylistPagination(this, 0, 20, true);
         TrackManager.getInstance(getContext())
-                .getAllTracks(this);
+                .getAllTracksPagination(this, 0, 10, false, true);
     }
 
     @Override
@@ -159,7 +159,6 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
      */
     @Override
     public void onAllList(ArrayList<Playlist> playlists) {
-        playlists.sort(Comparator.comparing(Playlist::getFollowers).reversed());
         ArrayList<Playlist> topPlaylists = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             topPlaylists.add(playlists.get(i));
@@ -207,7 +206,6 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
     @Override
     public void onTracksReceived(List<Track> tracks) {
-        tracks.sort(Comparator.comparing(Track::getLikes).reversed());
         tracks.stream().limit(10);
         tracksAdapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity().getApplicationContext(), getFragmentManager(), (ArrayList<Track>) tracks);
         tracksAdapter.setPlaylist(new Playlist((ArrayList<Track>) tracks));

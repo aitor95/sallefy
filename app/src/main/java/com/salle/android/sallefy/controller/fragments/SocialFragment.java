@@ -89,31 +89,6 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 			}
 		});
 
-		//DETECTAR SCROLL RV
-		/*mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-			@Override
-			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-				super.onScrollStateChanged(recyclerView, newState);
-			}
-
-			@Override
-			public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-				super.onScrolled(recyclerView, dx, dy);
-				int visibleItemCount = mLinearLayoutManager.getChildCount();
-				int totalItemCount = mLinearLayoutManager.getItemCount();
-				int firstVisibleItemPosition = mLinearLayoutManager.findFirstVisibleItemPosition();
-
-
-				if (!isLoading && !isLast) {
-					if ((visibleItemCount + firstVisibleItemPosition) >= totalItemCount
-					&& firstVisibleItemPosition >= 0
-							&& totalItemCount >= PAGE_SIZE) {
-						loadMoreItems();
-					}
-				}
-			}
-		});*/
-
 	}
 
 	private void loadMoreItems() {
@@ -121,7 +96,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 		currentPage += 1;
 
-		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, true);
+		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, true, false);
 
 	}
 
@@ -134,7 +109,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
 		mFollowing = new ArrayList<UserPublicInfo>();
 		mFollowing.addAll(users);
-		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, true);
+		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, true, false);
 	}
 
 	@Override

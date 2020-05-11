@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,25 +13,35 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
 import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.callbacks.SeeAllCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
+import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
 
 public class SeeAllSongFragment extends Fragment implements TrackCallback {
 
 	public static final String TAG = SeeAllSongFragment.class.getName();
 	public static final String TAG_CONTENT = SeeAllSongFragment.class.getName();
 
-	private RecyclerView mRecyclerView;
+	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList mTracks;
 
 	private static Playlist mPlaylist;
+
+	//Pagination
+	private int currentPage = 0;
+
+	private TrackListVerticalAdapter mAdapter;
 
 	private static SeeAllCallback seeAllCallback;
 	public static void setSeeAllCallback(SeeAllCallback seeAllC){
@@ -62,18 +73,22 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		initViews(v);
 
 		mTracks = (ArrayList<Track>) getArguments().getSerializable(TAG_CONTENT);
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
-		adapter.setPlaylist(mPlaylist);
-		mRecyclerView.setAdapter(adapter);
+		mAdapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
+		mAdapter.setPlaylist(mPlaylist);
+		mRecyclerView.setAdapter(mAdapter);
 		return v;
 	}
 
 	private void initViews(View v) {
-		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
+		mRecyclerView = (PaginatedRecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
 		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), null);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(adapter);
+		mRecyclerView.setListener(new PaginatedRecyclerView.PaginatedRecyclerViewListener() {
+			@Override
+			public void onPageLoaded() { loadMoreItems(); }
+		});
 
 		Fragment fragment = this;
 		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
@@ -97,11 +112,25 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		return fragment;
 	}
 
+	private void loadMoreItems() {
+		mRecyclerView.setLoading(true);
+
+		currentPage += 1;
+
+		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, false, true);
+
+	}
+
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
-		mTracks = (ArrayList) tracks;
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
-		mRecyclerView.setAdapter(adapter);
+		if(tracks.size() < PAGE_SIZE){
+			mRecyclerView.setLast(true);
+		}
+		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);
+		mTracks.addAll(tracks);
+		Parcelable parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
+		this.mAdapter.notifyDataSetChanged();
+		mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
 	}
 
 	@Override

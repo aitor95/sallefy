@@ -76,7 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
         Glide.with(
                 getApplicationContext()
                         .getApplicationContext())
-                .load(mUser.getImageUrl().toString())
+                .load(mUser.getImageUrl())
                 .centerCrop()
                 .override(400,400)
                 .placeholder(R.drawable.user_default_image)

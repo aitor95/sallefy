@@ -1,6 +1,8 @@
 package com.salle.android.sallefy.controller.adapters;
 
+import android.app.Activity;
 import android.content.Context;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -105,14 +107,13 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
                 .load(mTracks.get(position).getThumbnail())
                 .into(holder.ivPicture);
 
+        setGenresView(holder, (ArrayList<Genre>) track.getGenres());
+    }
 
-        ArrayList<Genre> genres = new ArrayList<>();
-        if (track.getGenres().size() > 3) {
-            for (Genre g: track.getGenres()) genres.add(g);
-            genres.add(new Genre("+" + (track.getGenres().size() - 3)));
-        } else {
-            genres = (ArrayList<Genre>) track.getGenres();
-        }
+    private void setGenresView(ViewHolder holder, ArrayList<Genre> genres) {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        ((Activity) mContext).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int screenWidth = displayMetrics.widthPixels;
 
         LinearLayoutManager manager = new LinearLayoutManager(mContext, RecyclerView.HORIZONTAL, false);
         GenresAdapter adapter = new GenresAdapter(genres, mCallback, R.layout.item_genre_little);
@@ -120,6 +121,19 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
         holder.genres.setAdapter(adapter);
 
         holder.genres.measure(0, 0);
+        int rvWidth = holder.genres.getMeasuredWidth();
+        int nPlus = 0;
+
+        if (screenWidth * 0.65 < rvWidth) genres.add(new Genre("+" + nPlus));
+        while (screenWidth * 0.65 < rvWidth) {
+            genres.remove(genres.size() - 2);
+            nPlus += 1;
+            genres.get(genres.size() - 1).setName("+" + nPlus);
+            adapter = new GenresAdapter(genres, mCallback, R.layout.item_genre_little);
+            holder.genres.setAdapter(adapter);
+            holder.genres.measure(0, 0);
+            rvWidth = holder.genres.getMeasuredWidth();
+        }
     }
 
     private String getTimePassed(LocalDateTime trackDate) {

@@ -58,6 +58,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends FragmentActivity implements AdapterClickCallback, MusicCallback, BottomMenuDialog.BottomMenuDialogInterf {
 
     public static final String TAG = MainActivity.class.getName();
+    private static final int ASKED_FOR_USER = 5005;
 
     //Fragment management
     private FragmentManager mFragmentManager;
@@ -523,18 +524,18 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             Log.d(TAG, "onTrackSelected: Track is " + track.getName());
             Intent intent = new Intent(this, MusicPlayerActivity.class);
             intent.putExtra(Constants.INTENT_EXTRAS.PLAYER_SONG,track);
-            startActivity(intent);
+            startActivityForResult(intent, ASKED_FOR_USER);
         }else{
             Intent intent = new Intent(this, MusicPlayerActivity.class);
             intent.putExtra(Constants.INTENT_EXTRAS.PLAYER_SONG,track);
             intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST,playlist);
-            startActivity(intent);
+            startActivityForResult(intent, ASKED_FOR_USER);
         }
         Log.d(TAG, "onTrackClicked");
 
     }
 
-    @Override
+        @Override
     public void onPlaylistClick(Playlist playlist) {
         Log.d(TAG, "onPlaylistClick: Playlist is " + playlist.getName());
 
@@ -657,6 +658,9 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 if (fragment instanceof MeFragment) {
                     ((MeFragment) fragment).updatePlaylistInfo(mUpdatedPlaylists);
                 }
+            } else if (requestCode == ASKED_FOR_USER && resultCode == RESULT_OK) {
+                User u = (User) data.getSerializableExtra(Constants.INTENT_EXTRAS.SHOW_USER_FROM_MUSIC_PLAYER);
+                onUserClick(u);
             }
         }
     }
@@ -760,6 +764,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 break;
             case "showArtist":
                 Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
+                onUserClick(track.getTrack().getUser());
                 break;
             case "delete":
                 Log.d(TAG, "onButtonClicked: DELETE");

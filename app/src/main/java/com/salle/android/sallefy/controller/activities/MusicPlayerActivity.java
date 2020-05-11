@@ -32,6 +32,7 @@ import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
+import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 
@@ -425,7 +426,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         more.setOnClickListener(view -> showMoreMenu());
 
         back = findViewById(R.id.new_playlist_nav);
-        back.setOnClickListener(view -> finish());
+        back.setOnClickListener(view -> {
+            Intent data = new Intent();
+            setResult(RESULT_CANCELED, data);
+            finish();
+        });
 
         songTitle = findViewById(R.id.music_player_title);
         songAuthor = findViewById(R.id.music_player_author);
@@ -583,6 +588,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                 break;
             case "showArtist":
                 Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
+                showArtist(track.getTrack().getUser());
                 break;
             case "delete":
                 Log.d(TAG, "onButtonClicked: DELETE");
@@ -594,6 +600,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                 startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDIT);
                 break;
         }
+    }
+
+    private void showArtist(User user) {
+        Intent data = new Intent();
+        data.putExtra(Constants.INTENT_EXTRAS.SHOW_USER_FROM_MUSIC_PLAYER, user);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     @Override

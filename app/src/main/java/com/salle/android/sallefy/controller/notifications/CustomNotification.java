@@ -46,6 +46,7 @@ public class CustomNotification {
             NotificationChannel notificationChannel = new NotificationChannel(CHANNEL_ID, name, importance);
             notificationChannel.setDescription(description);
             notificationChannel.setSound(null, null);
+            notificationChannel.setShowBadge(false);
 
             notificationManager = (NotificationManager) context.getSystemService( Context.NOTIFICATION_SERVICE);
             notificationManager.createNotificationChannel(notificationChannel);
@@ -132,8 +133,10 @@ public class CustomNotification {
                 .setShowWhen(false)
                 .setSound(null)
                 .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+                .setGroup("My group")
+                .setGroupSummary(false)
                 .setOngoing(true)
-
                 .build();
 
 
@@ -154,7 +157,12 @@ public class CustomNotification {
                 .setSmallIcon(R.drawable.ic_sallefy)
                 .setContent(notificationLayout)
                 .setShowWhen(false)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setSound(null)
+                .setPriority(NotificationCompat.PRIORITY_LOW)
+                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+                .setGroup("My group")
+                .setGroupSummary(false)
+                .setOngoing(true)
                 .build();
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);

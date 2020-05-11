@@ -127,7 +127,15 @@ public class MusicService extends Service {
     }
 
     @Override
+    public void onTaskRemoved(Intent rootIntent) {
+        Log.d(TAG, "onTaskRemoved: TASK REMOVED!!");
+        super.onTaskRemoved(rootIntent);
+        stopService();
+    }
+
+    @Override
     public void onDestroy() {
+        Log.d(TAG, "onDestroy: DESTRoY");
         super.onDestroy();
     }
 

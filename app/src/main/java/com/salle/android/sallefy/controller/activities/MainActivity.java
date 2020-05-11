@@ -121,6 +121,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     private void startStreamingService () {
         Intent intent = new Intent(this, MusicService.class);
+        startService(intent);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 

@@ -162,6 +162,7 @@ public class CustomNotification {
     }
 
     public static void close(){
+        Log.d("ss", "close: ");
         if(notificationManager != null)
             notificationManager.cancelAll();
     }

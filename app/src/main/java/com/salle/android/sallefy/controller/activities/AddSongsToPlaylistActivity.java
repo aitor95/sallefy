@@ -93,15 +93,22 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         backBtn = findViewById(R.id.add_songs_to_playlist_back);
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent data = new Intent();
-                data.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
-                setResult(RESULT_OK, data);
-                finish();
-            }
+            public void onClick(View v) { exitAddSongs(); }
         });
     }
 
+    private void exitAddSongs(){
+        Intent data = new Intent();
+        data.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        exitAddSongs();
+    }
 
     private void loadMoreItems() {
         mAddSongToPlaylistRecyclerView.setLoading(true);

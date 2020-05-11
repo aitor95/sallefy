@@ -83,6 +83,19 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
         });
     }
 
+    private void exitAddSongs(){
+        Intent data = new Intent();
+      //  data.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        exitAddSongs();
+    }
+
     private void addSong(int playlistNum) {
         Playlist playlist = mSelectedPlaylists.get(playlistNum);
         playlist.getTracks().add(this.mTrack);
@@ -101,6 +114,16 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
                     }
                 }
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.EDIT_CONTENT.PLAYLIST_EDIT && resultCode == RESULT_OK) {
+            mPlaylists.add(1, (Playlist) data.getSerializableExtra(NewPlaylistActivity.EXTRA_NEW_PLAYLIST));
+            mAdapter = new AddToPlayListAdapter(this, (ArrayList) this.mPlaylists, mSelectedPlaylists);
+            mAddToPlaylistRecyclerView.setAdapter(mAdapter);
         }
     }
 

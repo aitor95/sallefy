@@ -517,6 +517,9 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     public void onTrackClicked(Track track, Playlist playlist) {
         if(playlist == null){
 
+            Log.d("TAGG", track.getName());
+            Log.d("TAGG", track.toString());
+
             Log.d(TAG, "onTrackSelected: Track is " + track.getName());
             Intent intent = new Intent(this, MusicPlayerActivity.class);
             intent.putExtra(Constants.INTENT_EXTRAS.PLAYER_SONG,track);
@@ -698,6 +701,49 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 track.getCallback());
     }
 
+    private void deleteSong(TrackViewPack track) {
+        TrackManager.getInstance(this).deleteTrack(track.getTrack().getId(), new TrackCallback() {
+            @Override
+            public void onTracksReceived(List<Track> tracks) {
+
+            }
+            @Override
+            public void onNoTracks(Throwable throwable) {
+
+            }
+            @Override
+            public void onPersonalTracksReceived(List<Track> tracks) {
+
+            }
+            @Override
+            public void onUserTracksReceived(List<Track> tracks) {
+
+            }
+            @Override
+            public void onCreateTrack(Track track) {
+
+            }
+            @Override
+            public void onUpdatedTrack() {
+
+            }
+
+            @Override
+            public void onTrackDeleted() {
+                Track t = track.getTrack();
+                t.setDeleted(true);
+
+                updateTrackDataFromEverywhere(t);
+                CloudinaryManager.getInstance(MainActivity.this).deleteCoverImage(t.getThumbnail(),true);
+            }
+
+            @Override
+            public void onFailure(Throwable throwable) {
+                Log.d(TAG, "onFailure: CANT DELETE TRACK!");
+            }
+        });
+    }
+
     @Override
     public void onButtonClicked(TrackViewPack track, String text) {
 
@@ -708,54 +754,16 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 break;
             case "addToPlaylist":
                 Log.d(TAG, "onButtonClicked: ADDTOPLAYLIST");
+                Intent intentA2P = new Intent(this, AddToPlaylistActivity.class);
+                intentA2P.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
+                startActivity(intentA2P);
                 break;
             case "showArtist":
                 Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
                 break;
             case "delete":
                 Log.d(TAG, "onButtonClicked: DELETE");
-
-                TrackManager.getInstance(this).deleteTrack(track.getTrack().getId(), new TrackCallback() {
-                    @Override
-                    public void onTracksReceived(List<Track> tracks) {
-
-                    }
-                    @Override
-                    public void onNoTracks(Throwable throwable) {
-
-                    }
-                    @Override
-                    public void onPersonalTracksReceived(List<Track> tracks) {
-
-                    }
-                    @Override
-                    public void onUserTracksReceived(List<Track> tracks) {
-
-                    }
-                    @Override
-                    public void onCreateTrack(Track track) {
-
-                    }
-                    @Override
-                    public void onUpdatedTrack() {
-
-                    }
-
-                    @Override
-                    public void onTrackDeleted() {
-                        Track t = track.getTrack();
-                        t.setDeleted(true);
-
-                        updateTrackDataFromEverywhere(t);
-                        CloudinaryManager.getInstance(MainActivity.this).deleteCoverImage(t.getThumbnail(),true);
-                    }
-
-                    @Override
-                    public void onFailure(Throwable throwable) {
-                        Log.d(TAG, "onFailure: CANT DELETE TRACK!");
-                    }
-                });
-
+                deleteSong(track);
                 break;
             case "edit":
                 Log.d(TAG, "onButtonClicked: EDIT");

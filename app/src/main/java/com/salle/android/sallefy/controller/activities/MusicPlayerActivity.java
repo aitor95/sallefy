@@ -510,6 +510,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     }
 
     private void showMoreMenu() {
+        Log.d("TAGG", mBoundService.getCurrentTrack().toString());
+
         BottomMenuDialog dialog = new BottomMenuDialog(new TrackViewPack(mBoundService.getCurrentTrack(), null, null), this);
         dialog.show(getSupportFragmentManager(),"options");
     }

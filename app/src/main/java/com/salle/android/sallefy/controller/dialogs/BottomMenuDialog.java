@@ -51,6 +51,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             @Override
             public void onClick(View view) {
                 songLiked = !songLiked;
+                //TODO: Revisar
                 likeImage.setImageResource(songLiked ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
                 mListener.onButtonClicked(track,"like");
                 dismiss();

@@ -287,6 +287,9 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
                 break;
             case "addToPlaylist":
                 Log.d(TAG, "onButtonClicked: ADDTOPLAYLIST");
+                Intent intentA2P = new Intent(this, AddToPlaylistActivity.class);
+                intentA2P.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
+                startActivity(intentA2P);
                 break;
             case "showArtist":
                 Log.d(TAG, "onButtonClicked: SHOW ARTIST!");

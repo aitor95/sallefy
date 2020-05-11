@@ -41,6 +41,10 @@ public class GenresAdapter extends RecyclerView.Adapter<GenresAdapter.ViewHolder
         Genre genre = mGenres.get(position);
         holder.tvName.setText(genre.getName());
         holder.tvName.setOnClickListener(view -> mCallback.onGenreClick(genre));
+
+        holder.tvName.setOnClickListener(view -> {
+            mCallback.onGenreClick(genre);
+        });
     }
 
     @Override

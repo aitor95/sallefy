@@ -4,8 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -14,11 +16,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.adapters.GenresAdapter;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.dialogs.StateDialog;
 import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
@@ -26,8 +32,10 @@ import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.GenreManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Genre;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
+import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.FilenameHelper;
 
@@ -37,7 +45,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class UploadSongActivity extends AppCompatActivity implements TrackCallback, UploadCallback, GenreCallback {
+public class UploadSongActivity extends AppCompatActivity implements TrackCallback, UploadCallback, GenreCallback, AdapterClickCallback {
 
     public static final String TAG = UploadSongActivity.class.getName();
     public static final String EXTRA_NEW_SONG = "EXTRA_NEW_SONG";
@@ -70,6 +78,9 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     private ArrayList<Genre> mCurrentGenres;
     private PopupMenu mGenresMenu;
     private Boolean uploading;
+
+    private GenresAdapter mGenresAdapter;
+    private RecyclerView mGenresView;
 
     //Dialogo para indicar el processo de carga.
     StateDialog stateDialog;
@@ -133,16 +144,25 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
                 finish(); }
         });
 
+        AdapterClickCallback callback = this;
         mGenresMenu = new PopupMenu(this,mGenresBtn);
         mGenresMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener(){
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 mCurrentGenres.add(mAPIGenres.get(item.getItemId()));
                 mGenresMenu.getMenu().removeItem(item.getItemId());
+
+                mGenresAdapter = new GenresAdapter(mCurrentGenres, callback, R.layout.item_genre);
+                mGenresView.setAdapter(mGenresAdapter);
                 return false;
             }
         });
 
+        LinearLayoutManager managerGenres = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+        mGenresAdapter = new GenresAdapter(null, this, R.layout.item_genre);
+        mGenresView = findViewById(R.id.upload_song_genre_list);
+        mGenresView.setLayoutManager(managerGenres);
+        mGenresView.setAdapter(mGenresAdapter);
     }
 
     private void initElements() {
@@ -407,5 +427,29 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
 
         m.deleteAudioFile(mTrack.getUrl());
         m.deleteCoverImage(mTrack.getThumbnail(),true);
+    }
+
+    @Override
+    public void onTrackClicked(Track track, Playlist playlist) {
+
+    }
+
+    @Override
+    public void onPlaylistClick(Playlist playlist) {
+
+    }
+
+    @Override
+    public void onUserClick(User user) {
+
+    }
+
+    @Override
+    public void onGenreClick(Genre genre) {
+        mCurrentGenres.remove(genre);
+        mGenresMenu.getMenu().add(Menu.NONE, mAPIGenres.indexOf(genre), Menu.NONE, genre.getName());
+
+        mGenresAdapter = new GenresAdapter(mCurrentGenres, this, R.layout.item_genre);
+        mGenresView.setAdapter(mGenresAdapter);
     }
 }

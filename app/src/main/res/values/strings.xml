@@ -3,7 +3,7 @@
 
     <!-- DEFAULT TRACK -->
     <string name="default_track_title">Título canción</string>
-    <string name="default_track_author">Autor/a</string>
+    <string name="default_track_author">Author/a</string>
     <string name="default_username">User</string>
     <string name="default_usernames">Users</string>
     <string name="default_playlists">Playlists</string>
@@ -45,7 +45,7 @@
     <!-- ACTIVITY [ Create Song ] -->
     <string name="create_song_titulo">Título</string>
     <string name="create_song_genre">Género</string>
-    <string name="create_song_artist">Autor/a</string>
+    <string name="create_song_artist">Author/a</string>
     <string name="create_song_file">Buscar fichero</string>
 
 
@@ -107,7 +107,7 @@
     <!-- <string name="login_register_here">Register here</string> -->
     <string name="LoginQuestion_start_text">New here?</string>
     <string name="Login_SignUp_Question_button">Sign up now!</string>
-    <string name="splashScreen_logging_in">Logging in...</string>
+    <string name="splashScreen_logging_in">Logging in…</string>
 
     <!-- ACTIVITY [ Sign Up ] -->
     <string name="SignUp_username">Username</string>
@@ -177,10 +177,13 @@
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
     <string name="Settings_title">Settings</string>
     <string name="Stats_title">Statistics</string>
+    <string name="EditAccount_title">Edit Account</string>
+    <string name="logoDescription">Company Logo</string>
+
     <string name="GotoSymbol"><![CDATA[>]]></string>
-    <string name="optionViewStats">View Sallefy statistics</string>
-    <string name="optionModifyAccount">Modify user account</string>
-    <string name="optionDeleteAccount">Delete user account</string>
+    <string name="optionViewStats">Sallefy statistics</string>
+    <string name="optionModifyAccount">Edit account</string>
+    <string name="optionDeleteAccount">Delete account</string>
     <string name="optionLogOut">Log Out</string>
     <string name="no_tracks_on_social">The people you follow haven\'t uploaded anything yet.</string>
     <string name="no_users_on_social">You are not following anyone. Please, follow some users to see their activity!</string>
@@ -188,11 +191,11 @@
     <!--Error messages-->
     <string name="error_like">Can\'t like now, try later…</string>
     <string name="error_follow">Can\'t follow now, try later…</string>
-    <string name="ServiceNotLoadedError">Can\'t do that now, try again later...</string>
+    <string name="ServiceNotLoadedError">Can\'t do that now, try again later…</string>
     <string name="NoContentAvailableMeUsers">You don\'t follow any user.</string>
     <string name="NoContentAvailableMeSongs">You haven\'t uploaded any song.</string>
     <string name="NoContentAvailableMePlayists">You haven\'t created any playlist.</string>
-    <string name="LoadingMe">Loading...</string>
+    <string name="LoadingMe">Loading…</string>
     <string name="new_playlist_creation_failure_cloudinary">Something went wrong on Cloudinary Server</string>
     <string name="delete_btn">DELETE</string>
     <string name="User_has_no_songs">User don\'t have songs</string>

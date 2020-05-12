@@ -19,4 +19,8 @@
     <color name="colorLoginGrey">#F2F2F2</color>
 
     <color name="colorPurpleButtons">#803DEE</color>
+    <color name="colorBgStatistics">#FEEFEC</color>
+    <color name="colorBgDeleteAccount">#FFE6E6</color>
+    <color name="colorBgEditAccount">#EFE8FA</color>
+
 </resources>

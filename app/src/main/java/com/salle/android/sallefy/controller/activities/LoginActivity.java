@@ -11,6 +11,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.restapi.callback.UserLogInAndRegisterCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
@@ -27,6 +28,8 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
     private EditText etPassword;
     private Button btnLogin;
     private boolean inAutomaticLogIn;
+    private TextInputLayout textInputUsername;
+    private TextInputLayout textInputPassword;
 
 
     @Override
@@ -89,8 +92,10 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
         etPassword = findViewById(R.id.login_password);
 
         btnLogin = findViewById(R.id.login_btn_action);
-        btnLogin.setOnClickListener(v -> doLogin(etLogin.getText().toString(),
-                etPassword.getText().toString()));
+        btnLogin.setOnClickListener(v -> confirmInput());
+
+        textInputUsername = findViewById(R.id.textInputUsername);
+        textInputPassword = findViewById(R.id.textInputPassword);
 
         Button signUpNow = findViewById(R.id.login_btn_SignUpNow);
         signUpNow.setOnClickListener(new View.OnClickListener(){
@@ -101,6 +106,42 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
             }
         });
     }
+
+    private boolean validateUsername() {
+        String usernameInput = textInputUsername.getEditText().getText().toString().trim();
+
+        if (usernameInput.isEmpty()){
+            textInputUsername.setError("Username can't be empty");
+            return false;
+        } else {
+            textInputUsername.setError(null);
+            return true;
+        }
+
+    }
+
+    private boolean validatePassword() {
+        String passwordInput = textInputPassword.getEditText().getText().toString().trim();
+
+        if (passwordInput.isEmpty()) {
+            textInputPassword.setError("Password can't be empty");
+            return false;
+        } else {
+            textInputPassword.setError(null);
+            return true;
+        }
+    }
+
+    public void confirmInput(){
+        if (!validateUsername() | !validatePassword()){
+            return;
+        }
+            doLogin(etLogin.getText().toString(),
+                    etPassword.getText().toString());
+
+    }
+
+
 
     private void doLogin(String username, String password) {
         UserManager.getInstance(getApplicationContext())

@@ -180,6 +180,15 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 				.placeholder(R.drawable.user_default_image)
 				.into(user_img);
 
+			Glide.with(
+					getActivity()
+					.getApplicationContext())
+					.load(mUser.getImageUrl())
+					.centerCrop()
+					.override(400,400)
+					.placeholder(R.drawable.user_default_image)
+					.into(user_img);
+
 
 		TextView user_name = v.findViewById(R.id.user_name);
 		user_name.setText(mUser.getLogin());

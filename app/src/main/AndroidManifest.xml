@@ -44,6 +44,8 @@
         <activity android:name=".controller.activities.UploadSongActivity" />
         <activity android:name=".controller.activities.EditSongActivity" />
         <activity android:name=".controller.activities.PlaylistActivity" />
+        <activity android:name=".controller.activities.EditAccountActivity" />
+
         <receiver android:name=".controller.notifications.NotificationReceiver"/>
     </application>
 

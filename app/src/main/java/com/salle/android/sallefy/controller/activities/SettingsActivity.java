@@ -83,7 +83,8 @@ public class SettingsActivity extends AppCompatActivity {
                 .into(user_img);
 
         optionModify.setOnClickListener(view -> {
-            //TODO: Modify user
+            Intent intent = new Intent(this, EditAccountActivity.class);
+            startActivity(intent);
         });
 
         optionDelete.setOnClickListener(view -> {

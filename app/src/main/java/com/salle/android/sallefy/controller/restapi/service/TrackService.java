@@ -19,9 +19,6 @@ import retrofit2.http.Query;
 public interface TrackService {
 
     @GET("tracks")
-    Call<List<Track>> getAllTracks(@Header("Authorization") String token);
-
-    @GET("tracks")
     Call<List<Track>> getAllTracksPagination(@Header("Authorization") String token, @Query("page") int page, @Query("size") int size, @Query("recent") boolean recent, @Query("popular") boolean popular);
 
     @GET("tracks")

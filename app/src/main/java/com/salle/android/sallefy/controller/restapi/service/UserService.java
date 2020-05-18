@@ -23,9 +23,6 @@ public interface UserService {
     Call<User> getUserById(@Path("login") String login, @Header("Authorization") String token);
 
     @GET("users")
-    Call<List<User>> getAllUsers(@Header("Authorization") String token);
-
-    @GET("users")
     Call<List<User>> getAllUsersPagination(@Header("Authorization") String token, @Query("page") int page, @Query("size") int size);
 
     @GET("users")
@@ -44,7 +41,7 @@ public interface UserService {
     Call<ResponseBody> updateProfile(@Body User user, @Header("Authorization") String token);
 
     @GET("me/followings")
-    Call<List<UserPublicInfo>> getMeFollowings(@Header("Authorization") String token);
+    Call<List<User>> getMeFollowings(@Header("Authorization") String token);
 
     @GET("me/followers")
     Call<List<UserPublicInfo>> getMeFollowers(@Header("Authorization") String token);

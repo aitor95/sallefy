@@ -225,25 +225,6 @@ public class UserManager {
     }
 
     /********************   ALL USERS    ********************/
-    public synchronized void getUsers (final UserCallback userCallback) {
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
-        Call<List<User>> call = mService.getAllUsers( "Bearer " + userToken.getIdToken());
-        call.enqueue(new Callback<List<User>>() {
-            @Override
-            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
-                if (response.isSuccessful()) {
-                    userCallback.onUsersReceived(response.body());
-                } else {
-                    userCallback.onUsersFailure(new Throwable());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<User>> call, Throwable t) {
-                userCallback.onFailure(t);
-            }
-        });
-    }
 
     public synchronized void getUsersPagination (final UserCallback userCallback, int currentPage, int size) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
@@ -265,7 +246,7 @@ public class UserManager {
         });
     }
 
-    public synchronized void getUsersFragmentMe (final UserCallback userCallback) {
+   /* public synchronized void getUsersFragmentMe (final UserCallback userCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
         Call<List<User>> call = mService.getAllUsersMeFragment( "Bearer " + userToken.getIdToken(), 1000);
         call.enqueue(new Callback<List<User>>() {
@@ -283,17 +264,17 @@ public class UserManager {
                 userCallback.onFailure(t);
             }
         });
-    }
+    }*/
 
 
     /********************   GETTERS / SETTERS    ********************/
     public synchronized void getMeFollowing (final UserCallback userCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
-        Call<List<UserPublicInfo>> call = mService.getMeFollowings( "Bearer " + userToken.getIdToken());
+        Call<List<User>> call = mService.getMeFollowings( "Bearer " + userToken.getIdToken());
 
-        call.enqueue(new Callback<List<UserPublicInfo>>() {
+        call.enqueue(new Callback<List<User>>() {
             @Override
-            public void onResponse(Call<List<UserPublicInfo>> call, Response<List<UserPublicInfo>> response) {
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
 
                 if (response.isSuccessful()) {
                     userCallback.onMeFollowingsReceived(response.body());
@@ -303,7 +284,7 @@ public class UserManager {
             }
 
             @Override
-            public void onFailure(Call<List<UserPublicInfo>> call, Throwable t) {
+            public void onFailure(Call<List<User>> call, Throwable t) {
                 userCallback.onFailure(t);
             }
         });

@@ -4,6 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 public class Track implements Serializable {
 
@@ -172,5 +173,18 @@ public class Track implements Serializable {
 
     public void setDeleted(boolean deleted) {
         isDeleted = deleted;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Track track = (Track) o;
+        return id.equals(track.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
     }
 }

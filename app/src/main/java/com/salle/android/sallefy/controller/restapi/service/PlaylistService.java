@@ -22,9 +22,6 @@ public interface PlaylistService {
     Call<Playlist> getPlaylistById(@Path("id") Integer id, @Header("Authorization") String token);
 
     @GET("playlists")
-    Call<List<Playlist>> getAllPlaylists(@Header("Authorization") String token);
-
-    @GET("playlists")
     Call<List<Playlist>> getAllPlaylistsPagination(@Header("Authorization") String token, @Query("page") int page, @Query("size") int size, @Query("popular") boolean popular);
 
     @DELETE("playlists/{id}")

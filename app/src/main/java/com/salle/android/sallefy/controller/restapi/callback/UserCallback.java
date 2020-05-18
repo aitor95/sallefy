@@ -9,7 +9,7 @@ public interface UserCallback extends FailureCallback {
 
     void onUsersReceived(List<User> users);
     void onUsersFailure(Throwable throwable);
-    void onMeFollowingsReceived(List<UserPublicInfo> users);
+    void onMeFollowingsReceived(List<User> users);
     void onIsFollowingResponseReceived(String login, Boolean isFollowed);
     void onUpdateUser();
 

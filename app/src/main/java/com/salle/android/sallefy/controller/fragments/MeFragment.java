@@ -252,7 +252,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 	}
 
 	@Override
-	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
+	public void onMeFollowingsReceived(List<User> users) {
 	}
 
 	@Override

@@ -158,45 +158,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:orientation="vertical">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        style="@style/SectionName"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="7dp"
-                        android:layout_marginLeft="18dp"
-                        android:text="@string/default_genres"
-                        android:layout_alignParentStart="true"/>
-
-                    <!--<TextView
-                        android:id="@+id/SeeAllSearchedGenres"
-                        style="@style/SeeMoreFromSection"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="6dp"
-                        android:layout_marginEnd="0dp"
-                        android:text="@string/SeeMoreSection"
-                        android:layout_alignParentEnd="true"/>-->
-
-                </RelativeLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/search_genres_recyclerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
         </LinearLayout>
 
     </ScrollView>

@@ -30,8 +30,6 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	private RecyclerView mRecyclerView;
 	private ArrayList<User> mUsers;
-	private ArrayList<User> mUsersFollowed;
-	private ArrayList<UserPublicInfo> mUsersPublic;
 
 	private View v;
 
@@ -57,12 +55,12 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		v = inflater.inflate(R.layout.fragment_me_lists_users, container, false);
-        TextView text = v.findViewById(R.id.me_text_error);
+		TextView text = v.findViewById(R.id.me_text_error);
 		if(isOwner)
-		    text.setText(R.string.LoadingMe);
-        else{
-            text.setText("Backend doesn't provide this information for the moment");
-        }
+			text.setText(R.string.LoadingMe);
+		else{
+			text.setText("Backend doesn't provide this information for the moment");
+		}
 		Log.d("TEST", "onCreateView: User is "+ mUser.getLogin());
 
 		initViews(v);
@@ -80,36 +78,13 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	private void getData() {
 		mUsers = new ArrayList<>();
-		mUsersPublic = new ArrayList<>();
-		mUsersFollowed = new ArrayList<>();
-        if(isOwner)
-		    UserManager.getInstance(getContext()).getMeFollowing(this);
+		if(isOwner)
+			UserManager.getInstance(getContext()).getMeFollowing(this);
 	}
 
 	@Override
 	public void onUsersReceived(List<User> users) {
-		mUsers = (ArrayList<User>) users;
 
-		for(User u: mUsers){
-			for(UserPublicInfo f: mUsersPublic){
-				if(u.getLogin().equals(f.getLogin())){
-					mUsersFollowed.add(u);
-					break;
-				}
-			}
-		}
-
-		for (User u : mUsersFollowed) {
-			u.setFollowedByUser(false);
-			for (UserPublicInfo upi : mUsersPublic)
-				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
-		}
-
-		TextView text = v.findViewById(R.id.me_text_error);
-		text.setText(null);
-
-		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsersFollowed,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
-		mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override
@@ -119,16 +94,21 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 
 	@Override
-	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
-		mUsersPublic = (ArrayList<UserPublicInfo>) users;
-		if(mUsersPublic.isEmpty()){
+	public void onMeFollowingsReceived(List<User> users) {
+		mUsers= (ArrayList<User>) users;
+		if(mUsers.isEmpty()){
 			TextView text = v.findViewById(R.id.me_text_error);
 			text.setText(R.string.NoContentAvailableMeUsers);
-			UserVerticalAdapter adapter = new UserVerticalAdapter(mUsersFollowed,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
+			UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
 			mRecyclerView.setAdapter(adapter);
 		}else{
-			UserManager.getInstance(getActivity()).getUsersFragmentMe(this);
-		}
+			TextView text = v.findViewById(R.id.me_text_error);
+			text.setText(null);
+			for (int i = 0; i < users.size(); i++) {
+				users.get(i).setFollowedByUser(true);
+			}
+			UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
+			mRecyclerView.setAdapter(adapter);		}
 	}
 
 	@Override

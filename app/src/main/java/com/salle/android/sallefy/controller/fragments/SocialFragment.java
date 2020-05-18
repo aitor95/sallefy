@@ -37,7 +37,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
-	private ArrayList<UserPublicInfo> mFollowing;
+	private ArrayList<User> mFollowing;
 
 	//Pagination
 	private int currentPage = 0;
@@ -106,8 +106,8 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	}
 
 	@Override
-	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
-		mFollowing = new ArrayList<UserPublicInfo>();
+	public void onMeFollowingsReceived(List<User> users) {
+		mFollowing = new ArrayList<User>();
 		mFollowing.addAll(users);
 		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, true, false);
 	}

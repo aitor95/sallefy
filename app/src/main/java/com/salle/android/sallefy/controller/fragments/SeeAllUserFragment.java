@@ -35,6 +35,8 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<User> mUsers;
+	private ArrayList<User> mFollowedUsers;
+
 
 	private UserVerticalAdapter mAdapter;
 
@@ -62,10 +64,10 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		View v = inflater.inflate(R.layout.fragment_see_all_users, container, false);
-		initViews(v);
-
 		mUsers = (ArrayList<User>) getArguments().getSerializable(TAG_CONTENT);
+		mFollowedUsers = new ArrayList<>();
 		UserManager.getInstance(getContext()).getMeFollowing(this);
+		initViews(v);
 		return v;
 	}
 
@@ -110,9 +112,12 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 	}
 
-	private void getData() {
-		UserManager.getInstance(getActivity()).getUsersPagination(this, currentPage, 10);
-		mUsers = new ArrayList<>();
+	private void checkFollowing() {
+		for (User u: mUsers) {
+			u.setFollowedByUser(false);
+			for (User upi: mFollowedUsers)
+				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
+		}
 	}
 
 	@Override
@@ -122,6 +127,7 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 		}
 		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);
 		mUsers.addAll(users);
+		checkFollowing();
 		Parcelable parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
 		this.mAdapter.notifyDataSetChanged();
 		mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
@@ -134,13 +140,9 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	}
 
 	@Override
-	public void onMeFollowingsReceived(List<UserPublicInfo> users) {
-		for (User u: mUsers) {
-			u.setFollowedByUser(false);
-			for (UserPublicInfo upi: users)
-				if (u.getLogin().equals(upi.getLogin())) u.setFollowedByUser(true);
-		}
-
+	public void onMeFollowingsReceived(List<User> users) {
+		mFollowedUsers.addAll(users);
+		checkFollowing();
 		mAdapter = new UserVerticalAdapter(mUsers,adapterClickCallback, getContext(), R.layout.item_user_vertical);
 		mRecyclerView.setAdapter(mAdapter);
 	}

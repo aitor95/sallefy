@@ -20,9 +20,11 @@ import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
+import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
+import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 
 import java.util.ArrayList;
@@ -118,7 +120,12 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	}
 
 	@Override
-	public void onUpdateUser() {
+	public void onUpdateUser(UserToken userToken) {
+
+	}
+
+	@Override
+	public void onUpdatePassword(ChangePassword changePassword, UserToken userToken) {
 
 	}
 

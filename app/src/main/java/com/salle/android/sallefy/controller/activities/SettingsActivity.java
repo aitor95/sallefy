@@ -10,6 +10,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
@@ -23,7 +24,7 @@ import com.salle.android.sallefy.utils.Session;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements DeleteDialog.DeleteDialogListener {
 
     public static final String TAG = SettingsActivity.class.getName();
 
@@ -32,17 +33,16 @@ public class SettingsActivity extends AppCompatActivity {
 
     private RelativeLayout optionStats;
     private ImageButton backoption;
-    private  CircleImageView user_img;
+    private CircleImageView user_img;
     private RelativeLayout optionModify;
     private RelativeLayout optionDelete;
-    private  Button optionLogOut;
+    private Button optionLogOut;
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             MusicService.MusicBinder binder = (MusicService.MusicBinder)service;
             mBoundService = binder.getService();
-
         }
 
         @Override
@@ -88,7 +88,8 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         optionDelete.setOnClickListener(view -> {
-            //TODO: Delete user
+
+            openDialog();
         });
 
         optionLogOut.setOnClickListener(view -> {
@@ -108,6 +109,13 @@ public class SettingsActivity extends AppCompatActivity {
         backoption.setOnClickListener(view -> {
             finish();
         });
+
+        Toast.makeText(getApplicationContext(), PreferenceUtils.getUser(this), Toast.LENGTH_LONG).show();
+    }
+
+    private void openDialog() {
+        DeleteDialog dialog = new DeleteDialog();
+        dialog.show(getSupportFragmentManager(), "");
     }
 
     private void initElements(){
@@ -117,6 +125,12 @@ public class SettingsActivity extends AppCompatActivity {
         optionModify = findViewById(R.id.settings_modify_user);
         optionDelete = findViewById(R.id.settings_option_deleteAccount);
         optionLogOut = findViewById(R.id.btn_settings_logout);
+    }
+
+    @Override
+    public void onYesClicked() {
+        //TODO: Delete User
+
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {

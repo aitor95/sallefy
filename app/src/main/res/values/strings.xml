@@ -101,6 +101,7 @@
 
     <!-- ACTIVITY [ Login ] -->
     <string name="login_username">Username</string>
+    <string name="login">Login</string>
     <string name="login_password">Password</string>
     <!-- <string name="login_email">Email</string> -->
     <!-- <string name="login_signUpQuestionButton">New here? Sign up now!</string> -->
@@ -199,6 +200,5 @@
     <string name="new_playlist_creation_failure_cloudinary">Something went wrong on Cloudinary Server</string>
     <string name="delete_btn">DELETE</string>
     <string name="User_has_no_songs">User don\'t have songs</string>
-
 
 </resources>

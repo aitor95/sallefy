@@ -8,6 +8,7 @@ import com.salle.android.sallefy.controller.restapi.callback.UserFollowCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserLogInAndRegisterCallback;
 import com.salle.android.sallefy.controller.restapi.service.UserService;
 import com.salle.android.sallefy.controller.restapi.service.UserTokenService;
+import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserLogin;
@@ -15,6 +16,7 @@ import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserRegister;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
 import java.io.IOException;
@@ -55,6 +57,7 @@ public class UserManager {
 
         mService = mRetrofit.create(UserService.class);
         mTokenService = mRetrofit.create(UserTokenService.class);
+
     }
 
 
@@ -112,7 +115,6 @@ public class UserManager {
         });
     }
 
-
     /********************   REGISTRATION    ********************/
     public synchronized void registerAttempt (String email, String username, String password, final UserLogInAndRegisterCallback userCallback) {
 
@@ -142,25 +144,57 @@ public class UserManager {
         });
     }
 
+    /********************   UPDATE PROFILE    ********************/
     public synchronized void updateProfile(User user, final UserCallback userCallback){
         UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<ResponseBody> call = mService.updateProfile(user, "Bearer " + userToken.getIdToken());
-
-        call.enqueue(new Callback<ResponseBody>() {
+        Call<UserToken> call = mService.updateProfile(user, "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<UserToken>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<UserToken> call, Response<UserToken> response) {
                 int code = response.code();
+
                 if (response.isSuccessful()){
-                    userCallback.onUpdateUser();
+                    UserToken userToken = response.body();
+                    userCallback.onUpdateUser(userToken);
+
                 } else {
-                    Log.d(TAG, "Can't upload image to API " + code);
+                    Log.d(TAG, "Can't upload profile " + code);
                     userCallback.onFailure(new Throwable("Error " + code + ", " + response.raw().message()));
                 }
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<UserToken> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + Arrays.toString(t.getStackTrace()));
+                userCallback.onFailure(new Throwable("ERROR " + Arrays.toString(t.getStackTrace())));
+            }
+        });
+    }
+
+    /********************   UPDATE PASSWORD    ********************/
+    public synchronized void updatePassword(ChangePassword changePassword, final UserCallback userCallback){
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+
+        Call<UserToken> call = mService.updatePassword(changePassword, "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<UserToken>() {
+            @Override
+            public void onResponse(Call<UserToken> call, Response<UserToken> response) {
+                int code = response.code();
+
+                if (response.isSuccessful()){
+                    UserToken userToken = response.body();
+
+                    userCallback.onUpdatePassword(changePassword, userToken);
+
+                } else {
+                    Log.d(TAG, "Can't upload profile " + code);
+                    userCallback.onFailure(new Throwable("Error " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserToken> call, Throwable t) {
                 Log.d(TAG, "Error Failure: " + Arrays.toString(t.getStackTrace()));
                 userCallback.onFailure(new Throwable("ERROR " + Arrays.toString(t.getStackTrace())));
             }

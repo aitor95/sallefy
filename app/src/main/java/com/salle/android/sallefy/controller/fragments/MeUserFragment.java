@@ -18,8 +18,10 @@ import com.salle.android.sallefy.controller.adapters.UserVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
+import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
+import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,11 +119,17 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	}
 
 	@Override
-	public void onUpdateUser() {
+	public void onUpdateUser(UserToken userToken) {
 
 	}
 
-	@Override
+    @Override
+    public void onUpdatePassword(ChangePassword changePassword, UserToken us
+	) {
+
+    }
+
+    @Override
 	public void onMeFollowersReceived(List<UserPublicInfo> body) {
 
 	}

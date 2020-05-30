@@ -1,15 +1,18 @@
 package com.salle.android.sallefy.controller.restapi.service;
 
+import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserRegister;
+import com.salle.android.sallefy.model.UserToken;
 
 import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
@@ -38,11 +41,17 @@ public interface UserService {
     Call<Follow> isFollowingUser(@Path("login") String userLogin, @Header("Authorization") String token);
 
     @POST("account")
-    Call<ResponseBody> updateProfile(@Body User user, @Header("Authorization") String token);
+    Call<UserToken> updateProfile(@Body User user, @Header("Authorization") String token);
+
+    @POST("account/change-password")
+    Call<UserToken> updatePassword(@Body ChangePassword changePassword, @Header("Authorization") String token);
 
     @GET("me/followings")
     Call<List<User>> getMeFollowings(@Header("Authorization") String token);
 
     @GET("me/followers")
     Call<List<UserPublicInfo>> getMeFollowers(@Header("Authorization") String token);
+
+    @DELETE
+    Call<ResponseBody> deleteAccount(@Header("Authorization") String token);
 }

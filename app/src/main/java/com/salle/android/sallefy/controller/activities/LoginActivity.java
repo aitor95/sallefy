@@ -141,8 +141,6 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
 
     }
 
-
-
     private void doLogin(String username, String password) {
         UserManager.getInstance(getApplicationContext())
                 .loginAttempt(username, password, LoginActivity.this);

@@ -26,11 +26,14 @@ import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
+import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
+import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
@@ -180,16 +183,6 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 				.placeholder(R.drawable.user_default_image)
 				.into(user_img);
 
-			Glide.with(
-					getActivity()
-					.getApplicationContext())
-					.load(mUser.getImageUrl())
-					.centerCrop()
-					.override(400,400)
-					.placeholder(R.drawable.user_default_image)
-					.into(user_img);
-
-
 		TextView user_name = v.findViewById(R.id.user_name);
 		user_name.setText(mUser.getLogin());
 
@@ -286,7 +279,13 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 	}
 
 	@Override
-	public void onUpdateUser() {
+	public void onUpdateUser(UserToken userToken) {
+		//Update photo with the new login name
+		CloudinaryManager.getInstance(this.getContext()).uploadCoverImage(Constants.STORAGE.USER_PICTURE_FOLDER, mUri, mUser.getLogin(), MeFragment.this);
+	}
+
+	@Override
+	public void onUpdatePassword(ChangePassword changePassword, UserToken userToken) {
 
 	}
 
@@ -311,7 +310,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 	public void onSuccess(String requestId, Map resultData) {
         if (profileImageChoosen){
             mUser.setImageUrl((String)resultData.get("url"));
-            UserManager.getInstance(getActivity()).updateProfile(mUser, MeFragment.this);
+            UserManager.getInstance(getActivity()).updateProfile(mUser,MeFragment.this);
             profileImageChoosen = false;
         }
 	}

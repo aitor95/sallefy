@@ -103,7 +103,7 @@
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingVertical="10dp">
+                    android:layout_marginVertical="10dp">
 
                     <ImageButton
                         android:id="@+id/statistics"
@@ -142,7 +142,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingVertical="10dp">
+                    android:layout_marginVertical="10dp">
 
                     <ImageButton
                         android:id="@+id/edit_account"
@@ -181,7 +181,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:paddingVertical="10dp">
+                    android:layout_marginVertical="10dp">
 
                     <ImageButton
                         android:id="@+id/delete_account"
@@ -232,22 +232,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/settings_option_layout">
+        app:layout_constraintTop_toBottomOf="@+id/settings_option_layout"
+        android:layout_marginTop="30dp">
 
         <Button
             android:id="@+id/btn_settings_logout"
+            style="@style/buttonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="40dp"
+
             android:gravity="center"
             android:includeFontPadding="false"
             android:scaleType="fitXY"
             android:text="@string/optionLogOut"
             android:background="@drawable/login_btn"
-            android:minWidth="100dp"
-            android:minHeight="40dp"
-            style="@style/buttonText"/>
+            android:minWidth="200dp"
+            android:textColor="@color/colorWhite" />
 
     </RelativeLayout>
 

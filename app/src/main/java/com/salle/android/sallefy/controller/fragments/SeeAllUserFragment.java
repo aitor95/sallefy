@@ -18,8 +18,10 @@ import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.callbacks.SeeAllCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
+import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
+import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 
 import java.util.ArrayList;
@@ -153,7 +155,12 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	}
 
 	@Override
-	public void onUpdateUser() {
+	public void onUpdateUser(UserToken userToken) {
+
+	}
+
+	@Override
+	public void onUpdatePassword(ChangePassword changePassword, UserToken userToken) {
 
 	}
 

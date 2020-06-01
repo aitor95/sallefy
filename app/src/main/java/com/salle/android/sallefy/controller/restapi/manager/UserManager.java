@@ -61,7 +61,7 @@ public class UserManager {
     }
 
 
-    /********************   LOGIN    ********************/
+    /********************    LOGIN    ********************/
     public synchronized void loginAttempt (String username, String password, final UserLogInAndRegisterCallback userCallback) {
 
         Call<UserToken> call = mTokenService.loginUser(new UserLogin(username, password, true));
@@ -90,7 +90,7 @@ public class UserManager {
     }
 
 
-    /********************   USER INFO    ********************/
+    /********************     USER INFO    ********************/
     public synchronized void getUserData (String login, final UserLogInAndRegisterCallback userCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
         Call<User> call = mService.getUserById(login, "Bearer " + userToken.getIdToken());
@@ -115,7 +115,7 @@ public class UserManager {
         });
     }
 
-    /********************   REGISTRATION    ********************/
+    /********************    SIGN UP    ********************/
     public synchronized void registerAttempt (String email, String username, String password, final UserLogInAndRegisterCallback userCallback) {
 
         Call<ResponseBody> call = mService.registerUser(new UserRegister(email, username, password));
@@ -144,7 +144,7 @@ public class UserManager {
         });
     }
 
-    /********************   UPDATE PROFILE    ********************/
+    /********************    UPDATE PROFILE    ********************/
     public synchronized void updateProfile(User user, final UserCallback userCallback){
         UserToken userToken = Session.getInstance(mContext).getUserToken();
 
@@ -172,7 +172,7 @@ public class UserManager {
         });
     }
 
-    /********************   UPDATE PASSWORD    ********************/
+    /********************    UPDATE PASSWORD    ********************/
     public synchronized void updatePassword(ChangePassword changePassword, final UserCallback userCallback){
         UserToken userToken = Session.getInstance(mContext).getUserToken();
 
@@ -188,7 +188,7 @@ public class UserManager {
                     userCallback.onUpdatePassword(changePassword, userToken);
 
                 } else {
-                    Log.d(TAG, "Can't upload profile " + code);
+                    Log.d(TAG, "Can't update password " + code);
                     userCallback.onFailure(new Throwable("Error " + code + ", " + response.raw().message()));
                 }
             }
@@ -200,6 +200,33 @@ public class UserManager {
             }
         });
     }
+
+    /********************    DELETE ACCOUNT    ********************/
+    public synchronized void deleteAccount(final UserCallback userCallback){
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+
+        Call<ResponseBody> call = mService.deleteAccount("Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int code = response.code();
+
+                if (response.isSuccessful()){
+                    userCallback.onDeleteAccount();
+                } else {
+                    Log.d(TAG, "Can't delete account " + code);
+                    userCallback.onFailure(new Throwable("Error " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + Arrays.toString(t.getStackTrace()));
+                userCallback.onFailure(new Throwable("ERROR " + Arrays.toString(t.getStackTrace())));
+            }
+        });
+    }
+
 
     public synchronized void setFollowing(String userLogin, Boolean following, final UserFollowCallback userFollowCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();

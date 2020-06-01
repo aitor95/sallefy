@@ -170,6 +170,11 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	}
 
 	@Override
+	public void onDeleteAccount() {
+
+	}
+
+	@Override
 	public void onFailure(Throwable throwable) {
 
 	}

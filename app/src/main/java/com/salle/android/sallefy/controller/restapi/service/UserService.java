@@ -52,6 +52,6 @@ public interface UserService {
     @GET("me/followers")
     Call<List<UserPublicInfo>> getMeFollowers(@Header("Authorization") String token);
 
-    @DELETE
+    @DELETE("account")
     Call<ResponseBody> deleteAccount(@Header("Authorization") String token);
 }

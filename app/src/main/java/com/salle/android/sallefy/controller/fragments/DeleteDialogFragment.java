@@ -1,4 +1,4 @@
-package com.salle.android.sallefy.controller.activities;
+package com.salle.android.sallefy.controller.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -8,7 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-public class DeleteDialog extends AppCompatDialogFragment {
+public class DeleteDialogFragment extends AppCompatDialogFragment {
     private DeleteDialogListener listener;
 
     @Override

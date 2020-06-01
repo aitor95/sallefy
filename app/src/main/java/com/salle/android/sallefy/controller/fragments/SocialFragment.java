@@ -135,6 +135,11 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	}
 
 	@Override
+	public void onDeleteAccount() {
+
+	}
+
+	@Override
 	public void onTracksReceived(List<Track> tracks) {
 
 		int newSongs = 0;

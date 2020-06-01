@@ -17,14 +17,22 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.fragments.DeleteDialogFragment;
 import com.salle.android.sallefy.controller.music.MusicService;
+import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
+import com.salle.android.sallefy.controller.restapi.manager.UserManager;
+import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.User;
+import com.salle.android.sallefy.model.UserPublicInfo;
+import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
+import java.util.List;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SettingsActivity extends AppCompatActivity implements DeleteDialog.DeleteDialogListener {
+public class SettingsActivity extends AppCompatActivity implements DeleteDialogFragment.DeleteDialogListener, UserCallback {
 
     public static final String TAG = SettingsActivity.class.getName();
 
@@ -88,7 +96,6 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialog.
         });
 
         optionDelete.setOnClickListener(view -> {
-
             openDialog();
         });
 
@@ -114,8 +121,8 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialog.
     }
 
     private void openDialog() {
-        DeleteDialog dialog = new DeleteDialog();
-        dialog.show(getSupportFragmentManager(), "");
+        DeleteDialogFragment dialog = new DeleteDialogFragment();
+        dialog.show(getSupportFragmentManager(), "Delete Account Dialog");
     }
 
     private void initElements(){
@@ -130,6 +137,60 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialog.
     @Override
     public void onYesClicked() {
         //TODO: Delete User
+        UserManager.getInstance(getApplicationContext()).deleteAccount(SettingsActivity.this);
+    }
+
+    @Override
+    public void onUsersReceived(List<User> users) {
+
+    }
+
+    @Override
+    public void onUsersFailure(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onMeFollowingsReceived(List<User> users) {
+
+    }
+
+    @Override
+    public void onIsFollowingResponseReceived(String login, Boolean isFollowed) {
+
+    }
+
+    @Override
+    public void onUpdateUser(UserToken userToken) {
+
+    }
+
+    @Override
+    public void onUpdatePassword(ChangePassword changePassword, UserToken userToken) {
+
+    }
+
+    @Override
+    public void onMeFollowersReceived(List<UserPublicInfo> body) {
+
+    }
+
+    @Override
+    public void onDeleteAccount() {
+        PreferenceUtils.resetValues(this);
+        Session.getInstance(this).resetValues();
+        mBoundService.stopMusic();
+        unbindService(mServiceConnection);
+
+        stopService(intent);
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onFailure(Throwable throwable) {
 
     }
 

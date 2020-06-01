@@ -16,4 +16,5 @@ public interface UserCallback extends FailureCallback {
     void onUpdateUser(UserToken userToken);
     void onUpdatePassword(ChangePassword changePassword, UserToken userToken);
     void onMeFollowersReceived(List<UserPublicInfo> body);
+    void onDeleteAccount();
 }

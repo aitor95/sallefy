@@ -184,6 +184,11 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
     }
 
     @Override
+    public void onDeleteAccount() {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
 
     }

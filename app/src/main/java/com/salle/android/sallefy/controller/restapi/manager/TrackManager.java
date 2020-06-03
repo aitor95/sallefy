@@ -173,10 +173,10 @@ public class TrackManager {
         });
     }
 
-    public synchronized void getUserTracks(String login, final TrackCallback trackCallback) {
+    public synchronized void getUserTracks(String login, int currentPage, int size, boolean popular, final TrackCallback trackCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<List<Track>> call = mTrackService.getUserTracks(login, "Bearer " + userToken.getIdToken());
+        Call<List<Track>> call = mTrackService.getUserTracks(login, "Bearer " + userToken.getIdToken(), currentPage, size, popular);
         call.enqueue(new Callback<List<Track>>() {
             @Override
             public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
@@ -223,7 +223,7 @@ public class TrackManager {
     }
 
 
-    /***
+    /**
      * DELETES THE TRACK
      */
     public void deleteTrack(int id, TrackCallback trackCallback) {

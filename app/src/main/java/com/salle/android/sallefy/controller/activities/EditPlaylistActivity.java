@@ -103,6 +103,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
                 startActivityForResult(intent, Constants.EDIT_CONTENT.PLAYLIST_EDIT);
             }
         });
+
         Button mDeletePlaylist = (Button) findViewById(R.id.edit_playlist_delete);
         mDeletePlaylist.setOnClickListener(new View.OnClickListener(){
 
@@ -166,6 +167,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
             if (requestCode == Constants.EDIT_CONTENT.PLAYLIST_EDIT && resultCode == RESULT_OK) {
                 //Update playlist information
                 onPlaylistById((Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
+                updatePlaylist();
             }
         }
     }

@@ -28,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
-
 public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 	public static final String TAG = SeeAllUserFragment.class.getName();
@@ -39,6 +37,7 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	private ArrayList<User> mUsers;
 	private ArrayList<User> mFollowedUsers;
 
+	private final int PAGE_SIZE = 10;
 
 	private UserVerticalAdapter mAdapter;
 
@@ -171,6 +170,16 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onDeleteAccount() {
+
+	}
+
+	@Override
+	public void onAllFollowingsFromUserReceived(List<User> users) {
+
+	}
+
+	@Override
+	public void onAllFollowersFromUserReceived(List<User> users) {
 
 	}
 

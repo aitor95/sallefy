@@ -356,6 +356,16 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     }
 
+    @Override
+    public void onAllFollowingsFromUserReceived(List<User> users) {
+
+    }
+
+    @Override
+    public void onAllFollowersFromUserReceived(List<User> users) {
+
+    }
+
     /**********************************************************************************************
      *   *   *   *   *   *   *   *   TrackListCallback   *   *   *   *   *   *   *   *   *
      **********************************************************************************************/

@@ -595,8 +595,6 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
         repPlayStop.setImageResource(R.drawable.ic_pause_circle_40dp);
         repPlayStop.setTag(STOP);
-
-        Toast.makeText(this, "Playing Audio", Toast.LENGTH_SHORT).show();
     }
 
     private void pauseSong() {
@@ -607,7 +605,6 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         mBoundService.pauseSong();
         repPlayStop.setImageResource(R.drawable.ic_play_circle_filled_40dp);
         repPlayStop.setTag(PLAY);
-        Toast.makeText(this, "Pausing Audio", Toast.LENGTH_SHORT).show();
     }
 
     private void changeTrack(int offset){
@@ -748,6 +745,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         });
     }
 
+    //Control del dialogo que aparece al pulsar los 3 puntos de una track.
     @Override
     public void onButtonClicked(TrackViewPack track, String text) {
 

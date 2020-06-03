@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -135,13 +134,8 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         mBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //We return the edited playlist to PlaylistActivity
-                if(uploaded){
-                    Intent data = new Intent();
-                    data.putExtra(Constants.INTENT_EXTRAS.TRACK, mTrack);
-                    setResult(RESULT_OK, data);
-                }
-                finish(); }
+                exitActivity();
+            }
         });
 
         AdapterClickCallback callback = this;
@@ -163,6 +157,21 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
         mGenresView = findViewById(R.id.upload_song_genre_list);
         mGenresView.setLayoutManager(managerGenres);
         mGenresView.setAdapter(mGenresAdapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitActivity();
+    }
+
+    private void exitActivity() {
+        //We return the edited playlist to PlaylistActivity
+        if(uploaded){
+            Intent data = new Intent();
+            data.putExtra(Constants.INTENT_EXTRAS.TRACK, mTrack);
+            setResult(RESULT_OK, data);
+        }
+        finish();
     }
 
     private void initElements() {

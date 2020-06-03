@@ -171,13 +171,23 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         mNav.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent data = new Intent();
-                data.putExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE, mUpdatedPlaylist);
-                setResult(RESULT_OK, data);
-                finish();
+                exitEditing();
             }
         });
 
+    }
+
+    private void exitEditing(){
+        Intent data = new Intent();
+        data.putExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE, mUpdatedPlaylist);
+        setResult(RESULT_OK, data);
+        finish();
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitEditing();
     }
 
     private void initElements() {

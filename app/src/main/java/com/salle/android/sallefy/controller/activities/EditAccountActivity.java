@@ -10,7 +10,6 @@ import com.bumptech.glide.Glide;
 import com.google.android.material.textfield.TextInputLayout;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
-import com.salle.android.sallefy.controller.restapi.callback.UserLogInAndRegisterCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.User;
@@ -185,6 +184,16 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
 
     @Override
     public void onDeleteAccount() {
+
+    }
+
+    @Override
+    public void onAllFollowingsFromUserReceived(List<User> users) {
+
+    }
+
+    @Override
+    public void onAllFollowersFromUserReceived(List<User> users) {
 
     }
 

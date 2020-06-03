@@ -8,14 +8,14 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
-
 public class PaginatedRecyclerView extends RecyclerView {
+
 
     private PaginatedRecyclerViewListener listener;
 
     private boolean isLoading = false;
     private boolean isLast = false;
+    public static final int PAGE_SIZE = 10;
 
     public PaginatedRecyclerView(@NonNull Context context) {
         super(context);
@@ -44,7 +44,6 @@ public class PaginatedRecyclerView extends RecyclerView {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-
             }
 
             @Override

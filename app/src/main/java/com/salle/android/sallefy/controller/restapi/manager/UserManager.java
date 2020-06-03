@@ -16,7 +16,6 @@ import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserRegister;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
-import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
 import java.io.IOException;
@@ -368,6 +367,50 @@ public class UserManager {
 
             @Override
             public void onFailure(Call<List<UserPublicInfo>> call, Throwable t) {
+                userCallback.onFailure(t);
+            }
+        });
+    }
+
+    public void getAllFollowingsFromUser(User mUser, final UserCallback userCallback) {
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+        Call<List<User>> call = mService.getAllFollowingsFromUser( "Bearer " + userToken.getIdToken(), mUser.getLogin());
+
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+
+                if (response.isSuccessful()) {
+                    userCallback.onAllFollowingsFromUserReceived(response.body());
+                } else {
+                    userCallback.onUsersFailure(new Throwable());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
+                userCallback.onFailure(t);
+            }
+        });
+    }
+
+    public void getAllFollowersFromUser(User mUser, final UserCallback userCallback) {
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+        Call<List<User>> call = mService.getAllFollowersFromUser( "Bearer " + userToken.getIdToken(), mUser.getLogin());
+
+        call.enqueue(new Callback<List<User>>() {
+            @Override
+            public void onResponse(Call<List<User>> call, Response<List<User>> response) {
+
+                if (response.isSuccessful()) {
+                    userCallback.onAllFollowersFromUserReceived(response.body());
+                } else {
+                    userCallback.onUsersFailure(new Throwable());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<User>> call, Throwable t) {
                 userCallback.onFailure(t);
             }
         });

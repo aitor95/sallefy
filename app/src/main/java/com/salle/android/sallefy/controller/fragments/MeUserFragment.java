@@ -26,6 +26,8 @@ import com.salle.android.sallefy.model.UserToken;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.salle.android.sallefy.controller.fragments.MeFragment.localFollowingUsers;
+
 public class MeUserFragment extends Fragment implements UserCallback {
 
 	public static final String TAG = MeUserFragment.class.getName();
@@ -39,6 +41,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	private boolean isOwner;
 
 	private static AdapterClickCallback adapterClickCallback;
+
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
 	}
@@ -58,13 +61,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		v = inflater.inflate(R.layout.fragment_me_lists_users, container, false);
 		TextView text = v.findViewById(R.id.me_text_error);
-		if(isOwner)
-			text.setText(R.string.LoadingMe);
-		else{
-			text.setText("Backend doesn't provide this information for the moment");
-		}
-		Log.d("TEST", "onCreateView: User is "+ mUser.getLogin());
-
+		text.setText(R.string.LoadingMe);
 		initViews(v);
 		getData();
 		return v;
@@ -72,16 +69,23 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	private void initViews(View v) {
 		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
+
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		UserVerticalAdapter adapter = new UserVerticalAdapter(null, adapterClickCallback, getContext(),R.layout.item_user_vertical);
 		mRecyclerView.setLayoutManager(manager);
-		mRecyclerView.setAdapter(adapter);
+
+		mUsers = new ArrayList<>();
+
+		UserVerticalAdapter madapter = new UserVerticalAdapter(mUsers, adapterClickCallback, getContext(), R.layout.item_user_vertical);
+		mRecyclerView.setAdapter(madapter);
+
 	}
 
 	private void getData() {
 		mUsers = new ArrayList<>();
 		if(isOwner)
 			UserManager.getInstance(getContext()).getMeFollowing(this);
+		else
+			UserManager.getInstance(getContext()).getAllFollowingsFromUser(mUser,this);
 	}
 
 	@Override
@@ -95,22 +99,56 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	}
 
 
+	private void onDataReceived(List<User> users){
+		mUsers = (ArrayList<User>) users;
+
+		TextView text = v.findViewById(R.id.me_text_error);
+
+		if(mUsers.isEmpty()){
+			text.setVisibility(View.VISIBLE);
+			if(isOwner)
+				text.setText(R.string.NoContentAvailableMeUsers);
+			else
+				text.setText(R.string.UserDontFollowAnyone);
+		}else{
+			text.setVisibility(View.GONE);
+		}
+
+		UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, adapterClickCallback, getContext(),  R.layout.item_user_vertical);
+		mRecyclerView.setAdapter(adapter);
+	}
+
 	@Override
 	public void onMeFollowingsReceived(List<User> users) {
-		mUsers= (ArrayList<User>) users;
-		if(mUsers.isEmpty()){
-			TextView text = v.findViewById(R.id.me_text_error);
-			text.setText(R.string.NoContentAvailableMeUsers);
-			UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
-			mRecyclerView.setAdapter(adapter);
-		}else{
-			TextView text = v.findViewById(R.id.me_text_error);
-			text.setText(null);
-			for (int i = 0; i < users.size(); i++) {
-				users.get(i).setFollowedByUser(true);
-			}
-			UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers,adapterClickCallback, getContext(),  R.layout.item_user_vertical);
-			mRecyclerView.setAdapter(adapter);		}
+		localFollowingUsers = (ArrayList<User>) users;
+		for (int i = 0; i < users.size(); i++) {
+			users.get(i).setFollowedByUser(true);
+		}
+		onDataReceived(users);
+	}
+
+
+	@Override
+	public void onAllFollowingsFromUserReceived(List<User> users) {
+		for(User u : users){
+			boolean aux = doLocalUserFollows(u);
+			Log.d(TAG, "onAllFollowingsFromUserReceived: mUsers.contains(u) is " + aux + " " + u.getLogin()+  " " + localFollowingUsers.size());
+			u.setFollowedByUser(aux);
+		}
+		onDataReceived(users);
+	}
+
+	private boolean doLocalUserFollows(User u) {
+		for(User lu : localFollowingUsers){
+			Log.d(TAG, "doLocalUserFollows: \t\t" + lu.getLogin());
+			if(u.getLogin().equals(lu.getLogin())) return true;
+		}
+		return false;
+	}
+
+	@Override
+	public void onAllFollowersFromUserReceived(List<User> users) {
+
 	}
 
 	@Override
@@ -124,8 +162,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	}
 
     @Override
-    public void onUpdatePassword(ChangePassword changePassword, UserToken us
-	) {
+    public void onUpdatePassword(ChangePassword changePassword, UserToken us) {
 
     }
 
@@ -138,6 +175,7 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	public void onDeleteAccount() {
 
 	}
+
 
 	@Override
 	public void onFailure(Throwable throwable) {

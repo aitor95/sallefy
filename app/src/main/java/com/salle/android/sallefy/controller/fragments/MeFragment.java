@@ -33,7 +33,6 @@ import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
-import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
@@ -58,6 +57,9 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
     private CircleImageView user_img;
 	private TextView followers;
 	private TextView following;
+
+	//Arraylist con los users que el local user sigue.
+	public static ArrayList<User> localFollowingUsers = new ArrayList<>();
 
 	private boolean profileImageChoosen;
 
@@ -84,7 +86,6 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 		mUser = (User) getArguments().getSerializable(TAG_CONTENT);
 
 		User localUser = Session.getInstance(getContext()).getUser();
-
 		isOwner = (mUser == localUser);
 
 		profileImageChoosen = false;
@@ -92,6 +93,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 
         return v;
     }
+
 
 	private void initViews(View v) {
 
@@ -103,8 +105,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 		followers = v.findViewById(R.id.me_number_followers);
 
 		followers.setText(String.valueOf( mUser.getFollowers()));
-		followers.setText(String.valueOf( mUser.getFollowing()));
-
+		following.setText(String.valueOf( mUser.getFollowing()));
 
 		user_img = v.findViewById(R.id.user_img);
 
@@ -246,14 +247,26 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 
 	@Override
 	public void onMeFollowingsReceived(List<User> users) {
+
 	}
 
 	@Override
 	public void onMeFollowersReceived(List<UserPublicInfo> users) {
+
 	}
 
 	@Override
 	public void onDeleteAccount() {
+
+	}
+
+	@Override
+	public void onAllFollowingsFromUserReceived(List<User> users) {
+
+	}
+
+	@Override
+	public void onAllFollowersFromUserReceived(List<User> users) {
 
 	}
 

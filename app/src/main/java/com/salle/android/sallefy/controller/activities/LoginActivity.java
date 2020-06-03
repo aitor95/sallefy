@@ -46,10 +46,6 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
             }else{
                 //Ignora, el usuario ha vuelto sin hacer login
             }
-        }else{
-            //El usuario vuelve con a login porque ha salido del home.
-            //TODO: repair this
-            //showLogin();
         }
     }
 

@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.SocialActivityAdapter;
@@ -31,11 +30,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
 
 public class SocialFragment extends Fragment implements TrackCallback, UserCallback {
 
 	public static final String TAG = SocialFragment.class.getName();
+	private static final int PAGE_SIZE = 10;
 
 	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
@@ -136,6 +135,16 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 	@Override
 	public void onDeleteAccount() {
+
+	}
+
+	@Override
+	public void onAllFollowingsFromUserReceived(List<User> users) {
+
+	}
+
+	@Override
+	public void onAllFollowersFromUserReceived(List<User> users) {
 
 	}
 

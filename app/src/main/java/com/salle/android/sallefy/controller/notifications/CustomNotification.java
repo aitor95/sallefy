@@ -52,8 +52,8 @@ public class CustomNotification {
             notificationManager.createNotificationChannel(notificationChannel);
         }
     }
+
     public static void createNotification(Context context, Track track, boolean isPlaying){
-        Log.d("ss", "createNotification: ");
         if(track.getThumbnail() == null){
             generateNotification(context,track,null,isPlaying);
         }else{

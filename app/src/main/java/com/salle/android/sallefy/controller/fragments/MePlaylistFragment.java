@@ -104,7 +104,6 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	}
 
 	public void updateInfo(ArrayList<Playlist> playlists){
-
 		boolean found = false;
 
 		for (int i = 0; i < playlists.size(); i++) {
@@ -123,7 +122,6 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		showInformativeMessageIfNecessary(mPlaylists);
 		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setAdapter(adapter);
-
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
-import com.salle.android.sallefy.controller.adapters.PlaylistListVerticalAdapter;
 import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.callbacks.SeeAllCallback;
@@ -87,15 +87,15 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 	private void initViews(View v) {
 		mRecyclerView = (PaginatedRecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), null);
+		//TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), null);
 		mRecyclerView.setLayoutManager(manager);
-		mRecyclerView.setAdapter(adapter);
+		//mRecyclerView.setAdapter(adapter);
 		mRecyclerView.setListener(new PaginatedRecyclerView.PaginatedRecyclerViewListener() {
 			@Override
 			public void onPageLoaded() { loadMoreItems(); }
 		});
 
-		Fragment fragment = this;
+
 		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
 			if (seeAllCallback != null) seeAllCallback.onSeeAllClosed();
 
@@ -122,7 +122,7 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		mRecyclerView.setLoading(true);
 
 		currentPage += 1;
-
+		Log.d(TAG, "loadMoreItems: AMOR");
 		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, false, popular);
 
 	}

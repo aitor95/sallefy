@@ -36,8 +36,6 @@ import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 
-import static com.salle.android.sallefy.utils.OnSwipeListener.Direction.up;
-
 //Mirar https://developer.android.com/guide/components/bound-services?hl=es-419
 
 public class MusicPlayerActivity extends AppCompatActivity implements MusicCallback, LikeCallback, BottomMenuDialogInterf, isLikedCallback {
@@ -254,9 +252,18 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         detector = new GestureDetectorCompat(this, new OnSwipeListener() {
             @Override
             public boolean onSwipe(Direction direction) {
-                if(direction == up){
-                    showMoreMenu();
-                    return true;
+                switch (direction) {
+                    case up:
+                        showMoreMenu();
+                        return true;
+                    case left:
+                        nextTrack();
+                        break;
+                    case right:
+                        prevTrack();
+                        break;
+                    default:
+                        return false;
                 }
                 return false;
             }
@@ -280,7 +287,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         playPause.setImageResource(R.drawable.ic_pause_circle_64dp);
         playPause.setTag(STOP);
 
-        Toast.makeText(this, "Playing Audio", Toast.LENGTH_SHORT).show();
     }
 
     private void pauseSong() {
@@ -291,7 +297,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         mBoundService.pauseSong();
         playPause.setImageResource(R.drawable.ic_play_circle_filled_64dp);
         playPause.setTag(PLAY);
-        Toast.makeText(this, "Pausing Audio", Toast.LENGTH_SHORT).show();
     }
 
     private void changeTrack(int offset){
@@ -427,9 +432,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
         back = findViewById(R.id.new_playlist_nav);
         back.setOnClickListener(view -> {
-            Intent data = new Intent();
-            setResult(RESULT_CANCELED, data);
-            finish();
+            exitPlayer();
         });
 
         songTitle = findViewById(R.id.music_player_title);
@@ -440,6 +443,16 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         thumbnail = findViewById(R.id.music_player_thumbnail);
     }
 
+    private void exitPlayer(){
+        Intent data = new Intent();
+        setResult(RESULT_CANCELED, data);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        exitPlayer();
+    }
 
     private void updateSeekBar(){
         if(!mServiceBound){

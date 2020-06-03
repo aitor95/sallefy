@@ -28,7 +28,7 @@ public interface TrackService {
     Call<List<Track>> getOwnTracks(@Header("Authorization") String token);
 
     @GET("users/{login}/tracks")
-    Call<List<Track>> getUserTracks(@Path("login") String login, @Header("Authorization") String token);
+    Call<List<Track>> getUserTracks(@Path("login") String login, @Header("Authorization") String token, @Query("page") int page, @Query("size") int size,@Query("popular") boolean popular);
 
     @POST("tracks")
     Call<Track> createTrack(@Body Track track, @Header("Authorization") String token);

@@ -54,4 +54,10 @@ public interface UserService {
 
     @DELETE("account")
     Call<ResponseBody> deleteAccount(@Header("Authorization") String token);
+
+    @GET("users/{login}/following")
+    Call<List<User>> getAllFollowingsFromUser(@Header("Authorization") String s, @Path("login") String login);
+
+    @GET("users/{login}/followers")
+    Call<List<User>> getAllFollowersFromUser(@Header("Authorization") String s, @Path("login") String login);
 }

@@ -190,6 +190,16 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
     }
 
     @Override
+    public void onAllFollowingsFromUserReceived(List<User> users) {
+
+    }
+
+    @Override
+    public void onAllFollowersFromUserReceived(List<User> users) {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
 
     }

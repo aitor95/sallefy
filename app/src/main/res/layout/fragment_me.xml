@@ -9,8 +9,11 @@
 
     <RelativeLayout
         android:id="@+id/relativeLayoutMeUserImg"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_width="wrap_content"
+        android:layout_height="130dp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:orientation="vertical"
@@ -19,6 +22,7 @@
         <RelativeLayout
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_centerVertical="true"
             android:gravity="center_horizontal">
 
             <de.hdodenhof.circleimageview.CircleImageView
@@ -28,6 +32,7 @@
                 android:layout_height="100dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
                 android:src="@drawable/user_default_image"
                 app:civ_border_width="0dp"
                 app:civ_border_color="#FF000000"/>
@@ -46,6 +51,7 @@
 
     </RelativeLayout>
 
+    <!--
     <RelativeLayout
         android:id="@+id/relativeLayoutMeUsername"
         android:layout_width="match_parent"
@@ -109,16 +115,124 @@
 
 
     </RelativeLayout>
+    -->
+    <RelativeLayout
+        android:id="@+id/relativeLayoutUSerInfo"
+
+        android:layout_height="131dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1"
+        app:layout_constraintStart_toEndOf="@+id/relativeLayoutMeUserImg"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="0dp">
+
+        <TextView
+            android:id="@+id/me_number_following"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/userLinearLayout"
+            android:layout_alignStart="@+id/userLinearLayout"
+
+            android:includeFontPadding="false"
+
+            android:scaleType="fitXY"
+            android:text="0"
+            android:textAppearance="@style/username_me_text" />
+
+        <TextView
+            android:id="@+id/me_number_followers"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignBottom="@id/me_number_following"
+            android:layout_alignStart="@+id/FollowersText"
+            android:includeFontPadding="false"
+            android:scaleType="fitXY"
+            android:text="0"
+            android:textAppearance="@style/username_me_text" />
+
+
+        <TextView
+            android:id="@+id/FollowingText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+
+            android:layout_below="@+id/me_number_following"
+
+            android:layout_alignStart="@+id/me_number_following"
+
+            android:includeFontPadding="false"
+            android:scaleType="fitXY"
+            android:text="Following"
+            android:textAppearance="@style/music_player_author" />
+
+
+        <TextView
+            android:id="@+id/FollowersText"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_alignBottom="@id/FollowingText"
+            android:layout_marginStart="30dp"
+            android:layout_toEndOf="@+id/FollowingText"
+            android:includeFontPadding="false"
+            android:scaleType="fitXY"
+            android:text="Followers"
+            android:textAppearance="@style/music_player_author" />
+
+        <LinearLayout
+            android:id="@+id/userLinearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="10dp"
+
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/user_name"
+                android:layout_width="0dp"
+                android:layout_weight="0.8"
+
+                android:layout_height="match_parent"
+
+
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:scaleType="fitXY"
+                android:text="@string/default_username"
+                android:textAppearance="@style/username_me_text" />
+
+            <ImageView
+                android:id="@+id/config_button"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+
+                android:layout_marginEnd="30dp"
+                android:layout_marginStart="10dp"
+                android:includeFontPadding="false"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_settings_black_24dp"
+                android:textAppearance="@style/username_me_text" />
+
+        </LinearLayout>
+
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/relativeLayoutMeMenu"
-        android:layout_width="410dp"
+        android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutMeUsername">
+        app:layout_constraintTop_toBottomOf="@+id/relativeLayoutMeUserImg">
 
         <Button
             android:id="@+id/action_me_users"

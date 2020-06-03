@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +39,14 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	private final User mUser;
 	private boolean isOwner;
 
-	private RecyclerView mRecyclerView;
+	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
 
 	private View v;
 
 	private TrackListVerticalAdapter adapter;
 	private static AdapterClickCallback adapterClickCallback;
-	private boolean tracksAvailable;
+	private int currentPage;
 
 	public MeSongFragment(User mUser, boolean isOwner) {
 		this.mUser = mUser;
@@ -58,25 +60,33 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mTracks = new ArrayList<>();
+		getData();
 	}
 
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 		v = inflater.inflate(R.layout.fragment_me_lists_song, container, false);
+		initViews(v);
 		TextView text = v.findViewById(R.id.me_text_error);
 		text.setText(R.string.LoadingMe);
-		initViews(v);
-		getData();
+		currentPage = 0;
 		return v;
 	}
 
 	private void initViews(View v) {
-		mRecyclerView = (RecyclerView) v.findViewById(R.id.dynamic_recyclerView);
+		mRecyclerView = (PaginatedRecyclerView) v.findViewById(R.id.dynamic_recyclerView);
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
-		adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), null);
 		mRecyclerView.setLayoutManager(manager);
+		adapter = new TrackListVerticalAdapter(adapterClickCallback, getContext(), getFragmentManager(), mTracks);
 		mRecyclerView.setAdapter(adapter);
+		mRecyclerView.setListener(new PaginatedRecyclerView.PaginatedRecyclerViewListener() {
+			@Override
+			public void onPageLoaded() {
+				loadMoreItems();
+			}
+		});
 
 		Button addNew = v.findViewById(R.id.add_new_btn);
 		if(isOwner) {
@@ -90,6 +100,13 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 		}
 	}
 
+	//Es crida cada cop que arribem al final de el contingut carregat.
+	private void loadMoreItems() {
+		mRecyclerView.setLoading(true);
+		currentPage += 1;
+		getData();
+	}
+
 
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -97,7 +114,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 		if (requestCode == EXTRA_NEW_SONG_CODE && resultCode == RESULT_OK) {
 			mTracks.add((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
 			showInformativeMessageIfNecessary(mTracks);
-			TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getContext(), getFragmentManager(), mTracks);
+			adapter = new TrackListVerticalAdapter(adapterClickCallback, getContext(), getFragmentManager(), mTracks);
 			mRecyclerView.setAdapter(adapter);
 		}
 	}
@@ -116,11 +133,12 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 
 
 	private void getData() {
-		if(isOwner)
+		if(isOwner) {
 			TrackManager.getInstance(getActivity()).getOwnTracks(this);
-		else
-			TrackManager.getInstance(getActivity()).getUserTracks(mUser.getLogin(),this);
-		mTracks = new ArrayList<>();
+		}
+		else {
+			TrackManager.getInstance(getActivity()).getUserTracks(mUser.getLogin(), currentPage, 10, false, this);
+		}
 	}
 
 	public void updateSongInfo(Track track){
@@ -132,16 +150,12 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 		}
 		mTracks.removeIf(Track::isDeleted);
 		showInformativeMessageIfNecessary(mTracks);
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
+		adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
 		mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
-		//mTracks = (ArrayList<Track>) tracks;
-		//this.tracksAvailable = !tracks.isEmpty();
-		//TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), mTracks);
-		//mRecyclerView.setAdapter(adapter);
 	}
 
 
@@ -153,17 +167,25 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	@Override
 	public void onPersonalTracksReceived(List<Track> tracks) {
 		mTracks = (ArrayList<Track>) tracks;
-		showInformativeMessageIfNecessary((ArrayList<Track>) tracks);
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
+		showInformativeMessageIfNecessary(mTracks);
+		adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
 		mRecyclerView.setAdapter(adapter);
 	}
 
 	@Override
 	public void onUserTracksReceived(List<Track> tracks) {
-		mTracks = (ArrayList<Track>) tracks;
-		showInformativeMessageIfNecessary((ArrayList<Track>) tracks);
-		TrackListVerticalAdapter adapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
-		mRecyclerView.setAdapter(adapter);
+		if(tracks.size() < PaginatedRecyclerView.PAGE_SIZE){
+			mRecyclerView.setLast(true);
+		}
+
+		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);
+
+		mTracks.addAll(tracks);
+		showInformativeMessageIfNecessary(mTracks);
+
+		Parcelable parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
+		adapter.notifyDataSetChanged();
+		mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
 	}
 
 	@Override

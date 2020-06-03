@@ -1,7 +1,6 @@
 package com.salle.android.sallefy.controller.adapters;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -71,12 +70,7 @@ public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapte
                     .load(currUser.getImageUrl())
                     .into(holder.mPhoto);
 
-
-
-            //isFollowing = currUser.getFollowedByUser();
-
             if (currUser.getFollowedByUser() == null){
-                Log.d("TAGG", currUser.getLogin());
                 currUser.setFollowedByUser(false);
             }
 

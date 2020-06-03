@@ -2,7 +2,6 @@ package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,23 +68,19 @@ public class MeUserFragment extends Fragment implements UserCallback {
 				LinkedList<String> loginToDelete = new LinkedList<>();
 				if(mUsers != null && isOwner) {
 					for (User u : mUsers) {
-						//TODO: BUG: PASA ALGO .
 						if (!u.getFollowedByUser() ) {
 							long timeSinceLastFollow = u.getTimeSinceLastFollow();
 							if (timeSinceLastFollow == 0) {
 								// Value never defined. El usuari ha deixat de seguir la account fa REFRESH_TIME
 								u.setTimeSinceLastFollow(System.currentTimeMillis());
-								Log.d(TAG, "Detected a unfollow.: " + u.getLogin());
 							} else {
 								if (System.currentTimeMillis() - timeSinceLastFollow >= MAX_TIME) {
 									//User needs to be removed.
 									loginToDelete.push(u.getLogin());
-									Log.d(TAG, "Added to delete list.");
 								}
 							}
 
 						} else if (u.getTimeSinceLastFollow() != 0) {
-							Log.d(TAG, "Followed aback just in time!: " + u.getLogin());
 							u.setTimeSinceLastFollow(0);
 						}
 					}

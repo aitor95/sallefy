@@ -50,6 +50,11 @@ public class MeUserFragment extends Fragment implements UserCallback {
 		followingCount = meFragment;
 	}
 
+
+	public interface MeFragmentUpdateFollowingCount{
+		void updateFollowingCount(int followingCount);
+	}
+
 	public MeUserFragment(User user, boolean isOwner, ArrayList<User> mFollowing){
 		mUsers = mFollowing;
 		mUser = user;

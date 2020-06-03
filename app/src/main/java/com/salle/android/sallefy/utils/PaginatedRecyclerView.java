@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class PaginatedRecyclerView extends RecyclerView {
 
-
     private PaginatedRecyclerViewListener listener;
 
     private boolean isLoading = false;

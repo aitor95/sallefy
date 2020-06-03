@@ -42,11 +42,8 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-interface MeFragmentUpdateFollowingCount{
-	void updateFollowingCount(int followingCount);
-}
 
-public class MeFragment extends Fragment implements UserCallback, UploadCallback, MeFragmentUpdateFollowingCount {
+public class MeFragment extends Fragment implements UserCallback, UploadCallback, MeUserFragment.MeFragmentUpdateFollowingCount {
 
 	public static final String TAG = MeFragment.class.getName();
 	public static final String TAG_CONTENT = MeFragment.class.getName();

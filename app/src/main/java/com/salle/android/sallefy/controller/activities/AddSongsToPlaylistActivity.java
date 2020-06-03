@@ -10,7 +10,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.AddSongsToPlayListAdapter;
@@ -28,8 +27,6 @@ import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
 
 public class AddSongsToPlaylistActivity extends AppCompatActivity implements PlaylistCallback, TrackCallback, BottomMenuDialog.BottomMenuDialogInterf {
 
@@ -51,7 +48,6 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     //Pagination
     private int currentPage = 0;
-
 
 
     @Override
@@ -130,7 +126,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     private void checkExistingTracks(){
-        if(this.mTracks.size() < PAGE_SIZE){
+        if(this.mTracks.size() < PaginatedRecyclerView.PAGE_SIZE){
             mAddSongToPlaylistRecyclerView.setLast(true);
         }
 
@@ -148,7 +144,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
             }
         }
 
-        if(!mAddSongToPlaylistRecyclerView.isLast() && this.mTracks.size() < PAGE_SIZE){
+        if(!mAddSongToPlaylistRecyclerView.isLast() && this.mTracks.size() < PaginatedRecyclerView.PAGE_SIZE){
             loadMoreItems();
         }
 
@@ -232,7 +228,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     @Override
     public void onTracksReceived(List<Track> tracks) {
-        mTracks.addAll((ArrayList)tracks);
+        mTracks.addAll(tracks);
         if(mAddSongToPlaylistRecyclerView.isLoading()){
             mAddSongToPlaylistRecyclerView.setLoading(false);
             checkExistingTracks();

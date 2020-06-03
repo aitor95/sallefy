@@ -34,7 +34,7 @@ import java.util.List;
 public class SocialFragment extends Fragment implements TrackCallback, UserCallback {
 
 	public static final String TAG = SocialFragment.class.getName();
-	private static final int PAGE_SIZE = 10;
+
 
 	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
@@ -153,7 +153,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 		int newSongs = 0;
 
-		if(tracks.size() < PAGE_SIZE){
+		if(tracks.size() < PaginatedRecyclerView.PAGE_SIZE){
 			mRecyclerView.setLast(true);
 		}
 
@@ -175,7 +175,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 		//Es el ultimo y mtracks no es 0 --> simplemente actualizar
 		//No es el ultimo y mtracks no llega a PAGE_SIZE --> carga mas
 		//No es el ultimo y mtracks llega a PAGE_SIZE--> actualiza
-		if(!mRecyclerView.isLast() && (this.mTracks.size() < PAGE_SIZE || newSongs == 0)){
+		if(!mRecyclerView.isLast() && (this.mTracks.size() < PaginatedRecyclerView.PAGE_SIZE || newSongs == 0)){
 			loadMoreItems();
 		}else{
 			if(mRecyclerView.isLast() && mTracks.size() == 0){

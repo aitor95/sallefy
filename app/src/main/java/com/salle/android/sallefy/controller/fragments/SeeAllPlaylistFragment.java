@@ -25,7 +25,6 @@ import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 import java.util.ArrayList;
 import java.util.Objects;
 
-import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
 
 public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback {
 
@@ -138,7 +137,7 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 
 	@Override
 	public void onAllList(ArrayList<Playlist> playlists) {
-		if(playlists.size() < PAGE_SIZE){
+		if(playlists.size() < PaginatedRecyclerView.PAGE_SIZE){
 			mRecyclerView.setLast(true);
 		}
 		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);

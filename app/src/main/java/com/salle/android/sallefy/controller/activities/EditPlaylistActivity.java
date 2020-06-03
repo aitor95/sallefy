@@ -125,7 +125,6 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
             PlaylistManager.getInstance(getApplicationContext())
                     .updatePlaylist(this.mPlaylist, EditPlaylistActivity.this);
         }
-
     }
 
     private void chooseCoverImage() {
@@ -225,7 +224,8 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
 
     @Override
     public void onPlaylistUpdated() {
-        Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_success, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_success, Toast.LENGTH_SHORT).show();
+        exitEditing();
     }
 
     @Override

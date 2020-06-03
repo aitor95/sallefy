@@ -1,4 +1,4 @@
-package com.salle.android.sallefy.controller.fragments;
+package com.salle.android.sallefy.controller.dialogs;
 
 import android.app.AlertDialog;
 import android.app.Dialog;

@@ -37,8 +37,6 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	private ArrayList<User> mUsers;
 	private ArrayList<User> mFollowedUsers;
 
-	private final int PAGE_SIZE = 10;
-
 	private UserVerticalAdapter mAdapter;
 
 	private int currentPage = 0;
@@ -123,7 +121,7 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onUsersReceived(List<User> users) {
-		if(users.size() < PAGE_SIZE){
+		if(users.size() < PaginatedRecyclerView.PAGE_SIZE){
 			mRecyclerView.setLast(true);
 		}
 		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);

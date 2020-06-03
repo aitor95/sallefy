@@ -26,8 +26,6 @@ import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.nfc.tech.MifareUltralight.PAGE_SIZE;
-
 public class SeeAllSongFragment extends Fragment implements TrackCallback {
 
 	public static final String TAG = SeeAllSongFragment.class.getName();
@@ -129,7 +127,7 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
-		if(tracks.size() < PAGE_SIZE){
+		if(tracks.size() < PaginatedRecyclerView.PAGE_SIZE){
 			mRecyclerView.setLast(true);
 		}
 		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);

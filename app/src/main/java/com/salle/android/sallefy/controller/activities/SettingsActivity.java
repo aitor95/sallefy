@@ -10,7 +10,6 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
@@ -117,7 +116,7 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
             finish();
         });
 
-        Toast.makeText(getApplicationContext(), PreferenceUtils.getUser(this), Toast.LENGTH_LONG).show();
+        //Toast.makeText(getApplicationContext(), PreferenceUtils.getUser(this), Toast.LENGTH_LONG).show();
     }
 
     private void openDialog() {

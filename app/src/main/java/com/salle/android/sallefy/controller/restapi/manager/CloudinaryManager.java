@@ -39,7 +39,6 @@ public class CloudinaryManager extends AppCompatActivity {
     public synchronized void uploadAudioFile(String folder, Uri fileUri, String fileName, final UploadCallback uploadCallback) {
         Map<String, Object> options = new HashMap<>();
 
-        Log.d("TEST", "SENDING AUDIO FILE: \'" + fileName + "\'");
         options.put("public_id", fileName);
         options.put("folder", folder);
         options.put("resource_type", "video");

@@ -348,7 +348,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 	}
 
 	private void uploadProfileImage() {
-		CloudinaryManager.getInstance(this.getContext()).uploadCoverImage(Constants.STORAGE.USER_PICTURE_FOLDER, mUri, mUser.getLogin(), MeFragment.this);
+		CloudinaryManager.getInstance(this.getContext()).uploadCoverImage(Constants.STORAGE.USER_PICTURE_FOLDER, mUri, String.valueOf(mUser.getId()), MeFragment.this);
 	}
 
 	@Override
@@ -359,7 +359,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 	@Override
 	public void onUpdateUser(UserToken userToken) {
 		//Update photo with the new login name
-		CloudinaryManager.getInstance(this.getContext()).uploadCoverImage(Constants.STORAGE.USER_PICTURE_FOLDER, mUri, mUser.getLogin(), MeFragment.this);
+		CloudinaryManager.getInstance(this.getContext()).uploadCoverImage(Constants.STORAGE.USER_PICTURE_FOLDER, mUri, String.valueOf(mUser.getId()), MeFragment.this);
 	}
 
 	@Override

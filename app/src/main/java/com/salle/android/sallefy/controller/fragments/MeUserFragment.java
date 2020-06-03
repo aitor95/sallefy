@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,16 +18,15 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.adapters.UserVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
-import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
-import static com.salle.android.sallefy.controller.fragments.MeFragment.localFollowingUsers;
 
 public class MeUserFragment extends Fragment implements UserCallback {
 
@@ -41,19 +41,85 @@ public class MeUserFragment extends Fragment implements UserCallback {
 	private boolean isOwner;
 
 	private static AdapterClickCallback adapterClickCallback;
+	private static MeFragmentUpdateFollowingCount followingCount;
 
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
 	}
 
-	public MeUserFragment(User user, boolean isOwner){
+	public static void setFollowCountCallback(MeFragmentUpdateFollowingCount meFragment) {
+		followingCount = meFragment;
+	}
+
+	public MeUserFragment(User user, boolean isOwner, ArrayList<User> mFollowing){
+		mUsers = mFollowing;
 		mUser = user;
 		this.isOwner = isOwner;
+	}
+
+	private final int REFRESH_TIME = 250;
+	private final int MAX_TIME = 2000;
+
+	//Thread management para la seekbar
+	private Handler mHandler;
+	Runnable mSeekBarUpdater = new Runnable() {
+		@Override
+		public void run() {
+			try{
+				LinkedList<String> loginToDelete = new LinkedList<>();
+				if(mUsers != null && isOwner) {
+					for (User u : mUsers) {
+						//TODO: BUG: PASA ALGO .
+						if (!u.getFollowedByUser() ) {
+							long timeSinceLastFollow = u.getTimeSinceLastFollow();
+							if (timeSinceLastFollow == 0) {
+								// Value never defined. El usuari ha deixat de seguir la account fa REFRESH_TIME
+								u.setTimeSinceLastFollow(System.currentTimeMillis());
+								Log.d(TAG, "Detected a unfollow.: " + u.getLogin());
+							} else {
+								if (System.currentTimeMillis() - timeSinceLastFollow >= MAX_TIME) {
+									//User needs to be removed.
+									loginToDelete.push(u.getLogin());
+									Log.d(TAG, "Added to delete list.");
+								}
+							}
+
+						} else if (u.getTimeSinceLastFollow() != 0) {
+							Log.d(TAG, "Followed aback just in time!: " + u.getLogin());
+							u.setTimeSinceLastFollow(0);
+						}
+					}
+
+					int size = loginToDelete.size();
+					if (size != 0) {
+						for (String s : loginToDelete) {
+							mUsers.removeIf((u) -> u.getLogin().equals(s));
+						}
+						followingCount.updateFollowingCount(mUsers.size());
+						UserVerticalAdapter adapter = new UserVerticalAdapter(mUsers, adapterClickCallback, getContext(), R.layout.item_user_vertical);
+						mRecyclerView.setAdapter(adapter);
+					}
+				}
+			}catch (Exception e){
+				e.printStackTrace();
+			}finally{
+				mHandler.postDelayed(mSeekBarUpdater, REFRESH_TIME);
+			}
+		}
+	};
+
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mHandler.removeCallbacks(mSeekBarUpdater);
 	}
 
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mHandler = new Handler();
+		mSeekBarUpdater.run();
 	}
 
 	@Nullable
@@ -63,7 +129,6 @@ public class MeUserFragment extends Fragment implements UserCallback {
 		TextView text = v.findViewById(R.id.me_text_error);
 		text.setText(R.string.LoadingMe);
 		initViews(v);
-		getData();
 		return v;
 	}
 
@@ -73,19 +138,15 @@ public class MeUserFragment extends Fragment implements UserCallback {
 		LinearLayoutManager manager = new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false);
 		mRecyclerView.setLayoutManager(manager);
 
-		mUsers = new ArrayList<>();
+		if(mUsers != null){
+			onDataReceived(mUsers);
+		}else{
+			mUsers = new ArrayList<>();
+		}
 
 		UserVerticalAdapter madapter = new UserVerticalAdapter(mUsers, adapterClickCallback, getContext(), R.layout.item_user_vertical);
 		mRecyclerView.setAdapter(madapter);
 
-	}
-
-	private void getData() {
-		mUsers = new ArrayList<>();
-		if(isOwner)
-			UserManager.getInstance(getContext()).getMeFollowing(this);
-		else
-			UserManager.getInstance(getContext()).getAllFollowingsFromUser(mUser,this);
 	}
 
 	@Override
@@ -120,30 +181,12 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onMeFollowingsReceived(List<User> users) {
-		localFollowingUsers = (ArrayList<User>) users;
-		for (int i = 0; i < users.size(); i++) {
-			users.get(i).setFollowedByUser(true);
-		}
-		onDataReceived(users);
+
 	}
 
 
 	@Override
 	public void onAllFollowingsFromUserReceived(List<User> users) {
-		for(User u : users){
-			boolean aux = doLocalUserFollows(u);
-			Log.d(TAG, "onAllFollowingsFromUserReceived: mUsers.contains(u) is " + aux + " " + u.getLogin()+  " " + localFollowingUsers.size());
-			u.setFollowedByUser(aux);
-		}
-		onDataReceived(users);
-	}
-
-	private boolean doLocalUserFollows(User u) {
-		for(User lu : localFollowingUsers){
-			Log.d(TAG, "doLocalUserFollows: \t\t" + lu.getLogin());
-			if(u.getLogin().equals(lu.getLogin())) return true;
-		}
-		return false;
 	}
 
 	@Override

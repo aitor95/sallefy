@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 
@@ -119,9 +120,7 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
         if (!validateEmail() | !validateLogin() | !validatePassword()){
             return;
         }
-
         updateUser();
-
     }
 
     private void updateUser() {
@@ -140,8 +139,6 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
         UserManager.getInstance(getApplicationContext()).updateProfile(mUser,  EditAccountActivity.this);
         UserManager.getInstance(getApplicationContext()).updatePassword(mChangePasswords, EditAccountActivity.this);
 
-        PreferenceUtils.savePassword(this,  password);
-        finish();
     }
 
     @Override
@@ -167,13 +164,16 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
 
     @Override
     public void onUpdateUser(UserToken userToken) {
-
+        Log.d(TAG, "onUpdateUser: USER UPDATED");
     }
 
     @Override
     public void onUpdatePassword(ChangePassword changePassword, UserToken userToken) {
+        Log.d(TAG, "onUpdatePassword: PASSWORD UPDATED");
         //TODO: actualizar el token
         Session.getInstance(this).setUserToken(userToken);
+        PreferenceUtils.savePassword(this,  password);
+        finish();
     }
 
 

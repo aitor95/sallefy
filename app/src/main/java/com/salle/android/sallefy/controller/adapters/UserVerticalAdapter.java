@@ -32,8 +32,10 @@ public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapte
     //Guardamos la referencia del holder que le han dado follow
     private ViewHolder followHolder;
 
-    public UserVerticalAdapter(ArrayList<User> users, AdapterClickCallback callback, Context context, int layoutId) {
+
+    public UserVerticalAdapter(ArrayList<User> users, AdapterClickCallback callback,Context context, int layoutId) {
         mUsers = users;
+
         mContext = context;
         this.layoutId = layoutId;
         followHolder = null;
@@ -64,6 +66,7 @@ public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapte
 
             holder.mTitle.setText(currUser.getLogin());
             holder.mFollowers.setText(currUser.getFollowers() + " followers");
+
             Glide.with(mContext)
                     .asBitmap()
                     .placeholder(R.drawable.ic_user_thumbnail)
@@ -87,7 +90,7 @@ public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapte
             holder.mFollowing.setOnClickListener(view -> {
                 if(followHolder == null) {
                     followHolder = holder;
-                    UserManager.getInstance(mContext).setFollowing(currUser.getLogin(), !currUser.getFollowedByUser(), UserVerticalAdapter.this);
+                    UserManager.getInstance(mContext).setFollowing(currUser.getLogin(), UserVerticalAdapter.this);
                 }else{
                     //El sistema esta ocupado dando like a otro post.
                     Toast.makeText(mContext, R.string.error_follow, Toast.LENGTH_SHORT).show();
@@ -103,13 +106,16 @@ public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapte
 
 
     @Override
-    public void onFollowUnfollowSuccess(String userLogin) {
+    public void onFollowUnfollowSuccess(String userLogin, Boolean followResult) {
+
+
+
         for(User currUser : mUsers){
             if(currUser.getLogin().equals(userLogin)){
-                currUser.setFollowedByUser(!currUser.getFollowedByUser());
+                currUser.setFollowedByUser(followResult);
 
 
-                if (currUser.getFollowedByUser()) {
+                if (followResult) {
                     followHolder.mFollowing.setTextAppearance(R.style.FollowingButton);
                     followHolder.mFollowing.setBackgroundResource(R.drawable.round_corner_light);
                     followHolder.mFollowing.setText(R.string.FollowingText);
@@ -118,8 +124,8 @@ public class UserVerticalAdapter extends RecyclerView.Adapter<UserVerticalAdapte
                     followHolder.mFollowing.setBackgroundResource(R.drawable.round_corner);
                     followHolder.mFollowing.setText(R.string.ToFollowText);
                 }
-
-                currUser.setFollowers(currUser.getFollowers() + ((currUser.getFollowedByUser()) ? +1 : -1));
+                int inc = (currUser.getFollowedByUser()) ? +1 : -1;
+                currUser.setFollowers(currUser.getFollowers() + inc);
                 followHolder.mFollowers.setText(currUser.getFollowers() + " followers");
 
                 followHolder = null;

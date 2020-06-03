@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,7 +42,11 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MeFragment extends Fragment implements UserCallback, UploadCallback {
+interface MeFragmentUpdateFollowingCount{
+	void updateFollowingCount(int followingCount);
+}
+
+public class MeFragment extends Fragment implements UserCallback, UploadCallback, MeFragmentUpdateFollowingCount {
 
 	public static final String TAG = MeFragment.class.getName();
 	public static final String TAG_CONTENT = MeFragment.class.getName();
@@ -56,10 +61,12 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 	private static AdapterClickCallback adapterClickCallback;
     private CircleImageView user_img;
 	private TextView followers;
-	private TextView following;
+	private static TextView following;
+
 
 	//Arraylist con los users que el local user sigue.
 	public static ArrayList<User> localFollowingUsers = new ArrayList<>();
+	public  ArrayList<User> mFollowing = new ArrayList<>();
 
 	private boolean profileImageChoosen;
 
@@ -73,7 +80,23 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 		adapterClickCallback = callback;
 	}
 
-    @Override
+	public void updateFollowingCount(int followingCount){
+		Log.d(TAG, "updateFollowingCount: UPDATING COUNT!" + followingCount);
+		mUser.setFollowing(followingCount);
+		following.setText(String.valueOf(followingCount));
+	}
+
+	private void updateFollowings(long val){
+		mUser.setFollowing((int) val);
+		following.setText(String.valueOf(val));
+	}
+
+	private void updateFollowers(long val){
+		mUser.setFollowers((int) val);
+		followers.setText(String.valueOf(val));
+	}
+
+	@Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
@@ -84,16 +107,26 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
         View v = inflater.inflate(R.layout.fragment_me, container, false);
 
 		mUser = (User) getArguments().getSerializable(TAG_CONTENT);
-
 		User localUser = Session.getInstance(getContext()).getUser();
 		isOwner = (mUser == localUser);
 
 		profileImageChoosen = false;
+
+		getData();
         initViews(v);
 
         return v;
     }
 
+	private void getData() {
+		if(isOwner){
+			UserManager.getInstance(getContext()).getMeFollowing(this);
+			UserManager.getInstance(getContext()).getMeFollowers(this);
+		}else{
+			UserManager.getInstance(getContext()).getAllFollowingsFromUser(mUser,this);
+			UserManager.getInstance(getContext()).getAllFollowersFromUser(mUser,this);
+		}
+	}
 
 	private void initViews(View v) {
 
@@ -104,15 +137,10 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 		following = v.findViewById(R.id.me_number_following);
 		followers = v.findViewById(R.id.me_number_followers);
 
-		followers.setText(String.valueOf( mUser.getFollowers()));
-		following.setText(String.valueOf( mUser.getFollowing()));
+		followers.setText(String.valueOf(0));
+		following.setText(String.valueOf(0));
 
 		user_img = v.findViewById(R.id.user_img);
-
-		Fragment fragmentMeUsers = new MeUserFragment(mUser,isOwner);
-		MeUserFragment.setAdapterClickCallback(adapterClickCallback);
-		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-		transaction.add(R.id.me_fragment_container, fragmentMeUsers).commit();
 
 		users.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -126,10 +154,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 				playlists.setBackgroundResource(0);
 
 				// FRAGMENT INTO FRAGMENT
-				Fragment fragmentMeUsers = new MeUserFragment(mUser, isOwner);
-				MeUserFragment.setAdapterClickCallback(adapterClickCallback);
-				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-				transaction.add(R.id.me_fragment_container, fragmentMeUsers).commit();
+				openUserFragment();
 			}
 		});
 
@@ -147,6 +172,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 				// FRAGMENT INTO FRAGMENT
 				fragmentMeSongs = new MeSongFragment(mUser,isOwner);
 				MeSongFragment.setAdapterClickCallback(adapterClickCallback);
+
 				FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 				transaction.add(R.id.me_fragment_container, fragmentMeSongs).commit();
 			}
@@ -209,6 +235,15 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 		}
 	}
 
+	private void openUserFragment() {
+
+		Fragment fragmentMeUsers = new MeUserFragment(mUser,isOwner,mFollowing);
+		MeUserFragment.setAdapterClickCallback(adapterClickCallback);
+		MeUserFragment.setFollowCountCallback(this);
+		FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+		transaction.add(R.id.me_fragment_container, fragmentMeUsers).commit();
+	}
+
 
 	public static MeFragment newInstance(User user) {
 		MeFragment fragment = new MeFragment();
@@ -245,31 +280,59 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 
 	}
 
+
 	@Override
 	public void onMeFollowingsReceived(List<User> users) {
+		updateFollowings(users.size());
 
+		for (int i = 0; i < users.size(); i++) {
+			users.get(i).setFollowedByUser(true);
+		}
+
+		mFollowing = (ArrayList<User>) users;
+		localFollowingUsers = (ArrayList<User>) users;
+
+		openUserFragment();
 	}
 
 	@Override
 	public void onMeFollowersReceived(List<UserPublicInfo> users) {
-
+		updateFollowers(users.size());
 	}
+
+	@Override
+	public void onAllFollowingsFromUserReceived(List<User> users) {
+		updateFollowings(users.size());
+		mFollowing = (ArrayList<User>) users;
+		openUserFragment();
+
+		for(User u : users){
+			boolean aux = doLocalUserFollows(u);
+			Log.d(TAG, "onAllFollowingsFromUserReceived: mUsers.contains(u) is " + aux + " " + u.getLogin()+  " " + localFollowingUsers.size());
+			u.setFollowedByUser(aux);
+		}
+	}
+
+	private boolean doLocalUserFollows(User u) {
+		for(User lu : localFollowingUsers){
+			Log.d(TAG, "doLocalUserFollows: \t\t" + lu.getLogin());
+			if(u.getLogin().equals(lu.getLogin())) return true;
+		}
+		return false;
+	}
+
+
+
+	@Override
+	public void onAllFollowersFromUserReceived(List<User> users) {
+		updateFollowers(users.size());
+	}
+
 
 	@Override
 	public void onDeleteAccount() {
 
 	}
-
-	@Override
-	public void onAllFollowingsFromUserReceived(List<User> users) {
-
-	}
-
-	@Override
-	public void onAllFollowersFromUserReceived(List<User> users) {
-
-	}
-
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);

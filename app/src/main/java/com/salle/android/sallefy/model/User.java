@@ -59,6 +59,7 @@ public class User implements Serializable {
     private String login;
 
     private Boolean followedByUser;
+    private long timeSinceLastFollow;
 
     public Boolean getFollowedByUser() {
         return followedByUser;
@@ -202,5 +203,13 @@ public class User implements Serializable {
 
     public void setLogin(String login) {
         this.login = login;
+    }
+
+    public long getTimeSinceLastFollow() {
+        return timeSinceLastFollow;
+    }
+
+    public void setTimeSinceLastFollow(long currentTimeMillis) {
+        timeSinceLastFollow = currentTimeMillis;
     }
 }

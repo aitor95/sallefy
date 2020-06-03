@@ -35,7 +35,7 @@ public interface UserService {
     Call<ResponseBody> registerUser(@Body UserRegister user);
 
     @PUT("users/{login}/follow")
-    Call<ResponseBody> followUser(@Path("login") String userLogin, @Body Boolean isFollowing, @Header("Authorization") String token);
+    Call<Follow> followUser(@Path("login") String userLogin, @Header("Authorization") String token);
 
     @GET("users/{login}/follow")
     Call<Follow> isFollowingUser(@Path("login") String userLogin, @Header("Authorization") String token);

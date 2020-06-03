@@ -227,17 +227,17 @@ public class UserManager {
     }
 
 
-    public synchronized void setFollowing(String userLogin, Boolean following, final UserFollowCallback userFollowCallback) {
+    public synchronized void setFollowing(String userLogin, final UserFollowCallback userFollowCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
-        Call<ResponseBody> call = mService.followUser(userLogin, following, "Bearer " + userToken.getIdToken());
+        Call<Follow> call = mService.followUser(userLogin, "Bearer " + userToken.getIdToken());
 
-        call.enqueue(new Callback<ResponseBody>() {
+        call.enqueue(new Callback<Follow>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<Follow> call, Response<Follow> response) {
 
                 int code = response.code();
                 if (response.isSuccessful()) {
-                    userFollowCallback.onFollowUnfollowSuccess(userLogin);
+                    userFollowCallback.onFollowUnfollowSuccess(userLogin,response.body().getFollow());
                 } else {
                     try {
                         userFollowCallback.onFailure(new Throwable("ERROR " + code + ", " + response.errorBody().string()));
@@ -248,7 +248,7 @@ public class UserManager {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<Follow> call, Throwable t) {
                 userFollowCallback.onFailure(t);
             }
         });

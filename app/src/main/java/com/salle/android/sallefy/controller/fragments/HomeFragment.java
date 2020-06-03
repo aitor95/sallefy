@@ -28,7 +28,6 @@ import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCallback {
@@ -206,7 +205,6 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
     @Override
     public void onTracksReceived(List<Track> tracks) {
-        tracks.stream().limit(10);
         tracksAdapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity().getApplicationContext(), getFragmentManager(), (ArrayList<Track>) tracks);
         tracksAdapter.setPlaylist(new Playlist((ArrayList<Track>) tracks));
         rvSongs.setAdapter(tracksAdapter);

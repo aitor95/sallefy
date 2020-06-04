@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.salle.android.sallefy.R;
@@ -101,6 +102,18 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         }
 
         return v;
+    }
+
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        if (tag != null && tag.equals("FRAGMENT_TAG_MAX_ONE_INSTANCE")) {
+            // we do not show it twice
+            if (manager.findFragmentByTag(tag) == null) {
+                super.show(manager, tag);
+            }
+        } else {
+            super.show(manager, tag);
+        }
     }
 
     public interface BottomMenuDialogInterf {

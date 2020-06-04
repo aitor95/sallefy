@@ -539,7 +539,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         Log.d("TAGG", mBoundService.getCurrentTrack().toString());
 
         BottomMenuDialog dialog = new BottomMenuDialog(new TrackViewPack(mBoundService.getCurrentTrack(), null, null), this);
-        dialog.show(getSupportFragmentManager(),"options");
+        dialog.show(getSupportFragmentManager(),"FRAGMENT_TAG_MAX_ONE_INSTANCE");
     }
 
 

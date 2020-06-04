@@ -61,6 +61,10 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     public static final String TAG = MainActivity.class.getName();
     private static final int MUSIC_PLAYER = 5005;
 
+    //Tiempo que ha de pasar entre acciones para que estas se interpreten como validas
+    //Esto permite eliminar los dobleclicks del usuario.
+    private static final long TIME_BETWEEN_CLICKS = 300;
+
     //Fragment management
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
@@ -104,6 +108,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     //Track edit
     private static TrackViewPack mTrackViewPack;
 
+    private long lastClick;
+
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -145,6 +151,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         //Volvemos del reproductor, actualizamos el mini reproductor.
         Log.d(TAG, "onResume: Volviendo a la main activity");
         updateIfBoundToService();
+        lastClick = 0;
     }
 
     private void updateIfBoundToService() {
@@ -185,8 +192,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         setContentView(R.layout.activity_main);
 
         startStreamingService();
-
-        isMeUserTheOwner = false;
+        lastClick = 0;
+        isMeUserTheOwner = true;
         backButtonLastPressTime = 0;
         backButtonPressed = false;
         initViews();
@@ -244,6 +251,10 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         linearLayoutMiniplayer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+                    return;
+
+                lastClick = System.currentTimeMillis();
                 Intent intent = new Intent(MainActivity.this, MusicPlayerActivity.class);
                 startActivity(intent);
             }
@@ -517,6 +528,13 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     @Override
     public void onTrackClicked(Track track, Playlist playlist) {
+        if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS) {
+            Log.d(TAG, "onTrackClicked: TIME WAS " + (System.currentTimeMillis() - lastClick));
+            return;
+        }
+
+        lastClick = System.currentTimeMillis();
+
         Intent intent = new Intent(this, MusicPlayerActivity.class);
         Log.d(TAG, "onTrackSelected: Track is " + track.getName());
 
@@ -533,6 +551,11 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
         @Override
     public void onPlaylistClick(Playlist playlist) {
+        if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+            return;
+
+        lastClick = System.currentTimeMillis();
+
         Log.d(TAG, "onPlaylistClick: Playlist is " + playlist.getName());
 
         Intent intent = new Intent(this, PlaylistActivity.class);
@@ -543,6 +566,11 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     @Override
     public void onUserClick(User user) {
+        if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+            return;
+
+        lastClick = System.currentTimeMillis();
+
         Log.d(TAG, "onUserClick: User name is " + user.getLogin());
         if(user.getId()==Session.getInstance(this).getUser().getId().intValue())
             enterMeFragmentOfOwner();
@@ -552,6 +580,11 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     @Override
     public void onGenreClick(Genre genre) {
+        if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+            return;
+
+        lastClick = System.currentTimeMillis();
+
         Log.d(TAG, "onGenreClick: Genre name is " + genre.getName());
     }
 

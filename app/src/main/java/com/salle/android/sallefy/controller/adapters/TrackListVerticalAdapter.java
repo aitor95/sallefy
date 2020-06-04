@@ -111,7 +111,7 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
             }
 
             BottomMenuDialog dialog = new BottomMenuDialog(tvp, mContext);
-            dialog.show(fragmentManager,"options");
+            dialog.show(fragmentManager,"FRAGMENT_TAG_MAX_ONE_INSTANCE");
         });
     }
 

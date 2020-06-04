@@ -39,12 +39,11 @@ public class FilenameHelper {
         String inn = in.replace("&","")
                 .replace("#","")
                 .replace("/","")
-                .replace("$","")
-                .replace(".","");
-
+                .replace("$","");
         if (inn.indexOf(".") > 0)
-            return inn.substring(0, inn.lastIndexOf("."));
-        return inn;
+            inn = inn.substring(0, inn.lastIndexOf("."));
+
+        return inn.replace(".","");
     }
 
     public static String extractPublicIdFromUri(String fileUri) {

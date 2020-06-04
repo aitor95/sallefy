@@ -165,7 +165,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
         }else {
             if (requestCode == Constants.EDIT_CONTENT.PLAYLIST_EDIT && resultCode == RESULT_OK) {
                 //Update playlist information
-                onPlaylistById((Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
+                this.mPlaylist = (Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST);
                 updatePlaylist();
             }
         }
@@ -225,6 +225,7 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
     @Override
     public void onPlaylistUpdated() {
         //Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_success, Toast.LENGTH_SHORT).show();
+
         exitEditing();
     }
 

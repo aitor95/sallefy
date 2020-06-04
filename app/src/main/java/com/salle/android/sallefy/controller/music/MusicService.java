@@ -117,7 +117,7 @@ public class MusicService extends Service {
     }
 
     public boolean hasTrack() {
-        return false;
+        return !mTracks.isEmpty();
     }
 
     public class MusicBinder extends Binder {
@@ -351,6 +351,17 @@ public class MusicService extends Service {
             mCallback.onUpdatePlayButton();
         if(mCallbackMini != null)
             mCallbackMini.onUpdatePlayButton();
+    }
+
+    public void updateSongAfterEditing(Track t){
+        for(int i = mTracks.size() - 1; i >= 0; i--){
+            if(mTracks.get(i).getId()==t.getId().intValue()){
+                mTracks.set(i,t);
+                break;
+            }
+        }
+        if(mPlaylist != null)
+            mPlaylist.setTracks(mTracks);
     }
 
     //Tell everyPlayer to update the song data(prev/skip buttons pressed).

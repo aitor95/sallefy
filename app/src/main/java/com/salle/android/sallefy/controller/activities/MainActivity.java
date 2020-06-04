@@ -664,11 +664,18 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     private void updateTrackDataFromEverywhere(Track track) {
         if(mBoundService.hasTrack()) {
-            if (mBoundService.getCurrentTrack().getId() == track.getId().intValue() && track.isDeleted()) {
-                linearLayoutMiniplayer.setVisibility(View.GONE);
-                mBoundService.playlistOrSongDeleted();
+            if(track.isDeleted()){
+                if (mBoundService.getCurrentTrack().getId() == track.getId().intValue()) {
+                    linearLayoutMiniplayer.setVisibility(View.GONE);
+                    mBoundService.playlistOrSongDeleted();
+                }
+            }else{
+                //Update la track del reproductor.
+                mBoundService.updateSongAfterEditing(track);
+                updateIfBoundToService();
             }
         }
+
 
         //TODO: ACABAR EL DELETE DE LA PLAYLIST I EL DELETE DE LAS TRACKS.
         Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);

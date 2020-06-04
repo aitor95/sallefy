@@ -88,11 +88,6 @@ public class CloudinaryManager extends AppCompatActivity {
 
         new DeleteConnection().execute(path + FilenameHelper.extractPublicIdFromUri(fileUri), options);
     }
-
-    public synchronized void deleteUserImage(){
-
-    }
-
 }
 
 class DeleteConnection extends AsyncTask{

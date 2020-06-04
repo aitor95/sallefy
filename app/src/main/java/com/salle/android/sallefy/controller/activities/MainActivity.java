@@ -544,7 +544,10 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     @Override
     public void onUserClick(User user) {
         Log.d(TAG, "onUserClick: User name is " + user.getLogin());
-        enterMeFragmentOfOtherUser(user);
+        if(user.getId()==Session.getInstance(this).getUser().getId().intValue())
+            enterMeFragmentOfOwner();
+        else
+            enterMeFragmentOfOtherUser(user);
     }
 
     @Override

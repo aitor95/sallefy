@@ -106,7 +106,9 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 
 		mUser = (User) getArguments().getSerializable(TAG_CONTENT);
 		User localUser = Session.getInstance(getContext()).getUser();
-		isOwner = (mUser == localUser);
+
+		Log.d(TAG, "onCreateView: Created vista user. LocalUser is " + localUser.getLogin() + ", id " + localUser.getId() + " New user is " + mUser.getLogin() + ", id " + mUser.getId());
+		isOwner = (mUser.getId() == localUser.getId().intValue());
 
 		profileImageChoosen = false;
 

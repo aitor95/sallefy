@@ -49,6 +49,7 @@ import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
+import com.salle.android.sallefy.utils.UpdatableFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -58,7 +59,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class MainActivity extends FragmentActivity implements AdapterClickCallback, MusicCallback, BottomMenuDialog.BottomMenuDialogInterf {
 
     public static final String TAG = MainActivity.class.getName();
-    private static final int ASKED_FOR_USER = 5005;
+    private static final int MUSIC_PLAYER = 5005;
 
     //Fragment management
     private FragmentManager mFragmentManager;
@@ -516,23 +517,18 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     @Override
     public void onTrackClicked(Track track, Playlist playlist) {
+        Intent intent = new Intent(this, MusicPlayerActivity.class);
+        Log.d(TAG, "onTrackSelected: Track is " + track.getName());
+
         if(playlist == null){
 
-            Log.d("TAGG", track.getName());
-            Log.d("TAGG", track.toString());
-
-            Log.d(TAG, "onTrackSelected: Track is " + track.getName());
-            Intent intent = new Intent(this, MusicPlayerActivity.class);
             intent.putExtra(Constants.INTENT_EXTRAS.PLAYER_SONG,track);
-            startActivityForResult(intent, ASKED_FOR_USER);
         }else{
-            Intent intent = new Intent(this, MusicPlayerActivity.class);
             intent.putExtra(Constants.INTENT_EXTRAS.PLAYER_SONG,track);
             intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST,playlist);
-            startActivityForResult(intent, ASKED_FOR_USER);
         }
-        Log.d(TAG, "onTrackClicked");
 
+        startActivityForResult(intent, MUSIC_PLAYER);
     }
 
         @Override
@@ -637,7 +633,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         if (requestCode == Constants.EDIT_CONTENT.TRACK_EDIT && resultCode == RESULT_OK) {
             //Update track information
             Track track = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
-
+            Log.d(TAG, "onActivityResult: REQUESTED A EDIT");
             updateTrackDataFromEverywhere(track);
 
         }else{
@@ -655,9 +651,17 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 if (fragment instanceof MeFragment) {
                     ((MeFragment) fragment).updatePlaylistInfo(mUpdatedPlaylists);
                 }
-            } else if (requestCode == ASKED_FOR_USER && resultCode == RESULT_OK) {
-                User u = (User) data.getSerializableExtra(Constants.INTENT_EXTRAS.SHOW_USER_FROM_MUSIC_PLAYER);
-                onUserClick(u);
+            } else if (requestCode == MUSIC_PLAYER) {
+                if(resultCode == Constants.EDIT_CONTENT.RESULT_MP_USER){
+                    //User stuff
+                    User u = (User) data.getSerializableExtra(Constants.INTENT_EXTRAS.SHOW_USER_FROM_MUSIC_PLAYER);
+                    onUserClick(u);
+                }else if(resultCode == Constants.EDIT_CONTENT.RESULT_MP_TRACK_EDITED){
+                    //SongEditStuff
+                    Track track = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
+
+                    updateTrackDataFromEverywhere(track);
+                }
             }
         }
     }
@@ -675,15 +679,11 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 updateIfBoundToService();
             }
         }
-
-
-        //TODO: ACABAR EL DELETE DE LA PLAYLIST I EL DELETE DE LAS TRACKS.
         Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
-        //Log.d(TAG, "updateTrackDataFromEverywhere: FRAGMENT ACTTIVADO IS " + fragment.toString());
-        if(fragment instanceof MeFragment){
-            ((MeFragment) fragment).updateSongInfo(track);
-        }
+        if(fragment instanceof UpdatableFragment)
+            ((UpdatableFragment) fragment).updateSongInfo(track);
     }
+
 
     private boolean currentSongInPlaylistDeleted(ArrayList<Playlist> mUpdatedPlaylists) {
         Playlist currentPlaylist = mBoundService.getPlaylist();
@@ -701,7 +701,6 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         }
         return false;
     }
-
 
     private void tryToLike(TrackViewPack track) {
         TrackManager.getInstance(this).likeTrack(track.getTrack().getId(),

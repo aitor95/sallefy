@@ -41,6 +41,7 @@ import com.salle.android.sallefy.utils.OnSwipeListener;
 public class MusicPlayerActivity extends AppCompatActivity implements MusicCallback, LikeCallback, BottomMenuDialogInterf, isLikedCallback {
 
     public static final String TAG = MusicPlayerActivity.class.getName();
+    private boolean trackWasEdited;
 
     public enum LoopButtonState {
         LOOP_NOT_ACTIVATED,
@@ -211,6 +212,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate: Created.");
         partyMode = false;
+        trackWasEdited = false;
 
         setContentView(R.layout.activity_music_player);
 
@@ -445,7 +447,13 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
     private void exitPlayer(){
         Intent data = new Intent();
-        setResult(RESULT_CANCELED, data);
+        if(trackWasEdited) {
+            data.putExtra(Constants.INTENT_EXTRAS.TRACK, mBoundService.getCurrentTrack());
+            setResult(Constants.EDIT_CONTENT.RESULT_MP_TRACK_EDITED, data);
+        }else {
+            setResult(Constants.EDIT_CONTENT.RESULT_MP_ORDINARY, data);
+        }
+
         finish();
     }
 
@@ -618,7 +626,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     private void showArtist(User user) {
         Intent data = new Intent();
         data.putExtra(Constants.INTENT_EXTRAS.SHOW_USER_FROM_MUSIC_PLAYER, user);
-        setResult(RESULT_OK, data);
+        setResult(Constants.EDIT_CONTENT.RESULT_MP_USER, data);
         finish();
     }
 
@@ -636,8 +644,11 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
 
             }else{
                 //Audio file was not updated
-                updateUIDataBefore((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
+                Track newTrack = (Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
+                mBoundService.updateSongAfterEditing(newTrack);
+                updateUIDataBefore(newTrack);
                 updateSongInfoAfterLoad();
+                trackWasEdited = true;
             }
         }
     }

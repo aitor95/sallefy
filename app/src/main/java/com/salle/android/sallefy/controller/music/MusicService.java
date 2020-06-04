@@ -117,7 +117,7 @@ public class MusicService extends Service {
     }
 
     public boolean hasTrack() {
-        return !mTracks.isEmpty();
+        return mTracks != null && !mTracks.isEmpty();
     }
 
     public class MusicBinder extends Binder {

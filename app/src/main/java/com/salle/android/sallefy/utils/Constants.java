@@ -39,6 +39,9 @@ public class Constants {
         public static int PLAYLIST_EDIT = 8;
         public static int TRACK_EDIT = 9;
         public static int SELECTED_PLAYLIST_UPDATE = 10;
+        int RESULT_MP_USER = 11;
+        int RESULT_MP_ORDINARY = 12;
+        int RESULT_MP_TRACK_EDITED = 13;
     }
 
     public interface ACTION {

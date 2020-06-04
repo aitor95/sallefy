@@ -1,7 +1,6 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,13 +38,14 @@ import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
+import com.salle.android.sallefy.utils.UpdatableFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class SearchFragment extends Fragment implements PlaylistCallback, UserCallback, TrackCallback, SearchCallback, SeeAllCallback {
+public class SearchFragment extends Fragment implements PlaylistCallback, UserCallback, TrackCallback, SearchCallback, SeeAllCallback, UpdatableFragment {
 
     public static final String TAG = SearchFragment.class.getName();
     public static final int ACTIVE_WRITING_TIMEOUT = 500;
@@ -59,12 +59,15 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     private RecyclerView mTracksView;
 
     private ArrayList<Playlist> playlists;
-    private ArrayList<Track> tracks;
+    private ArrayList<Track> mTracks;
     private ArrayList<User> users;
 
     private Timer searchTimer;
 
     private EditText searchText;
+
+    private Fragment mSeeAllPlaylistFragment;
+    private Fragment mSeeAllSongFragment;
 
     private static AdapterClickCallback adapterClickCallback;
     public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -88,24 +91,12 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         getData();
 
         playlists = new ArrayList<>();
-        tracks = new ArrayList<>();
+        mTracks = new ArrayList<>();
         users = new ArrayList<>();
 
         searchTimer = new Timer();
 
         return v;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        Log.d(TAG, "onResume: resuming");
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d(TAG, "onPause: Pausing");
     }
 
     private void initViews(View v) {
@@ -142,7 +133,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
         seeAllPlaylists.setOnClickListener(view -> {
-            Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists, false);
+            mSeeAllPlaylistFragment = SeeAllPlaylistFragment.newInstance(playlists, false);
 	        FragmentManager manager = getFragmentManager();
 
             SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
@@ -153,7 +144,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
-	        transaction.add(R.id.fragment_container,fragment);
+	        transaction.add(R.id.fragment_container,mSeeAllPlaylistFragment);
 	        transaction.addToBackStack(null);
 	        transaction.commit();
         });
@@ -167,7 +158,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllTracks = v.findViewById(R.id.SeeAllSearchedSongs);
         seeAllTracks.setOnClickListener(view -> {
-            Fragment fragment = SeeAllSongFragment.newInstance(tracks, false);
+            mSeeAllSongFragment = SeeAllSongFragment.newInstance(mTracks, false);
             FragmentManager manager = getFragmentManager();
 
             SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
@@ -178,7 +169,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
-            transaction.add(R.id.fragment_container,fragment);
+            transaction.add(R.id.fragment_container,mSeeAllSongFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         });
@@ -218,6 +209,27 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     public void onSeeAllClosed() {
         searchText.setEnabled(true);
     }
+
+    @Override
+    public void updateSongInfo(Track track) {
+
+        //Update with new info.
+        for (int i = 0; i < mTracks.size(); i++) {
+            if(mTracks.get(i).getId().intValue() == track.getId().intValue()){
+                mTracks.set(i, track);
+            }
+        }
+        //Remove if necessary.
+        mTracks.removeIf(Track::isDeleted);
+
+        //Update the adapter.
+        TrackListHorizontalAdapter adapter = new TrackListHorizontalAdapter(adapterClickCallback, getActivity(), mTracks);
+        mTracksView.setAdapter(adapter);
+
+        if(mSeeAllSongFragment != null)
+        ((SeeAllSongFragment)(mSeeAllSongFragment)).reloadItems(mTracks);
+    }
+
 
     class SearchPerformer extends TimerTask {
 
@@ -376,7 +388,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         TrackListHorizontalAdapter adapter = new TrackListHorizontalAdapter(adapterClickCallback, getActivity(), mTracks);
         mTracksView.setAdapter(adapter);
 
-        this.tracks = (ArrayList<Track>) tracks;
+        this.mTracks = (ArrayList<Track>) tracks;
     }
 
     @Override
@@ -417,10 +429,10 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TrackListHorizontalAdapter adapter = new TrackListHorizontalAdapter(adapterClickCallback, getActivity(), tracks);
         mTracksView.setAdapter(adapter);
-        this.tracks = tracks;
+        this.mTracks = tracks;
 
         TextView tvSeeAllTracks = getView().findViewById(R.id.SeeAllSearchedSongs);
-        if(this.tracks.isEmpty()){
+        if(this.mTracks.isEmpty()){
             tvSeeAllTracks.setVisibility(View.INVISIBLE);
         }else{
             tvSeeAllTracks.setVisibility(View.VISIBLE);

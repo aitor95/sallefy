@@ -2,7 +2,6 @@ package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,10 +56,6 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 
 	public static void setPlaylist(Playlist playlist) {
 		mPlaylist = playlist;
-	}
-
-	public static Fragment getInstance() {
-		return new SeeAllSongFragment();
 	}
 
     @Override
@@ -120,9 +115,7 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		mRecyclerView.setLoading(true);
 
 		currentPage += 1;
-		Log.d(TAG, "loadMoreItems: AMOR");
 		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, false, popular);
-
 	}
 
 	@Override
@@ -132,6 +125,14 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		}
 		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);
 		mTracks.addAll(tracks);
+		Parcelable parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
+		this.mAdapter.notifyDataSetChanged();
+		mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
+	}
+
+	public void reloadItems(ArrayList<Track> mTracks){
+		this.mTracks = mTracks;
+
 		Parcelable parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
 		this.mAdapter.notifyDataSetChanged();
 		mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
@@ -171,4 +172,5 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 	public void onFailure(Throwable throwable) {
 
 	}
+
 }

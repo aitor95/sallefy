@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +27,12 @@ import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.utils.UpdatableFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCallback {
+public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCallback, UpdatableFragment {
 
     public static final String TAG = HomeFragment.class.getName();
     private RecyclerView rvPlaylists;
@@ -39,15 +41,16 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
     private PlaylistListHorizontalAdapter playlistsAdapter;
     private TrackListVerticalAdapter tracksAdapter;
 
-    private ArrayList<Playlist> playlists;
-    private ArrayList<Track> tracks;
+    private ArrayList<Playlist> mPlaylists;
+    private ArrayList<Track> mTracks;
 
 
     private static AdapterClickCallback adapterClickCallback;
+    private SeeAllSongFragment mSeeAllSongFragment;
+
     public static void setAdapterClickCallback(AdapterClickCallback callback){
         adapterClickCallback = callback;
     }
-
 
     public static HomeFragment getInstance() {
         return new HomeFragment();
@@ -56,6 +59,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getData();
     }
 
     @Nullable
@@ -64,12 +68,6 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         View v = inflater.inflate(R.layout.fragment_home, container, false);
         initViews(v);
         return v;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        getData();
     }
 
     private void initViews(View v) {
@@ -89,7 +87,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
         seeAllPlaylists.setOnClickListener(view -> {
 
-            Fragment fragment = SeeAllPlaylistFragment.newInstance(playlists, true);
+            Fragment fragment = SeeAllPlaylistFragment.newInstance(mPlaylists, true);
             SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
 
             FragmentManager manager_seeAll = getFragmentManager();
@@ -98,19 +96,18 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
             transaction.add(R.id.fragment_container,fragment);
             transaction.addToBackStack(null);
             transaction.commit();
-
         });
 
         TextView seeAllSongs = v.findViewById(R.id.SeeAllSearchedSongs);
         seeAllSongs.setOnClickListener(view -> {
 
-            Fragment fragment = SeeAllSongFragment.newInstance(tracks, true);
+            mSeeAllSongFragment = SeeAllSongFragment.newInstance(mTracks, true);
             SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
-            SeeAllSongFragment.setPlaylist(new Playlist((ArrayList<Track>) tracks));
+            SeeAllSongFragment.setPlaylist(new Playlist((ArrayList<Track>) mTracks));
             FragmentManager manager_seeAll = getFragmentManager();
             FragmentTransaction transaction = manager_seeAll.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
-            transaction.add(R.id.fragment_container,fragment);
+            transaction.add(R.id.fragment_container,mSeeAllSongFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         });
@@ -124,7 +121,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         PlaylistManager.getInstance(getContext())
                 .getListOfPlaylistPagination(this, 0, 20, true);
         TrackManager.getInstance(getContext())
-                .getAllTracksPagination(this, 0, 10, false, true);
+                .getAllTracksPagination(this, 0, 10, true, true);
     }
 
     @Override
@@ -165,7 +162,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         playlistsAdapter = new PlaylistListHorizontalAdapter(topPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_horizontal);
         rvPlaylists.setAdapter(playlistsAdapter);
 
-        this.playlists = playlists;
+        this.mPlaylists = playlists;
     }
 
     @Override
@@ -209,7 +206,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         tracksAdapter.setPlaylist(new Playlist((ArrayList<Track>) tracks));
         rvSongs.setAdapter(tracksAdapter);
 
-        this.tracks = (ArrayList<Track>) tracks;
+        this.mTracks = (ArrayList<Track>) tracks;
     }
 
     @Override
@@ -242,4 +239,27 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
     }
 
+    @Override
+    public void updateSongInfo(Track track) {
+        //Update with new info.
+        for (int i = 0; i < mTracks.size(); i++) {
+            if(mTracks.get(i).getId().intValue() == track.getId().intValue()){
+                mTracks.set(i, track);
+            }
+        }
+        //Remove if necessary.
+        mTracks.removeIf(Track::isDeleted);
+
+        Parcelable parcelable = rvSongs.getLayoutManager().onSaveInstanceState();
+        tracksAdapter.notifyDataSetChanged();
+		rvSongs.getLayoutManager().onRestoreInstanceState(parcelable);
+
+		/*
+        tracksAdapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity().getApplicationContext(), getFragmentManager(), (ArrayList<Track>) mTracks);
+        tracksAdapter.setPlaylist(new Playlist((ArrayList<Track>) mTracks));
+        rvSongs.setAdapter(tracksAdapter);
+*/
+        if(mSeeAllSongFragment != null)
+        ((SeeAllSongFragment)(mSeeAllSongFragment)).reloadItems(mTracks);
+    }
 }

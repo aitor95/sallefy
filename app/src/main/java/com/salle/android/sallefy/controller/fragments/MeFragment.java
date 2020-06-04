@@ -35,6 +35,7 @@ import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.Session;
+import com.salle.android.sallefy.utils.UpdatableFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +44,7 @@ import java.util.Map;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 
-public class MeFragment extends Fragment implements UserCallback, UploadCallback, MeUserFragment.MeFragmentUpdateFollowingCount {
+public class MeFragment extends Fragment implements UserCallback, UploadCallback, MeUserFragment.MeFragmentUpdateFollowingCount, UpdatableFragment {
 
 	public static final String TAG = MeFragment.class.getName();
 	public static final String TAG_CONTENT = MeFragment.class.getName();
@@ -258,7 +259,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 		intent.setType("image/*");
 		startActivityForResult(Intent.createChooser(intent, "Choose a cover image"), Constants.STORAGE.IMAGE_SELECTED);
 	}
-
+	@Override
 	public void updateSongInfo(Track track){
 		fragmentMeSongs.updateSongInfo(track);
 	}

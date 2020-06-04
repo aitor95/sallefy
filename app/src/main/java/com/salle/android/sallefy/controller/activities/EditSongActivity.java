@@ -3,7 +3,6 @@ package com.salle.android.sallefy.controller.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -125,7 +124,9 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
         mBackBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                exitEditing();
+                Intent data = new Intent();
+                setResult(RESULT_CANCELED, data);
+                finish();
             }
         });
 
@@ -292,7 +293,9 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     public void onUpdatedTrack() {
         if(stateDialog != null)
             stateDialog.close();
+
         Toast.makeText(getApplicationContext(), R.string.edit_song_update_success, Toast.LENGTH_SHORT).show();
+        exitEditing();
     }
 
     @Override

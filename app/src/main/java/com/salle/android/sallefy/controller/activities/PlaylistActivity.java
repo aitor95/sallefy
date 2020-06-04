@@ -218,8 +218,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //Back from edit playlist!
         super.onActivityResult(requestCode, resultCode, data);
+        //Back from edit playlist!
+
         if (requestCode == Constants.EDIT_CONTENT.PLAYLIST_EDIT && resultCode == RESULT_OK) {
             //Update playlist information
             Playlist playlist = (Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST);
@@ -235,6 +236,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 finish();
             }
         }else{
+
             if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
                 mUpdatedPlaylist.addAll((ArrayList<Playlist>)data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE));
             }

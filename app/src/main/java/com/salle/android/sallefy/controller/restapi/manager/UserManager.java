@@ -147,15 +147,14 @@ public class UserManager {
     public synchronized void updateProfile(User user, final UserCallback userCallback){
         UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<UserToken> call = mService.updateProfile(user, "Bearer " + userToken.getIdToken());
-        call.enqueue(new Callback<UserToken>() {
+        Call<ResponseBody> call = mService.updateProfile(user, "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<UserToken> call, Response<UserToken> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 int code = response.code();
 
                 if (response.isSuccessful()){
-                    UserToken userToken = response.body();
-                    userCallback.onUpdateUser(userToken);
+                    userCallback.onUpdateUser();
 
                 } else {
                     Log.d(TAG, "Can't upload profile " + code);
@@ -164,8 +163,8 @@ public class UserManager {
             }
 
             @Override
-            public void onFailure(Call<UserToken> call, Throwable t) {
-                Log.d(TAG, "Error Failure: " + Arrays.toString(t.getStackTrace()));
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure 7: " + Arrays.toString(t.getStackTrace()));
                 userCallback.onFailure(new Throwable("ERROR " + Arrays.toString(t.getStackTrace())));
             }
         });
@@ -175,16 +174,15 @@ public class UserManager {
     public synchronized void updatePassword(ChangePassword changePassword, final UserCallback userCallback){
         UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<UserToken> call = mService.updatePassword(changePassword, "Bearer " + userToken.getIdToken());
-        call.enqueue(new Callback<UserToken>() {
+        Call<ResponseBody> call = mService.updatePassword(changePassword, "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<ResponseBody>() {
             @Override
-            public void onResponse(Call<UserToken> call, Response<UserToken> response) {
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 int code = response.code();
 
                 if (response.isSuccessful()){
-                    UserToken userToken = response.body();
 
-                    userCallback.onUpdatePassword(changePassword, userToken);
+                    userCallback.onUpdatePassword();
 
                 } else {
                     Log.d(TAG, "Can't update password " + code);
@@ -193,10 +191,12 @@ public class UserManager {
             }
 
             @Override
-            public void onFailure(Call<UserToken> call, Throwable t) {
-                Log.d(TAG, "Error Failure: " + Arrays.toString(t.getStackTrace()));
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Peta: " + Arrays.toString(t.getStackTrace()));
+
                 userCallback.onFailure(new Throwable("ERROR " + Arrays.toString(t.getStackTrace())));
             }
+
         });
     }
 

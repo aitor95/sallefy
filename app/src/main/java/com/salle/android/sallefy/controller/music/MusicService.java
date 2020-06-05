@@ -10,7 +10,10 @@ import android.os.IBinder;
 import android.util.Log;
 
 import com.salle.android.sallefy.controller.activities.MusicPlayerActivity;
+import com.salle.android.sallefy.controller.location.UserLocation;
 import com.salle.android.sallefy.controller.notifications.CustomNotification;
+import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.model.LatLong;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 
@@ -199,8 +202,14 @@ public class MusicService extends Service {
         System.gc();
     }
 
+
     //Carga una cancion en streaming.
     public void loadSong(Track track) {
+
+        LatLong latLong = UserLocation.getInstance(this).getLocation();
+
+        TrackManager.getInstance(this).playTrack(track, latLong);
+
         boolean mediaPlayerWasNull = (mediaPlayer == null);
         if (mediaPlayerWasNull) {
             //Init class values

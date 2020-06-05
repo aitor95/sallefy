@@ -1,5 +1,6 @@
 package com.salle.android.sallefy.controller.restapi.service;
 
+import com.salle.android.sallefy.model.LatLong;
 import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Track;
 
@@ -47,4 +48,7 @@ public interface TrackService {
 
     @GET("tracks")
     Call<List<Track>> getTopPopularTracks(@Query("size") int limit, @Query("liked") Boolean sortByPlayed, @Header("Authorization") String token);
+
+    @PUT("tracks/{id}/play")
+    Call<ResponseBody> playTrack(@Path("id") int id,@Body LatLong latLong, @Header("Authorization") String token);
 }

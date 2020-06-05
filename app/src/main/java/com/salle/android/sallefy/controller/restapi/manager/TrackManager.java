@@ -7,6 +7,7 @@ import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.callback.isLikedCallback;
 import com.salle.android.sallefy.controller.restapi.service.TrackService;
+import com.salle.android.sallefy.model.LatLong;
 import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.UserToken;
@@ -25,7 +26,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class TrackManager {
 
-    private static final String TAG = "TrackManager";
+    public static final String TAG = TrackManager.class.getName();
     private Context mContext;
     private static TrackManager sTrackManager;
     private Retrofit mRetrofit;
@@ -249,7 +250,7 @@ public class TrackManager {
     /**
      * DELETES THE TRACK
      */
-    public void deleteTrack(int id, TrackCallback trackCallback) {
+    public void deleteTrack(int id, final TrackCallback trackCallback) {
         UserToken userToken = Session.getInstance(mContext).getUserToken();
         Call<ResponseBody> call = mTrackService.deleteTrack(id,"Bearer " + userToken.getIdToken());
         call.enqueue(new Callback<ResponseBody>() {
@@ -268,6 +269,28 @@ public class TrackManager {
             public void onFailure(Call<ResponseBody> call, Throwable t) {
                 Log.d(TAG, "Error Failure: " + t.getStackTrace());
                 trackCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+    }
+
+    public void playTrack(Track track, LatLong latLong){
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+        Call<ResponseBody> call = mTrackService.playTrack(track.getId(), latLong,"Bearer " + userToken.getIdToken());
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                int code = response.code();
+                if (!response.isSuccessful()) {
+                    Log.d(TAG, "Error, Play track was not Successful: " + code);
+                }else{
+                    Log.d(TAG, "Playing all good bby!");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure on play track: " + t.getStackTrace());
             }
         });
     }

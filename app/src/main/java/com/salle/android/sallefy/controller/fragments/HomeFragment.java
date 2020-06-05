@@ -114,7 +114,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         seeAllSongs.setOnClickListener(view -> {
 
             mSeeAllSongFragment = SeeAllSongFragment.newInstance(mTracks, popularSongs);
-            mSeeAllPlaylistFragment.setNumber(NUMBER_OF_SONGS);
+            mSeeAllSongFragment.setNumber(NUMBER_OF_SONGS);
             SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
             SeeAllSongFragment.setPlaylist(new Playlist((ArrayList<Track>) mTracks));
             FragmentManager manager_seeAll = getFragmentManager();

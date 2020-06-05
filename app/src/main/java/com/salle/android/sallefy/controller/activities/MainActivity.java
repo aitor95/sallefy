@@ -39,7 +39,7 @@ import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
 import com.salle.android.sallefy.controller.fragments.SocialFragment;
-import com.salle.android.sallefy.controller.location.LocationProvider;
+import com.salle.android.sallefy.controller.location.UserLocation;
 import com.salle.android.sallefy.controller.music.MusicCallback;
 import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
@@ -199,7 +199,6 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: CREATED MAIN ACTIVITY!!!!!!!!!!!!!!!!!!!!!");
         setContentView(R.layout.activity_main);
 
         startStreamingService();
@@ -433,7 +432,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
         } else {
             Session.getInstance(this).setAudioEnabled(true);
-            LocationProvider.getInstance(this).requestLocationPermissions(MainActivity.this);
+            UserLocation.getInstance(this).requestLocationPermissions(MainActivity.this);
         }
 
     }
@@ -455,7 +454,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Session.getInstance(this).setAudioEnabled(true);
-                LocationProvider.getInstance(this).requestLocationPermissions(MainActivity.this);
+                UserLocation.getInstance(this).requestLocationPermissions(MainActivity.this);
                 return;
             }else{
                 ErrorDialog.getInstance(this).showErrorDialog("Microphone is mandatory!","Please let us use the microphone to reproduce music.",this);
@@ -464,9 +463,6 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
         Log.d(TAG, "onRequestPermissionsResult: Permission needed and not granted: " + requestCode + " " + Arrays.toString(grantResults));
     }
-
-
-
 
     @Override
     protected void onDestroy() {

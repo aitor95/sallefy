@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.dialogs;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,19 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
                 likeImage.setImageResource(songLiked ? R.drawable.ic_favorite_black_24dp : R.drawable.ic_favorite_border_black_24dp);
                 mListener.onButtonClicked(track,"like");
                 dismiss();
+            }
+        });
+
+        LinearLayout share = v.findViewById(R.id.bottom_menu_a_share);
+        share.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("hellooou");
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, "Look what I found on Sallefy!  http://sallefy.eu-west-3.elasticbeanstalk.com/track/" + track.getTrack().getId());
+                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Shared from Sallefy");
+                startActivity(Intent.createChooser(intent, "Share"));
             }
         });
 

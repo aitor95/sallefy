@@ -30,6 +30,7 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 	public static final String TAG = SeeAllSongFragment.class.getName();
 	public static final String TAG_CONTENT_POPULAR = SeeAllSongFragment.class.getName() + "_popular";
 	public static final String TAG_CONTENT_DATA = SeeAllSongFragment.class.getName() + "_data";
+	private int NUMBER_OF_TRACKS;
 
 
 	private PaginatedRecyclerView mRecyclerView;
@@ -74,6 +75,7 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		mAdapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity(), getFragmentManager(), mTracks);
 		mAdapter.setPlaylist(mPlaylist);
 		mRecyclerView.setAdapter(mAdapter);
+		mRecyclerView.setPageSize(NUMBER_OF_TRACKS);
 		return v;
 	}
 
@@ -115,12 +117,12 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		mRecyclerView.setLoading(true);
 
 		currentPage += 1;
-		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, false, popular);
+		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, NUMBER_OF_TRACKS, false, popular);
 	}
 
 	@Override
 	public void onTracksReceived(List<Track> tracks) {
-		if(tracks.size() < PaginatedRecyclerView.PAGE_SIZE){
+		if(tracks.size() < NUMBER_OF_TRACKS){
 			mRecyclerView.setLast(true);
 		}
 		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);
@@ -172,5 +174,7 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 	public void onFailure(Throwable throwable) {
 
 	}
-
+	public void setNumber(int number) {
+		this.NUMBER_OF_TRACKS = number;
+	}
 }

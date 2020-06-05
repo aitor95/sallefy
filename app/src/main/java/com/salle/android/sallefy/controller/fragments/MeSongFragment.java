@@ -35,6 +35,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 
 	public static final String TAG = MeSongFragment.class.getName();
 	private static final int EXTRA_NEW_SONG_CODE = 98;
+	private static final int NUMBER_OF_TRACKS = 10;
 
 	private final User mUser;
 	private boolean isOwner;
@@ -81,6 +82,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 		mRecyclerView.setLayoutManager(manager);
 		adapter = new TrackListVerticalAdapter(adapterClickCallback, getContext(), getFragmentManager(), mTracks);
 		mRecyclerView.setAdapter(adapter);
+		mRecyclerView.setPageSize(NUMBER_OF_TRACKS);
 		mRecyclerView.setListener(new PaginatedRecyclerView.PaginatedRecyclerViewListener() {
 			@Override
 			public void onPageLoaded() {
@@ -137,7 +139,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 			TrackManager.getInstance(getActivity()).getOwnTracks(this);
 		}
 		else {
-			TrackManager.getInstance(getActivity()).getUserTracks(mUser.getLogin(), currentPage, 10, false, this);
+			TrackManager.getInstance(getActivity()).getUserTracks(mUser.getLogin(), currentPage, NUMBER_OF_TRACKS, false, this);
 		}
 	}
 
@@ -174,7 +176,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 
 	@Override
 	public void onUserTracksReceived(List<Track> tracks) {
-		if(tracks.size() < PaginatedRecyclerView.PAGE_SIZE){
+		if(tracks.size() < NUMBER_OF_TRACKS){
 			mRecyclerView.setLast(true);
 		}
 

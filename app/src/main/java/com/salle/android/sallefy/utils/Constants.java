@@ -26,6 +26,7 @@ public class Constants {
 
     public interface PERMISSIONS {
         int MICROPHONE = 7;
+        int LOCATION = 8;
     }
 
     public interface SENDING {

@@ -37,12 +37,12 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
     public static final String TAG = HomeFragment.class.getName();
 
     private static final boolean popularSongs = true;
-    private static final boolean recentSongs = true;
+    private static final boolean recentSongs = false;
 
     private static final boolean popularPlaylists = true;
-    private static final int NUMBER_OF_PLAYLISTS = 10;
-    private static final int NUMBER_OF_SONGS = 10;
 
+    private static final int NUMBER_OF_PLAYLISTS = 20;
+    private static final int NUMBER_OF_SONGS = 10;
 
     private RecyclerView rvPlaylists;
     private RecyclerView rvSongs;
@@ -98,6 +98,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         seeAllPlaylists.setOnClickListener(view -> {
 
             mSeeAllPlaylistFragment = SeeAllPlaylistFragment.newInstance(mPlaylists, popularPlaylists);
+            mSeeAllPlaylistFragment.setNumber(NUMBER_OF_PLAYLISTS);
             SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
 
             FragmentManager manager_seeAll = getFragmentManager();
@@ -112,6 +113,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         seeAllSongs.setOnClickListener(view -> {
 
             mSeeAllSongFragment = SeeAllSongFragment.newInstance(mTracks, popularSongs);
+            mSeeAllPlaylistFragment.setNumber(NUMBER_OF_SONGS);
             SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
             SeeAllSongFragment.setPlaylist(new Playlist((ArrayList<Track>) mTracks));
             FragmentManager manager_seeAll = getFragmentManager();

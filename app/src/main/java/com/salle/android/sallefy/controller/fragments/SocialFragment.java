@@ -34,6 +34,7 @@ import java.util.List;
 public class SocialFragment extends Fragment implements TrackCallback, UserCallback {
 
 	public static final String TAG = SocialFragment.class.getName();
+	private static final int NUMBER_OF_TRACKS = 10;
 
 
 	private PaginatedRecyclerView mRecyclerView;
@@ -79,6 +80,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 		mTracks = new ArrayList<>();
 		adapter = new SocialActivityAdapter(adapterClickCallback, getContext(), mTracks);
 		//mRecyclerView.setLayoutManager(mLinearLayoutManager);
+		mRecyclerView.setPageSize(NUMBER_OF_TRACKS);
 		mRecyclerView.setAdapter(adapter);
 
 		nitv = v.findViewById(R.id.no_info_aviable_on_social);
@@ -97,7 +99,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 		currentPage += 1;
 
-		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, 10, true, false);
+		TrackManager.getInstance(getActivity()).getAllTracksPagination(this, currentPage, NUMBER_OF_TRACKS, true, false);
 
 	}
 
@@ -153,7 +155,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 		int newSongs = 0;
 
-		if(tracks.size() < PaginatedRecyclerView.PAGE_SIZE){
+		if(tracks.size() < NUMBER_OF_TRACKS){
 			mRecyclerView.setLast(true);
 		}
 
@@ -175,7 +177,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 		//Es el ultimo y mtracks no es 0 --> simplemente actualizar
 		//No es el ultimo y mtracks no llega a PAGE_SIZE --> carga mas
 		//No es el ultimo y mtracks llega a PAGE_SIZE--> actualiza
-		if(!mRecyclerView.isLast() && (this.mTracks.size() < PaginatedRecyclerView.PAGE_SIZE || newSongs == 0)){
+		if(!mRecyclerView.isLast() && (this.mTracks.size() < NUMBER_OF_TRACKS || newSongs == 0)){
 			loadMoreItems();
 		}else{
 			if(mRecyclerView.isLast() && mTracks.size() == 0){

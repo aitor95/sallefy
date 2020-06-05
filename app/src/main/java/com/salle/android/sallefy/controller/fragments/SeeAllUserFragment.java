@@ -33,6 +33,8 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	public static final String TAG = SeeAllUserFragment.class.getName();
 	public static final String TAG_CONTENT = SeeAllUserFragment.class.getName();
 
+	private int NUMBER_OF_USERS;
+
 	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<User> mUsers;
 	private ArrayList<User> mFollowedUsers;
@@ -76,6 +78,8 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 		mAdapter = new UserVerticalAdapter(null,adapterClickCallback, getContext(), R.layout.item_user_vertical);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(mAdapter);
+		mRecyclerView.setPageSize(NUMBER_OF_USERS);
+
 		mRecyclerView.setListener(new PaginatedRecyclerView.PaginatedRecyclerViewListener() {
 			@Override
 			public void onPageLoaded() { loadMoreItems(); }
@@ -107,7 +111,7 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 		currentPage += 1;
 
-		UserManager.getInstance(getActivity()).getUsersPagination(this, currentPage, 10);
+		UserManager.getInstance(getActivity()).getUsersPagination(this, currentPage, NUMBER_OF_USERS);
 
 	}
 
@@ -121,16 +125,18 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 
 	@Override
 	public void onUsersReceived(List<User> users) {
-		if(users.size() < PaginatedRecyclerView.PAGE_SIZE){
+		if(users.size() < NUMBER_OF_USERS){
 			mRecyclerView.setLast(true);
 		}
+
 		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);
+
 		mUsers.addAll(users);
 		checkFollowing();
+
 		Parcelable parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
 		this.mAdapter.notifyDataSetChanged();
 		mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
-
 	}
 
 	@Override
@@ -184,5 +190,9 @@ public class SeeAllUserFragment extends Fragment implements UserCallback {
 	@Override
 	public void onFailure(Throwable throwable) {
 
+	}
+
+	public void setNumber(int number) {
+		this.NUMBER_OF_USERS = number;
 	}
 }

@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,8 +53,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     private static final int NUMBER_OF_PLAYLISTS = 10;
     private static final int NUMBER_OF_SONGS = 10;
-    private static final int NUMBER_OF_USERS = 10;
-
+    private static final int NUMBER_OF_USERS = 12;
 
     public static final int ACTIVE_WRITING_TIMEOUT = 500;
 
@@ -73,8 +73,8 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     private EditText searchText;
 
-    private Fragment mSeeAllPlaylistFragment;
-    private Fragment mSeeAllSongFragment;
+    private SeeAllPlaylistFragment mSeeAllPlaylistFragment;
+    private SeeAllSongFragment mSeeAllSongFragment;
 
     private static AdapterClickCallback adapterClickCallback;
     public static void setAdapterClickCallback(AdapterClickCallback callback){
@@ -115,7 +115,9 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllUsers = v.findViewById(R.id.SeeAllSearchedUsers);
         seeAllUsers.setOnClickListener(view -> {
-            Fragment fragment = SeeAllUserFragment.newInstance(users);
+            SeeAllUserFragment fragment = SeeAllUserFragment.newInstance(users);
+            //TODO: API BUG: THIS IS A API BUG
+            fragment.setNumber(NUMBER_OF_USERS - 2);
             FragmentManager manager = getFragmentManager();
             SeeAllUserFragment.setAdapterClickCallback(adapterClickCallback);
 
@@ -141,6 +143,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
         seeAllPlaylists.setOnClickListener(view -> {
             mSeeAllPlaylistFragment = SeeAllPlaylistFragment.newInstance(mPlaylists, false);
+            mSeeAllPlaylistFragment.setNumber(NUMBER_OF_PLAYLISTS);
 	        FragmentManager manager = getFragmentManager();
 
             SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
@@ -166,6 +169,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         TextView seeAllTracks = v.findViewById(R.id.SeeAllSearchedSongs);
         seeAllTracks.setOnClickListener(view -> {
             mSeeAllSongFragment = SeeAllSongFragment.newInstance(mTracks, false);
+            mSeeAllSongFragment.setNumber(NUMBER_OF_SONGS);
             FragmentManager manager = getFragmentManager();
 
             SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
@@ -329,6 +333,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onAllList(ArrayList<Playlist> playlists) {
+        Log.d(TAG, "onAllList: Got playlists " + playlists.size());
         mPlaylistAdapter = new PlaylistListHorizontalAdapter(playlists, getContext(), adapterClickCallback, R.layout.item_playlist_horizontal);
         mPlaylistsView.setAdapter(mPlaylistAdapter);
         //Toast.makeText(getContext(), "Playlists received", Toast.LENGTH_LONG).show();
@@ -377,6 +382,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onUsersReceived(List<User> users) {
+        Log.d(TAG, "onUsersReceived: Got users " + users.size());
         mUserHorizontalAdapter = new UserHorizontalAdapter((ArrayList<User>) users,adapterClickCallback, getContext());
         mUsersView.setAdapter(mUserHorizontalAdapter);
 
@@ -434,6 +440,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onTracksReceived(List<Track> tracks) {
+        Log.d(TAG, "onTracksReceived: Got tracks " + tracks.size());
         ArrayList<Track> mTracks = (ArrayList<Track>) tracks;
         TrackListHorizontalAdapter adapter = new TrackListHorizontalAdapter(adapterClickCallback, getActivity(), mTracks);
         mTracksView.setAdapter(adapter);
@@ -473,6 +480,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onSearchResultReceived(SearchResult body) {
+        Log.d(TAG, "onSearchResultReceived: GOT THE RESULTS");
         ArrayList<Track> tracks = (ArrayList<Track>) body.getTracks();
         ArrayList<Playlist> playlists = (ArrayList<Playlist>) body.getPlaylists();
         ArrayList<User> users = (ArrayList<User>) body.getUsers();

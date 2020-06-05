@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 	public static final String TAG_CONTENT_POPULAR = SeeAllPlaylistFragment.class.getName() + "_popular";
 	public static final String TAG_CONTENT_DATA = SeeAllPlaylistFragment.class.getName() + "_data";
 
+	private int NUMBER_OF_PLAYLISTS;
 
 	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<Playlist> mPlaylists;
@@ -53,11 +55,6 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 		adapterClickCallback = callback;
 	}
 
-
-	public static Fragment getInstance() {
-		return new SeeAllPlaylistFragment();
-	}
-
 	@Override
 	public void onCreate(@Nullable Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -74,6 +71,7 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 
 		PlaylistListVerticalAdapter adapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setAdapter(adapter);
+
 		return v;
 	}
 
@@ -93,6 +91,7 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 		mAdapter = new PlaylistListVerticalAdapter(null, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setLayoutManager(manager);
 		mRecyclerView.setAdapter(mAdapter);
+		mRecyclerView.setPageSize(NUMBER_OF_PLAYLISTS);
 		mRecyclerView.setListener(new PaginatedRecyclerView.PaginatedRecyclerViewListener() {
 			@Override
 			public void onPageLoaded() { loadMoreItems(); }
@@ -120,8 +119,7 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 
 		currentPage += 1;
 
-		PlaylistManager.getInstance(getActivity()).getListOfPlaylistPagination(this, currentPage, 20, popular);
-
+		PlaylistManager.getInstance(getActivity()).getListOfPlaylistPagination(this, currentPage, NUMBER_OF_PLAYLISTS, popular);
 	}
 
 	@Override
@@ -141,8 +139,10 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 
 	@Override
 	public void onAllList(ArrayList<Playlist> playlists) {
-		if(playlists.size() < PaginatedRecyclerView.PAGE_SIZE){
+		Log.d(TAG, "onAllList: GOT " + playlists.size());
+		if(playlists.size() < NUMBER_OF_PLAYLISTS){
 			mRecyclerView.setLast(true);
+			Log.d(TAG, "onAllList: IS LAST!");
 		}
 		if(mRecyclerView.isLoading()) mRecyclerView.setLoading(false);
 		mPlaylists.addAll(playlists);
@@ -193,5 +193,9 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 		mAdapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
 		mRecyclerView.setAdapter(mAdapter);
 		mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
+	}
+
+	public void setNumber(int NUMBER_OF_PLAYLISTS) {
+		this.NUMBER_OF_PLAYLISTS = NUMBER_OF_PLAYLISTS;
 	}
 }

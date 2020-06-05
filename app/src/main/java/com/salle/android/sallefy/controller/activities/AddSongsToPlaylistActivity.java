@@ -31,6 +31,7 @@ import java.util.List;
 public class AddSongsToPlaylistActivity extends AppCompatActivity implements PlaylistCallback, TrackCallback, BottomMenuDialog.BottomMenuDialogInterf {
 
     public static final String TAG = AddSongsToPlaylistActivity.class.getName();
+    private static final int NUMBER_OF_TRACKS = 10;
 
     private PaginatedRecyclerView mAddSongToPlaylistRecyclerView;
 
@@ -55,6 +56,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_songs_to_playlist);
         mAddSongToPlaylistRecyclerView = (PaginatedRecyclerView) findViewById(R.id.add_songs_to_playlist_recycler_view);
+        mAddSongToPlaylistRecyclerView.setPageSize(NUMBER_OF_TRACKS);
         mAddSongToPlaylistRecyclerView.setListener(new PaginatedRecyclerView.PaginatedRecyclerViewListener() {
             @Override
             public void onPageLoaded() {
@@ -73,7 +75,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         newTrack.setName(getResources().getString(R.string.add_songs_to_playlist_lastitem_title));
         this.mTracks.add(0, newTrack);
 
-        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 10, true, false);
+        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, NUMBER_OF_TRACKS, true, false);
 
 
         doneBtn = findViewById(R.id.add_songs_to_playlist_btn);
@@ -111,7 +113,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
         currentPage += 1;
 
-        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, 10, true, false);
+        TrackManager.getInstance(getApplicationContext()).getAllTracksPagination(this, currentPage, NUMBER_OF_TRACKS, true, false);
 
     }
 
@@ -127,7 +129,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     private void checkExistingTracks(){
-        if(this.mTracks.size() < PaginatedRecyclerView.PAGE_SIZE){
+        if(this.mTracks.size() < NUMBER_OF_TRACKS){
             mAddSongToPlaylistRecyclerView.setLast(true);
         }
 
@@ -145,7 +147,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
             }
         }
 
-        if(!mAddSongToPlaylistRecyclerView.isLast() && this.mTracks.size() < PaginatedRecyclerView.PAGE_SIZE){
+        if(!mAddSongToPlaylistRecyclerView.isLast() && this.mTracks.size() < NUMBER_OF_TRACKS){
             loadMoreItems();
         }
 

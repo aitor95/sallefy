@@ -34,6 +34,7 @@ public class Session {
     private ArrayList<Track> mTracks;
     private int mIndex;
     private boolean isPlaying;
+    private boolean locationEnabled;
 
     public static Session getInstance(Context context) {
         Session result = sSession;
@@ -55,6 +56,7 @@ public class Session {
         this.mUserToken = null;
         this.isPlaying = false;
         this.audioEnabled = false;
+        locationEnabled = false;
     }
 
     public void resetValues() {
@@ -151,5 +153,9 @@ public class Session {
 
     public void setPlaying(boolean playing) {
         isPlaying = playing;
+    }
+
+    public void setLocationEnabled(boolean b) {
+        this.locationEnabled = b;
     }
 }

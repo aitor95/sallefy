@@ -11,19 +11,19 @@ public class UserRegister {
     private String email;
 
     @SerializedName("firstName")
-    private String firstName = "java";
+    private String firstName;
 
     @SerializedName("id")
     private Integer id;
 
     @SerializedName("imageUrl")
-    private String imageUrl = "eiufher";
+    private String imageUrl;
 
     @SerializedName("langKey")
     private String langKey = "en";
 
     @SerializedName("lastName")
-    private String lastName = "android";
+    private String lastName;
 
     @SerializedName("login")
     private String login;
@@ -38,7 +38,10 @@ public class UserRegister {
         this.activated = true;
         this.email = email;
         this.login = login;
+        this.firstName = login;
+        this.lastName = "OurTeamIsTheBest";
         this.password = password;
+        this.imageUrl = "asdasd";
         this.id = null;
     }
 

@@ -372,20 +372,6 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         replaceFragment(fragment);
     }
 
-
-    private void requestPermissions() {
-        if (ContextCompat.checkSelfPermission(getApplicationContext(),
-                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
-
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.RECORD_AUDIO,
-                            Manifest.permission.MODIFY_AUDIO_SETTINGS}, Constants.PERMISSIONS.MICROPHONE);
-
-        } else {
-            Session.getInstance(this).setAudioEnabled(true);
-        }
-    }
-
     private void replaceFragment(Fragment fragment) {
 
         String fragmentTag = getFragmentTag(fragment);
@@ -433,10 +419,36 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     }
 
 
+
+    private void requestPermissions() {
+
+        if (ContextCompat.checkSelfPermission(getApplicationContext(),
+                Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.RECORD_AUDIO,
+                            Manifest.permission.MODIFY_AUDIO_SETTINGS}, Constants.PERMISSIONS.MICROPHONE);
+
+
+        } else {
+            Session.getInstance(this).setAudioEnabled(true);
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
+                    Constants.PERMISSIONS.LOCATION
+                );
+        }else{
+            Session.getInstance(this).setLocationEnabled(true);
+        }
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        System.out.println(requestCode);
+
         if (requestCode == Constants.PERMISSIONS.MICROPHONE) {
 
             if (grantResults.length > 0

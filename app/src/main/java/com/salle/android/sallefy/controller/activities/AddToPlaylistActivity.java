@@ -144,6 +144,7 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
     @Override
     public void onOwnList(ArrayList<Playlist> playlists) {
         this.mPlaylists.addAll(playlists);
+        Log.d(TAG, "onOwnList: REQUESTED OWN PLAYLISTS. GOT " + playlists.size());
         //Add last track for New Track row
         checkExistingPlaylists();
         //Create RV tracks adapter

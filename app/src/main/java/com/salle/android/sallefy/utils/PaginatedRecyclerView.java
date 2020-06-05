@@ -14,7 +14,7 @@ public class PaginatedRecyclerView extends RecyclerView {
 
     private boolean isLoading = false;
     private boolean isLast = false;
-    public static final int PAGE_SIZE = 10;
+    private int PAGE_SIZE;
 
     public PaginatedRecyclerView(@NonNull Context context) {
         super(context);
@@ -26,6 +26,10 @@ public class PaginatedRecyclerView extends RecyclerView {
 
     public PaginatedRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+    }
+
+    public void setPageSize(int numberOfUsers) {
+        PAGE_SIZE = numberOfUsers;
     }
 
     public interface PaginatedRecyclerViewListener {

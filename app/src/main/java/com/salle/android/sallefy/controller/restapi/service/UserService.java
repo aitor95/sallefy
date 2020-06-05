@@ -41,10 +41,10 @@ public interface UserService {
     Call<Follow> isFollowingUser(@Path("login") String userLogin, @Header("Authorization") String token);
 
     @POST("account")
-    Call<UserToken> updateProfile(@Body User user, @Header("Authorization") String token);
+    Call<ResponseBody> updateProfile(@Body User user, @Header("Authorization") String token);
 
     @POST("account/change-password")
-    Call<UserToken> updatePassword(@Body ChangePassword changePassword, @Header("Authorization") String token);
+    Call<ResponseBody> updatePassword(@Body ChangePassword changePassword, @Header("Authorization") String token);
 
     @GET("me/followings")
     Call<List<User>> getMeFollowings(@Header("Authorization") String token);

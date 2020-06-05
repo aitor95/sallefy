@@ -330,6 +330,8 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 	}
 
 
+
+
 	@Override
 	public void onDeleteAccount() {
 
@@ -361,13 +363,13 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 	}
 
 	@Override
-	public void onUpdateUser(UserToken userToken) {
+	public void onUpdateUser() {
 		//Update photo with the new login name
 		CloudinaryManager.getInstance(this.getContext()).uploadCoverImage(Constants.STORAGE.USER_PICTURE_FOLDER, mUri, String.valueOf(mUser.getId()), MeFragment.this);
 	}
 
 	@Override
-	public void onUpdatePassword(ChangePassword changePassword, UserToken userToken) {
+	public void onUpdatePassword() {
 
 	}
 

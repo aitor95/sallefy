@@ -160,12 +160,13 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
     }
 
     @Override
-    public void onUpdateUser(UserToken userToken) {
+    public void onUpdateUser() {
 
     }
 
+
     @Override
-    public void onUpdatePassword(ChangePassword changePassword, UserToken userToken) {
+    public void onUpdatePassword() {
 
     }
 
@@ -197,6 +198,7 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
     public void onAllFollowersFromUserReceived(List<User> users) {
 
     }
+
 
     @Override
     public void onFailure(Throwable throwable) {

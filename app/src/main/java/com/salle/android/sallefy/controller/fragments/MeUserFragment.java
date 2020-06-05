@@ -194,18 +194,18 @@ public class MeUserFragment extends Fragment implements UserCallback {
 
 	}
 
-	@Override
+    @Override
 	public void onIsFollowingResponseReceived(String login, Boolean isFollowed) {
 
 	}
 
 	@Override
-	public void onUpdateUser(UserToken userToken) {
+	public void onUpdateUser() {
 
 	}
 
     @Override
-    public void onUpdatePassword(ChangePassword changePassword, UserToken us) {
+    public void onUpdatePassword() {
 
     }
 

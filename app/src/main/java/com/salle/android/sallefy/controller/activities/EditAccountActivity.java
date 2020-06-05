@@ -1,5 +1,6 @@
 package com.salle.android.sallefy.controller.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
+import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
@@ -139,6 +141,15 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
         UserManager.getInstance(getApplicationContext()).updateProfile(mUser,  EditAccountActivity.this);
         UserManager.getInstance(getApplicationContext()).updatePassword(mChangePasswords, EditAccountActivity.this);
 
+
+    }
+
+    private void exitEditing(){
+        //We return the edited User
+        Intent data = new Intent();
+        data.putExtra(Constants.INTENT_EXTRAS.USER, mUser);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     @Override
@@ -163,15 +174,16 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
     }
 
     @Override
-    public void onUpdateUser(UserToken userToken) {
+    public void onUpdateUser() {
         Log.d(TAG, "onUpdateUser: USER UPDATED");
+        exitEditing();
     }
 
     @Override
-    public void onUpdatePassword(ChangePassword changePassword, UserToken userToken) {
+    public void onUpdatePassword() {
         Log.d(TAG, "onUpdatePassword: PASSWORD UPDATED");
         //TODO: actualizar el token
-        Session.getInstance(this).setUserToken(userToken);
+//        Session.getInstance(this).setUserToken(userToken);
         PreferenceUtils.savePassword(this,  password);
         finish();
     }

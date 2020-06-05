@@ -13,8 +13,8 @@ public interface UserCallback extends FailureCallback {
     void onUsersFailure(Throwable throwable);
     void onMeFollowingsReceived(List<User> users);
     void onIsFollowingResponseReceived(String login, Boolean isFollowed);
-    void onUpdateUser(UserToken userToken);
-    void onUpdatePassword(ChangePassword changePassword, UserToken userToken);
+    void onUpdateUser();
+    void onUpdatePassword();
     void onMeFollowersReceived(List<UserPublicInfo> body);
     void onDeleteAccount();
 

@@ -119,12 +119,12 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	}
 
 	@Override
-	public void onUpdateUser(UserToken userToken) {
+	public void onUpdateUser() {
 
 	}
 
 	@Override
-	public void onUpdatePassword(ChangePassword changePassword, UserToken userToken) {
+	public void onUpdatePassword() {
 
 	}
 
@@ -148,7 +148,8 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 
 	}
 
-	@Override
+
+    @Override
 	public void onTracksReceived(List<Track> tracks) {
 
 		int newSongs = 0;

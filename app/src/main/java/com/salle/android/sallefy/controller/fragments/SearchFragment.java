@@ -399,12 +399,12 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     }
 
     @Override
-    public void onUpdateUser(UserToken userToken) {
+    public void onUpdateUser() {
 
     }
 
     @Override
-    public void onUpdatePassword(ChangePassword changePassword, UserToken userToken) {
+    public void onUpdatePassword() {
 
     }
 
@@ -427,6 +427,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     public void onAllFollowersFromUserReceived(List<User> users) {
 
     }
+
 
     /**********************************************************************************************
      *   *   *   *   *   *   *   *   TrackListCallback   *   *   *   *   *   *   *   *   *

@@ -206,6 +206,11 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	}
 
 	@Override
+	public void onPopularTracksReceived(List<Track> tracks) {
+
+	}
+
+	@Override
 	public void onFailure(Throwable throwable) {
 
 	}

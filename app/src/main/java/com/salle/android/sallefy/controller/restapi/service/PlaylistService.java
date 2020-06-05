@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.restapi.service;
 
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.model.Track;
 
 import java.util.List;
 
@@ -48,5 +49,6 @@ public interface PlaylistService {
     @POST("playlists")
     Call<Playlist> createPlaylist(@Body Playlist playlist, @Header("Authorization") String token);
 
-
+    @GET("playlists")
+    Call<List<Playlist>> getTopPopularPlaylists(@Query("size") int limit, @Query("popular") Boolean sortByFollowed, @Header("Authorization") String token);
 }

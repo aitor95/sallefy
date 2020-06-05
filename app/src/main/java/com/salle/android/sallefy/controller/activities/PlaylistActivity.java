@@ -514,6 +514,11 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     }
 
     @Override
+    public void onPopularPlaylistsReceived(List<Playlist> playlists) {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), R.string.playlist_creation_failure, Toast.LENGTH_LONG).show();
     }

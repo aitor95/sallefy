@@ -11,7 +11,8 @@
     <RelativeLayout
         android:id="@+id/relativeLayoutStatisticsTitle"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="70dp"
+        android:layout_marginTop="30dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -49,26 +50,53 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <RelativeLayout
+
+
+    <LinearLayout
         android:id="@+id/textOptionNotAvailable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/relativeLayoutStatisticsTitle"
-        android:padding="40dp">
+        android:paddingTop="10dp"
+        android:paddingStart="40dp"
+        android:paddingEnd="40dp"
+        android:orientation="vertical">
 
-        <TextView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
-            style="@style/SectionName"
-            android:text="This option is not ready to use for this version of Sallefy"
-            android:id="@+id/Back_from_settings"
+        <Button
+            android:id="@+id/choose_graph_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true" />
+            android:background="@color/colorLoginGrey"
+            android:layout_marginBottom="30dp"
+            android:paddingRight="20dp"
+            android:textAllCaps="false"
+            android:paddingLeft="20dp"
+            android:text="@string/label_choose_graph_button"
+            android:textAlignment="textStart"
+            style="@style/formLabel"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:drawableTint="@color/colorDarkGrey"
+            android:textSize="24sp"/>
 
-    </RelativeLayout>
+        <TextView
+            style="@style/TitlesTheme"
+            android:id="@+id/graph_title"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:paddingBottom="20dp"
+            android:text="@string/Stats_title" />
+
+        <com.salle.android.sallefy.utils.GraphView
+            android:id="@+id/stats_graph"
+            android:layout_width="match_parent"
+            android:layout_height="400dp">
+
+        </com.salle.android.sallefy.utils.GraphView>
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

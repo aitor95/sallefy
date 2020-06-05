@@ -24,6 +24,7 @@ import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.utils.PaginatedRecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -178,6 +179,11 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 
 	@Override
 	public void onPlaylistDeleted() {
+
+	}
+
+	@Override
+	public void onPopularPlaylistsReceived(List<Playlist> playlists) {
 
 	}
 

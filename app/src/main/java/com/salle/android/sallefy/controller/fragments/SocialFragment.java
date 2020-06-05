@@ -225,6 +225,11 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	}
 
 	@Override
+	public void onPopularTracksReceived(List<Track> tracks) {
+
+	}
+
+	@Override
 	public void onFailure(Throwable throwable) {
 
 	}

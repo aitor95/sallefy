@@ -372,6 +372,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     }
 
     @Override
+    public void onPopularPlaylistsReceived(List<Playlist> playlists) {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
 
     }
@@ -476,6 +481,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     @Override
     public void onTrackDeleted() {
+
+    }
+
+    @Override
+    public void onPopularTracksReceived(List<Track> tracks) {
 
     }
 

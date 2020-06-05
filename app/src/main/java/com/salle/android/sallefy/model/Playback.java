@@ -4,10 +4,10 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Playback implements Serializable {
+public class Playback implements Serializable, Comparable<Playback> {
 
-    @SerializedName("date")
-    private String date;
+    @SerializedName("time")
+    private String time;
 
     @SerializedName("id")
     private Integer id;
@@ -16,10 +16,10 @@ public class Playback implements Serializable {
     private String ip;
 
     @SerializedName("latitude")
-    private Integer latitude;
+    private Double latitude;
 
     @SerializedName("longitude")
-    private Integer longitude;
+    private Double longitude;
 
     @SerializedName("trackId")
     private Integer trackId;
@@ -33,12 +33,23 @@ public class Playback implements Serializable {
     @SerializedName("userLogin")
     private String userLogin;
 
-    public String getDate() {
-        return date;
+    @SerializedName("track")
+    private Track track;
+
+    public Track getTrack() {
+        return track;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setTrack(Track track) {
+        this.track = track;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public Integer getId() {
@@ -57,19 +68,19 @@ public class Playback implements Serializable {
         this.ip = ip;
     }
 
-    public Integer getLatitude() {
+    public Double getLatitude() {
         return latitude;
     }
 
-    public void setLatitude(Integer latitude) {
+    public void setLatitude(Double latitude) {
         this.latitude = latitude;
     }
 
-    public Integer getLongitude() {
+    public Double getLongitude() {
         return longitude;
     }
 
-    public void setLongitude(Integer longitude) {
+    public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
 
@@ -103,5 +114,10 @@ public class Playback implements Serializable {
 
     public void setUserLogin(String userLogin) {
         this.userLogin = userLogin;
+    }
+
+    @Override
+    public int compareTo(Playback playback) {
+        return (playback.time.compareTo(time) < 0) ? 1 : -1;
     }
 }

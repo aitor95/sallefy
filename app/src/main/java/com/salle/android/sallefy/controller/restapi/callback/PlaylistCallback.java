@@ -4,6 +4,7 @@ import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public interface PlaylistCallback extends FailureCallback {
 
@@ -26,4 +27,6 @@ public interface PlaylistCallback extends FailureCallback {
     void onUpdateFollow(Follow result);
 
     void onPlaylistDeleted();
+
+    void onPopularPlaylistsReceived(List<Playlist> playlists);
 }

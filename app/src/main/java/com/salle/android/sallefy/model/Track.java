@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
-public class Track implements Serializable {
+public class Track implements Serializable, Comparable<Track> {
 
     @SerializedName("color")
     private String color;
@@ -66,6 +66,16 @@ public class Track implements Serializable {
     /*public void setLikeCallback(LikeCallback likeCallback) {
         this.likeCallback = likeCallback;
     }*/
+
+    private int reproductions;
+
+    public int getReproductions() {
+        return reproductions;
+    }
+
+    public void setReproductions(int reproductions) {
+        this.reproductions = reproductions;
+    }
 
     public void setLikes(int likes) {
         this.likes = likes;
@@ -186,5 +196,10 @@ public class Track implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id);
+    }
+
+    @Override
+    public int compareTo(Track track) {
+        return (reproductions < track.reproductions) ? 1 : -1;
     }
 }

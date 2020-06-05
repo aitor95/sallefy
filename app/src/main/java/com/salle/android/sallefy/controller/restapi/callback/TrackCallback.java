@@ -14,4 +14,5 @@ public interface TrackCallback extends FailureCallback {
     void onCreateTrack(Track track);
     void onUpdatedTrack();
     void onTrackDeleted();
+    void onPopularTracksReceived(List<Track> tracks);
 }

@@ -5,9 +5,11 @@ import android.util.Log;
 
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistFollowCallback;
+import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.service.PlaylistService;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
+import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.Session;
@@ -337,6 +339,30 @@ public class PlaylistManager {
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+    }
+
+    public synchronized void getTopPlaylists(int limit, final PlaylistCallback playlistCallback) {
+        UserToken userToken = Session.getInstance(mContext).getUserToken();
+        Call<List<Playlist>> call = mService.getTopPopularPlaylists(limit, true, "Bearer " + userToken.getIdToken());
+        call.enqueue(new Callback<List<Playlist>>() {
+            @Override
+            public void onResponse(Call<List<Playlist>> call, Response<List<Playlist>> response) {
+
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    playlistCallback.onPopularPlaylistsReceived(response.body());
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    playlistCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Playlist>> call, Throwable t) {
                 Log.d(TAG, "Error Failure: " + t.getStackTrace());
                 playlistCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
             }

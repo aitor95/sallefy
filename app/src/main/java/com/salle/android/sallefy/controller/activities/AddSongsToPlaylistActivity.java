@@ -226,6 +226,11 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     @Override
+    public void onPopularPlaylistsReceived(List<Playlist> playlists) {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), R.string.edit_playlist_creation_failure, Toast.LENGTH_LONG).show();
         Log.e(TAG, "onFailure: "+throwable.getMessage());
@@ -270,6 +275,11 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
 
     @Override
     public void onTrackDeleted() {
+
+    }
+
+    @Override
+    public void onPopularTracksReceived(List<Track> tracks) {
 
     }
 

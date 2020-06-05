@@ -80,10 +80,10 @@ public class SocialActivityAdapter extends RecyclerView.Adapter<SocialActivityAd
 
         holder.trackTitle.setText(track.getName());
 
-        holder.trackArtist.setText(track.getUserLogin());                       //TODO: Buscar alternativa
+        holder.trackArtist.setText(track.getUserLogin());
 
         int likes = mTracks.get(position).getLikes();
-        holder.NumOfLikes.setText(likes + "");                                        //TODO: posar valor de debó
+        holder.NumOfLikes.setText(likes + "");
 
         holder.favImg.setImageResource(
                 (track.isLiked()) ?

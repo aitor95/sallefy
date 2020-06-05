@@ -22,6 +22,7 @@ import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.utils.Constants;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class  AddToPlaylistActivity extends AppCompatActivity implements PlaylistCallback {
 
@@ -194,6 +195,11 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
 
     @Override
     public void onPlaylistDeleted() {
+
+    }
+
+    @Override
+    public void onPopularPlaylistsReceived(List<Playlist> playlists) {
 
     }
 

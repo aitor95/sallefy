@@ -44,4 +44,7 @@ public interface TrackService {
 
     @DELETE("tracks/{id}")
     Call<ResponseBody> deleteTrack(@Path("id") int id, @Header("Authorization") String token);
+
+    @GET("tracks")
+    Call<List<Track>> getTopPopularTracks(@Query("size") int limit, @Query("liked") Boolean sortByPlayed, @Header("Authorization") String token);
 }

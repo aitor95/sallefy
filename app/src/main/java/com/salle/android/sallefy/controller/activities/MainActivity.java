@@ -824,6 +824,11 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             }
 
             @Override
+            public void onPopularTracksReceived(List<Track> tracks) {
+
+            }
+
+            @Override
             public void onFailure(Throwable throwable) {
                 Log.d(TAG, "onFailure: CANT DELETE TRACK!");
             }

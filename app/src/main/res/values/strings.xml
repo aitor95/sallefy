@@ -202,6 +202,7 @@
     <string name="new_playlist_creation_failure_cloudinary">Something went wrong on Cloudinary Server</string>
     <string name="delete_btn">DELETE</string>
     <string name="User_has_no_songs">User don\'t have songs</string>
+    <string name="label_choose_graph_button">Choose another graph</string>
     <string name="UserDontFollowAnyone">This user don\'t follow any user.</string>
 
 </resources>

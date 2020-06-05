@@ -107,6 +107,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
             transaction.add(R.id.fragment_container, mSeeAllPlaylistFragment);
             transaction.addToBackStack(null);
             transaction.commit();
+
         });
 
         TextView seeAllSongs = v.findViewById(R.id.SeeAllSearchedSongs);
@@ -199,6 +200,11 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
     @Override
     public void onPlaylistDeleted() {
+
+    }
+
+    @Override
+    public void onPopularPlaylistsReceived(List<Playlist> playlists) {
 
     }
 
@@ -300,6 +306,11 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
         if(mSeeAllPlaylistFragment != null)
             mSeeAllPlaylistFragment.reloadItems(mPlaylists);
+    }
+
+    @Override
+    public void onPopularTracksReceived(List<Track> tracks) {
+
     }
 
 }

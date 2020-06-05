@@ -308,6 +308,11 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     }
 
     @Override
+    public void onPopularTracksReceived(List<Track> tracks) {
+
+    }
+
+    @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), R.string.new_playlist_creation_failure, Toast.LENGTH_LONG).show();
     }

@@ -27,6 +27,7 @@ import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -197,6 +198,11 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
 	@Override
 	public void onPlaylistDeleted() {
+
+	}
+
+	@Override
+	public void onPopularPlaylistsReceived(List<Playlist> playlists) {
 
 	}
 

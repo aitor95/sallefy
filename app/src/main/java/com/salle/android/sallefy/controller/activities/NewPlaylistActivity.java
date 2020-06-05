@@ -26,6 +26,7 @@ import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.FilenameHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCallback, UploadCallback {
@@ -186,6 +187,11 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
 
     @Override
     public void onPlaylistDeleted() {
+
+    }
+
+    @Override
+    public void onPopularPlaylistsReceived(List<Playlist> playlists) {
 
     }
 

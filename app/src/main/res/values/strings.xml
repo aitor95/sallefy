@@ -158,6 +158,7 @@
     <string name="showArtistBottomMenu">Show Artist</string>
     <string name="DeleteBottomMenu">Delete</string>
     <string name="EditBottomMenu">Edit</string>
+    <string name="ShareBottomMenu">Share</string>
     <string name="home_new_playlists_title">Popular Playlists</string>
     <string name="default_home_songs_title">Popular Tracks</string>
     <string name="title_activity_settings">Settings</string>

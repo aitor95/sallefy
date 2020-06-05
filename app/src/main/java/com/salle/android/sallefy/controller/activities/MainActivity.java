@@ -31,12 +31,15 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
+import com.salle.android.sallefy.controller.callbacks.PermissionsCallback;
 import com.salle.android.sallefy.controller.callbacks.PlaylistMainComunication;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
+import com.salle.android.sallefy.controller.dialogs.ErrorDialog;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
 import com.salle.android.sallefy.controller.fragments.SocialFragment;
+import com.salle.android.sallefy.controller.location.LocationProvider;
 import com.salle.android.sallefy.controller.music.MusicCallback;
 import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
@@ -53,6 +56,7 @@ import com.salle.android.sallefy.utils.Session;
 import com.salle.android.sallefy.utils.UpdatableFragment;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -62,7 +66,7 @@ import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_MP_D
 import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_PA_DELETE;
 import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_PA_USER;
 
-public class MainActivity extends FragmentActivity implements AdapterClickCallback, MusicCallback, BottomMenuDialog.BottomMenuDialogInterf, PlaylistMainComunication {
+public class MainActivity extends FragmentActivity implements AdapterClickCallback, MusicCallback, BottomMenuDialog.BottomMenuDialogInterf, PlaylistMainComunication, PermissionsCallback {
 
     public static final String TAG = MainActivity.class.getName();
 
@@ -195,7 +199,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        Log.d(TAG, "onCreate: CREATED MAIN ACTIVITY!!!!!!!!!!!!!!!!!!!!!");
         setContentView(R.layout.activity_main);
 
         startStreamingService();
@@ -215,7 +219,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         });
 
         enterHomeFragment();
-        requestPermissions();
+        requestAudioPermissions();
     }
 
     private void initViewsMiniMultimedia() {
@@ -418,48 +422,51 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         }
     }
 
-
-
-    private void requestPermissions() {
+    @Override
+    public void requestAudioPermissions() {
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
                 Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
 
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.RECORD_AUDIO,
-                            Manifest.permission.MODIFY_AUDIO_SETTINGS}, Constants.PERMISSIONS.MICROPHONE);
-
+                    new String[]{Manifest.permission.RECORD_AUDIO,Manifest.permission.MODIFY_AUDIO_SETTINGS}, Constants.PERMISSIONS.MICROPHONE);
 
         } else {
             Session.getInstance(this).setAudioEnabled(true);
+            LocationProvider.getInstance(this).requestLocationPermissions(MainActivity.this);
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION},
-                    Constants.PERMISSIONS.LOCATION
-                );
-        }else{
-            Session.getInstance(this).setLocationEnabled(true);
-        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
+        if (requestCode == Constants.PERMISSIONS.LOCATION){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                Session.getInstance(this).setLocationEnabled(true);
+                return;
+            }else{
+                ErrorDialog.getInstance(this).showErrorDialog("Location is mandatory!","Please let us know your location to use the app.",this);
+            }
+        }
+
         if (requestCode == Constants.PERMISSIONS.MICROPHONE) {
 
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 Session.getInstance(this).setAudioEnabled(true);
-            } else {
-
+                LocationProvider.getInstance(this).requestLocationPermissions(MainActivity.this);
+                return;
+            }else{
+                ErrorDialog.getInstance(this).showErrorDialog("Microphone is mandatory!","Please let us use the microphone to reproduce music.",this);
             }
-            return;
         }
+
+        Log.d(TAG, "onRequestPermissionsResult: Permission needed and not granted: " + requestCode + " " + Arrays.toString(grantResults));
     }
+
+
+
 
     @Override
     protected void onDestroy() {
@@ -702,7 +709,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                     ArrayList<Playlist> mUpdatedPlaylists = (ArrayList<Playlist>) data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE);
                     //If Playlist gone! Stop player and mini player.
                     Log.d(TAG, "onActivityResult: ARRAYLIST OF PLAYLIST SIZE IS " + mUpdatedPlaylists.size());
-                    if(mBoundService.isPlaying()) {
+                    if(mBoundService!= null && mBoundService.isPlaying()) {
                         if (currentSongInPlaylistDeleted(mUpdatedPlaylists)) {
                             linearLayoutMiniplayer.setVisibility(View.GONE);
                             mBoundService.playlistOrSongDeleted();

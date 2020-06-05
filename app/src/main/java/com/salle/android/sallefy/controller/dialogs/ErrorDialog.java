@@ -8,8 +8,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.callbacks.PermissionsCallback;
 
 public class ErrorDialog {
+
 
     private static ErrorDialog sManager;
     private static Object mutex = new Object();
@@ -36,12 +38,15 @@ public class ErrorDialog {
         mDialog = new Dialog(mContext);
     }
 
-    public void showErrorDialog() {
+    public void showErrorDialog(String title, String subtitle, PermissionsCallback callback) {
         mDialog.setContentView(R.layout.dialog_error);
         mDialog.setCanceledOnTouchOutside(false);
 
         tvTitle = (TextView) mDialog.findViewById(R.id.dialog_error_title);
+        tvTitle.setText(title);
+
         tvSubtitle = (TextView) mDialog.findViewById(R.id.dialog_error_subtitle);
+        tvSubtitle.setText(subtitle);
 
         ivIcon = (ImageView) mDialog.findViewById(R.id.dialog_error_icon);
 
@@ -49,6 +54,7 @@ public class ErrorDialog {
         btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                callback.requestAudioPermissions();
                 mDialog.cancel();
             }
         });

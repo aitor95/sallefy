@@ -33,7 +33,7 @@
     <string name="action_login">Login</string>
     <string name="action_logout">Logout</string>
     <string name="action_signUp">Sign Up</string>
-    <string name="action_accept">Aceptar</string>
+    <string name="action_accept">Accept</string>
     <string name="action_decline">Cancelar</string>
     <string name="action_advance_list">Mostrar Tracks (avanzado)</string>
     <string name="action_list">Mostrar Tracks</string>
@@ -41,13 +41,6 @@
     <string name="action_backend_playback">Backend Playback</string>
     <string name="action_network_music">Music Service</string>
     <string name="action_cloudinary">Subir canción</string>
-
-    <!-- ACTIVITY [ Create Song ] -->
-    <string name="create_song_titulo">Título</string>
-    <string name="create_song_genre">Género</string>
-    <string name="create_song_artist">Author/a</string>
-    <string name="create_song_file">Buscar fichero</string>
-
 
     <!-- ACTIVITY [ New Playlist ] -->
     <string name="new_playlist_name">New Playlist</string>

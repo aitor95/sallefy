@@ -60,7 +60,7 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
     }
 
     public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
-        Log.d(TAG, "onBindViewHolder: called. viewHolder hashcode: " + holder.hashCode());
+
 
         Track track = mTracks.get(position);
         holder.mLayout.setOnClickListener(v -> {
@@ -109,8 +109,9 @@ public class TrackListVerticalAdapter extends RecyclerView.Adapter<TrackListVert
             if (!exists) {
                 tracksToLikeOnDialog.add(tvp);
             }
+            Log.d(TAG, "onBindViewHolder: PRESSED INSIDE A PLAYLIST");
+            BottomMenuDialog dialog = new BottomMenuDialog(tvp, mContext,mPlaylist);
 
-            BottomMenuDialog dialog = new BottomMenuDialog(tvp, mContext);
             dialog.show(fragmentManager,"FRAGMENT_TAG_MAX_ONE_INSTANCE");
         });
     }

@@ -121,6 +121,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
         for (int i = 0; i < mSelectedSongs.size(); i++) {
             this.mPlaylist.getTracks().add(mSelectedSongs.get(i));
         }
+
         PlaylistManager.getInstance(getApplicationContext())
                 .updatePlaylist(this.mPlaylist, AddSongsToPlaylistActivity.this);
     }

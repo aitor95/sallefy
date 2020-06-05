@@ -37,7 +37,7 @@ public class FilenameHelper {
 
     public static String removeSpecialCharsAndTail(String in){
         String regex = in.replaceAll("[^a-zA-Z0-9_ .]","");
-        if (regex.indexOf(".") > 0)
+        if (regex.contains("."))
             regex = regex.substring(0, regex.lastIndexOf("."));
         return regex;
     }

@@ -483,7 +483,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
     @Override
     public void onPlaylistUpdated() {
-
     }
 
     @Override
@@ -543,8 +542,17 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 showArtist(track.getTrack().getUser());
                 break;
             case "delete":
+                //COMO ESTAMOS EN EL INTERIOR DE UNA PLAYLIST, DELETE SIGNIFICA REMOVE FROM PLAYLIST.
                 Log.d(TAG, "onButtonClicked: DELETE");
-                //TODO CAMBIAR POR REMOVE FROM PLAYLIST.
+                Track t = track.getTrack();
+
+                t.setDeleted(true);
+                updateTrackOnEdition(t);
+
+                PlaylistManager.getInstance(getApplicationContext())
+                        .updatePlaylist(this.mPlaylist, this);
+
+                t.setDeleted(false);
                 break;
             case "edit":
                 Log.d(TAG, "onButtonClicked: EDIT");
@@ -555,7 +563,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 break;
         }
     }
-
 
     private void showArtist(User user) {
         Intent data = new Intent();

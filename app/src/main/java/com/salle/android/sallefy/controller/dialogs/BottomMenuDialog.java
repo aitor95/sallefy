@@ -15,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.utils.Session;
 
@@ -24,13 +25,27 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
 
     private ImageView likeImage;
     private boolean songLiked;
-    private boolean isOwned;
+    private boolean isTrackOwner;
+    private boolean isPlaylistOwner;
     private TrackViewPack track;
+    private boolean insidePlaylist;
 
-    public BottomMenuDialog(TrackViewPack track, Context context){
+    public BottomMenuDialog(TrackViewPack track, Context context, Playlist playlist) {
         this.track = track;
         this.songLiked = track.getTrack().isLiked();
-        this.isOwned = track.getTrack().getUserLogin().equals(Session.getInstance(context).getUser().getLogin());
+
+        int trackUserId = track.getTrack().getUser().getId();
+        int localUserId = Session.getInstance(context).getUser().getId();
+
+        this.isTrackOwner = trackUserId == localUserId;
+
+        if (playlist == null || playlist.getUser() == null) {
+            isPlaylistOwner = false;
+            insidePlaylist = false;
+        } else {
+            isPlaylistOwner = localUserId == playlist.getUser().getId();
+            insidePlaylist = true;
+        }
     }
 
     @Override
@@ -93,19 +108,30 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
 
         LinearLayout delete = v.findViewById(R.id.bottom_menu_a_deleteSong);
 
-        if (!isOwned) {
-            ((TextView) v.findViewById(R.id.bottom_menu_a_delete_text)).setTextAppearance(R.style.primaryTextDisabled);
+        TextView t = v.findViewById(R.id.bottom_menu_a_delete_text);
+
+        if(insidePlaylist){
+            t.setText(R.string.RemoveFromPlaylistBottomMenu);
+        }else{
+            t.setText(R.string.DeleteBottomMenu);
+        }
+
+        if(!isPlaylistOwner){
+            t.setTextAppearance(R.style.primaryTextDisabled);
             ((ImageView) v.findViewById(R.id.bottom_menu_a_delete_img)).setBackgroundResource(R.drawable.ic_delete_grey);
-        } else {
+        }
+
+        if (isTrackOwner || isPlaylistOwner) {
             delete.setOnClickListener(view -> {
                 mListener.onButtonClicked(track, "delete");
                 dismiss();
             });
         }
 
+
         LinearLayout edit = v.findViewById(R.id.bottom_menu_a_editSong);
 
-        if (!isOwned) {
+        if (!isTrackOwner) {
             ((TextView) v.findViewById(R.id.bottom_menu_a_editSong_text)).setTextAppearance(R.style.primaryTextDisabled);
             ((ImageView) v.findViewById(R.id.bottom_menu_a_editSong_img)).setBackgroundResource(R.drawable.ic_edit_grey);
         } else {
@@ -120,6 +146,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
 
     @Override
     public void show(FragmentManager manager, String tag) {
+
         if (tag != null && tag.equals("FRAGMENT_TAG_MAX_ONE_INSTANCE")) {
             // we do not show it twice
             if (manager.findFragmentByTag(tag) == null) {
@@ -129,6 +156,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             super.show(manager, tag);
         }
     }
+
 
     public interface BottomMenuDialogInterf {
         void onButtonClicked(TrackViewPack track, String text);

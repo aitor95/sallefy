@@ -157,6 +157,7 @@
     <string name="likeBottomMenu">Like</string>
     <string name="showArtistBottomMenu">Show Artist</string>
     <string name="DeleteBottomMenu">Delete</string>
+    <string name="RemoveFromPlaylistBottomMenu">Remove from playlist</string>
     <string name="EditBottomMenu">Edit</string>
     <string name="ShareBottomMenu">Share</string>
     <string name="home_new_playlists_title">Popular Playlists</string>

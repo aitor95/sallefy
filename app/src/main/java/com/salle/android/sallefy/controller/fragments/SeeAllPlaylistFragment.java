@@ -99,16 +99,20 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 		});
 
 		v.findViewById(R.id.edit_playlist_nav).setOnClickListener(view -> {
-
-			if (seeAllCallback != null) seeAllCallback.onSeeAllClosed();
-
-			Objects.requireNonNull(getActivity()).
-					getSupportFragmentManager().
-					beginTransaction().
-					setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right).
-					remove(this).commit();
+			closeFragment();
 		});
 
+	}
+
+	private void closeFragment() {
+
+		if (seeAllCallback != null) seeAllCallback.onSeeAllClosed();
+
+		Objects.requireNonNull(getActivity()).
+				getSupportFragmentManager().
+				beginTransaction().
+				setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right).
+				remove(this).commit();
 	}
 
 	private void loadMoreItems() {
@@ -180,5 +184,14 @@ public class SeeAllPlaylistFragment extends Fragment implements PlaylistCallback
 	@Override
 	public void onFailure(Throwable throwable) {
 
+	}
+
+	public void reloadItems(ArrayList<Playlist> playlists) {
+		this.mPlaylists = playlists;
+
+		Parcelable parcelable = mRecyclerView.getLayoutManager().onSaveInstanceState();
+		mAdapter = new PlaylistListVerticalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_vertical);
+		mRecyclerView.setAdapter(mAdapter);
+		mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
 	}
 }

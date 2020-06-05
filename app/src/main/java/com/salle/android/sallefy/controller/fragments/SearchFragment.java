@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.fragments;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,6 +49,12 @@ import java.util.TimerTask;
 public class SearchFragment extends Fragment implements PlaylistCallback, UserCallback, TrackCallback, SearchCallback, SeeAllCallback, UpdatableFragment {
 
     public static final String TAG = SearchFragment.class.getName();
+
+    private static final int NUMBER_OF_PLAYLISTS = 10;
+    private static final int NUMBER_OF_SONGS = 10;
+    private static final int NUMBER_OF_USERS = 10;
+
+
     public static final int ACTIVE_WRITING_TIMEOUT = 500;
 
     private RecyclerView mUsersView;
@@ -58,7 +65,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     private RecyclerView mTracksView;
 
-    private ArrayList<Playlist> playlists;
+    private ArrayList<Playlist> mPlaylists;
     private ArrayList<Track> mTracks;
     private ArrayList<User> users;
 
@@ -90,7 +97,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         initViews(v);
         getData();
 
-        playlists = new ArrayList<>();
+        mPlaylists = new ArrayList<>();
         mTracks = new ArrayList<>();
         users = new ArrayList<>();
 
@@ -133,7 +140,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
         seeAllPlaylists.setOnClickListener(view -> {
-            mSeeAllPlaylistFragment = SeeAllPlaylistFragment.newInstance(playlists, false);
+            mSeeAllPlaylistFragment = SeeAllPlaylistFragment.newInstance(mPlaylists, false);
 	        FragmentManager manager = getFragmentManager();
 
             SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
@@ -222,12 +229,53 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         //Remove if necessary.
         mTracks.removeIf(Track::isDeleted);
 
+
+        Parcelable parcelable = mTracksView.getLayoutManager().onSaveInstanceState();
+
         //Update the adapter.
         TrackListHorizontalAdapter adapter = new TrackListHorizontalAdapter(adapterClickCallback, getActivity(), mTracks);
         mTracksView.setAdapter(adapter);
 
+        mTracksView.getLayoutManager().onRestoreInstanceState(parcelable);
+
         if(mSeeAllSongFragment != null)
-        ((SeeAllSongFragment)(mSeeAllSongFragment)).reloadItems(mTracks);
+            ((SeeAllSongFragment)(mSeeAllSongFragment)).reloadItems(mTracks);
+    }
+
+    @Override
+    public void updatePlaylistInfo(ArrayList<Playlist> playlists) {
+        boolean found;
+
+        for (int i = 0; i < playlists.size(); i++) {
+            found = false;
+            for (int j = 0; j < mPlaylists.size(); j++) {
+                if (mPlaylists.get(j).getId().intValue() == playlists.get(i).getId().intValue()) {
+                    mPlaylists.set(j, playlists.get(i));
+                    found = true;
+                }
+            }
+            if(!found) mPlaylists.add(playlists.get(i));
+        }
+
+        mPlaylists.removeIf(Playlist::isDeleted);
+
+        ArrayList<Playlist> HoritzontalPlaylist = new ArrayList<>();
+        int a = 0;
+        for(int i = mPlaylists.size() - 1; i >= 0; i--,a++){
+            if(a == NUMBER_OF_PLAYLISTS)break;
+            HoritzontalPlaylist.add(mPlaylists.get(a));
+        }
+
+        Parcelable parcelable = mPlaylistsView.getLayoutManager().onSaveInstanceState();
+
+        mPlaylistAdapter = new PlaylistListHorizontalAdapter(HoritzontalPlaylist, getContext(), adapterClickCallback, R.layout.item_playlist_horizontal);
+        mPlaylistsView.setAdapter(mPlaylistAdapter);
+
+        mPlaylistsView.getLayoutManager().onRestoreInstanceState(parcelable);
+
+        if(mSeeAllPlaylistFragment != null)
+            ((SeeAllPlaylistFragment)(mSeeAllPlaylistFragment)).reloadItems(mPlaylists);
+
     }
 
 
@@ -250,11 +298,13 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
     private void getData() {
         PlaylistManager.getInstance(getContext())
-                .getListOfPlaylistPagination(this, 0, 10, false);
+                .getListOfPlaylistPagination(this, 0, NUMBER_OF_PLAYLISTS, false);
+
         UserManager.getInstance(getContext())
-                .getUsersPagination(this, 0, 10);
+                .getUsersPagination(this, 0, NUMBER_OF_USERS);
+
         TrackManager.getInstance(getContext())
-                .getAllTracksPagination(this, 0, 10, false, false);
+                .getAllTracksPagination(this, 0, NUMBER_OF_SONGS, false, false);
     }
 
 
@@ -283,7 +333,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mPlaylistsView.setAdapter(mPlaylistAdapter);
         //Toast.makeText(getContext(), "Playlists received", Toast.LENGTH_LONG).show();
 
-        this.playlists = (ArrayList<Playlist>) playlists;
+        this.mPlaylists = (ArrayList<Playlist>) playlists;
     }
 
     @Override
@@ -431,6 +481,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mTracksView.setAdapter(adapter);
         this.mTracks = tracks;
 
+        ///TODO: CHANGE THIS: THIS IS A BUG, it can really be null and crash the app! !!!!!!
         TextView tvSeeAllTracks = getView().findViewById(R.id.SeeAllSearchedSongs);
         if(this.mTracks.isEmpty()){
             tvSeeAllTracks.setVisibility(View.INVISIBLE);
@@ -440,10 +491,10 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         mPlaylistAdapter = new PlaylistListHorizontalAdapter(playlists, getContext(), adapterClickCallback, R.layout.item_playlist_horizontal);
         mPlaylistsView.setAdapter(mPlaylistAdapter);
-        this.playlists = playlists;
+        this.mPlaylists = playlists;
 
         TextView tvSeeAllPlaylists = getView().findViewById(R.id.SeeAllSearchedPlaylists);
-        if(this.playlists.isEmpty()){
+        if(this.mPlaylists.isEmpty()){
             tvSeeAllPlaylists.setVisibility(View.INVISIBLE);
         }else{
             tvSeeAllPlaylists.setVisibility(View.VISIBLE);

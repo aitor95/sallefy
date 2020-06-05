@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,8 @@ public class PlaylistListHorizontalAdapter extends RecyclerView.Adapter<Playlist
                     .load(mPlaylists.get(position).getThumbnail())
                     .into(holder.mPhoto);
 
+        }else{
+            Log.d(TAG, "onBindViewHolder: IM NULL!");
         }
     }
 

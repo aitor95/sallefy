@@ -23,25 +23,36 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
+import com.salle.android.sallefy.controller.callbacks.PlaylistMainComunication;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.fragments.PlaylistSongFragment;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.Follow;
+import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
+import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.Session;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import jp.wasabeef.glide.transformations.BlurTransformation;
 
+import static com.salle.android.sallefy.controller.activities.MainActivity.TIME_BETWEEN_CLICKS;
+import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.ACTIVITY_PLAYLIST_FINISHED;
+import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.MUSIC_PLAYER_FINISHED;
+import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.PLAYLIST_EDIT;
+import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_MP_DELETE;
+import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.TRACK_EDITING_FINISHED;
 
-public class PlaylistActivity extends AppCompatActivity implements PlaylistCallback, BottomMenuDialog.BottomMenuDialogInterf {
+
+public class PlaylistActivity extends AppCompatActivity implements PlaylistCallback, BottomMenuDialog.BottomMenuDialogInterf, AdapterClickCallback {
 
     public static final String TAG = PlaylistActivity.class.getName();
 
@@ -75,9 +86,12 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     private Fragment playlistSongFragment;
     private ArrayList<Playlist> mUpdatedPlaylist;
 
-    private static AdapterClickCallback adapterClickCallback;
-    public static void setAdapterClickCallback(AdapterClickCallback callback){
-        adapterClickCallback = callback;
+    //Button click control
+    private long lastClick;
+
+    private static PlaylistMainComunication playlistMainComunication;
+    public static void setPlaylistMainComunication(PlaylistMainComunication callback){
+        playlistMainComunication = callback;
     }
 
     @Override
@@ -86,8 +100,10 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         setContentView(R.layout.activity_playlist);
 
         this.fragmentCreated = false;
-        mUpdatedPlaylist = new ArrayList<Playlist>();
+        mUpdatedPlaylist = new ArrayList<>();
         initViews();
+
+        Log.d(TAG, "onCreate: ABOUT TO CRASH!!!!!!!!!!!!!!!!!!!!!!!!!");
 
         //Little hack to reduce code.
         onPlaylistById((Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
@@ -146,7 +162,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 }else{
                     Intent intent = new Intent(getApplicationContext(), EditPlaylistActivity.class);
                     intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
-                    startActivityForResult(intent, Constants.EDIT_CONTENT.PLAYLIST_EDIT);
+                    startActivityForResult(intent, PLAYLIST_EDIT);
                 }
 
             }
@@ -162,7 +178,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 ArrayList<Track> tracks = (ArrayList<Track>) mPlaylist.getTracks();
                 int size = tracks.size();
 
-                adapterClickCallback.onTrackClicked(tracks.get((int) (Math.random() * size-1)),mPlaylist);
+                playlistMainComunication.onTrackClicked(tracks.get((int) (Math.random() * size-1)),mPlaylist);
             }
         });
 
@@ -209,7 +225,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     private void setInitialFragment() {
         mFragmentManager = getSupportFragmentManager();
         mTransaction = mFragmentManager.beginTransaction();
-        PlaylistSongFragment.setAdapterClickCallback(adapterClickCallback);
+        //TODO: CHANGED AT 5 june by adria
+        PlaylistSongFragment.setAdapterClickCallback(this);
         playlistSongFragment = new PlaylistSongFragment();
 
         mTransaction.add(R.id.fragment_container_playlist, playlistSongFragment);
@@ -221,24 +238,97 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         super.onActivityResult(requestCode, resultCode, data);
         //Back from edit playlist!
 
-        if (requestCode == Constants.EDIT_CONTENT.PLAYLIST_EDIT && resultCode == RESULT_OK) {
-            //Update playlist information
-            Playlist playlist = (Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST);
-            if(!playlist.isDeleted()) {
-                mUpdatedPlaylist.add(playlist);
-                onPlaylistById(playlist);
-            }else{
-                mUpdatedPlaylist.add(playlist);
+        switch (requestCode){
+            case PLAYLIST_EDIT:
+                if(resultCode == RESULT_OK){
+                    //Update playlist information
+                    Playlist playlist = (Playlist) data.getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST);
+                    if(!playlist.isDeleted()) {
+                        addToUpdatedPlaylist(playlist);
 
-                data = new Intent();
-                data.putExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE, mUpdatedPlaylist);
-                setResult(RESULT_OK, data);
-                finish();
-            }
+
+                        onPlaylistById(playlist);
+                    }else{
+                        addToUpdatedPlaylist(playlist);
+                        data = new Intent();
+                        data.putExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE, mUpdatedPlaylist);
+                        setResult(RESULT_OK, data);
+                        finish();
+                    }
+                }
+                break;
+            case ACTIVITY_PLAYLIST_FINISHED:
+                if(resultCode == RESULT_OK){
+                    ArrayList<Playlist> newPlaylists = (ArrayList<Playlist>)data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE);
+                    for(Playlist p : newPlaylists){
+                        addToUpdatedPlaylist(p);
+                    }
+                }
+                break;
+            case TRACK_EDITING_FINISHED:
+                if(resultCode == RESULT_OK){
+                    //Resultado de edicion de song.
+                    Track newTrack = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
+                    updateTrackOnEdition(newTrack);
+                }
+                break;
+            case MUSIC_PLAYER_FINISHED:
+                if(resultCode == Constants.EDIT_CONTENT.RESULT_MP_USER){
+                    //User stuff
+                    User u = (User) data.getSerializableExtra(Constants.INTENT_EXTRAS.USER);
+                    //playlistMainComunication.onUserClick(u);
+                    showArtist(u);
+                }else if(resultCode == Constants.EDIT_CONTENT.RESULT_MP_TRACK_EDITED){
+                    //SongEditStuff
+                    Track newTrack = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
+                    updateTrackOnEdition(newTrack);
+
+                }else if(resultCode == RESULT_MP_DELETE){
+                    Track track = (Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
+                    Log.d(TAG, "onActivityResult: TRACK DELETED.");
+                    track.setDeleted(true);
+                    updateTrackOnEdition(track);
+                    playlistMainComunication.deleteSong(track);
+                }
+                break;
+            default:
+                Log.d(TAG, "onActivityResult: ACTIVITY RESULT NOT CONTROLED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        }
+    }
+
+    private void updateTrackOnEdition(Track newTrack){
+        //Resultado de edicion de song.
+
+        List<Track> tracks = mPlaylist.getTracks();
+        if(tracks.isEmpty()){
+            tracks.add(newTrack);
         }else{
+            for(int i = tracks.size() - 1; i >= 0; i--){
+                if(tracks.get(i).getId().intValue() == newTrack.getId()){
+                    tracks.set(i,newTrack);
+                    break;
+                }
+            }
+        }
 
-            if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
-                mUpdatedPlaylist.addAll((ArrayList<Playlist>)data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE));
+        tracks.removeIf(Track::isDeleted);
+
+        mPlaylist.setTracks(tracks);
+        addToUpdatedPlaylist(mPlaylist);
+        sendTracksToFragment();
+    }
+
+
+    //adds or replaces if exists
+    private void addToUpdatedPlaylist(Playlist playlist) {
+        if(mUpdatedPlaylist.isEmpty()){
+            mUpdatedPlaylist.add(playlist);
+        }else{
+            for(int i = mUpdatedPlaylist.size() - 1; i >= 0; i--){
+                if(mUpdatedPlaylist.get(i).getId()==playlist.getId().intValue()){
+                    mUpdatedPlaylist.set(i,playlist);
+                    return;
+                }
             }
         }
     }
@@ -312,10 +402,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
         this.pId = mPlaylist.getId();
 
-        if (Session.getInstance(this).getUser().getLogin().equals(mPlaylist.getUserLogin())) {
-            this.owner = true;
-        }
-
+        this.owner = Session.getInstance(this).getUser().getId() == mPlaylist.getUser().getId().intValue();
 
         if (!this.owner) {
             //Call API to get if current user follows playlist with id
@@ -352,6 +439,10 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         if(this.mPlaylist.getTracks().size() != 0){
             this.mNoTracks.setVisibility(View.GONE);
         }
+        sendTracksToFragment();
+    }
+
+    private void sendTracksToFragment(){
         //Send playlist tracks to PlaylistSongFragment
         getIntent().putExtra(Constants.INTENT_EXTRAS.PLAYLIST_DATA, (Serializable) this.mPlaylist);
         if (!this.fragmentCreated) {
@@ -445,21 +536,60 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 Log.d(TAG, "onButtonClicked: ADDTOPLAYLIST");
                 Intent intent1 = new Intent(this, AddToPlaylistActivity.class);
                 intent1.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
-                startActivityForResult(intent1, Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE);
+                startActivityForResult(intent1, ACTIVITY_PLAYLIST_FINISHED);
                 break;
             case "showArtist":
                 Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
+                showArtist(track.getTrack().getUser());
                 break;
             case "delete":
                 Log.d(TAG, "onButtonClicked: DELETE");
+                //TODO CAMBIAR POR REMOVE FROM PLAYLIST.
                 break;
             case "edit":
                 Log.d(TAG, "onButtonClicked: EDIT");
-                Intent intent2 = new Intent(this, EditSongActivity.class);
-                intent2.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
-                startActivity(intent2);
+
+                Intent intent = new Intent(this, EditSongActivity.class);
+                intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
+                startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDITING_FINISHED);
                 break;
         }
     }
 
+
+    private void showArtist(User user) {
+        Intent data = new Intent();
+        data.putExtra(Constants.INTENT_EXTRAS.USER, user);
+        setResult(Constants.EDIT_CONTENT.RESULT_PA_USER, data);
+        finish();
+    }
+
+    @Override
+    public void onTrackClicked(Track track, Playlist playlist) {
+        if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+            return;
+
+        lastClick = System.currentTimeMillis();
+
+        Intent intent = new Intent(this, MusicPlayerActivity.class);
+        Log.d(TAG, "onTrackSelected: Track SELECTED INSIDE A PLAYLIS. It is " + track.getName());
+
+        intent.putExtra(Constants.INTENT_EXTRAS.PLAYER_SONG,track);
+        intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST,playlist);
+
+        startActivityForResult(intent, MUSIC_PLAYER_FINISHED);
+    }
+
+    @Override
+    public void onPlaylistClick(Playlist playlist) {
+    }
+
+    @Override
+    public void onUserClick(User user) {
+    }
+
+    @Override
+    public void onGenreClick(Genre genre) {
+
+    }
 }

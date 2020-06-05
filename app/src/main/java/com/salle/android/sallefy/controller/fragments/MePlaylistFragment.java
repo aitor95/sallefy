@@ -104,7 +104,7 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	}
 
 	public void updateInfo(ArrayList<Playlist> playlists){
-		boolean found = false;
+		boolean found;
 
 		for (int i = 0; i < playlists.size(); i++) {
 			found = false;

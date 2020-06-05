@@ -42,6 +42,8 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
         followHolder = null;
     }
 
+
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -132,6 +134,10 @@ public class PlaylistListVerticalAdapter extends RecyclerView.Adapter<PlaylistLi
     @Override
     public void onFailure(Throwable throwable) {
         Log.d(TAG, "onFailure: Erros following in playlistVerticalAdapter " + throwable.getMessage());
+    }
+
+    public void updatePlaylists(ArrayList<Playlist> mPlaylists) {
+        this.mPlaylists = mPlaylists;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

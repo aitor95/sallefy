@@ -263,6 +263,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 	}
 	@Override
 	public void updateSongInfo(Track track){
+		if(fragmentMeSongs != null)
 		fragmentMeSongs.updateSongInfo(track);
 	}
 

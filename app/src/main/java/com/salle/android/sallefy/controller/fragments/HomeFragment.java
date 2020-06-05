@@ -35,6 +35,15 @@ import java.util.List;
 public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCallback, UpdatableFragment {
 
     public static final String TAG = HomeFragment.class.getName();
+
+    private static final boolean popularSongs = true;
+    private static final boolean recentSongs = true;
+
+    private static final boolean popularPlaylists = true;
+    private static final int NUMBER_OF_PLAYLISTS = 10;
+    private static final int NUMBER_OF_SONGS = 10;
+
+
     private RecyclerView rvPlaylists;
     private RecyclerView rvSongs;
 
@@ -47,6 +56,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
     private static AdapterClickCallback adapterClickCallback;
     private SeeAllSongFragment mSeeAllSongFragment;
+    private SeeAllPlaylistFragment mSeeAllPlaylistFragment;
 
     public static void setAdapterClickCallback(AdapterClickCallback callback){
         adapterClickCallback = callback;
@@ -87,13 +97,13 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
         seeAllPlaylists.setOnClickListener(view -> {
 
-            Fragment fragment = SeeAllPlaylistFragment.newInstance(mPlaylists, true);
+            mSeeAllPlaylistFragment = SeeAllPlaylistFragment.newInstance(mPlaylists, popularPlaylists);
             SeeAllPlaylistFragment.setAdapterClickCallback(adapterClickCallback);
 
             FragmentManager manager_seeAll = getFragmentManager();
             FragmentTransaction transaction = manager_seeAll.beginTransaction();
             transaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right);
-            transaction.add(R.id.fragment_container,fragment);
+            transaction.add(R.id.fragment_container, mSeeAllPlaylistFragment);
             transaction.addToBackStack(null);
             transaction.commit();
         });
@@ -101,7 +111,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         TextView seeAllSongs = v.findViewById(R.id.SeeAllSearchedSongs);
         seeAllSongs.setOnClickListener(view -> {
 
-            mSeeAllSongFragment = SeeAllSongFragment.newInstance(mTracks, true);
+            mSeeAllSongFragment = SeeAllSongFragment.newInstance(mTracks, popularSongs);
             SeeAllSongFragment.setAdapterClickCallback(adapterClickCallback);
             SeeAllSongFragment.setPlaylist(new Playlist((ArrayList<Track>) mTracks));
             FragmentManager manager_seeAll = getFragmentManager();
@@ -119,9 +129,9 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
     private void getData() {
         PlaylistManager.getInstance(getContext())
-                .getListOfPlaylistPagination(this, 0, 20, true);
+                .getListOfPlaylistPagination(this, 0, NUMBER_OF_PLAYLISTS, popularPlaylists);
         TrackManager.getInstance(getContext())
-                .getAllTracksPagination(this, 0, 10, true, true);
+                .getAllTracksPagination(this, 0, NUMBER_OF_SONGS, recentSongs, popularSongs);
     }
 
     @Override
@@ -155,14 +165,9 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
      */
     @Override
     public void onAllList(ArrayList<Playlist> playlists) {
-        ArrayList<Playlist> topPlaylists = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            topPlaylists.add(playlists.get(i));
-        }
-        playlistsAdapter = new PlaylistListHorizontalAdapter(topPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_horizontal);
-        rvPlaylists.setAdapter(playlistsAdapter);
-
         this.mPlaylists = playlists;
+        playlistsAdapter = new PlaylistListHorizontalAdapter(mPlaylists, getContext(), adapterClickCallback, R.layout.item_playlist_horizontal);
+        rvPlaylists.setAdapter(playlistsAdapter);
     }
 
     @Override
@@ -247,19 +252,52 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
                 mTracks.set(i, track);
             }
         }
+
         //Remove if necessary.
         mTracks.removeIf(Track::isDeleted);
 
-        Parcelable parcelable = rvSongs.getLayoutManager().onSaveInstanceState();
-        tracksAdapter.notifyDataSetChanged();
-		rvSongs.getLayoutManager().onRestoreInstanceState(parcelable);
-
-		/*
         tracksAdapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity().getApplicationContext(), getFragmentManager(), (ArrayList<Track>) mTracks);
         tracksAdapter.setPlaylist(new Playlist((ArrayList<Track>) mTracks));
         rvSongs.setAdapter(tracksAdapter);
-*/
+
+
         if(mSeeAllSongFragment != null)
-        ((SeeAllSongFragment)(mSeeAllSongFragment)).reloadItems(mTracks);
+            mSeeAllSongFragment.reloadItems(mTracks);
     }
+
+    @Override
+    public void updatePlaylistInfo(ArrayList<Playlist> playlists) {
+        boolean found;
+
+        for (int i = 0; i < playlists.size(); i++) {
+            found = false;
+            for (int j = 0; j < mPlaylists.size(); j++) {
+                if (mPlaylists.get(j).getId().intValue() == playlists.get(i).getId().intValue()) {
+                    mPlaylists.set(j, playlists.get(i));
+                    found = true;
+                }
+            }
+            if(!found) mPlaylists.add(playlists.get(i));
+        }
+
+        mPlaylists.removeIf(Playlist::isDeleted);
+
+        ArrayList<Playlist> HoritzontalPlaylist = new ArrayList<>();
+        int a = 0;
+        for(int i = mPlaylists.size() - 1; i >= 0; i--,a++){
+            if(a == NUMBER_OF_PLAYLISTS) break;
+            HoritzontalPlaylist.add(mPlaylists.get(a));
+        }
+
+        Parcelable parcelable = rvPlaylists.getLayoutManager().onSaveInstanceState();
+
+        playlistsAdapter = new PlaylistListHorizontalAdapter(HoritzontalPlaylist, getContext(), adapterClickCallback, R.layout.item_playlist_horizontal);
+        rvPlaylists.setAdapter(playlistsAdapter);
+
+        rvPlaylists.getLayoutManager().onRestoreInstanceState(parcelable);
+
+        if(mSeeAllPlaylistFragment != null)
+            mSeeAllPlaylistFragment.reloadItems(mPlaylists);
+    }
+
 }

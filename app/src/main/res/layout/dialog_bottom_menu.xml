@@ -128,39 +128,12 @@
 
     <LinearLayout
 
-        android:id="@+id/bottom_menu_a_deleteSong"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="16dp">
-        android:layout_marginLeft="30dp"
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_delete_black"
-            android:id="@+id/bottom_menu_a_delete_img"
-            android:orientation="horizontal" />
-
-        <TextView
-            android:id="@+id/bottom_menu_a_delete_text"
-            style="@style/primaryText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:paddingStart="30dp"
-            android:text="@string/DeleteBottomMenu" />
-
-    </LinearLayout>
-
-    <LinearLayout
-
         android:id="@+id/bottom_menu_a_editSong"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
+
         android:padding="16dp">
 
         <ImageView
@@ -180,8 +153,32 @@
             android:text="@string/EditBottomMenu" />
 
     </LinearLayout>
+    <LinearLayout
 
+        android:id="@+id/bottom_menu_a_deleteSong"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:layout_marginBottom="20dp">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_delete_black"
+            android:id="@+id/bottom_menu_a_delete_img"
+            android:orientation="horizontal" />
 
+        <TextView
+            android:id="@+id/bottom_menu_a_delete_text"
+            style="@style/primaryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="30dp"
+            android:text="@string/DeleteBottomMenu" />
+
+    </LinearLayout>
 </LinearLayout>
 </LinearLayout>

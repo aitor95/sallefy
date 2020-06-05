@@ -153,7 +153,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.EDIT_CONTENT.TRACK_EDIT && resultCode == RESULT_OK) {
+        if (requestCode == Constants.EDIT_CONTENT.TRACK_EDITING_FINISHED && resultCode == RESULT_OK) {
             Track newTrack = (Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
             mTracks.add(1, newTrack);
             mSelectedSongs.add(newTrack);

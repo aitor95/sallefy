@@ -86,7 +86,7 @@ public class  AddToPlaylistActivity extends AppCompatActivity implements Playlis
     private void exitAddSongs(){
         Intent data = new Intent();
       //  data.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, mPlaylist);
-        setResult(RESULT_OK, data);
+        setResult(RESULT_CANCELED, data);
         finish();
     }
 

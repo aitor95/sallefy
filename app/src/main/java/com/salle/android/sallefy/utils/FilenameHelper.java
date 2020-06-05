@@ -21,38 +21,35 @@ public class FilenameHelper {
                 try {
                     cursor = c.getContentResolver().query(uri, null, null, null, null);
                     if (cursor != null && cursor.moveToFirst()) {
-                        return removeTail(cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)));
+                        return removeSpecialCharsAndTail(cursor.getString(cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)));
                     }
                 } finally {
                     if (cursor != null)
                         cursor.close();
                 }
             } else if (uriString.startsWith("file://")) {
-                return removeTail(myFile.getName());
+                return removeSpecialCharsAndTail(myFile.getName());
             }
             return uri.toString();
         }
         return "error";
     }
 
-    private static String removeTail(String in){
-        String inn = in.replace("&","")
-                .replace("#","")
-                .replace("/","")
-                .replace("$","");
-        if (inn.indexOf(".") > 0)
-            inn = inn.substring(0, inn.lastIndexOf("."));
-
-        return inn.replace(".","");
+    public static String removeSpecialCharsAndTail(String in){
+        String regex = in.replaceAll("[^a-zA-Z0-9_ .]","");
+        if (regex.indexOf(".") > 0)
+            regex = regex.substring(0, regex.lastIndexOf("."));
+        return regex;
     }
 
     public static String extractPublicIdFromUri(String fileUri) {
         Log.d("TEST", "extractPublicIdFromUri: EXTRACTING PUBLIC ID FROM " + fileUri);
         String decoded = Uri.decode(fileUri);
         int lastBar = decoded.lastIndexOf("/");
-        String result = removeTail(decoded.substring(lastBar + 1));
+        String result = removeSpecialCharsAndTail(decoded.substring(lastBar + 1));
         Log.d("TEST", "extractPublicIdFromUri: OBTAINED " + result);
         return result;
     }
+
 }
 

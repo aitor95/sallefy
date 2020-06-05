@@ -89,10 +89,10 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
 
         }else {
 
-            mPlaylist.setName(mTitle.getText().toString());
+            mPlaylist.setName(FilenameHelper.removeSpecialCharsAndTail(mTitle.getText().toString()));
 
             if (coverChosen) {
-                CloudinaryManager.getInstance(this).uploadCoverImage(Constants.STORAGE.PLAYLIST_COVER_FOLDER, mUri, mFilename, NewPlaylistActivity.this);
+                CloudinaryManager.getInstance(this).uploadCoverImage(Constants.STORAGE.PLAYLIST_COVER_FOLDER, mUri, mFilename+ System.currentTimeMillis(), NewPlaylistActivity.this);
 
             }else{
 

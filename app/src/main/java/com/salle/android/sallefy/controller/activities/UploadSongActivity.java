@@ -258,7 +258,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
                 uploading = false;
             }else {
 
-                mTrack.setName(mName.getText().toString());
+                mTrack.setName(FilenameHelper.removeSpecialCharsAndTail(mName.getText().toString()));
                 ZonedDateTime currentTime = ZonedDateTime.now();
                 mTrack.setReleased(currentTime.toString());
                 //System.out.println(currentTime.toString());
@@ -274,7 +274,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
                 stateDialog.showStateDialog(false);
 
                 CloudinaryManager.getInstance(this)
-                        .uploadAudioFile(Constants.STORAGE.TRACK_AUDIO_FOLDER, mAudioUri, mAudioFilename, UploadSongActivity.this);
+                        .uploadAudioFile(Constants.STORAGE.TRACK_AUDIO_FOLDER, mAudioUri, mAudioFilename+ System.currentTimeMillis(), UploadSongActivity.this);
 
             }
         }
@@ -391,7 +391,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
             audioSet = true;
             if (coverChosen) {
                 CloudinaryManager.getInstance(this)
-                        .uploadCoverImage(Constants.STORAGE.TRACK_COVER_FOLDER, mCoverUri, mCoverFilename, UploadSongActivity.this);
+                        .uploadCoverImage(Constants.STORAGE.TRACK_COVER_FOLDER, mCoverUri, mCoverFilename+ System.currentTimeMillis(), UploadSongActivity.this);
             }else{
                 TrackManager.getInstance(this)
                         .createTrack(mTrack, UploadSongActivity.this);

@@ -611,45 +611,57 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                 Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
                 showArtist(track.getTrack().getUser());
                 break;
-            case "delete":
-                Log.d(TAG, "onButtonClicked: DELETE");
-                break;
+
             case "edit":
                 Log.d(TAG, "onButtonClicked: EDIT");
                 Intent intent = new Intent(this, EditSongActivity.class);
                 intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, mBoundService.getCurrentTrack());
-                startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDIT);
+                startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDITING_FINISHED);
+                break;
+            case "delete":
+                Log.d(TAG, "onButtonClicked: DELETE");
+                deleteTrack(track.getTrack());
                 break;
         }
     }
 
     private void showArtist(User user) {
         Intent data = new Intent();
-        data.putExtra(Constants.INTENT_EXTRAS.SHOW_USER_FROM_MUSIC_PLAYER, user);
+        data.putExtra(Constants.INTENT_EXTRAS.USER, user);
         setResult(Constants.EDIT_CONTENT.RESULT_MP_USER, data);
         finish();
     }
+
+    private void deleteTrack(Track track){
+        Intent data = new Intent();
+        data.putExtra(Constants.INTENT_EXTRAS.TRACK, track);
+        setResult(Constants.EDIT_CONTENT.RESULT_MP_DELETE, data);
+        finish();
+    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         //Back from edit song!
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.EDIT_CONTENT.TRACK_EDIT && resultCode == RESULT_OK) {
+        if (requestCode == Constants.EDIT_CONTENT.TRACK_EDITING_FINISHED && resultCode == RESULT_OK) {
             //Update track information
             boolean audioSet = data.getBooleanExtra("audioSet", false);
+            Track newTrack = (Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
+
             if(audioSet){
                 //Audio file was updated
-                mBoundService.loadSong((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
-                updateUIDataBefore((Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK));
+                mBoundService.loadSong(newTrack);
+                mBoundService.updateSongAfterEditing(newTrack);
+                updateUIDataBefore(newTrack);
 
             }else{
                 //Audio file was not updated
-                Track newTrack = (Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
                 mBoundService.updateSongAfterEditing(newTrack);
                 updateUIDataBefore(newTrack);
                 updateSongInfoAfterLoad();
-                trackWasEdited = true;
             }
+            trackWasEdited = true;
         }
     }
 }

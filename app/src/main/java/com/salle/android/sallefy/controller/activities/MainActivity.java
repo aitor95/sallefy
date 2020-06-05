@@ -31,6 +31,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
+import com.salle.android.sallefy.controller.callbacks.PlaylistMainComunication;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
@@ -56,14 +57,18 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MainActivity extends FragmentActivity implements AdapterClickCallback, MusicCallback, BottomMenuDialog.BottomMenuDialogInterf {
+import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.MUSIC_PLAYER_FINISHED;
+import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_MP_DELETE;
+import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_PA_DELETE;
+import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_PA_USER;
+
+public class MainActivity extends FragmentActivity implements AdapterClickCallback, MusicCallback, BottomMenuDialog.BottomMenuDialogInterf, PlaylistMainComunication {
 
     public static final String TAG = MainActivity.class.getName();
-    private static final int MUSIC_PLAYER = 5005;
 
     //Tiempo que ha de pasar entre acciones para que estas se interpreten como validas
     //Esto permite eliminar los dobleclicks del usuario.
-    private static final long TIME_BETWEEN_CLICKS = 300;
+    public static final long TIME_BETWEEN_CLICKS = 300;
 
     //Fragment management
     private FragmentManager mFragmentManager;
@@ -148,6 +153,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     @Override
     protected void onResume() {
         super.onResume();
+
         //Volvemos del reproductor, actualizamos el mini reproductor.
         Log.d(TAG, "onResume: Volviendo a la main activity");
         updateIfBoundToService();
@@ -189,6 +195,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
         startStreamingService();
@@ -481,6 +488,11 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 }
             }
         } else {
+            if(tagFragmentActivado.equals(SearchFragment.TAG)){
+                SearchFragment sf = (SearchFragment)mFragmentManager.findFragmentByTag(SearchFragment.TAG);
+                if(sf != null)sf.onSeeAllClosed();
+            }
+
             getSupportFragmentManager().popBackStack();
         }
     }
@@ -528,10 +540,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     @Override
     public void onTrackClicked(Track track, Playlist playlist) {
-        if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS) {
-            Log.d(TAG, "onTrackClicked: TIME WAS " + (System.currentTimeMillis() - lastClick));
+        if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
             return;
-        }
 
         lastClick = System.currentTimeMillis();
 
@@ -546,7 +556,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST,playlist);
         }
 
-        startActivityForResult(intent, MUSIC_PLAYER);
+        startActivityForResult(intent, MUSIC_PLAYER_FINISHED);
     }
 
         @Override
@@ -559,9 +569,9 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         Log.d(TAG, "onPlaylistClick: Playlist is " + playlist.getName());
 
         Intent intent = new Intent(this, PlaylistActivity.class);
-        PlaylistActivity.setAdapterClickCallback(this);
+        PlaylistActivity.setPlaylistMainComunication(this);
         intent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST, playlist);
-        startActivityForResult(intent, Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE);
+        startActivityForResult(intent, Constants.EDIT_CONTENT.ACTIVITY_PLAYLIST_FINISHED);
     }
 
     @Override
@@ -666,43 +676,64 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == Constants.EDIT_CONTENT.TRACK_EDIT && resultCode == RESULT_OK) {
-            //Update track information
-            Track track = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
-            Log.d(TAG, "onActivityResult: REQUESTED A EDIT");
-            updateTrackDataFromEverywhere(track);
-
-        }else{
-            if(requestCode == Constants.EDIT_CONTENT.SELECTED_PLAYLIST_UPDATE && resultCode == RESULT_OK){
-                ArrayList<Playlist> mUpdatedPlaylists = (ArrayList<Playlist>) data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE);
-                //If Playlist gone! Stop player and mini player.
-                if(mBoundService.isPlaying()) {
-                    if (currentSongInPlaylistDeleted(mUpdatedPlaylists)) {
-                        linearLayoutMiniplayer.setVisibility(View.GONE);
-                        mBoundService.playlistOrSongDeleted();
+        switch (requestCode){
+            case Constants.EDIT_CONTENT.TRACK_EDITING_FINISHED:
+                if(resultCode == RESULT_OK) {
+                    //Update track information
+                    Track track = (Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
+                    Log.d(TAG, "onActivityResult: REQUESTED A EDIT");
+                    updateTrackDataFromEverywhere(track);
+                }
+            break;
+            case Constants.EDIT_CONTENT.ACTIVITY_PLAYLIST_FINISHED:
+                if(resultCode == RESULT_OK){
+                    ArrayList<Playlist> mUpdatedPlaylists = (ArrayList<Playlist>) data.getSerializableExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE);
+                    //If Playlist gone! Stop player and mini player.
+                    Log.d(TAG, "onActivityResult: ARRAYLIST OF PLAYLIST SIZE IS " + mUpdatedPlaylists.size());
+                    if(mBoundService.isPlaying()) {
+                        if (currentSongInPlaylistDeleted(mUpdatedPlaylists)) {
+                            linearLayoutMiniplayer.setVisibility(View.GONE);
+                            mBoundService.playlistOrSongDeleted();
+                        }
                     }
-                }
 
-                Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
-                if (fragment instanceof MeFragment) {
-                    ((MeFragment) fragment).updatePlaylistInfo(mUpdatedPlaylists);
+                    Fragment fragment = mFragmentManager.findFragmentByTag(tagFragmentActivado);
+                    if(fragment instanceof UpdatableFragment)
+                        ((UpdatableFragment) fragment).updatePlaylistInfo(mUpdatedPlaylists);
+
+                }else  if(resultCode == RESULT_PA_USER){
+                    //User must be shown.
+                    User u = (User) data.getSerializableExtra(Constants.INTENT_EXTRAS.USER);
+                    onUserClick(u);
+                }else if(resultCode == RESULT_PA_DELETE){
+                    //TODO:
+                    //Track track = (Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
+                    //deleteSong(track);
                 }
-            } else if (requestCode == MUSIC_PLAYER) {
+                break;
+            case MUSIC_PLAYER_FINISHED:
+
                 if(resultCode == Constants.EDIT_CONTENT.RESULT_MP_USER){
                     //User stuff
-                    User u = (User) data.getSerializableExtra(Constants.INTENT_EXTRAS.SHOW_USER_FROM_MUSIC_PLAYER);
+                    User u = (User) data.getSerializableExtra(Constants.INTENT_EXTRAS.USER);
                     onUserClick(u);
                 }else if(resultCode == Constants.EDIT_CONTENT.RESULT_MP_TRACK_EDITED){
                     //SongEditStuff
                     Track track = (Track)data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
 
                     updateTrackDataFromEverywhere(track);
+                }else if(resultCode == RESULT_MP_DELETE){
+                    Track track = (Track) data.getSerializableExtra(Constants.INTENT_EXTRAS.TRACK);
+                    deleteSong(track);
                 }
-            }
+                break;
+
+            default:
+                Log.d(TAG, "onActivityResult: ACTIVITY RESULT NOT CONTROLED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
     }
-
-    private void updateTrackDataFromEverywhere(Track track) {
+    @Override
+    public void updateTrackDataFromEverywhere(Track track) {
         if(mBoundService.hasTrack()) {
             if(track.isDeleted()){
                 if (mBoundService.getCurrentTrack().getId() == track.getId().intValue()) {
@@ -729,10 +760,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         }
         int id = currentPlaylist.getId();
         for(Playlist p : mUpdatedPlaylists){
-            if(p.getId() ==  id && p.isDeleted()){
-                return true;
-            }else{
-                return false;
+            if(p.getId() ==  id){
+                return p.isDeleted();
             }
         }
         return false;
@@ -744,8 +773,9 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 track.getCallback());
     }
 
-    private void deleteSong(TrackViewPack track) {
-        TrackManager.getInstance(this).deleteTrack(track.getTrack().getId(), new TrackCallback() {
+    @Override
+    public void deleteSong(Track track) {
+        TrackManager.getInstance(this).deleteTrack(track.getId(), new TrackCallback() {
             @Override
             public void onTracksReceived(List<Track> tracks) {
 
@@ -773,11 +803,12 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
             @Override
             public void onTrackDeleted() {
-                Track t = track.getTrack();
-                t.setDeleted(true);
 
-                updateTrackDataFromEverywhere(t);
-                CloudinaryManager.getInstance(MainActivity.this).deleteCoverImage(t.getThumbnail(),true);
+                track.setDeleted(true);
+
+                updateTrackDataFromEverywhere(track);
+                CloudinaryManager.getInstance(MainActivity.this).deleteCoverImage(track.getThumbnail(),true);
+                CloudinaryManager.getInstance(MainActivity.this).deleteAudioFile(track.getUrl());
             }
 
             @Override
@@ -806,18 +837,25 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 Log.d(TAG, "onButtonClicked: SHOW ARTIST!");
                 onUserClick(track.getTrack().getUser());
                 break;
-            case "delete":
-                Log.d(TAG, "onButtonClicked: DELETE");
-                deleteSong(track);
-                break;
+
             case "edit":
                 Log.d(TAG, "onButtonClicked: EDIT");
                 mTrackViewPack = track;
                 Intent intent = new Intent(this, EditSongActivity.class);
                 intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
-                startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDIT);
+                startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDITING_FINISHED);
+                break;
+
+            case "delete":
+                Log.d(TAG, "onButtonClicked: DELETE");
+                deleteSong(track.getTrack());
                 break;
         }
+    }
+    /*PELIGROSO PER EMOSIONANTE.*/
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(new Bundle());
     }
 }
 

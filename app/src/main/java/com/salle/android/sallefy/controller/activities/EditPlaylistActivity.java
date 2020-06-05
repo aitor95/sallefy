@@ -115,11 +115,11 @@ public class EditPlaylistActivity extends AppCompatActivity implements PlaylistC
     }
 
     private void updatePlaylist() {
-        this.mPlaylist.setName(mTitle.getText().toString());
+        this.mPlaylist.setName(FilenameHelper.removeSpecialCharsAndTail(mTitle.getText().toString()));
         this.mPlaylist.setDescription(mDescription.getText().toString());
         this.saved = true;
         if(coverChosen){
-            CloudinaryManager.getInstance(this).uploadCoverImage(Constants.STORAGE.PLAYLIST_COVER_FOLDER, mUri, mFilename, EditPlaylistActivity.this);
+            CloudinaryManager.getInstance(this).uploadCoverImage(Constants.STORAGE.PLAYLIST_COVER_FOLDER, mUri, mFilename+ System.currentTimeMillis(), EditPlaylistActivity.this);
             completed = false;
         }else{
             PlaylistManager.getInstance(getApplicationContext())

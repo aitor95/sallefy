@@ -116,7 +116,7 @@ public class AddSongsToPlayListAdapter extends RecyclerView.Adapter<AddSongsToPl
 
     private void createTrack( ){
         Intent intent = new Intent(mContext, UploadSongActivity.class);
-        ((Activity)mContext).startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDIT);
+        ((Activity)mContext).startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDITING_FINISHED);
     }
 
     private void selectCheckbox(ViewHolder holder, Track track){

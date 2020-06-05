@@ -240,18 +240,21 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
 
     private void updateTrack() {
 
-        mTrack.setName(mName.getText().toString());
+        String newName = FilenameHelper.removeSpecialCharsAndTail(mName.getText().toString());
+
+        mTrack.setName(newName);
+
         mTrack.setGenres(mCurrentGenres);
         stateDialog = StateDialog.getInstance(this);
         stateDialog.showStateDialog(false);
 
         if(trackChosen){
             CloudinaryManager.getInstance(this)
-                    .uploadAudioFile(Constants.STORAGE.TRACK_AUDIO_FOLDER, mAudioUri, mAudioFilename, EditSongActivity.this);
+                    .uploadAudioFile(Constants.STORAGE.TRACK_AUDIO_FOLDER, mAudioUri, mAudioFilename+ System.currentTimeMillis(), EditSongActivity.this);
         }else{
             if(coverChosen){
                 CloudinaryManager.getInstance(this)
-                        .uploadCoverImage(Constants.STORAGE.TRACK_COVER_FOLDER, mCoverUri, mCoverFilename, EditSongActivity.this);
+                        .uploadCoverImage(Constants.STORAGE.TRACK_COVER_FOLDER, mCoverUri, mCoverFilename+ System.currentTimeMillis(), EditSongActivity.this);
             }else{
                 TrackManager.getInstance(this)
                         .updateTrack(mTrack, EditSongActivity.this);
@@ -357,7 +360,7 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
             trackChosen = false;
             if (coverChosen) {
                 CloudinaryManager.getInstance(this)
-                        .uploadCoverImage(Constants.STORAGE.TRACK_COVER_FOLDER, mCoverUri, mCoverFilename, EditSongActivity.this);
+                        .uploadCoverImage(Constants.STORAGE.TRACK_COVER_FOLDER, mCoverUri, mCoverFilename+ System.currentTimeMillis(), EditSongActivity.this);
             }else{
                 TrackManager.getInstance(this)
                         .updateTrack(mTrack, EditSongActivity.this);

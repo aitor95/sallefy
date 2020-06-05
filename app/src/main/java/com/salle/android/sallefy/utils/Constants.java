@@ -1,7 +1,7 @@
 package com.salle.android.sallefy.utils;
 
 public class Constants {
-    public static final String URL = "url";
+    final String URL = "url";
 
     public interface INTENT_EXTRAS{
         String PLAYER_SONG = "_EXTRA_SONG_" ;
@@ -13,53 +13,56 @@ public class Constants {
         String PLAYLIST_DATA = "_PLAYLIST_DATA_";
         String CURRENT_TRACK = "_CURRENT_TRACK_";
         String PLAYLIST_ID = "_PLAYLIST_ID_";
-        String SHOW_USER_FROM_MUSIC_PLAYER = "_SHOW_USER_FROM_MUSIC_PLAYER_";
+        String USER = "_USER_";
     }
 
     public interface CALLBACKS {
-        public static String MUSIC_CALLBACK = "musicCallback";
+        String MUSIC_CALLBACK = "musicCallback";
     }
 
     public interface NETWORK {
-        public static  String BASE_URL = "http://" + "sallefy.eu-west-3.elasticbeanstalk.com/api/";
+         String BASE_URL = "http://" + "sallefy.eu-west-3.elasticbeanstalk.com/api/";
     }
 
     public interface PERMISSIONS {
-        public static int MICROPHONE = 7;
+        int MICROPHONE = 7;
     }
 
     public interface SENDING {
-        public static String PLAYLIST = "sendingPlaylist";
-        public static String INDEX = "sendingIndex";
-        public static String TRACK = "sendingTrack";
-        public static String TRACKS = "sendingTracks";
+        String PLAYLIST = "sendingPlaylist";
+        String INDEX = "sendingIndex";
+        String TRACK = "sendingTrack";
+        String TRACKS = "sendingTracks";
     }
 
     public interface EDIT_CONTENT {
-        public static int PLAYLIST_EDIT = 8;
-        public static int TRACK_EDIT = 9;
-        public static int SELECTED_PLAYLIST_UPDATE = 10;
+        int PLAYLIST_EDIT = 8;
+        int TRACK_EDITING_FINISHED = 9;
+        int ACTIVITY_PLAYLIST_FINISHED = 10;
         int RESULT_MP_USER = 11;
         int RESULT_MP_ORDINARY = 12;
         int RESULT_MP_TRACK_EDITED = 13;
+        int RESULT_MP_DELETE = 14;
+        int RESULT_PA_USER = 15;
+        int RESULT_PA_DELETE = 16;
+        int MUSIC_PLAYER_FINISHED = 5005;
     }
 
     public interface ACTION {
-        public static String STARTFOREGROUND_ACTION = "salle.android.sallefy_heroes_v10A.action.startforeground";
-        public static String STOPFOREGROUND_ACTION = "salle.android.projects.sallefy_heroes_v10.action.stopforeground";
+        String STARTFOREGROUND_ACTION = "salle.android.sallefy_heroes_v10A.action.startforeground";
+        String STOPFOREGROUND_ACTION = "salle.android.projects.sallefy_heroes_v10.action.stopforeground";
     }
 
     public interface NOTIFICATION_ID {
-        public static int FOREGROUND_SERVICE = 101;
+        int FOREGROUND_SERVICE = 101;
     }
 
     public interface STORAGE {
-        public static int SONG_SELECTED = 4;
-        public static int IMAGE_SELECTED = 5;
-        public static String PLAYLIST_COVER_FOLDER = "sallefy/covers/playlists";
-        public static String TRACK_COVER_FOLDER = "sallefy/covers/songs";
-        public static String USER_PICTURE_FOLDER = "sallefy/users";
-        public static String TRACK_AUDIO_FOLDER = "sallefy/tracks";
-
+        int SONG_SELECTED = 4;
+        int IMAGE_SELECTED = 5;
+        String PLAYLIST_COVER_FOLDER = "sallefy/covers/playlists";
+        String TRACK_COVER_FOLDER = "sallefy/covers/songs";
+        String USER_PICTURE_FOLDER = "sallefy/users";
+        String TRACK_AUDIO_FOLDER = "sallefy/tracks";
     }
 }

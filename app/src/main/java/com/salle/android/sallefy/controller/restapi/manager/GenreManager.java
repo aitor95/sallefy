@@ -7,9 +7,6 @@ import com.salle.android.sallefy.controller.restapi.callback.GenreCallback;
 import com.salle.android.sallefy.controller.restapi.service.GenreService;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Track;
-import com.salle.android.sallefy.model.UserToken;
-import com.salle.android.sallefy.utils.Constants;
-import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,15 +14,11 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class GenreManager {
+public class GenreManager extends BaseManager{
 
-    private static final String TAG = "genreManager";
+    private static final String TAG = GenreManager.class.getName();
     private static GenreManager sGenreManager;
-    private Retrofit mRetrofit;
-    private Context mContext;
 
     private GenreService mService;
 
@@ -37,19 +30,15 @@ public class GenreManager {
     }
 
     private GenreManager(Context cntxt) {
-        mContext = cntxt;
-        mRetrofit = new Retrofit.Builder()
-                .baseUrl(Constants.NETWORK.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-
+        super(cntxt);
         mService = mRetrofit.create(GenreService.class);
     }
 
     public synchronized void getAllGenres(final GenreCallback genreCallback) {
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<List<Genre>> call = mService.getAllGenres("Bearer " + userToken.getIdToken());
+
+        Call<List<Genre>> call = mService.getAllGenres();
+
         call.enqueue(new Callback<List<Genre>>() {
             @Override
             public void onResponse(Call<List<Genre>> call, Response<List<Genre>> response) {
@@ -74,9 +63,10 @@ public class GenreManager {
     }
 
     public synchronized void getTracksByGenre(int genreId, final GenreCallback genreCallback) {
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<List<Track>> call = mService.getTracksByGenre( genreId, "Bearer " + userToken.getIdToken());
+
+        Call<List<Track>> call = mService.getTracksByGenre(genreId);
+
         call.enqueue(new Callback<List<Track>>() {
             @Override
             public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {

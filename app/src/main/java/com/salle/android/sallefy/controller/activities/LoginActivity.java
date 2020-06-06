@@ -20,6 +20,8 @@ import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
+import java.util.Arrays;
+
 public class LoginActivity extends AppCompatActivity implements UserLogInAndRegisterCallback {
 
     public static final String TAG = LoginActivity.class.getName();
@@ -210,6 +212,6 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
     @Override
     public void onFailure(Throwable throwable) {
         Toast.makeText(getApplicationContext(), "Something went wrong", Toast.LENGTH_LONG).show();
-        Log.d(TAG, "onFailure: "  +throwable.getMessage());
+        Log.d(TAG, "onFailure: "  + throwable.getMessage() + Arrays.toString(throwable.getStackTrace()));
     }
 }

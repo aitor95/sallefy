@@ -11,6 +11,4 @@ public interface UserTokenService {
 
     @POST("authenticate")
     Call<UserToken> loginUser(@Body UserLogin login);
-
-
 }

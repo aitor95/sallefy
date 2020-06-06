@@ -10,9 +10,6 @@ import com.salle.android.sallefy.controller.restapi.service.TrackService;
 import com.salle.android.sallefy.model.LatLong;
 import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Track;
-import com.salle.android.sallefy.model.UserToken;
-import com.salle.android.sallefy.utils.Constants;
-import com.salle.android.sallefy.utils.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,15 +18,12 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
-public class TrackManager {
+public class TrackManager extends BaseManager{
 
     public static final String TAG = TrackManager.class.getName();
-    private Context mContext;
+
     private static TrackManager sTrackManager;
-    private Retrofit mRetrofit;
     private TrackService mTrackService;
 
 
@@ -42,20 +36,14 @@ public class TrackManager {
     }
 
     public TrackManager(Context context) {
-        mContext = context;
-
-        mRetrofit = new Retrofit.Builder()
-                .baseUrl(Constants.NETWORK.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
+        super(context);
 
         mTrackService = mRetrofit.create(TrackService.class);
     }
 
     public synchronized void createTrack(Track track, final TrackCallback trackCallback) {
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<Track> call = mTrackService.createTrack(track, "Bearer " + userToken.getIdToken());
+        Call<Track> call = mTrackService.createTrack();
         call.enqueue(new Callback<Track>() {
             @Override
             public void onResponse(Call<Track> call, Response<Track> response) {
@@ -77,9 +65,9 @@ public class TrackManager {
     }
 
     public synchronized void updateTrack(Track track, final TrackCallback trackCallback) {
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<ResponseBody> call = mTrackService.updateTrack(track, "Bearer " + userToken.getIdToken());
+
+        Call<ResponseBody> call = mTrackService.updateTrack(track);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -101,9 +89,9 @@ public class TrackManager {
     }
 
     public synchronized void likeTrack(int songId, Boolean like, final LikeCallback likeCallback) {
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<ResponseBody> call = mTrackService.likeTrack(songId, new Like(like), "Bearer " + userToken.getIdToken());
+
+        Call<ResponseBody> call = mTrackService.likeTrack(songId, new Like(like));
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -125,8 +113,8 @@ public class TrackManager {
     }
 
     public synchronized void isTrackLiked(int trackId, final isLikedCallback isLiked){
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
-        Call<Like> call = mTrackService.isTrackLiked(trackId,"Bearer " + userToken.getIdToken());
+
+        Call<Like> call = mTrackService.isTrackLiked(trackId);
         call.enqueue(new Callback<Like>() {
             @Override
             public void onResponse(Call<Like> call, Response<Like> response) {
@@ -150,9 +138,9 @@ public class TrackManager {
     /********************   ALL TRACKS    ********************/
 
     public synchronized void getAllTracksPagination(final TrackCallback trackCallback, int currentPage, int size, boolean recent, boolean popular) {
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<List<Track>> call = mTrackService.getAllTracksPagination( "Bearer " + userToken.getIdToken(), currentPage, size, recent, popular);
+
+        Call<List<Track>> call = mTrackService.getAllTracksPagination(currentPage, size, recent, popular);
         call.enqueue(new Callback<List<Track>>() {
             @Override
             public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
@@ -175,9 +163,9 @@ public class TrackManager {
     }
 
     public synchronized void getUserTracks(String login, int currentPage, int size, boolean popular, final TrackCallback trackCallback) {
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
 
-        Call<List<Track>> call = mTrackService.getUserTracks(login, "Bearer " + userToken.getIdToken(), currentPage, size, popular);
+
+        Call<List<Track>> call = mTrackService.getUserTracks(login, currentPage, size, popular);
         call.enqueue(new Callback<List<Track>>() {
             @Override
             public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
@@ -200,8 +188,8 @@ public class TrackManager {
     }
 
     public synchronized void getOwnTracks(final TrackCallback trackCallback) {
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
-        Call<List<Track>> call = mTrackService.getOwnTracks("Bearer " + userToken.getIdToken());
+
+        Call<List<Track>> call = mTrackService.getOwnTracks();
         call.enqueue(new Callback<List<Track>>() {
             @Override
             public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
@@ -224,8 +212,8 @@ public class TrackManager {
     }
 
     public synchronized void getTopTracks(int limit, final TrackCallback trackCallback) {
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
-        Call<List<Track>> call = mTrackService.getTopPopularTracks(limit, true, "Bearer " + userToken.getIdToken());
+
+        Call<List<Track>> call = mTrackService.getTopPopularTracks(limit, true);
         call.enqueue(new Callback<List<Track>>() {
             @Override
             public void onResponse(Call<List<Track>> call, Response<List<Track>> response) {
@@ -251,8 +239,8 @@ public class TrackManager {
      * DELETES THE TRACK
      */
     public void deleteTrack(int id, final TrackCallback trackCallback) {
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
-        Call<ResponseBody> call = mTrackService.deleteTrack(id,"Bearer " + userToken.getIdToken());
+
+        Call<ResponseBody> call = mTrackService.deleteTrack(id);
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
@@ -274,8 +262,8 @@ public class TrackManager {
     }
 
     public void playTrack(Track track, LatLong latLong){
-        UserToken userToken = Session.getInstance(mContext).getUserToken();
-        Call<ResponseBody> call = mTrackService.playTrack(track.getId(), latLong,"Bearer " + userToken.getIdToken());
+
+        Call<ResponseBody> call = mTrackService.playTrack(track.getId(), latLong);
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

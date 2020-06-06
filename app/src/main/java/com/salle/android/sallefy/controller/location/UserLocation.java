@@ -58,8 +58,8 @@ public class UserLocation {
         crit.setPowerRequirement(Criteria.POWER_MEDIUM);
 
         String provider = locationManager.getBestProvider(crit,true);
-        
-        if (locationManager.isProviderEnabled(provider)) {
+
+        if (provider != null && locationManager.isProviderEnabled(provider)) {
 
                 @SuppressLint("MissingPermission") android.location.Location locationGPS = locationManager.getLastKnownLocation(provider);
                 if (locationGPS != null) {

@@ -1,8 +1,8 @@
 package com.salle.android.sallefy.utils;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.salle.android.sallefy.controller.restapi.manager.BaseManager;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
@@ -91,8 +91,8 @@ public class Session {
 
     public void setUserToken(UserToken userToken)
     {
-        Log.d(TAG, "setUserToken: is " + userToken.getIdToken());
         mUserToken = userToken;
+        BaseManager.changeToken(mContext);
     }
 
     public boolean isAudioEnabled() {

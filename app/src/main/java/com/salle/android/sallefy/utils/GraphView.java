@@ -20,6 +20,7 @@ public class GraphView extends View{
     private int maxValue = 0;
 
     private int type;
+    private boolean loading;
 
     private int[][] timeGraphValues;
     private int[] barGraphValues;
@@ -51,6 +52,8 @@ public class GraphView extends View{
 
         this.x_label = "x_label";
         this.y_label = "y_label";
+
+        loading = true;
 
         init(null);
     }
@@ -109,6 +112,8 @@ public class GraphView extends View{
         this.x_label = "x_label";
         this.y_label = "y_label";
 
+        loading = true;
+
         init(attrs);
     }
 
@@ -124,6 +129,8 @@ public class GraphView extends View{
         for (int i = 0; i < timeGraphValues[1].length; i++) timeGraphValues[1][i] = (10-i)*(10-i);
         for (int i = 0; i < barGraphValues.length; i++) barGraphValues[i] = (i+1)*(i+1);
         for (int i = 0; i < labels.length; i++) labels[i] = "0" + i + "-20";
+
+        loading = true;
 
         this.x_label = "x_label";
         this.y_label = "y_label";
@@ -146,6 +153,8 @@ public class GraphView extends View{
 
         this.x_label = "x_label";
         this.y_label = "y_label";
+
+        loading = true;
 
         init(attrs);
     }
@@ -317,12 +326,17 @@ public class GraphView extends View{
 
         for (int[] a: timeGraphValues) for (int v: a) if (maxValue < v) maxValue = v;
 
-        if (type == 1) {
-            printTimeGraphAxis(canvas);
-            for (int[] values: timeGraphValues) printDots(canvas, values);
+        if (loading) {
+            canvas.drawText("Choose an option", WIDTH/2, HEIGHT/2, textColor);
         } else {
-            printBarGraphAxis(canvas);
-            printBars(canvas, barGraphValues);
+            if (type == 1) {
+                printTimeGraphAxis(canvas);
+                for (int[] values : timeGraphValues) printDots(canvas, values);
+            } else {
+                printBarGraphAxis(canvas);
+                printBars(canvas, barGraphValues);
+            }
         }
+        loading = false;
     }
 }

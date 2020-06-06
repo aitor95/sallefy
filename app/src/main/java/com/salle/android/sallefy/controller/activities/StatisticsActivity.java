@@ -72,7 +72,7 @@ public class StatisticsActivity extends AppCompatActivity implements PlaybackCal
         graphsMenu.getMenu().add(Menu.NONE, 2, Menu.NONE, "Top liked tracks");
         graphsMenu.getMenu().add(Menu.NONE, 3, Menu.NONE, "Top popular playlists");
         graphsMenu.getMenu().add(Menu.NONE, 4, Menu.NONE, "Your activity");
-        ((TextView) findViewById(R.id.graph_title)).setText("Your activity");
+        ((TextView) findViewById(R.id.graph_title)).setText("");
 
         graphsMenu.setOnMenuItemClickListener(item -> {
             ((TextView) findViewById(R.id.graph_title)).setText(item.getTitle());
@@ -95,14 +95,7 @@ public class StatisticsActivity extends AppCompatActivity implements PlaybackCal
             return false;
         });
 
-
         graphView = findViewById(R.id.stats_graph);
-        graphView.setType(2);
-
-        graphView.resetView();
-
-        barmode = false;
-        playbackManager.getPlaybacksByUser(this);
     }
 
     @Override

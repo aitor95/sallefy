@@ -24,6 +24,9 @@ public interface TrackService {
     @GET("tracks")
     Call<List<Track>> getAllTracksSocial(@Query("size") int size, @Query("recent") boolean recent);
 
+    @GET("tracks/{id}")
+    Call<Track> getTrack(@Path("id") int id);
+
     @GET("me/tracks")
     Call<List<Track>> getOwnTracks();
 

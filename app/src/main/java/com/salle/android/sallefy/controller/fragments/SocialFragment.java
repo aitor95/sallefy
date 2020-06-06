@@ -194,6 +194,11 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	}
 
 	@Override
+	public void onTrackById(Track track) {
+
+	}
+
+	@Override
 	public void onNoTracks(Throwable throwable) {
 
 		mRecyclerView.setLast(true);
@@ -220,7 +225,7 @@ public class SocialFragment extends Fragment implements TrackCallback, UserCallb
 	}
 
 	@Override
-	public void onTrackDeleted() {
+	public void onTrackDeleted(Track track) {
 
 	}
 

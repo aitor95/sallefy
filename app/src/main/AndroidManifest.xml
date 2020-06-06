@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.salle.android.sallefy">
 
     <!--Audio permissions-->
@@ -20,7 +21,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
 
-        <activity android:name=".controller.activities.AddSongsToPlaylistActivity"/>
+        <activity android:name=".controller.activities.AddSongsToPlaylistActivity" />
         <activity android:name=".controller.activities.StatisticsActivity" />
         <activity
             android:name=".controller.activities.SettingsActivity"
@@ -33,9 +34,9 @@
             android:stopWithTask="false" />
 
         <activity android:name=".controller.activities.AddToPlaylistActivity" />
-
-        <activity android:name=".controller.activities.MainActivity"
-            android:launchMode="singleTask"/>
+        <activity
+            android:name=".controller.activities.MainActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".controller.activities.SignUpActivity" />
 
         <activity android:name=".controller.activities.LoginActivity">
@@ -43,6 +44,39 @@
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="sallefy.eu-west-3.elasticbeanstalk.com"
+                    android:pathPrefix="/playlist" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="sallefy.eu-west-3.elasticbeanstalk.com"
+                    android:pathPrefix="/user" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:scheme="http"
+                    android:host="sallefy.eu-west-3.elasticbeanstalk.com"
+                    android:pathPrefix="/track" />
             </intent-filter>
         </activity>
 
@@ -53,7 +87,7 @@
         <activity android:name=".controller.activities.PlaylistActivity" />
         <activity android:name=".controller.activities.EditAccountActivity" />
 
-        <receiver android:name=".controller.notifications.NotificationReceiver"/>
+        <receiver android:name=".controller.notifications.NotificationReceiver" />
     </application>
 
 </manifest>

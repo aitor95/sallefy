@@ -132,6 +132,11 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 		mRecyclerView.getLayoutManager().onRestoreInstanceState(parcelable);
 	}
 
+	@Override
+	public void onTrackById(Track track) {
+
+	}
+
 	public void reloadItems(ArrayList<Track> mTracks){
 		this.mTracks = mTracks;
 
@@ -166,7 +171,7 @@ public class SeeAllSongFragment extends Fragment implements TrackCallback {
 	}
 
 	@Override
-	public void onTrackDeleted() {
+	public void onTrackDeleted(Track track) {
 
 	}
 

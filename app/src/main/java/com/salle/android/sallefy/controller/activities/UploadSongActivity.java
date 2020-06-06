@@ -292,6 +292,11 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     }
 
     @Override
+    public void onTrackById(Track track) {
+
+    }
+
+    @Override
     public void onNoTracks(Throwable throwable) {
 
     }
@@ -332,7 +337,7 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
     }
 
     @Override
-    public void onTrackDeleted() {
+    public void onTrackDeleted(Track track) {
 
     }
 

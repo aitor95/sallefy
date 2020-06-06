@@ -223,6 +223,11 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
     }
 
     @Override
+    public void onTrackById(Track track) {
+
+    }
+
+    @Override
     public void onNoTracks(Throwable throwable) {
 
     }
@@ -248,7 +253,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
     }
 
     @Override
-    public void onTrackDeleted() {
+    public void onTrackDeleted(Track track) {
 
     }
 

@@ -247,6 +247,11 @@ public class StatisticsActivity extends AppCompatActivity implements PlaybackCal
     }
 
     @Override
+    public void onTrackById(Track track) {
+
+    }
+
+    @Override
     public void onNoTracks(Throwable throwable) {
 
     }
@@ -272,7 +277,7 @@ public class StatisticsActivity extends AppCompatActivity implements PlaybackCal
     }
 
     @Override
-    public void onTrackDeleted() {
+    public void onTrackDeleted(Track track) {
 
     }
 

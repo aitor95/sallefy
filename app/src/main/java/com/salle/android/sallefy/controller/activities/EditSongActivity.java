@@ -153,7 +153,7 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
                 m.deleteAudioFile(mTrack.getUrl());
                 m.deleteCoverImage(mTrack.getThumbnail(),true);
 
-                TrackManager.getInstance(EditSongActivity.this).deleteTrack(mTrack.getId(),EditSongActivity.this);
+                TrackManager.getInstance(EditSongActivity.this).deleteTrack(mTrack,EditSongActivity.this);
             }
         });
 
@@ -273,6 +273,11 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     }
 
     @Override
+    public void onTrackById(Track track) {
+
+    }
+
+    @Override
     public void onNoTracks(Throwable throwable) {
 
     }
@@ -302,7 +307,7 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     }
 
     @Override
-    public void onTrackDeleted() {
+    public void onTrackDeleted(Track track) {
         mTrack.setDeleted(true);
         exitEditing();
     }

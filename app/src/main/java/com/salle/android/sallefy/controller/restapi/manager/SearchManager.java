@@ -10,14 +10,12 @@ import com.salle.android.sallefy.model.SearchResult;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class SearchManager extends BaseManager {
 
     private static final String TAG = SearchManager.class.getName();
-    private Context mContext;
+
     private static SearchManager sTrackManager;
-    private Retrofit mRetrofit;
     private SearchService mSearchService;
 
 

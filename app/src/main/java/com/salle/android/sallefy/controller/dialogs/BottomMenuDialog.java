@@ -3,7 +3,6 @@ package com.salle.android.sallefy.controller.dialogs;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -109,7 +108,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         LinearLayout delete = v.findViewById(R.id.bottom_menu_a_deleteSong);
 
         TextView t = v.findViewById(R.id.bottom_menu_a_delete_text);
-        Log.d("TEST", "onCreateView: inside " + insidePlaylist + " isOwner " +isPlaylistOwner + " is OnwerTrac "  + isTrackOwner);
+//        Log.d("TEST", "onCreateView: inside " + insidePlaylist + " isOwner " +isPlaylistOwner + " is OnwerTrac "  + isTrackOwner);
 
         if(insidePlaylist){
             t.setText(R.string.RemoveFromPlaylistBottomMenu);

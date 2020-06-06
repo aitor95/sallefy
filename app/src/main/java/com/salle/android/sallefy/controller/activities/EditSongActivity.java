@@ -217,6 +217,11 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
                     mCoverUri = data.getData();
                     if (mCoverUri == null) break;
 
+                    if(FilenameHelper.getMimeType(mCoverUri,this).contains("tiff")) {
+                        Toast.makeText(getApplicationContext(), "Tiff images are not supported.", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+
                     mCoverFilename = FilenameHelper.extractFromUri(mCoverUri, this);
                     Glide
                             .with(getApplicationContext())

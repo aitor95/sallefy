@@ -79,6 +79,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
     private ImageButton loopBtn;
 
     private FrameLayout frameLayoutVideo;
+    private SurfaceHolder mSurfaceHolder;
 
     //Indica si se esta en el modo fiesta.
     private boolean partyMode;
@@ -532,6 +533,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
                     if (mBoundService != null) {
                         mBoundService.thumbnailClicked();
                         mBoundService.setVideoFullScreen(true);
+                        mBoundService.getMediaPlayer().setDisplay(mSurfaceHolder);
                     }
                 }
             });
@@ -551,6 +553,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
         Log.d(TAG, "surfaceCreated: SURFACE CREATED.");
         //mediaPlayer.setDisplay(holder);
         //mBoundService.updateSurfaceHolder(videoThumbnail.getHolder());
+        mSurfaceHolder = holder;
         if(mBoundService != null)
         try{
         //    mBoundService.getPapa().setDisplay(holder);
@@ -562,6 +565,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         Log.d(TAG, "surfaceChanged: CHANGED");
+        mSurfaceHolder = holder;
         //mediaPlayer.setDisplay(holder);
         //if(mBoundService != null)
        // mBoundService.updateSurfaceHolder(videoThumbnail.getHolder());
@@ -581,6 +585,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         Log.d(TAG, "surfaceDestroyed: DESTROY");
+        mSurfaceHolder = null;
        // mBoundService.updateSurfaceHolder(null);
         if(mBoundService != null){
             try{

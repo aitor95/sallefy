@@ -43,13 +43,16 @@ import com.salle.android.sallefy.controller.location.UserLocation;
 import com.salle.android.sallefy.controller.music.MusicCallback;
 import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
+import com.salle.android.sallefy.controller.restapi.callback.UserLogInAndRegisterCallback;
 import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.model.User;
+import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
@@ -66,7 +69,7 @@ import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_MP_D
 import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_PA_DELETE;
 import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_PA_USER;
 
-public class MainActivity extends FragmentActivity implements AdapterClickCallback, MusicCallback, BottomMenuDialog.BottomMenuDialogInterf, PlaylistMainComunication, PermissionsCallback {
+public class MainActivity extends FragmentActivity implements AdapterClickCallback, MusicCallback, TrackCallback, BottomMenuDialog.BottomMenuDialogInterf, UserLogInAndRegisterCallback, PlaylistMainComunication, PermissionsCallback {
 
     public static final String TAG = MainActivity.class.getName();
 
@@ -197,6 +200,21 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     }
 
     @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        if (getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.USER_ID) != null) {
+            String userId = (String) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.USER_ID);
+            UserManager.getInstance(this).getUserData(userId,this);
+        }else if(getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.TRACK_ID) != null){
+            int trackId = (int) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.TRACK_ID);
+            TrackManager.getInstance(this).getTrack(this, trackId);
+        }else {
+            enterHomeFragment();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -217,6 +235,16 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             }
         });
 
+
+     /*   if (getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.USER_ID) != null) {
+            String userId = (String) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.USER_ID);
+            UserManager.getInstance(this).getUserData(userId,this);
+        }else if(getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.TRACK_ID) != null){
+            int trackId = (int) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.TRACK_ID);
+            TrackManager.getInstance(this).getTrack(this, trackId);
+        }else {
+            enterHomeFragment();
+        }*/
         enterHomeFragment();
         requestAudioPermissions();
     }
@@ -352,15 +380,14 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         me.setTextAppearance(R.style.BottomNavigationView);
         home.setTextAppearance(R.style.BottomNavigationView);
         search.setImageResource(R.drawable.ic_search);
-
         Fragment fragment = MeFragment.newInstance(user);
         MeFragment.setAdapterClickCallback(this);
 
         tagFragmentActivado = MeFragment.TAG;
         mFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment,  MeFragment.TAG)
-            //.addToBackStack(null)
-            .commit();
+                .replace(R.id.fragment_container, fragment,  MeFragment.TAG)
+                //.addToBackStack(null)
+                .commit();
     }
 
     private void enterSearchFragment() {
@@ -421,7 +448,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         }
     }
 
-    @Override
+   // @Override
     public void requestAudioPermissions() {
 
         if (ContextCompat.checkSelfPermission(getApplicationContext(),
@@ -747,6 +774,12 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 Log.d(TAG, "onActivityResult: ACTIVITY RESULT NOT CONTROLED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         }
     }
+
+    @Override
+    public void deleteSong(Track track) {
+
+    }
+
     @Override
     public void updateTrackDataFromEverywhere(Track track) {
         if(mBoundService.hasTrack()) {
@@ -788,54 +821,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 track.getCallback());
     }
 
-    @Override
-    public void deleteSong(Track track) {
-        TrackManager.getInstance(this).deleteTrack(track.getId(), new TrackCallback() {
-            @Override
-            public void onTracksReceived(List<Track> tracks) {
-
-            }
-            @Override
-            public void onNoTracks(Throwable throwable) {
-
-            }
-            @Override
-            public void onPersonalTracksReceived(List<Track> tracks) {
-
-            }
-            @Override
-            public void onUserTracksReceived(List<Track> tracks) {
-
-            }
-            @Override
-            public void onCreateTrack(Track track) {
-
-            }
-            @Override
-            public void onUpdatedTrack() {
-
-            }
-
-            @Override
-            public void onTrackDeleted() {
-
-                track.setDeleted(true);
-
-                updateTrackDataFromEverywhere(track);
-                CloudinaryManager.getInstance(MainActivity.this).deleteCoverImage(track.getThumbnail(),true);
-                CloudinaryManager.getInstance(MainActivity.this).deleteAudioFile(track.getUrl());
-            }
-
-            @Override
-            public void onPopularTracksReceived(List<Track> tracks) {
-
-            }
-
-            @Override
-            public void onFailure(Throwable throwable) {
-                Log.d(TAG, "onFailure: CANT DELETE TRACK!");
-            }
-        });
+    private void deleteSong(TrackViewPack track) {
+        TrackManager.getInstance(this).deleteTrack(track.getTrack(), this);
     }
 
     //Control del dialogo que aparece al pulsar los 3 puntos de una track.
@@ -876,6 +863,85 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(new Bundle());
+    }
+
+    @Override
+    public void onUserInfoReceived(User userData) {
+        onUserClick(userData);
+    }
+
+    @Override
+    public void onLoginSuccess(UserToken userToken) {
+
+    }
+
+    @Override
+    public void onLoginFailure(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onRegisterSuccess() {
+
+    }
+
+    @Override
+    public void onRegisterFailure(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onFailure(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onTracksReceived(List<Track> tracks) {
+
+    }
+
+    @Override
+    public void onTrackById(Track track) {
+        onTrackClicked(track, null);
+    }
+
+    @Override
+    public void onNoTracks(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onPersonalTracksReceived(List<Track> tracks) {
+
+    }
+
+    @Override
+    public void onUserTracksReceived(List<Track> tracks) {
+
+    }
+
+    @Override
+    public void onCreateTrack(Track track) {
+
+    }
+
+    @Override
+    public void onUpdatedTrack() {
+
+    }
+
+    @Override
+    public void onTrackDeleted(Track t) {
+        t.setDeleted(true);
+
+        updateTrackDataFromEverywhere(t);
+        CloudinaryManager.getInstance(MainActivity.this).deleteCoverImage(t.getThumbnail(),true);
+        CloudinaryManager.getInstance(MainActivity.this).deleteAudioFile(t.getUrl());
+    }
+
+    @Override
+    public void onPopularTracksReceived(List<Track> tracks) {
+
     }
 }
 

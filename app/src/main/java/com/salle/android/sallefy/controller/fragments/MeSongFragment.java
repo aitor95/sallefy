@@ -160,6 +160,11 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	public void onTracksReceived(List<Track> tracks) {
 	}
 
+	@Override
+	public void onTrackById(Track track) {
+
+	}
+
 
 	@Override
 	public void onNoTracks(Throwable throwable) {
@@ -201,7 +206,7 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 	}
 
 	@Override
-	public void onTrackDeleted() {
+	public void onTrackDeleted(Track track) {
 
 	}
 

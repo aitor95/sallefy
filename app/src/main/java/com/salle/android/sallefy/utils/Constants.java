@@ -13,6 +13,9 @@ public class Constants {
         String PLAYLIST_DATA = "_PLAYLIST_DATA_";
         String CURRENT_TRACK = "_CURRENT_TRACK_";
         String PLAYLIST_ID = "_PLAYLIST_ID_";
+        String USER_ID = "_USER_ID_";
+        String TRACK_ID = "_TRACK_ID_";
+        String SHOW_USER_FROM_MUSIC_PLAYER = "_SHOW_USER_FROM_MUSIC_PLAYER_";
         String USER = "_USER_";
     }
 

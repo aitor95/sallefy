@@ -214,7 +214,16 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 		user_name.setText(mUser.getLogin());
 
 		ImageView configButton = v.findViewById(R.id.config_button);
+		ImageView shareButton = v.findViewById(R.id.profile_share);
 		ImageButton changePhoto = (ImageButton) v.findViewById(R.id.action_change_photo);
+
+		shareButton.setOnClickListener(view -> {
+			Intent intent = new Intent(Intent.ACTION_SEND);
+			intent.setType("text/plain");
+			intent.putExtra(Intent.EXTRA_TEXT, "Look what I found on Sallefy!  http://sallefy.eu-west-3.elasticbeanstalk.com/user/" + mUser.getLogin());
+			intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Shared from Sallefy");
+			startActivity(Intent.createChooser(intent, "Share"));
+		});
 
 		if(isOwner) {
 
@@ -233,6 +242,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 			configButton.setVisibility(View.GONE);
 			changePhoto.setVisibility(View.GONE);
 		}
+
 	}
 
 	private void openUserFragment() {

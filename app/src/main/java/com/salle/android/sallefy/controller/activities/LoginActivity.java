@@ -1,6 +1,7 @@
 package com.salle.android.sallefy.controller.activities;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,9 +18,11 @@ import com.salle.android.sallefy.controller.restapi.callback.UserLogInAndRegiste
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserToken;
+import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
+import java.util.List;
 import java.util.Arrays;
 
 public class LoginActivity extends AppCompatActivity implements UserLogInAndRegisterCallback {
@@ -32,6 +35,14 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
     private boolean inAutomaticLogIn;
     private TextInputLayout textInputUsername;
     private TextInputLayout textInputPassword;
+
+    //Shared links
+    private int sharedId = -1;
+    private String sharedUserId = null;
+    private int sharedType = -1;
+    private static final int USER = 0;
+    private static final int PLAYLIST = 1;
+    private static final int TRACK = 2;
 
 
     @Override
@@ -51,6 +62,42 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
         }
     }
 
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        handleIntent(intent);
+    }
+
+    private void handleIntent(Intent intent) {
+        String appLinkAction = intent.getAction();
+        Uri appLinkData = intent.getData();
+        if (Intent.ACTION_VIEW.equals(appLinkAction) && appLinkData != null){
+            List<String> data = appLinkData.getPathSegments();
+            switch (data.get(0)){
+                case "user":
+                    sharedUserId = appLinkData.getLastPathSegment();
+                    sharedType = USER;
+                    break;
+                case "playlist":
+                    sharedId = Integer.parseInt(appLinkData.getLastPathSegment());
+                    sharedType = PLAYLIST;
+                    break;
+                case "track":
+                    sharedId = Integer.parseInt(appLinkData.getLastPathSegment());
+                    sharedType = TRACK;
+                    break;
+            }
+           /* playlistId = Integer.parseInt(appLinkData.getLastPathSegment());
+            System.out.println(playlistId);
+
+            */
+
+            /*Uri appData = Uri.parse("http://sallefy.eu-west-3.elasticbeanstalk.com/playlist/").buildUpon()
+                    .appendPath(playlistId).build();*/
+
+        }
+    }
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,12 +106,15 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
         //Uncomment this line to reset autologin data saved.
         //PreferenceUtils.resetValues(this);
 
-        if(checkExistingPreferences()){
+        if (checkExistingPreferences()) {
             showSplash();
-        }else{
+        } else {
             //User credentials not available. Show login.
             showLogin();
         }
+
+        handleIntent(getIntent());
+
     }
 
     private void showSplash(){
@@ -205,8 +255,30 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
         Session.getInstance(getApplicationContext())
                 .setUser(userData);
 
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
+        if (sharedId != -1 || sharedUserId != null) {
+            switch (sharedType){
+                case USER:
+                    Intent userIntent = new Intent(this, MainActivity.class);
+                    userIntent.putExtra(Constants.INTENT_EXTRAS.USER_ID, sharedUserId);
+                    startActivity(userIntent);
+                    break;
+                case PLAYLIST:
+                    Intent playlistIntent = new Intent(this, PlaylistActivity.class);
+                    playlistIntent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID, sharedId);
+                    startActivity(playlistIntent);
+                    break;
+                case TRACK:
+                    Intent trackIntent = new Intent(this, MainActivity.class);
+                    trackIntent.putExtra(Constants.INTENT_EXTRAS.TRACK_ID, sharedId);
+                    startActivity(trackIntent);
+                    break;
+            }
+
+
+        }else{
+            Intent intent = new Intent(this, MainActivity.class);
+            startActivity(intent);
+        }
     }
 
     @Override

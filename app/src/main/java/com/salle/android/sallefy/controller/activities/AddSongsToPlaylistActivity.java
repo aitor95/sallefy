@@ -249,6 +249,11 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     @Override
+    public void onTrackById(Track track) {
+
+    }
+
+    @Override
     public void onNoTracks(Throwable throwable) {
 
     }
@@ -274,7 +279,7 @@ public class AddSongsToPlaylistActivity extends AppCompatActivity implements Pla
     }
 
     @Override
-    public void onTrackDeleted() {
+    public void onTrackDeleted(Track track) {
 
     }
 

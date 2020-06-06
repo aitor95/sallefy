@@ -238,15 +238,15 @@ public class TrackManager extends BaseManager{
     /**
      * DELETES THE TRACK
      */
-    public void deleteTrack(int id, final TrackCallback trackCallback) {
+    public void deleteTrack(Track track, final TrackCallback trackCallback) {
 
-        Call<ResponseBody> call = mTrackService.deleteTrack(id);
+        Call<ResponseBody> call = mTrackService.deleteTrack(track.getId());
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 int code = response.code();
                 if (response.isSuccessful()) {
-                    trackCallback.onTrackDeleted();
+                    trackCallback.onTrackDeleted(track);
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);
                     trackCallback.onFailure(new Throwable("ERROR " + code + ", " + response.raw().message()));
@@ -255,6 +255,32 @@ public class TrackManager extends BaseManager{
 
             @Override
             public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d(TAG, "Error Failure: " + t.getStackTrace());
+                trackCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
+            }
+        });
+    }
+
+    /********************   GET TRACK    ********************/
+
+    public synchronized void getTrack(final TrackCallback trackCallback, int id) {
+
+        Call<Track> call = mTrackService.getTrack(id);
+        call.enqueue(new Callback<Track>() {
+            @Override
+            public void onResponse(Call<Track> call, Response<Track> response) {
+                int code = response.code();
+                if (response.isSuccessful()) {
+                    //  String nextPage = response.headers().get("next");
+                    trackCallback.onTrackById(response.body());
+                } else {
+                    Log.d(TAG, "Error Not Successful: " + code);
+                    trackCallback.onNoTracks(new Throwable("ERROR " + code + ", " + response.raw().message()));
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Track> call, Throwable t) {
                 Log.d(TAG, "Error Failure: " + t.getStackTrace());
                 trackCallback.onFailure(new Throwable("ERROR " + t.getStackTrace()));
             }

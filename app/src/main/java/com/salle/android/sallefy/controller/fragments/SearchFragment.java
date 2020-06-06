@@ -455,6 +455,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     }
 
     @Override
+    public void onTrackById(Track track) {
+
+    }
+
+    @Override
     public void onNoTracks(Throwable throwable) {
 
     }
@@ -480,7 +485,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     }
 
     @Override
-    public void onTrackDeleted() {
+    public void onTrackDeleted(Track track) {
 
     }
 

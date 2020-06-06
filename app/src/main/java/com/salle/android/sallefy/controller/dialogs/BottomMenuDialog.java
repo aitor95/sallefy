@@ -79,7 +79,6 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
         share.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("hellooou");
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, "Look what I found on Sallefy!  http://sallefy.eu-west-3.elasticbeanstalk.com/track/" + track.getTrack().getId());

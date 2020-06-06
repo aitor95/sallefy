@@ -2,6 +2,7 @@ package com.salle.android.sallefy.controller.activities;
 
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -66,6 +67,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     private TextView mNoTracks;
     private Button mFollowBtn;
     private ImageButton mShuffleBtn;
+    private ImageButton mShareBtn;
     private View mBottomSheet;
     private CardView mImgCard;
 
@@ -74,6 +76,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
     private boolean owner;
     private boolean fragmentCreated;
     private int pId;
+    private int sharedId = -1;
     private String pImg;
     private Playlist mPlaylist;
 
@@ -103,11 +106,13 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         mUpdatedPlaylist = new ArrayList<>();
         initViews();
 
-        Log.d(TAG, "onCreate: ABOUT TO CRASH!!!!!!!!!!!!!!!!!!!!!!!!!");
-
-        //Little hack to reduce code.
-        onPlaylistById((Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
-
+        if(getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID) != null){
+            sharedId = (Integer)getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
+            PlaylistManager.getInstance(this)
+                    .getPlaylistById(sharedId, this);
+        }else{
+            onPlaylistById((Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST));
+        }
     }
 
     private void initViews() {
@@ -182,6 +187,17 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
             }
         });
 
+        //Shuffle playlist button
+        mShareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_SEND);
+                intent.setType("text/plain");
+                intent.putExtra(Intent.EXTRA_TEXT, "Look what I found on Sallefy!  http://sallefy.eu-west-3.elasticbeanstalk.com/playlist/" + mPlaylist.getId());
+                intent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Shared from Sallefy");
+                startActivity(Intent.createChooser(intent, "Share"));
+            }
+        });
 
         //Back navigation button
         mNav.setOnClickListener(new View.OnClickListener() {
@@ -198,7 +214,6 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         data.putExtra(Constants.INTENT_EXTRAS.SELECTED_PLAYLIST_UPDATE, mUpdatedPlaylist);
         setResult(RESULT_OK, data);
         finish();
-
     }
 
     @Override
@@ -216,6 +231,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         mDescription = findViewById(R.id.playlist_description);
         mFollowBtn = findViewById(R.id.playlist_view_follow);
         mShuffleBtn = findViewById(R.id.playlist_view_shuffle);
+        mShareBtn = findViewById(R.id.playlist_share);
         mBottomSheet = findViewById(R.id.fragment_container_playlist);
         mNoTracks = findViewById(R.id.playlist_no_tracks);
         mNav = findViewById(R.id.playlist_back);
@@ -380,6 +396,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         if(show){
             mFollowBtn.setVisibility(View.VISIBLE);
             mShuffleBtn.setVisibility(View.VISIBLE);
+            mShareBtn.setVisibility(View.VISIBLE);
             mDescription.setVisibility(View.VISIBLE);
             mCoverImg.setVisibility(View.GONE);
             mImgCard.setVisibility(View.GONE);
@@ -387,6 +404,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
         }else{
             mFollowBtn.setVisibility(View.GONE);
             mShuffleBtn.setVisibility(View.GONE);
+            mShareBtn.setVisibility(View.GONE);
             mDescription.setVisibility(View.GONE);
             mCoverImg.setVisibility(View.VISIBLE);
             mImgCard.setVisibility(View.VISIBLE);

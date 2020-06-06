@@ -17,7 +17,7 @@ public class SearchManager extends BaseManager {
     private static final String TAG = SearchManager.class.getName();
     private Context mContext;
     private static SearchManager sTrackManager;
-    private Retrofit mRetrofit;
+    //private Retrofit mRetrofit;
     private SearchService mSearchService;
 
 

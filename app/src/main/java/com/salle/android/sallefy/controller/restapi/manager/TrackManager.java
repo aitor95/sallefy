@@ -43,7 +43,7 @@ public class TrackManager extends BaseManager{
 
     public synchronized void createTrack(Track track, final TrackCallback trackCallback) {
 
-        Call<Track> call = mTrackService.createTrack();
+        Call<Track> call = mTrackService.createTrack(track);
         call.enqueue(new Callback<Track>() {
             @Override
             public void onResponse(Call<Track> call, Response<Track> response) {

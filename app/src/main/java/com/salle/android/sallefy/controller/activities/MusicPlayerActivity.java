@@ -4,12 +4,17 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
+import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -38,10 +43,11 @@ import com.salle.android.sallefy.utils.OnSwipeListener;
 
 //Mirar https://developer.android.com/guide/components/bound-services?hl=es-419
 
-public class MusicPlayerActivity extends AppCompatActivity implements MusicCallback, LikeCallback, BottomMenuDialogInterf, isLikedCallback {
+public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHolder.Callback , MusicCallback, LikeCallback, BottomMenuDialogInterf, isLikedCallback {
 
     public static final String TAG = MusicPlayerActivity.class.getName();
     private boolean trackWasEdited;
+    private SurfaceView videoThumbnail;
 
     public enum LoopButtonState {
         LOOP_NOT_ACTIVATED,
@@ -71,6 +77,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     private TextView totalTrackTime;
     private ImageButton shuffleBtn;
     private ImageButton loopBtn;
+
+    private FrameLayout frameLayoutVideo;
 
     //Indica si se esta en el modo fiesta.
     private boolean partyMode;
@@ -175,9 +183,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                         mBoundService.songUpdateLike(initTrack.isLiked());
                         updateUIDataBefore(currTrack);
                         updateSongInfoAfterLoad();
-                        mBoundService.loadSongs(initPlaylist, initTrack,false);
+                        mBoundService.loadSongs(initPlaylist, initTrack,false);//, videoThumbnail);
                     }else{
-                        mBoundService.loadSongs(initPlaylist, initTrack,true);
+                        mBoundService.loadSongs(initPlaylist, initTrack,true);//, videoThumbnail);
                     }
 
                     mBoundService.setShuffle(initPlaylist.getIsShuffleStart());
@@ -185,6 +193,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
                 default:
                     throw new IllegalStateException("Unexpected value: " + modo);
             }
+            updateVideoViews(mBoundService.getCurrentTrack());
         }
 
         @Override
@@ -210,7 +219,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d(TAG, "onCreate: Created.");
+
         partyMode = false;
         trackWasEdited = false;
 
@@ -219,7 +228,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         ///Deduce el modo de trabajo de la classe.
         Track track = (Track) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYER_SONG);
         Playlist playlist = (Playlist) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST);
-
 
         atachButtons();
         if(playlist != null){
@@ -441,8 +449,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         songAuthor = findViewById(R.id.music_player_author);
         currTrackTime = findViewById(R.id.music_player_curr_time);
         totalTrackTime = findViewById(R.id.music_player_total_time);
-
         thumbnail = findViewById(R.id.music_player_thumbnail);
+        videoThumbnail = findViewById(R.id.video_thumbnail);
+        frameLayoutVideo = findViewById(R.id.frameThumbnail);
+
     }
 
     private void exitPlayer(){
@@ -492,14 +502,100 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         if(mServiceBound){
             updatePlayButton();
         }
-
         //Modificar el thumbnail
         Glide.with(this)
                 .asBitmap()
-                .placeholder(new ColorDrawable(getResources().getColor(R.color.colorWhite,null)))
+                .placeholder(new ColorDrawable(getResources().getColor(R.color.colorWhite, null)))
                 .load(track.getThumbnail())
                 .into(thumbnail);
     }
+
+    private void updateVideoViews(Track track){
+        if (track.getUrl().toLowerCase().contains("mp4")) {
+            Log.d(TAG, "updateUIDataBefore: MAKING VISIBLE VIDEO PLAYER.");
+            videoThumbnail.setVisibility(View.VISIBLE);
+
+            videoThumbnail.setZOrderOnTop(true);
+            videoThumbnail.getHolder().setFormat(PixelFormat.TRANSLUCENT);
+
+            frameLayoutVideo.setVisibility(View.GONE);
+            //thumbnail.setVisibility(View.GONE);
+
+            if (mServiceBound)
+                mBoundService.setVideoFullScreen(false);
+
+            videoThumbnail.getHolder().addCallback(this);
+
+            videoThumbnail.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mBoundService != null) {
+                        mBoundService.thumbnailClicked();
+                        mBoundService.setVideoFullScreen(true);
+                    }
+                }
+            });
+        } else {
+            Log.d(TAG, "updateUIDataBefore: MAKING VISIBLE THUMBNAIL.");
+
+            videoThumbnail.setVisibility(View.GONE);
+            frameLayoutVideo.setVisibility(View.VISIBLE);
+            //thumbnail.setVisibility(View.VISIBLE);
+            videoThumbnail.setOnClickListener(null);
+            videoThumbnail.getHolder().addCallback(null);
+        }
+    }
+
+    @Override
+    public void surfaceCreated(SurfaceHolder holder) {
+        Log.d(TAG, "surfaceCreated: SURFACE CREATED.");
+        //mediaPlayer.setDisplay(holder);
+        //mBoundService.updateSurfaceHolder(videoThumbnail.getHolder());
+        if(mBoundService != null)
+        try{
+        //    mBoundService.getPapa().setDisplay(holder);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        Log.d(TAG, "surfaceChanged: CHANGED");
+        //mediaPlayer.setDisplay(holder);
+        //if(mBoundService != null)
+       // mBoundService.updateSurfaceHolder(videoThumbnail.getHolder());
+        if(mBoundService != null){
+
+            try{
+                mBoundService.getMediaPlayer().setDisplay(holder);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+        }else{
+            Log.d(TAG, "surfaceChanged: IS NULL!!!!");
+        }
+    }
+
+    @Override
+    public void surfaceDestroyed(SurfaceHolder holder) {
+        Log.d(TAG, "surfaceDestroyed: DESTROY");
+       // mBoundService.updateSurfaceHolder(null);
+        if(mBoundService != null){
+            try{
+                mBoundService.getMediaPlayer().setDisplay(null);
+
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+    }else{
+        Log.d(TAG, "surfaceChanged: IS NULL!!!!");
+    }
+    }
+
+
 
     private void updatePlayButton() {
         if(!mBoundService.isPlaying()){
@@ -518,6 +614,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
         updateSeekBar();
 
         updatePlayButton();
+
+        //mBoundService.updateSurfaceHolder(videoThumbnail.getHolder());
     }
 
 
@@ -546,6 +644,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements MusicCallb
     @Override
     public void onMusicPlayerPrepared() {
         updateSongInfoAfterLoad();
+
     }
 
     @Override

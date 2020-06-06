@@ -20,28 +20,57 @@
         android:layout_marginTop="20dp"
         android:layout_gravity="start|start"/>
 
-    <FrameLayout
-        android:background="@drawable/music_player_image_background"
-        android:layout_width="@dimen/music_player_image_size"
-        android:layout_height="@dimen/music_player_image_size"
-        android:elevation="20dp"
-        android:clipToPadding="false"
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_gravity="center"
         android:layout_marginTop="40dp">
 
         <FrameLayout
+            android:id="@+id/frameThumbnail"
+            android:background="@drawable/music_player_image_background"
             android:layout_width="@dimen/music_player_image_size"
-            android:layout_height="237dp"
-            android:paddingBottom="5dp">
+            android:layout_height="@dimen/music_player_image_size"
+            android:elevation="20dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:clipToPadding="false"
+            android:layout_marginTop="30dp">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/music_player_thumbnail"
-                android:layout_width="232dp"
-                android:layout_height="232dp"
-                app:civ_border_width="0dp"
-                app:civ_border_color="#FF000000"/>
+            <FrameLayout
+                android:layout_width="@dimen/music_player_image_size"
+                android:layout_height="237dp"
+                android:paddingBottom="5dp">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/music_player_thumbnail"
+                    android:layout_width="232dp"
+                    android:layout_height="232dp"
+                    app:civ_border_width="0dp"
+                    app:civ_border_color="#FF000000"/>
+            </FrameLayout>
+
         </FrameLayout>
 
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:clipToPadding="false"
+
+        android:background="#FAFAFA"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true">
+
+    <SurfaceView
+        android:id="@+id/video_thumbnail"
+        android:layout_width="232dp"
+        android:layout_height="232dp"
+        android:visibility="gone"/>
     </FrameLayout>
+    </RelativeLayout>
+
 
     <TextView
         android:id="@+id/music_player_title"
@@ -49,7 +78,7 @@
         android:layout_width="300dp"
         android:gravity="center"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="30dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="@string/music_player_title" />

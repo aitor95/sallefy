@@ -3,6 +3,7 @@ package com.salle.android.sallefy.controller.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -39,6 +40,9 @@ import com.salle.android.sallefy.utils.FilenameHelper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import static com.salle.android.sallefy.utils.Constants.STORAGE.IMAGE_SELECTED;
+import static com.salle.android.sallefy.utils.Constants.STORAGE.SONG_SELECTED;
 
 public class EditSongActivity extends AppCompatActivity implements TrackCallback, UploadCallback, GenreCallback, AdapterClickCallback {
 
@@ -185,19 +189,21 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     }
 
     private void chooseCoverImage() {
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(Intent.createChooser(intent, "Choose a cover image"), Constants.STORAGE.IMAGE_SELECTED);
+        Intent intent = new Intent(Intent.ACTION_PICK);
+
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+        startActivityForResult(Intent.createChooser(intent, "Choose a cover image"), IMAGE_SELECTED);
     }
 
     private void chooseAudioFile() {
         audioSet = false;
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_GET_CONTENT);
-        intent.setType("audio/*");
-        startActivityForResult(Intent.createChooser(intent, "Choose a cover image"), Constants.STORAGE.SONG_SELECTED);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("audio/*, video/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new String[] {"audio/*", "video/*"});
+
+        startActivityForResult(intent, Constants.STORAGE.SONG_SELECTED);
     }
+
 
     @Override
     public void onBackPressed() { exitEditing(); }
@@ -205,25 +211,41 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == Constants.STORAGE.IMAGE_SELECTED && resultCode == RESULT_OK) {
-            mCoverUri = data.getData();
-            mCoverFilename = FilenameHelper.extractFromUri(mCoverUri,this);
-            Glide
-                    .with(getApplicationContext())
-                    .load(mCoverUri.toString())
-                    .centerCrop()
-                    .override(400,400)
-                    .placeholder(R.drawable.song_placeholder)
-                    .into(mImg);
-            coverChosen = true;
-        }else{
-            if (requestCode == Constants.STORAGE.SONG_SELECTED && resultCode == RESULT_OK) {
-                mAudioUri = data.getData();
-                mAudioFilename = FilenameHelper.extractFromUri(mAudioUri,this);
-                mFileBtn.setText(mAudioFilename);
-                mName.setText(mAudioFilename);
-                trackChosen = true;
-            }
+        switch (requestCode) {
+            case IMAGE_SELECTED:
+                if (resultCode == RESULT_OK) {
+                    mCoverUri = data.getData();
+                    if (mCoverUri == null) break;
+
+                    mCoverFilename = FilenameHelper.extractFromUri(mCoverUri, this);
+                    Glide
+                            .with(getApplicationContext())
+                            .load(mCoverUri.toString())
+                            .centerCrop()
+                            .override(400, 400)
+                            .placeholder(R.drawable.song_placeholder)
+                            .into(mImg);
+                    coverChosen = true;
+                }
+
+                break;
+            case SONG_SELECTED:
+                if (resultCode == RESULT_OK) {
+                    mAudioUri = data.getData();
+                    if(mAudioUri != null){
+                        String mime = FilenameHelper.getMimeType(mAudioUri,this);
+
+                        if(mime.equals("video/mp4") || mime.contains("audio")) {
+                            mAudioFilename = FilenameHelper.extractFromUri(mAudioUri, this);
+                            mFileBtn.setText(mAudioFilename);
+                            mName.setText(mAudioFilename);
+                            trackChosen = true;
+                        }else{
+                            Toast.makeText(getApplicationContext(),"Only MP4 videos can be uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+                break;
         }
     }
 

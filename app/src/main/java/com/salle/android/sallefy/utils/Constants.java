@@ -65,5 +65,6 @@ public class Constants {
         String TRACK_COVER_FOLDER = "sallefy/covers/songs";
         String USER_PICTURE_FOLDER = "sallefy/users";
         String TRACK_AUDIO_FOLDER = "sallefy/tracks";
+        int VIDEO_SELECTED = 6;
     }
 }

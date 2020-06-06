@@ -1,10 +1,12 @@
 package com.salle.android.sallefy.utils;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
 import java.io.File;
 
@@ -56,6 +58,20 @@ public class FilenameHelper {
         String result = removeSpecialCharsAndTail(decoded.substring(lastBar + 1));
         Log.d("TEST", "extractPublicIdFromUri: OBTAINED " + result);
         return result;
+    }
+
+    public static String getMimeType(Uri uri,Context context) {
+        String mimeType = null;
+        if (uri.getScheme().equals(ContentResolver.SCHEME_CONTENT)) {
+            ContentResolver cr = context.getContentResolver();
+            mimeType = cr.getType(uri);
+        } else {
+            String fileExtension = MimeTypeMap.getFileExtensionFromUrl(uri
+                    .toString());
+            mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(
+                    fileExtension.toLowerCase());
+        }
+        return mimeType;
     }
 
 }

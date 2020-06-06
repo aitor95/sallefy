@@ -12,6 +12,7 @@ import android.util.Log;
 import com.salle.android.sallefy.controller.activities.MusicPlayerActivity;
 import com.salle.android.sallefy.controller.location.UserLocation;
 import com.salle.android.sallefy.controller.notifications.CustomNotification;
+import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.model.LatLong;
 import com.salle.android.sallefy.model.Playlist;
@@ -60,8 +61,15 @@ public class MusicService extends Service {
     private boolean songFinished;
     private Playlist mPlaylist;
 
+    //Video stuff
+    boolean isVideoFullScreen;
+
     public int getPlaylistSize() {
         return mTracks != null ? mTracks.size() : 0;
+    }
+
+    public void setVideoFullScreen(boolean val){
+        isVideoFullScreen = val;
     }
 
     public void songUpdateLike(boolean isLiked) {
@@ -121,6 +129,14 @@ public class MusicService extends Service {
 
     public boolean hasTrack() {
         return mTracks != null && !mTracks.isEmpty();
+    }
+
+    public void thumbnailClicked() {
+        Log.d(TAG, "thumbnailClicked: Thumbnail pressed.");
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
     }
 
     public class MusicBinder extends Binder {
@@ -220,6 +236,7 @@ public class MusicService extends Service {
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mp) {
+                    Log.d(TAG, "onCompletion: ON SONG FINISHED");
                     onSongFinished();
                 }
             });
@@ -235,9 +252,16 @@ public class MusicService extends Service {
 
         try {
             //Si ya existia el media player, resetealo.
-            if(!mediaPlayerWasNull) mediaPlayer.reset();
+            if(!mediaPlayerWasNull){
+                mediaPlayer.reset();
+            }
 
-            mediaPlayer.setDataSource(track.getUrl());
+            String dataSource = track.getUrl();
+
+            if(!isVideoFullScreen)
+                dataSource = CloudinaryManager.getInstance(this).createVideoThumbnail(dataSource);
+
+            mediaPlayer.setDataSource(dataSource);
             mediaPlayer.prepare();
 
             //Como no existia el player, define el onPrepared listener.
@@ -245,6 +269,7 @@ public class MusicService extends Service {
                 mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                     @Override
                     public void onPrepared(MediaPlayer mp) {
+                        Log.d(TAG, "onPrepared: ON SONG PREPARED:");
                         if (mCallback != null) {
                             playSong();
                             try {
@@ -261,6 +286,7 @@ public class MusicService extends Service {
                 });
             }
         } catch(Exception e) {
+            e.printStackTrace();
             Log.d(TAG, "playStream: EXCEPTION" + e.getMessage());
         }
     }

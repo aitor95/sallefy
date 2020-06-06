@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.cloudinary.Transformation;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.UploadCallback;
 import com.salle.android.sallefy.utils.CloudinaryConfigs;
@@ -34,6 +35,10 @@ public class CloudinaryManager extends AppCompatActivity {
     private CloudinaryManager(Context context) {
         mContext = context;
         MediaManager.init(mContext, CloudinaryConfigs.getConfigurations());
+    }
+
+    public synchronized String createVideoThumbnail(String url){
+        return MediaManager.get().url().transformation(new Transformation().background("#FAFAFA").width(232).height(232).radius("max").crop("fill")).resourceType("video").generate(url.substring(url.lastIndexOf("upload") + 6));
     }
 
     public synchronized void uploadAudioFile(String folder, Uri fileUri, String fileName, final UploadCallback uploadCallback) {

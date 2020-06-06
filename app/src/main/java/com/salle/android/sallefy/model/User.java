@@ -5,7 +5,14 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
+import io.objectbox.annotation.Entity;
+import io.objectbox.annotation.Id;
+
+//@Entity
 public class User implements Serializable {
+
+   /* @Id
+    long idOB;*/
 
     @SerializedName("activated")
     private Boolean activated;

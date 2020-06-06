@@ -115,16 +115,19 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
             t.setText(R.string.DeleteBottomMenu);
         }
 
-        if(!isPlaylistOwner){
+        /*if(!isPlaylistOwner){
             t.setTextAppearance(R.style.primaryTextDisabled);
             ((ImageView) v.findViewById(R.id.bottom_menu_a_delete_img)).setBackgroundResource(R.drawable.ic_delete_grey);
-        }
+        }*/
 
         if (isTrackOwner || isPlaylistOwner) {
             delete.setOnClickListener(view -> {
                 mListener.onButtonClicked(track, "delete");
                 dismiss();
             });
+        }else{
+            t.setTextAppearance(R.style.primaryTextDisabled);
+            ((ImageView) v.findViewById(R.id.bottom_menu_a_delete_img)).setBackgroundResource(R.drawable.ic_delete_grey);
         }
 
 

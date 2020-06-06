@@ -777,7 +777,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     @Override
     public void deleteSong(Track track) {
-
+        TrackManager.getInstance(this).deleteTrack(track, this);
     }
 
     @Override
@@ -821,9 +821,9 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 track.getCallback());
     }
 
-    private void deleteSong(TrackViewPack track) {
+    /*private void deleteSong(TrackViewPack track) {
         TrackManager.getInstance(this).deleteTrack(track.getTrack(), this);
-    }
+    }*/
 
     //Control del dialogo que aparece al pulsar los 3 puntos de una track.
     @Override

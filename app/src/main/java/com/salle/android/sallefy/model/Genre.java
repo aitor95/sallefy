@@ -4,7 +4,13 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+import io.objectbox.annotation.Entity;
+import io.objectbox.annotation.Id;
+
+//@Entity
 public class Genre implements Serializable {
+
+    //@Id long idOB;
 
     public Genre(String name) {
         this.name = name;

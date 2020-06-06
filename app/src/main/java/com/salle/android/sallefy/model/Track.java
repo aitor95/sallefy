@@ -1,12 +1,24 @@
 package com.salle.android.sallefy.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
+import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 
 import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 
+import io.objectbox.annotation.Convert;
+import io.objectbox.annotation.Entity;
+import io.objectbox.annotation.Id;
+import io.objectbox.converter.PropertyConverter;
+import io.objectbox.relation.ToOne;
+
+//@Entity
 public class Track implements Serializable, Comparable<Track> {
+
+    //@Id long idOB;
 
     @SerializedName("color")
     private String color;
@@ -23,6 +35,7 @@ public class Track implements Serializable, Comparable<Track> {
     @SerializedName("name")
     private String name;
 
+   // @Convert(converter = UserConverter.class, dbType = String.class)
     @SerializedName("owner")
     private User user;
 
@@ -202,4 +215,26 @@ public class Track implements Serializable, Comparable<Track> {
     public int compareTo(Track track) {
         return (reproductions < track.reproductions) ? 1 : -1;
     }
+
+  /*  public static class UserConverter implements PropertyConverter<User, String> {
+
+        @Override
+        public User convertToEntityProperty(String databaseValue) {
+            if (databaseValue == null) {
+                return null;
+            }
+           /* UserManager.getInstance(this).getUserData(databaseValue, new UserCallback() {
+
+            });*/
+         /*   User user = new User();
+            user.setLogin(databaseValue);
+            return user;
+        }
+
+        @Override
+        public String convertToDatabaseValue(User entityProperty) {
+            return entityProperty == null ? null : entityProperty.getLogin();
+        }
+    }*/
 }
+

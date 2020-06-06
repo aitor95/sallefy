@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'io.objectbox' // Apply last.
 
 android {
     compileSdkVersion 28

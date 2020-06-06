@@ -10,6 +10,7 @@ import com.salle.android.sallefy.controller.restapi.service.UserService;
 import com.salle.android.sallefy.controller.restapi.service.UserTokenService;
 import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.Follow;
+import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserLogin;
 import com.salle.android.sallefy.model.UserPublicInfo;

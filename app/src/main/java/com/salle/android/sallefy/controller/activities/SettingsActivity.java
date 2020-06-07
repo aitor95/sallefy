@@ -50,7 +50,7 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
     private RelativeLayout optionModify;
     private RelativeLayout optionDelete;
     private Button optionLogOut;
-    private TextView updated_user;
+    private String updated_user;
 
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
@@ -139,7 +139,6 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
         optionModify = findViewById(R.id.settings_modify_user);
         optionDelete = findViewById(R.id.settings_option_deleteAccount);
         optionLogOut = findViewById(R.id.btn_settings_logout);
-        updated_user = findViewById(R.id.hola);
     }
 
     @Override
@@ -182,12 +181,9 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
     private void goBack(){
         // We return the edited User to the MainActivity
         Intent intent = getIntent();
-        intent.putExtra(Constants.INTENT_EXTRAS.USER_LOGIN, updated_user.getText());
+        intent.putExtra(Constants.INTENT_EXTRAS.USER_LOGIN, updated_user);
         setResult(RESULT_OK, intent);
         finish();
-//        Intent intent = new Intent(this, MainActivity.class);
-//        intent.putExtra(Constants.INTENT_EXTRAS.USER_LOGIN, updated_user.getText());
-//        startActivityForResult(intent, Constants.EDIT_CONTENT.USER_EDIT_FINISHED);
     }
 
     @Override
@@ -196,7 +192,7 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
         if (requestCode == Constants.EDIT_CONTENT.USER_EDIT_FINISHED && resultCode == RESULT_OK){
 
             String user = (String)data.getSerializableExtra(Constants.INTENT_EXTRAS.USER_LOGIN);
-            updated_user.setText(user);
+            updated_user = user;
 
         }
     }

@@ -199,6 +199,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
                         mBoundService.songUpdateLike(initTrack.isLiked());
                         updateUIDataBefore(currTrack);
                         updateSongInfoAfterLoad();
+                        videoPositionBeforeFullScreen = mBoundService.getCurrentPosition();
+                        mBoundService.resetVideoFullScreen();
                         mBoundService.loadSongs(initPlaylist, initTrack,false);
                     }else{
                         mBoundService.loadSongs(initPlaylist, initTrack,true);
@@ -210,6 +212,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
                     throw new IllegalStateException("Unexpected value: " + modo);
             }
             updateVideoViews(mBoundService.getCurrentTrack());
+            mBoundService.setVideoFullScreen(false,getScreenWidth(),getScreenHeight());
+
         }
 
         @Override
@@ -400,11 +404,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
 
     private void nextTrack() {
         videoPositionBeforeFullScreen = 0;
+        mBoundService.setVideoFullScreen(false,0,0);
         changeTrack(1);
+
     }
 
     private void prevTrack() {
         videoPositionBeforeFullScreen = 0;
+        mBoundService.setVideoFullScreen(false,0,0);
         changeTrack(-1);
     }
 
@@ -616,10 +623,6 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
             //thumbnail.setVisibility(View.GONE);
 
 
-            if (mServiceBound) {
-                mBoundService.setVideoFullScreen(false,getScreenWidth(),getScreenHeight());
-            }
-
 /*
             //ON TOUCCH DEL THUMBNAIL
             videoThumbnail.setOnTouchListener((v, event) -> {
@@ -822,8 +825,21 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
 
     @Override
     public void onMusicPlayerPrepared() {
-        if(videoThumbnail.getVisibility()==View.VISIBLE) {
 
+
+        if(mSurfaceHolder == null) {
+            videoThumbnail.requestLayout();
+            Log.d(TAG, "onMusicPlayerPrepared: SURFACE IS NULL");
+            updateVideoViews(mBoundService.getCurrentTrack());
+        }
+
+        if(videoThumbnail.getVisibility()==View.VISIBLE)
+            updateVideoViews(mBoundService.getCurrentTrack());
+
+
+
+        if(videoThumbnail.getVisibility()==View.VISIBLE) {
+            Log.d(TAG, "onMusicPlayerPrepared: NO TE VOY A MENTIR MAMI. Visible.");
             mBoundService.setCurrentPosition(videoPositionBeforeFullScreen);
 
             if(mBoundService.isVideoFullScreen()) {
@@ -850,15 +866,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
                 videoThumbnail.setLayoutParams(params);
                 videoThumbnail.requestLayout();
             }
+        }else{
+            Log.d(TAG, "onMusicPlayerPrepared: THIS IS IT");
+            mBoundService.setVideoFullScreen(false,getScreenWidth(),getScreenHeight());
         }
 
         updateSongInfoAfterLoad();
-
-        if(mSurfaceHolder == null) {
-            videoThumbnail.requestLayout();
-            Log.d(TAG, "onMusicPlayerPrepared: SURFACE IS NULL");
-            updateVideoViews(mBoundService.getCurrentTrack());
-        }
 
     }
 

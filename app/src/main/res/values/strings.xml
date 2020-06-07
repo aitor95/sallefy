@@ -115,7 +115,7 @@
     <string name="upload_song">Upload Song</string>
     <string name="label_name">Name</string>
     <string name="label_artist">Artist</string>
-    <string name="label_file_btn">Choose audio file</string>
+    <string name="label_file_btn">Audio/Video file</string>
     <string name="upload_song_not_complete">You have to add an audio file for your playlist!</string>
     <string name="label_genre">Genre</string>
     <string name="btn_upload">Upload</string>

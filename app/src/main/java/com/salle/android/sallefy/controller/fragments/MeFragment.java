@@ -73,6 +73,8 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 
     // Url file
     private Uri mUri;
+    private TextView user_name;
+    private String data;
 
 	public static void setAdapterClickCallback(AdapterClickCallback callback){
 		adapterClickCallback = callback;
@@ -114,6 +116,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 
 		getData();
         initViews(v);
+        data = getArguments().getString("data");
 
         return v;
     }
@@ -210,8 +213,14 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 				.placeholder(R.drawable.user_default_image)
 				.into(user_img);
 
-		TextView user_name = v.findViewById(R.id.user_name);
-		user_name.setText(mUser.getLogin());
+
+		user_name = v.findViewById(R.id.user_name);
+		if (data != null){
+			user_name.setText(data);
+		} else {
+			user_name.setText(mUser.getLogin());
+		}
+
 
 		ImageView configButton = v.findViewById(R.id.config_button);
 		ImageView shareButton = v.findViewById(R.id.profile_share);
@@ -229,7 +238,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 
 			configButton.setOnClickListener(view -> {
 				Intent intent = new Intent(getContext(), SettingsActivity.class);
-				startActivity(intent);
+				startActivityForResult(intent, Constants.INTENT_EXTRAS.CURRENT_USER);
 			});
 
 			changePhoto.setOnClickListener(new View.OnClickListener() {
@@ -271,6 +280,7 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 		intent.setType("image/*");
 		startActivityForResult(Intent.createChooser(intent, "Choose a cover image"), Constants.STORAGE.IMAGE_SELECTED);
 	}
+
 	@Override
 	public void updateSongInfo(Track track){
 		if(fragmentMeSongs != null)
@@ -339,9 +349,6 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
 		updateFollowers(users.size());
 	}
 
-
-
-
 	@Override
 	public void onDeleteAccount() {
 
@@ -361,6 +368,12 @@ public class MeFragment extends Fragment implements UserCallback, UploadCallback
             profileImageChoosen = true;
             uploadProfileImage();
 		}
+
+		if (requestCode == Constants.INTENT_EXTRAS.CURRENT_USER && resultCode == Activity.RESULT_OK){
+			String user_login = (String) data.getSerializableExtra(Constants.INTENT_EXTRAS.USER_LOGIN);
+			user_name.setText(user_login);
+		}
+
 	}
 
 	private void uploadProfileImage() {

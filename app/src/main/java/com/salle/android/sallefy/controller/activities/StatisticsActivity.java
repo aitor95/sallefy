@@ -170,14 +170,22 @@ public class StatisticsActivity extends AppCompatActivity implements PlaybackCal
         Log.d("TAGG", throwable.getMessage());
     }
 
-    private int getDateIndex(String time) {
+    private int getDateIndex(String time, String ref) {
         String date = time.split("T")[0];
         String[] values = date.split("-");
+
+        String dateRef = ref.split("T")[0];
+        String[] valuesRef = dateRef.split("-");
 
         int month = Integer.parseInt(values[1]);
         int day = Integer.parseInt(values[2]);
 
-        return (month - 5) * 4 + Math.floorDiv(Math.min(28, day), 7);
+        int monthRef = Integer.parseInt(valuesRef[1]);
+        int dayRef = Integer.parseInt(valuesRef[2]);
+
+        int daysPassed = 31 * (month - monthRef) + ((month == monthRef) ? day - dayRef : (31 - dayRef) + day);
+
+        return Math.floorDiv(daysPassed, 7);
     }
 
     private String getDateLabel(String time) {
@@ -197,7 +205,8 @@ public class StatisticsActivity extends AppCompatActivity implements PlaybackCal
     }
 
     private String[] generateLabelList(List<Playback> playbacks) {
-        int size = getDateIndex(playbacks.get(playbacks.size()-1).getTime()) - getDateIndex(playbacks.get(0).getTime()) + 1;
+        int size = getDateIndex(playbacks.get(playbacks.size()-1).getTime(), playbacks.get(0).getTime()) + 1;
+
         String[] labels = new String[size];
 
         String date = playbacks.get(0).getTime().split("T")[0];
@@ -221,7 +230,7 @@ public class StatisticsActivity extends AppCompatActivity implements PlaybackCal
     private int[][] calculatePlaybacksPerWeek(List<Playback> playbacks, String[] labels) {
         int[][] data;
         data = new int[1][labels.length];
-        for (Playback p: playbacks) data[0][getDateIndex(p.getTime())] += 1;
+        for (Playback p: playbacks) data[0][getDateIndex(p.getTime(), playbacks.get(0).getTime())] += 1;
         return data;
     }
 
@@ -231,12 +240,12 @@ public class StatisticsActivity extends AppCompatActivity implements PlaybackCal
                 labels.add(getDateLabel(p.getTime()));
                 values.add(1);
             } else {
-                for (int i = getMaxValue(values); i < getDateIndex(p.getTime()); i++) {
+                for (int i = getMaxValue(values); i < getDateIndex(p.getTime(), playbacks.get(0).getTime()); i++) {
                     labels.add(getDateLabel(p.getTime()));
                     values.add(0);
                 }
 
-                values.set(getDateIndex(p.getTime()), values.get(getDateIndex(p.getTime())) +1);
+                values.set(getDateIndex(p.getTime(), playbacks.get(0).getTime()), values.get(getDateIndex(p.getTime(), playbacks.get(0).getTime())) +1);
             }
         }
     }

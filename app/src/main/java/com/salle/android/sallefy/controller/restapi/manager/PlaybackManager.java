@@ -5,6 +5,7 @@ import android.content.Context;
 import com.salle.android.sallefy.controller.restapi.callback.PlaybackCallback;
 import com.salle.android.sallefy.controller.restapi.service.PlaybackService;
 import com.salle.android.sallefy.model.Playback;
+import com.salle.android.sallefy.utils.Session;
 
 import java.io.IOException;
 import java.util.List;
@@ -17,6 +18,7 @@ public class PlaybackManager extends BaseManager{
 
     private static final String TAG = PlaybackManager.class.getName();
 
+    private static Context mContext;
     private static PlaybackManager sPlaybackManager;
 
     private PlaybackService mService;
@@ -25,6 +27,7 @@ public class PlaybackManager extends BaseManager{
         if (sPlaybackManager == null) {
             sPlaybackManager = new PlaybackManager(context);
         }
+        mContext = context;
         return sPlaybackManager;
     }
 

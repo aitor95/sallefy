@@ -207,11 +207,11 @@ public class GraphView extends View{
     private void printDots(Canvas canvas, int[] values) {
         int lastx = 0, lasty = 0;
         double maxv = maxValue;
-        double spacing = (WIDTH - 3.0 * MARGINS) / (values.length - 1.0);
+        double spacing = (WIDTH - 3.0 * MARGINS) / Math.max(values.length - 1f, 1f);
 
         for (int i = 0; i < values.length; i++) {
             int v = values[i];
-            int x = (int) (2.0 * MARGINS + spacing * i);
+            int x = (int) (2f * MARGINS + spacing * i);
             int y = (int) (HEIGHT - ((v / maxv) * (HEIGHT - 3.0 * MARGINS) + 2.0 * MARGINS));
 
             if (i != 0) canvas.drawLine(x, y, lastx, lasty, linesColor);

@@ -17,6 +17,8 @@ public class Constants {
         String TRACK_ID = "_TRACK_ID_";
         String SHOW_USER_FROM_MUSIC_PLAYER = "_SHOW_USER_FROM_MUSIC_PLAYER_";
         String USER = "_USER_";
+        String USER_LOGIN = "_USER_LOGIN_";
+        int CURRENT_USER = 18;
     }
 
     public interface CALLBACKS {
@@ -49,6 +51,7 @@ public class Constants {
         int RESULT_MP_DELETE = 14;
         int RESULT_PA_USER = 15;
         int RESULT_PA_DELETE = 16;
+        int USER_EDIT_FINISHED = 17;
         int MUSIC_PLAYER_FINISHED = 5005;
     }
 

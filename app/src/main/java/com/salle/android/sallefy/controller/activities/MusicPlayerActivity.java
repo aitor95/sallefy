@@ -556,7 +556,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
 
     @Override
     public void onBackPressed() {
-        if(mServiceBound && mBoundService.isVideoFullScreen()){
+        if(videoThumbnail.getVisibility() == View.VISIBLE && mServiceBound && mBoundService.isVideoFullScreen()){
             videoPositionBeforeFullScreen = mBoundService.getCurrentPosition();
             closeVideoFullScreen();
         }else {

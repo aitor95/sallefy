@@ -3,7 +3,6 @@ package com.salle.android.sallefy.controller.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -214,22 +213,20 @@ public class UploadSongActivity extends AppCompatActivity implements TrackCallba
             case IMAGE_SELECTED:
                 if (resultCode == RESULT_OK) {
                     mCoverUri = data.getData();
-                    if (mCoverUri == null) break;
 
-                    if(FilenameHelper.getMimeType(mCoverUri,this).contains("tiff")) {
-                        Toast.makeText(getApplicationContext(), "Tiff images are not supported.", Toast.LENGTH_SHORT).show();
+                    if(FilenameHelper.isInvalidFile(mCoverUri,this)){
                         break;
                     }
 
                     mCoverFilename = FilenameHelper.extractFromUri(mCoverUri, this);
 
                     Glide
-                            .with(getApplicationContext())
-                            .load(mCoverUri.toString())
-                            .centerCrop()
-                            .override(400, 400)
-                            .placeholder(R.drawable.song_placeholder)
-                            .into(mImg);
+                        .with(getApplicationContext())
+                        .load(mCoverUri.toString())
+                        .centerCrop()
+                        .override(400, 400)
+                        .placeholder(R.drawable.song_placeholder)
+                        .into(mImg);
                     coverChosen = true;
                 }
 

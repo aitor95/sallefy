@@ -4,7 +4,6 @@ package com.salle.android.sallefy.controller.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -119,6 +118,11 @@ public class NewPlaylistActivity extends AppCompatActivity implements PlaylistCa
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.STORAGE.IMAGE_SELECTED && resultCode == RESULT_OK) {
             mUri = data.getData();
+
+            if(FilenameHelper.isInvalidFile(mUri,this)){
+                return;
+            }
+
             mFilename = FilenameHelper.extractFromUri(mUri,this);
             Glide
                     .with(getApplicationContext())

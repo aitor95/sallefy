@@ -2,13 +2,16 @@ package com.salle.android.sallefy.utils;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.OpenableColumns;
 import android.util.Log;
 import android.webkit.MimeTypeMap;
+import android.widget.Toast;
 
 import java.io.File;
+import java.io.IOException;
 
 public class FilenameHelper {
 
@@ -74,5 +77,43 @@ public class FilenameHelper {
         return mimeType;
     }
 
+    public static boolean isInvalidFile(Uri uri, Context c) {
+        if(uri == null) return true;
+
+        //Check image size:
+        AssetFileDescriptor afd = null;
+        try {
+            afd = c.getContentResolver().openAssetFileDescriptor(uri,"r");
+            if(afd != null) {
+                long fileSize = afd.getLength();
+                afd.close();
+                afd = null;
+                Log.d("TEST", "isInvalidFile: file size is " + fileSize + "bytes");
+                if (fileSize < 10000000) {
+                    Toast.makeText(c, "Image too big. Max 10MB", Toast.LENGTH_SHORT).show();
+                    return false;
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }finally {
+            if(afd != null){
+                try {
+                    afd.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        if(FilenameHelper.getMimeType(uri,c).contains("tiff")) {
+            Toast.makeText(c, "Tiff images are not supported.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+
+
+        return false;
+    }
 }
 

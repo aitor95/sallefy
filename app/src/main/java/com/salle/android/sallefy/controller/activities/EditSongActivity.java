@@ -3,7 +3,6 @@ package com.salle.android.sallefy.controller.activities;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -215,10 +214,8 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
             case IMAGE_SELECTED:
                 if (resultCode == RESULT_OK) {
                     mCoverUri = data.getData();
-                    if (mCoverUri == null) break;
 
-                    if(FilenameHelper.getMimeType(mCoverUri,this).contains("tiff")) {
-                        Toast.makeText(getApplicationContext(), "Tiff images are not supported.", Toast.LENGTH_SHORT).show();
+                    if(FilenameHelper.isInvalidFile(mCoverUri,this)){
                         break;
                     }
 

@@ -18,7 +18,6 @@ public class SearchManager extends BaseManager {
     private static SearchManager sTrackManager;
     private SearchService mSearchService;
 
-
     public static SearchManager getInstance (Context context) {
         if (sTrackManager == null) {
             sTrackManager = new SearchManager(context);
@@ -35,21 +34,15 @@ public class SearchManager extends BaseManager {
 
     public synchronized void search(String keyword, final SearchCallback searchCallback) {
 
-
         Call<SearchResult> call = mSearchService.search(keyword);
 
         call.enqueue(new Callback<SearchResult>() {
             @Override
             public void onResponse(Call<SearchResult> call, Response<SearchResult> response) {
-
                 int code = response.code();
 
-                if (response.isSuccessful()) {
-                    searchCallback.onSearchResultReceived(response.body());
-                } else {
-                    Log.d(TAG, "Error Not Successful: " + code);
-                    //searchCallback.onNoTracks(new Throwable("ERROR " + code + ", " + response.raw().message()));
-                }
+                if (response.isSuccessful()) searchCallback.onSearchResultReceived(response.body());
+                else Log.d(TAG, "Error Not Successful: " + code);
             }
 
             @Override

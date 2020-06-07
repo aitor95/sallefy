@@ -10,20 +10,26 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceFragmentCompat;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.dialogs.DeleteDialogFragment;
+import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.ChangePassword;
+import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
 import com.salle.android.sallefy.model.UserToken;
+import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
@@ -44,6 +50,8 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
     private RelativeLayout optionModify;
     private RelativeLayout optionDelete;
     private Button optionLogOut;
+    private TextView updated_user;
+
 
     private ServiceConnection mServiceConnection = new ServiceConnection() {
         @Override
@@ -70,6 +78,7 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
         setContentView(R.layout.activity_settings);
         mUser = Session.getInstance(getApplicationContext()).getUser();
         initViews();
+
     }
 
     private void initViews(){
@@ -91,7 +100,7 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
 
         optionModify.setOnClickListener(view -> {
             Intent intent = new Intent(this, EditAccountActivity.class);
-            startActivity(intent);
+            startActivityForResult(intent, Constants.EDIT_CONTENT.USER_EDIT_FINISHED);
         });
 
         optionDelete.setOnClickListener(view -> {
@@ -113,10 +122,9 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
 
 
         backoption.setOnClickListener(view -> {
-            finish();
+            goBack();
         });
 
-        //Toast.makeText(getApplicationContext(), PreferenceUtils.getUser(this), Toast.LENGTH_LONG).show();
     }
 
     private void openDialog() {
@@ -131,6 +139,7 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
         optionModify = findViewById(R.id.settings_modify_user);
         optionDelete = findViewById(R.id.settings_option_deleteAccount);
         optionLogOut = findViewById(R.id.btn_settings_logout);
+        updated_user = findViewById(R.id.hola);
     }
 
     @Override
@@ -169,6 +178,33 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
     public void onUpdatePassword() {
 
     }
+
+    private void goBack(){
+        // We return the edited User to the MainActivity
+        Intent intent = getIntent();
+        intent.putExtra(Constants.INTENT_EXTRAS.USER_LOGIN, updated_user.getText());
+        setResult(RESULT_OK, intent);
+        finish();
+//        Intent intent = new Intent(this, MainActivity.class);
+//        intent.putExtra(Constants.INTENT_EXTRAS.USER_LOGIN, updated_user.getText());
+//        startActivityForResult(intent, Constants.EDIT_CONTENT.USER_EDIT_FINISHED);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.EDIT_CONTENT.USER_EDIT_FINISHED && resultCode == RESULT_OK){
+
+            String user = (String)data.getSerializableExtra(Constants.INTENT_EXTRAS.USER_LOGIN);
+            updated_user.setText(user);
+
+        }
+    }
+
+    private void updateUIDataBefore(String user) {
+
+    }
+
 
     @Override
     public void onMeFollowersReceived(List<UserPublicInfo> body) {

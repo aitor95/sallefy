@@ -68,6 +68,7 @@ import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.MUSIC_PLAYE
 import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_MP_DELETE;
 import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_PA_DELETE;
 import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_PA_USER;
+import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.USER_EDIT_FINISHED;
 
 public class MainActivity extends FragmentActivity implements AdapterClickCallback, MusicCallback, TrackCallback, BottomMenuDialog.BottomMenuDialogInterf, UserLogInAndRegisterCallback, PlaylistMainComunication, PermissionsCallback {
 
@@ -373,6 +374,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         MeFragment.setAdapterClickCallback(this);
         replaceFragment(fragment);
     }
+
+
 
     private void enterMeFragmentOfOtherUser(User user){
         isMeUserTheOwner = false;
@@ -772,6 +775,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
             default:
                 Log.d(TAG, "onActivityResult: ACTIVITY RESULT NOT CONTROLED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
         }
     }
 

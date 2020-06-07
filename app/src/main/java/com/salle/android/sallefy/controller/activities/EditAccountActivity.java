@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -22,6 +23,7 @@ import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
 import java.util.List;
+import java.util.Set;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -40,6 +42,7 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
     private String password;
     private String oldPassword;
     private ChangePassword mChangePasswords;
+    private String new_user_login;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,6 +96,13 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
 
     }
 
+    public void confirmInputs(){
+        if (!validateEmail() | !validateLogin() | !validatePassword()){
+            return;
+        }
+        updateUser();
+    }
+
     private boolean validateLogin() {
         String loginInput = inputUsername.getEditText().getText().toString().trim();
 
@@ -118,13 +128,6 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
         }
     }
 
-    public void confirmInputs(){
-        if (!validateEmail() | !validateLogin() | !validatePassword()){
-            return;
-        }
-        updateUser();
-    }
-
     private void updateUser() {
         login = inputUsername.getEditText().getText().toString();
         password = inputPassword.getEditText().getText().toString();
@@ -133,6 +136,7 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
         mUser.setLogin(login);
 
         PreferenceUtils.saveUser(this, login);
+        new_user_login = login;
 
         // Añadimos las contraseñas al objeto para hacer el update en la API
         mChangePasswords.setCurrentPassword(oldPassword);
@@ -140,16 +144,21 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
 
         UserManager.getInstance(getApplicationContext()).updateProfile(mUser,  EditAccountActivity.this);
         UserManager.getInstance(getApplicationContext()).updatePassword(mChangePasswords, EditAccountActivity.this);
-
-
     }
 
     private void exitEditing(){
-        //We return the edited User
-        Intent data = new Intent();
-        data.putExtra(Constants.INTENT_EXTRAS.USER, mUser);
-        setResult(RESULT_OK, data);
+        Intent intent = new Intent();
+        intent.putExtra(Constants.INTENT_EXTRAS.USER_LOGIN, new_user_login);
+        setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == Constants.EDIT_CONTENT.USER_EDIT_FINISHED && resultCode == RESULT_OK) {
+            this.new_user_login = data.getStringExtra(Constants.INTENT_EXTRAS.USER);
+        }
     }
 
     @Override
@@ -176,16 +185,14 @@ public class EditAccountActivity extends AppCompatActivity implements UserCallba
     @Override
     public void onUpdateUser() {
         Log.d(TAG, "onUpdateUser: USER UPDATED");
+        PreferenceUtils.saveUser(getApplicationContext(), new_user_login);
         exitEditing();
     }
 
     @Override
     public void onUpdatePassword() {
-        Log.d(TAG, "onUpdatePassword: PASSWORD UPDATED");
-        //TODO: actualizar el token
-//        Session.getInstance(this).setUserToken(userToken);
         PreferenceUtils.savePassword(this,  password);
-        finish();
+        //finish();
     }
 
 

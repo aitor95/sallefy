@@ -250,6 +250,32 @@
             android:minWidth="200dp"
             android:textColor="@color/colorWhite" />
 
+
+
     </RelativeLayout>
+
+
+    <RelativeLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/settings_option_logOut"
+        android:layout_marginTop="30dp">
+
+        <TextView
+            style="@style/SettingOptionStyle"
+            android:id="@+id/hola"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:text=""
+            android:layout_marginStart="10dp"
+            android:layout_centerVertical="true"
+            />
+
+
+    </RelativeLayout>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

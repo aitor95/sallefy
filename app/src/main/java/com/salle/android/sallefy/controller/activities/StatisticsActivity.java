@@ -76,6 +76,7 @@ public class StatisticsActivity extends AppCompatActivity implements PlaybackCal
 
         graphsMenu.setOnMenuItemClickListener(item -> {
             ((TextView) findViewById(R.id.graph_title)).setText(item.getTitle());
+            graphView.loaded();
             switch (item.getItemId()) {
                 case 1:
                     barmode = true;

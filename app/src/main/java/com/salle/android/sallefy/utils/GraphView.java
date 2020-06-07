@@ -13,6 +13,8 @@ import com.salle.android.sallefy.R;
 
 public class GraphView extends View{
 
+    public static final float TOTAL_DURATION = 1000f;
+
     private int WIDTH = 0;
     private int HEIGHT = 0;
 
@@ -24,6 +26,8 @@ public class GraphView extends View{
     private boolean loading;
 
     private boolean started = false;
+    private boolean finished;
+    private long timeRef = 0;
 
     private int[][] timeGraphValues;
     private int[] barGraphValues;
@@ -264,7 +268,7 @@ public class GraphView extends View{
 
         if (paint.measureText(adapted) < size) return adapted;
 
-        while (paint.measureText(adapted) > size) adapted = adapted.substring(0, adapted.length() - 4) + "...";
+        while (paint.measureText(adapted) > size && adapted.length() >= 4) adapted = adapted.substring(0, adapted.length() - 4) + "...";
         return adapted;
     }
 
@@ -290,15 +294,21 @@ public class GraphView extends View{
             float left = 2f * MARGINS + 1f * sep;
             float bottom = top + H;
             float right = 2f * MARGINS + 1f * sep + (WIDTH - 3f * MARGINS - 2f * sep) * (float) (v / maxv);
+            float factor = ((float) (System.currentTimeMillis() - timeRef) / TOTAL_DURATION);
+            float aux = (float) Math.sqrt(1f - Math.pow(1f - factor, 2f));
+
+            if ((System.currentTimeMillis() - timeRef) < TOTAL_DURATION)
+                right = 2f * MARGINS + 1f * sep + (WIDTH - 3f * MARGINS - 2f * sep) * (float) (v / maxv) * aux;
+            else finished = true;
 
             canvas.drawRect(left, top, right, bottom, barColor);
 
             if ((v / maxv) < .5) {
                 String l = adaptString(labels[i], barTextColor, (WIDTH - MARGINS - sep) - (right + sep));
-                canvas.drawText(l, right + sep, top + H/2f + textSize/2f, barTextColor);
+                if (finished) canvas.drawText(l, right + sep, top + H/2f + textSize/2f, barTextColor);
             } else {
                 String l = adaptString(labels[i], barTextColor2, (right - sep) - (left + sep));
-                canvas.drawText(l, right - sep, bottom - H/2f + textSize/2f, barTextColor2);
+                if (finished) canvas.drawText(l, right - sep, bottom - H/2f + textSize/2f, barTextColor2);
             }
         }
     }
@@ -331,13 +341,17 @@ public class GraphView extends View{
         WIDTH = canvas.getWidth();
         MARGINS = WIDTH * 0.06f;
 
-        initColors();
+        if (!started) {
+            initColors();
+            timeRef = System.currentTimeMillis();
+            started = true;
+        }
 
         for (int[] a: timeGraphValues) for (int v: a) if (maxValue < v) maxValue = v;
 
         if (loading) {
-            //canvas.drawText("Choose an option", WIDTH/2, HEIGHT/2, textColor);
-            canvas.drawText("Choose an option", WIDTH/2, ((System.currentTimeMillis() - ref)/1000)*HEIGHT/10, textColor);
+            canvas.drawText("Choose an option", WIDTH/2, HEIGHT/2, textColor);
+            finished = true;
         } else {
             if (type == 1) {
                 if (labels.length > 1) {
@@ -345,22 +359,19 @@ public class GraphView extends View{
                     for (int[] values : timeGraphValues) printDots(canvas, values);
                 } else {
                     canvas.drawText("Not enough data yet", WIDTH/2, HEIGHT/2, textColor);
+                    finished = true;
                 }
             } else {
                 printBarGraphAxis(canvas);
                 printBars(canvas, barGraphValues);
-                /*if (!started) {
-                    GraphAnimator animator = new GraphAnimator(canvas, this, getContext(), barGraphValues, labels, x_label, y_label);
-                    animator.start();
-                    started = true;
-                }*/
             }
         }
-        //loading = false;
-        //Log.d("TAGG", "Waw");
-        long aux = last;
-        last = System.currentTimeMillis();
-        postInvalidateDelayed(17 - (System.currentTimeMillis() - aux));
+        if (!finished) postInvalidate();
     }
 
+    public void loaded(){
+        loading = false;
+        finished = false;
+        started = false;
+    }
 }

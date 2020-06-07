@@ -215,6 +215,23 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
     @Override
     public void onTracksReceived(List<Track> tracks) {
+        //TODO: ESTO HA PETADO!!!!!!!!!!!!!!
+        /* ERRROR MESSAGE:
+        E/AndroidRuntime: FATAL EXCEPTION: main
+        Process: com.salle.sallefy, PID: 20953
+        java.lang.NullPointerException: Attempt to invoke virtual method 'android.content.Context androidx.fragment.app.FragmentActivity.getApplicationContext()' on a null object reference
+            at com.salle.android.sallefy.controller.fragments.HomeFragment.onTracksReceived(HomeFragment.java:218)
+            at com.salle.android.sallefy.controller.restapi.manager.TrackManager$5.onResponse(TrackManager.java:150)
+            at retrofit2.DefaultCallAdapterFactory$ExecutorCallbackCall$1.lambda$onResponse$0$DefaultCallAdapterFactory$ExecutorCallbackCall$1(DefaultCallAdapterFactory.java:89)
+            at retrofit2.-$$Lambda$DefaultCallAdapterFactory$ExecutorCallbackCall$1$3wC8FyV4pyjrzrYL5U0mlYiviZw.run(Unknown Source:6)
+            at android.os.Handler.handleCallback(Handler.java:888)
+            at android.os.Handler.dispatchMessage(Handler.java:100)
+            at android.os.Looper.loop(Looper.java:213)
+            at android.app.ActivityThread.main(ActivityThread.java:8178)
+            at java.lang.reflect.Method.invoke(Native Method)
+            at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:513)
+            at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:1101)
+         */
         tracksAdapter = new TrackListVerticalAdapter(adapterClickCallback, getActivity().getApplicationContext(), getFragmentManager(), (ArrayList<Track>) tracks);
         tracksAdapter.setPlaylist(new Playlist((ArrayList<Track>) tracks));
         rvSongs.setAdapter(tracksAdapter);

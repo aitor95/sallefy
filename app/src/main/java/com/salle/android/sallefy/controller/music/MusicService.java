@@ -8,6 +8,7 @@ import android.media.MediaPlayer;
 import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.salle.android.sallefy.controller.activities.MusicPlayerActivity;
 import com.salle.android.sallefy.controller.location.UserLocation;
@@ -62,19 +63,35 @@ public class MusicService extends Service {
     private Playlist mPlaylist;
 
     //Video stuff
-    boolean isVideoFullScreen;
+    private boolean isVideoFullScreen;
+    private int screenWidth;
+    private int screenHeight;
 
     public int getPlaylistSize() {
         return mTracks != null ? mTracks.size() : 0;
     }
 
-    public void setVideoFullScreen(boolean val){
+    public void setVideoFullScreen(boolean val,int w,int h){
+        Log.d(TAG, "setVideoFullScreen: Setting video full screen to " + val);
         isVideoFullScreen = val;
+        screenHeight = h;
+        screenWidth = w;
+    }
+
+    public boolean isVideoFullScreen(){
+        return isVideoFullScreen;
     }
 
     public void songUpdateLike(boolean isLiked) {
         Track t = mTracks.get(currentTrack);
         t.setLiked(isLiked);
+    }
+
+    public void resetVideoFullScreen()  {
+        if(isVideoFullScreen) {
+            isVideoFullScreen = false;
+            loadSong(getCurrentTrack());
+        }
     }
 
     public void setLoopMode(MusicPlayerActivity.LoopButtonState mode) {
@@ -129,10 +146,6 @@ public class MusicService extends Service {
 
     public boolean hasTrack() {
         return mTracks != null && !mTracks.isEmpty();
-    }
-
-    public void thumbnailClicked() {
-        Log.d(TAG, "thumbnailClicked: Thumbnail pressed.");
     }
 
     public MediaPlayer getMediaPlayer() {
@@ -221,7 +234,7 @@ public class MusicService extends Service {
 
     //Carga una cancion en streaming.
     public void loadSong(Track track) {
-
+        Log.d(TAG, "loadSong: LOADING SONG");
         LatLong latLong = UserLocation.getInstance(this).getLocation();
 
         TrackManager.getInstance(this).playTrack(track, latLong);
@@ -256,10 +269,16 @@ public class MusicService extends Service {
                 mediaPlayer.reset();
             }
 
-            String dataSource = track.getUrl();
 
-            if(!isVideoFullScreen)
-                dataSource = CloudinaryManager.getInstance(this).createVideoThumbnail(dataSource);
+            String dataSource = null;
+            if(track.getUrl().toLowerCase().contains("mp4")) {
+                if (!isVideoFullScreen)
+                    dataSource = CloudinaryManager.getInstance(this).createVideoThumbnail(track.getUrl());
+                else
+                    dataSource = CloudinaryManager.getInstance(this).createVideoThumbnailFullScreen(track.getUrl(), screenWidth, screenHeight);
+            }else{
+                dataSource = track.getUrl();
+            }
 
             mediaPlayer.setDataSource(dataSource);
             mediaPlayer.prepare();
@@ -272,10 +291,12 @@ public class MusicService extends Service {
                         Log.d(TAG, "onPrepared: ON SONG PREPARED:");
                         if (mCallback != null) {
                             playSong();
+
                             try {
                                 mCallback.onMusicPlayerPrepared();
 
                             }catch (Exception e){
+                                e.printStackTrace();
                                 //Ignoramos. Simplemente la activity del callback ya no existe.
                             }
 
@@ -464,12 +485,18 @@ public class MusicService extends Service {
     public void setCurrentPosition(int time) {
         try {
             int seekToValue = time *1000;
-            if (seekToValue > mediaPlayer.getDuration()){
-                Log.d(TAG, "setCurrentPosition: Alguien ha intentado reproducir un instante" +
-                        "de tiempo fuera de la longitud de la canción.");
-                return;
+            int totalDuration = mediaPlayer.getDuration();
+            if(totalDuration == -1){
+                Toast.makeText(this,"Impossible to seek to that time. The video is streaming in nreal time.",Toast.LENGTH_LONG).show();
+
+            }else{
+                if (seekToValue > mediaPlayer.getDuration()){
+                    Log.d(TAG, "setCurrentPosition: Alguien ha intentado reproducir un instante" +
+                            "de tiempo fuera de la longitud de la canción. ");
+                    return;
+                }
+                mediaPlayer.seekTo(seekToValue);
             }
-            mediaPlayer.seekTo(seekToValue);
         } catch (Exception e) {
             Log.d(TAG, "Failed to set the duration");
         }

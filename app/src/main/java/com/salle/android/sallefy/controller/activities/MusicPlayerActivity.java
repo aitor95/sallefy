@@ -6,10 +6,13 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,6 +20,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,6 +53,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
     public static final String TAG = MusicPlayerActivity.class.getName();
     private boolean trackWasEdited;
     private SurfaceView videoThumbnail;
+    private int videoPositionBeforeFullScreen;
+
+
 
     public enum LoopButtonState {
         LOOP_NOT_ACTIVATED,
@@ -77,6 +85,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
     private TextView totalTrackTime;
     private ImageButton shuffleBtn;
     private ImageButton loopBtn;
+
+    private LinearLayout UI_buttons;
 
     private FrameLayout frameLayoutVideo;
     private SurfaceHolder mSurfaceHolder;
@@ -152,6 +162,8 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
                     //Miramos si el usuario ha pulsado la track que se estava reproduciendo
                     if(currTrack != null && currTrack.getId().intValue() == initTrack.getId()){
 
+                        videoPositionBeforeFullScreen = mBoundService.getCurrentPosition();
+                        mBoundService.resetVideoFullScreen();
 
                         //Actualizar current track con la info de initTrack (para los likes...)
                         mBoundService.songUpdateLike(initTrack.isLiked());
@@ -169,6 +181,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
 
                 case OPEN_SONG:
                     Track t = mBoundService.getCurrentTrack();
+                    videoPositionBeforeFullScreen = mBoundService.getCurrentPosition();
+                    mBoundService.resetVideoFullScreen();
+
                     //Hay que mirar si le han dado like.
                     TrackManager.getInstance(MusicPlayerActivity.this).isTrackLiked(t.getId(),MusicPlayerActivity.this);
                     updateUIDataBefore(t);
@@ -184,9 +199,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
                         mBoundService.songUpdateLike(initTrack.isLiked());
                         updateUIDataBefore(currTrack);
                         updateSongInfoAfterLoad();
-                        mBoundService.loadSongs(initPlaylist, initTrack,false);//, videoThumbnail);
+                        mBoundService.loadSongs(initPlaylist, initTrack,false);
                     }else{
-                        mBoundService.loadSongs(initPlaylist, initTrack,true);//, videoThumbnail);
+                        mBoundService.loadSongs(initPlaylist, initTrack,true);
                     }
 
                     mBoundService.setShuffle(initPlaylist.getIsShuffleStart());
@@ -265,17 +280,40 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
             public boolean onSwipe(Direction direction) {
                 switch (direction) {
                     case up:
-                        showMoreMenu();
-                        return true;
+                        if(mServiceBound && mBoundService.isVideoFullScreen()){
+                            closeVideoFullScreen();
+                        }else {
+                            showMoreMenu();
+                        }
+                        break;
                     case left:
                         nextTrack();
                         break;
                     case right:
                         prevTrack();
                         break;
+                    case down:
+                        openVideoFullScreen();
+                        break;
                     default:
                         return false;
                 }
+                return true;
+            }
+        });
+
+        detector.setOnDoubleTapListener(new GestureDetector.SimpleOnGestureListener() {
+
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                if(mServiceBound && mBoundService.isVideoFullScreen())
+                    UI_buttons.setVisibility(UI_buttons.getVisibility() == View.VISIBLE ? View.GONE : View.VISIBLE);
+                return super.onSingleTapConfirmed(e);
+            }
+
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                closeVideoFullScreen();
                 return false;
             }
         });
@@ -284,6 +322,40 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
 
         //Important to run this line here, we need the UI thread!
         mSeekBarUpdater.run();
+    }
+
+    private void closeVideoFullScreen() {
+        Log.d(TAG, "closeVideoFullScreen: IS visible" + videoThumbnail.getVisibility());
+        if(videoThumbnail.getVisibility()==View.VISIBLE && mServiceBound && mBoundService.isVideoFullScreen()) {
+            Log.d(TAG, "closeVideoFullScreen: CLOSING VIDEO FULL SCREEN");
+            //UI changes.
+            showMultimediaUI(false);
+
+            mBoundService.setVideoFullScreen(false, getScreenWidth(), getScreenHeight());
+            videoPositionBeforeFullScreen = 0;
+            updateVideoFullScreen();
+        }
+    }
+
+    private void showMultimediaUI(boolean addDecorations) {
+        UI_buttons.setVisibility(View.VISIBLE);
+        if(addDecorations) {
+            UI_buttons.setBackgroundResource(R.drawable.ui_reproductor_round);
+        }else{
+            UI_buttons.setBackground(null);
+        }
+    }
+
+    private void openVideoFullScreen() {
+
+        if(videoThumbnail.getVisibility()==View.VISIBLE && mServiceBound && !mBoundService.isVideoFullScreen()) {
+
+            //Ui changes.
+            showMultimediaUI(true);
+
+            mBoundService.setVideoFullScreen(true, getScreenWidth(), getScreenHeight());
+            updateVideoFullScreen();
+        }
     }
 
     /**START MUSIC CONTROL ZONE*/
@@ -315,6 +387,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
             Toast.makeText(MusicPlayerActivity.this, R.string.ServiceNotLoadedError, Toast.LENGTH_SHORT).show();
             return;
         }
+
         Track track = mBoundService.changeTrack(offset);
         if(track == null){
             //No hay una lista cargada.
@@ -326,10 +399,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
     }
 
     private void nextTrack() {
+        videoPositionBeforeFullScreen = 0;
         changeTrack(1);
     }
 
     private void prevTrack() {
+        videoPositionBeforeFullScreen = 0;
         changeTrack(-1);
     }
 
@@ -427,6 +502,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
                     return;
                 }
                 mBoundService.setCurrentPosition(userSelectedPosition);
+
                 updateSeekBar();
             }
         });
@@ -443,6 +519,12 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
 
         back = findViewById(R.id.new_playlist_nav);
         back.setOnClickListener(view -> {
+            if(mServiceBound) {
+                showMultimediaUI(false);
+                videoPositionBeforeFullScreen = 0;
+                //Ignoramos el setVideoFullScreen pq asi lo podemos detectar en MusicService al empezar musicPLayer con OPEN_SONG.
+                //  mBoundService.setVideoFullScreen(false,getScreenWidth(),getScreenHeight());
+            }
             exitPlayer();
         });
 
@@ -453,6 +535,10 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
         thumbnail = findViewById(R.id.music_player_thumbnail);
         videoThumbnail = findViewById(R.id.video_thumbnail);
         frameLayoutVideo = findViewById(R.id.frameThumbnail);
+
+        videoThumbnail.getHolder().addCallback(this);
+
+        UI_buttons = findViewById(R.id.UI_buttons);
 
     }
 
@@ -470,7 +556,14 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
 
     @Override
     public void onBackPressed() {
-        exitPlayer();
+        if(mServiceBound && mBoundService.isVideoFullScreen()){
+            videoPositionBeforeFullScreen = mBoundService.getCurrentPosition();
+            closeVideoFullScreen();
+        }else {
+            if(mServiceBound)
+                videoPositionBeforeFullScreen = mBoundService.getCurrentPosition();
+            exitPlayer();
+        }
     }
 
     private void updateSeekBar(){
@@ -516,36 +609,80 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
             Log.d(TAG, "updateUIDataBefore: MAKING VISIBLE VIDEO PLAYER.");
             videoThumbnail.setVisibility(View.VISIBLE);
 
-            videoThumbnail.setZOrderOnTop(true);
+            //videoThumbnail.setZOrderOnTop(true);
             videoThumbnail.getHolder().setFormat(PixelFormat.TRANSLUCENT);
 
             frameLayoutVideo.setVisibility(View.GONE);
             //thumbnail.setVisibility(View.GONE);
 
-            if (mServiceBound)
-                mBoundService.setVideoFullScreen(false);
 
-            videoThumbnail.getHolder().addCallback(this);
+            if (mServiceBound) {
+                mBoundService.setVideoFullScreen(false,getScreenWidth(),getScreenHeight());
+            }
+
+/*
+            //ON TOUCCH DEL THUMBNAIL
+            videoThumbnail.setOnTouchListener((v, event) -> {
+
+                detector.onTouchEvent(event);
+                return false;
+            });
 
             videoThumbnail.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View v) {
+
                     if (mBoundService != null) {
-                        mBoundService.thumbnailClicked();
-                        mBoundService.setVideoFullScreen(true);
-                        mBoundService.getMediaPlayer().setDisplay(mSurfaceHolder);
+                        if(!mBoundService.isVideoFullScreen()) {
+                            mBoundService.setVideoFullScreen(true, getScreenWidth(), getScreenHeight());
+                            updateVideoFullScreen();
+                        }
                     }
                 }
             });
+*/
         } else {
             Log.d(TAG, "updateUIDataBefore: MAKING VISIBLE THUMBNAIL.");
 
             videoThumbnail.setVisibility(View.GONE);
             frameLayoutVideo.setVisibility(View.VISIBLE);
             //thumbnail.setVisibility(View.VISIBLE);
-            videoThumbnail.setOnClickListener(null);
-            videoThumbnail.getHolder().addCallback(null);
         }
+    }
+
+    private void updateVideoFullScreen() {
+        videoPositionBeforeFullScreen = mBoundService.getCurrentPosition();
+        mBoundService.loadSong(mBoundService.getCurrentTrack());
+        mBoundService.getMediaPlayer().setDisplay(mSurfaceHolder);
+    }
+
+    private int getNavigationBarHeight() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            int usableHeight = metrics.heightPixels;
+            getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+            int realHeight = metrics.heightPixels;
+            if (realHeight > usableHeight)
+                return realHeight - usableHeight;
+            else
+                return 0;
+        }
+        return 0;
+    }
+
+    public int getScreenWidth(){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
+    }
+
+    public int getScreenHeight(){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        return displayMetrics.heightPixels + getNavigationBarHeight();
     }
 
     @Override
@@ -646,9 +783,82 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
     }
 
 
+    /* <FrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+
+        android:background="#FAFAFA"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="false">
+
+        ///
+
+
+         if(mBoundService.isVideoFullScreen()) {
+
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                );
+                params.gravity = Gravity.CENTER_HORIZONTAL;
+                params.setMargins(0,0,0,0);
+                videoThumbnail.setLayoutParams(params);
+                videoThumbnail.requestLayout();
+            }else{
+                final float scale = getResources().getDisplayMetrics().density;
+                int pixels =  (int) (232 * scale + 0.5f);
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                        pixels,
+                        pixels
+                );
+                params.gravity = Gravity.CENTER_HORIZONTAL;
+                params.setMargins(0,(int)(85* scale + 0.5f),0,0);
+                videoThumbnail.setLayoutParams(params);
+                videoThumbnail.requestLayout();
+            }
+*/
+
     @Override
     public void onMusicPlayerPrepared() {
+        if(videoThumbnail.getVisibility()==View.VISIBLE) {
+
+            mBoundService.setCurrentPosition(videoPositionBeforeFullScreen);
+
+            if(mBoundService.isVideoFullScreen()) {
+
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                );
+                //params. = Gravity.CENTER_HORIZONTAL;
+                params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                params.setMargins(0,0,0,0);
+                videoThumbnail.setLayoutParams(params);
+                videoThumbnail.requestLayout();
+            }else{
+                final float scale = getResources().getDisplayMetrics().density;
+                int pixels =  (int) (232 * scale + 0.5f);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                        pixels,
+                        pixels
+                );
+                params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+                //params.gravity = Gravity.CENTER_HORIZONTAL;
+                params.setMargins(0,(int)(85* scale + 0.5f),0,0);
+                videoThumbnail.setLayoutParams(params);
+                videoThumbnail.requestLayout();
+            }
+        }
+
         updateSongInfoAfterLoad();
+
+        if(mSurfaceHolder == null) {
+            videoThumbnail.requestLayout();
+            Log.d(TAG, "onMusicPlayerPrepared: SURFACE IS NULL");
+            updateVideoViews(mBoundService.getCurrentTrack());
+        }
 
     }
 

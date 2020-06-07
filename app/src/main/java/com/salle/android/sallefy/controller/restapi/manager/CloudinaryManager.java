@@ -41,6 +41,12 @@ public class CloudinaryManager extends AppCompatActivity {
         return MediaManager.get().url().transformation(new Transformation().background("#FAFAFA").width(232).height(232).radius("max").crop("fill")).resourceType("video").generate(url.substring(url.lastIndexOf("upload") + 6));
     }
 
+    public String createVideoThumbnailFullScreen(String url, int screenWidth, int screenHeight) {
+        String aux =  MediaManager.get().url().transformation(new Transformation().gravity("center").width(screenWidth).height(screenHeight).crop("fill")).resourceType("video").generate(url.substring(url.lastIndexOf("upload") + 6));
+        Log.d(TAG, "createVideoThumbnailFullScreen: AUX IS " + aux);
+        return aux;
+    }
+
     public synchronized void uploadAudioFile(String folder, Uri fileUri, String fileName, final UploadCallback uploadCallback) {
         Map<String, Object> options = new HashMap<>();
 
@@ -93,6 +99,7 @@ public class CloudinaryManager extends AppCompatActivity {
 
         new DeleteConnection().execute(path + FilenameHelper.extractPublicIdFromUri(fileUri), options);
     }
+
 }
 
 class DeleteConnection extends AsyncTask{

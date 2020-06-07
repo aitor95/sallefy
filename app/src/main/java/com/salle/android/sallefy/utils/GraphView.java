@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import androidx.annotation.Nullable;
 import com.salle.android.sallefy.R;
@@ -22,6 +23,8 @@ public class GraphView extends View{
     private int type;
     private boolean loading;
 
+    private boolean started = false;
+
     private int[][] timeGraphValues;
     private int[] barGraphValues;
     private String[] labels;
@@ -36,6 +39,9 @@ public class GraphView extends View{
     private Paint barTextColor;
     private Paint barTextColor2;
     private Paint barColor;
+
+    private long ref;
+    private long last = System.currentTimeMillis();
 
     public GraphView(Context context) {
         super(context);
@@ -54,6 +60,7 @@ public class GraphView extends View{
         this.y_label = "y_label";
 
         loading = true;
+        ref = System.currentTimeMillis();
 
         init(null);
     }
@@ -113,6 +120,7 @@ public class GraphView extends View{
         this.y_label = "y_label";
 
         loading = true;
+        ref = System.currentTimeMillis();
 
         init(attrs);
     }
@@ -134,6 +142,7 @@ public class GraphView extends View{
 
         this.x_label = "x_label";
         this.y_label = "y_label";
+        ref = System.currentTimeMillis();
 
         init(attrs);
     }
@@ -155,6 +164,7 @@ public class GraphView extends View{
         this.y_label = "y_label";
 
         loading = true;
+        ref = System.currentTimeMillis();
 
         init(attrs);
     }
@@ -315,7 +325,6 @@ public class GraphView extends View{
 
     }
 
-
     @Override
     protected void onDraw(Canvas canvas) {
         HEIGHT = canvas.getHeight();
@@ -327,16 +336,31 @@ public class GraphView extends View{
         for (int[] a: timeGraphValues) for (int v: a) if (maxValue < v) maxValue = v;
 
         if (loading) {
-            canvas.drawText("Choose an option", WIDTH/2, HEIGHT/2, textColor);
+            //canvas.drawText("Choose an option", WIDTH/2, HEIGHT/2, textColor);
+            canvas.drawText("Choose an option", WIDTH/2, ((System.currentTimeMillis() - ref)/1000)*HEIGHT/10, textColor);
         } else {
             if (type == 1) {
-                printTimeGraphAxis(canvas);
-                for (int[] values : timeGraphValues) printDots(canvas, values);
+                if (labels.length > 1) {
+                    printTimeGraphAxis(canvas);
+                    for (int[] values : timeGraphValues) printDots(canvas, values);
+                } else {
+                    canvas.drawText("Not enough data yet", WIDTH/2, HEIGHT/2, textColor);
+                }
             } else {
                 printBarGraphAxis(canvas);
                 printBars(canvas, barGraphValues);
+                /*if (!started) {
+                    GraphAnimator animator = new GraphAnimator(canvas, this, getContext(), barGraphValues, labels, x_label, y_label);
+                    animator.start();
+                    started = true;
+                }*/
             }
         }
-        loading = false;
+        //loading = false;
+        //Log.d("TAGG", "Waw");
+        long aux = last;
+        last = System.currentTimeMillis();
+        postInvalidateDelayed(17 - (System.currentTimeMillis() - aux));
     }
+
 }

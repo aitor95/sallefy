@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static com.salle.android.sallefy.controller.activities.MainActivity.TIME_BETWEEN_CLICKS;
 
 public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 
@@ -44,7 +45,8 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	private PlaylistListVerticalAdapter mAdapter;
 	private View v;
 
-	private boolean firstTime;
+	private long lastClick = 0;
+
 
 
 	private static AdapterClickCallback adapterClickCallback;
@@ -67,7 +69,6 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 	@Nullable
 	@Override
 	public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-		firstTime = true;
 		v = inflater.inflate(R.layout.fragment_me_lists_playlists, container, false);
 		TextView text = v.findViewById(R.id.me_text_error);
 		text.setText(R.string.LoadingMe);
@@ -87,6 +88,10 @@ public class MePlaylistFragment extends Fragment implements PlaylistCallback {
 		if(isOwner) {
 			addNew.setVisibility(View.VISIBLE);
 			addNew.setOnClickListener(view -> {
+				if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+					return;
+
+				lastClick = System.currentTimeMillis();
 				Intent intent = new Intent(getContext(), NewPlaylistActivity.class);
 				startActivityForResult(intent, EXTRA_NEW_PLAYLIST_CODE);
 			});

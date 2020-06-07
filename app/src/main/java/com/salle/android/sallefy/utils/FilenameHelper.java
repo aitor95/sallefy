@@ -89,7 +89,7 @@ public class FilenameHelper {
                 afd.close();
                 afd = null;
                 Log.d("TEST", "isInvalidFile: file size is " + fileSize + "bytes");
-                if (fileSize < 10000000) {
+                if (fileSize < 10000000L) {
                     Toast.makeText(c, "Image too big. Max 10MB", Toast.LENGTH_SHORT).show();
                     return false;
                 }

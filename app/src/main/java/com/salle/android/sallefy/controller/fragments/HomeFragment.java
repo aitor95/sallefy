@@ -32,6 +32,8 @@ import com.salle.android.sallefy.utils.UpdatableFragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.salle.android.sallefy.controller.activities.MainActivity.TIME_BETWEEN_CLICKS;
+
 public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCallback, UpdatableFragment {
 
     public static final String TAG = HomeFragment.class.getName();
@@ -57,6 +59,7 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
     private static AdapterClickCallback adapterClickCallback;
     private SeeAllSongFragment mSeeAllSongFragment;
     private SeeAllPlaylistFragment mSeeAllPlaylistFragment;
+    private long lastClick = 0;
 
     public static void setAdapterClickCallback(AdapterClickCallback callback){
         adapterClickCallback = callback;
@@ -96,6 +99,10 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
         TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
         seeAllPlaylists.setOnClickListener(view -> {
+            if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+                return;
+
+            lastClick = System.currentTimeMillis();
 
             mSeeAllPlaylistFragment = SeeAllPlaylistFragment.newInstance(mPlaylists, popularPlaylists);
             mSeeAllPlaylistFragment.setNumber(NUMBER_OF_PLAYLISTS);
@@ -112,6 +119,11 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
 
         TextView seeAllSongs = v.findViewById(R.id.SeeAllSearchedSongs);
         seeAllSongs.setOnClickListener(view -> {
+
+            if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+                return;
+
+            lastClick = System.currentTimeMillis();
 
             mSeeAllSongFragment = SeeAllSongFragment.newInstance(mTracks, popularSongs);
             mSeeAllSongFragment.setNumber(NUMBER_OF_SONGS);

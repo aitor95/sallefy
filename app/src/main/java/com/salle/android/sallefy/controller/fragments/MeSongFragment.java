@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.app.Activity.RESULT_OK;
+import static com.salle.android.sallefy.controller.activities.MainActivity.TIME_BETWEEN_CLICKS;
 
 public class MeSongFragment extends Fragment implements TrackCallback {
 
@@ -42,6 +43,8 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 
 	private PaginatedRecyclerView mRecyclerView;
 	private ArrayList<Track> mTracks;
+
+	private long lastClick = 0;
 
 	private View v;
 
@@ -92,8 +95,14 @@ public class MeSongFragment extends Fragment implements TrackCallback {
 
 		Button addNew = v.findViewById(R.id.add_new_btn);
 		if(isOwner) {
+
 			addNew.setVisibility(View.VISIBLE);
 			addNew.setOnClickListener(view -> {
+				if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+					return;
+
+				lastClick = System.currentTimeMillis();
+
 				Intent intent = new Intent(getContext(), UploadSongActivity.class);
 				startActivityForResult(intent, EXTRA_NEW_SONG_CODE);
 			});

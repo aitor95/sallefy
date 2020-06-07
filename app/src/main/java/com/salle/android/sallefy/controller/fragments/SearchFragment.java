@@ -32,20 +32,20 @@ import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.controller.restapi.manager.SearchManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
-import com.salle.android.sallefy.model.ChangePassword;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.SearchResult;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
-import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.UpdatableFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+
+import static com.salle.android.sallefy.controller.activities.MainActivity.TIME_BETWEEN_CLICKS;
 
 public class SearchFragment extends Fragment implements PlaylistCallback, UserCallback, TrackCallback, SearchCallback, SeeAllCallback, UpdatableFragment {
 
@@ -77,6 +77,8 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
     private SeeAllSongFragment mSeeAllSongFragment;
 
     private static AdapterClickCallback adapterClickCallback;
+    private long lastClick = 0;
+
     public static void setAdapterClickCallback(AdapterClickCallback callback){
         adapterClickCallback = callback;
     }
@@ -115,6 +117,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllUsers = v.findViewById(R.id.SeeAllSearchedUsers);
         seeAllUsers.setOnClickListener(view -> {
+            if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+                return;
+
+            lastClick = System.currentTimeMillis();
+
             SeeAllUserFragment fragment = SeeAllUserFragment.newInstance(users);
             //TODO: API BUG: THIS IS A API BUG
             fragment.setNumber(NUMBER_OF_USERS - 2);
@@ -142,6 +149,11 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllPlaylists = v.findViewById(R.id.SeeAllSearchedPlaylists);
         seeAllPlaylists.setOnClickListener(view -> {
+            if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+                return;
+
+            lastClick = System.currentTimeMillis();
+
             mSeeAllPlaylistFragment = SeeAllPlaylistFragment.newInstance(mPlaylists, false);
             mSeeAllPlaylistFragment.setNumber(NUMBER_OF_PLAYLISTS);
 	        FragmentManager manager = getFragmentManager();
@@ -168,6 +180,12 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
 
         TextView seeAllTracks = v.findViewById(R.id.SeeAllSearchedSongs);
         seeAllTracks.setOnClickListener(view -> {
+
+            if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
+                return;
+
+            lastClick = System.currentTimeMillis();
+
             mSeeAllSongFragment = SeeAllSongFragment.newInstance(mTracks, false);
             mSeeAllSongFragment.setNumber(NUMBER_OF_SONGS);
             FragmentManager manager = getFragmentManager();

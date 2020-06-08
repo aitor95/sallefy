@@ -79,7 +79,7 @@
 
 
     <!-- INFO STATE -->
-    <string name="state_wait">Please wait..</string>
+    <string name="state_wait">Please wait...</string>
     <string name="state_task_in_progress">Task in process</string>
 
     <string name="state_error_connexion">Error de conexión!</string>

@@ -11,3 +11,9 @@
 * Email: aitor.ble@gmail.com
 * Usuario: dpoc4
 * contraseña: Dpodpoc4!
+
+## Como proceder en caso de error por "ID de Objectbox"
+* Eliminar fichero app/objectbox-models/default.json
+* Hacer Rebuild del proyecto
+* En caso de tener la app instalada previamente, desinstalarla
+* Volver a correr la aplicación 

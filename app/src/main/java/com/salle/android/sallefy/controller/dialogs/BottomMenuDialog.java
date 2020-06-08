@@ -15,9 +15,13 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.model.DownloadFile;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.TrackViewPack;
+import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.utils.Session;
+
+import io.objectbox.Box;
 
 public class BottomMenuDialog extends BottomSheetDialogFragment {
 
@@ -29,6 +33,8 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
     private boolean isPlaylistOwner;
     private TrackViewPack track;
     private boolean insidePlaylist;
+    Box<DownloadFile> fileBox;
+
 
     public BottomMenuDialog(TrackViewPack track, Context context, Playlist playlist) {
         this.track = track;
@@ -104,6 +110,21 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
                 dismiss();
             }
         });
+
+        LinearLayout download = v.findViewById(R.id.bottom_menu_a_download);
+        TextView tDownload = v.findViewById(R.id.bottom_menu_a_download_text);
+        if(!ObjectBox.getInstance().checkIfFileExists(track.getTrack())){
+            download.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onButtonClicked(track, "download");
+                    dismiss();
+                }
+            });
+        }else{
+            tDownload.setTextAppearance(R.style.primaryTextDisabled);
+            ((ImageView) v.findViewById(R.id.bottom_menu_a_download_img)).setImageResource(R.drawable.ic_baseline_arrow_downward_24_grey);
+        }
 
         LinearLayout delete = v.findViewById(R.id.bottom_menu_a_deleteSong);
 

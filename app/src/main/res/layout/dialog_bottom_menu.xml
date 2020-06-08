@@ -126,6 +126,34 @@
 
     <LinearLayout
 
+        android:id="@+id/bottom_menu_a_download"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/bottom_menu_a_download_img"
+            android:background="@drawable/ic_baseline_arrow_downward_24"
+            android:backgroundTint="@color/colorBlack"
+            android:orientation="horizontal" />
+
+        <TextView
+            android:id="@+id/bottom_menu_a_download_text"
+            style="@style/primaryText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="30dp"
+            android:text="@string/DownloadBottomMenu" />
+
+    </LinearLayout>
+
+    <LinearLayout
+
         android:id="@+id/bottom_menu_a_editSong"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

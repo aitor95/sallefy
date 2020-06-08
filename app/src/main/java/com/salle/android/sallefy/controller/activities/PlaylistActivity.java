@@ -2,7 +2,6 @@ package com.salle.android.sallefy.controller.activities;
 
 import android.content.Intent;
 import android.content.res.Resources;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,10 +25,12 @@ import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.callbacks.PlaylistMainComunication;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
+import com.salle.android.sallefy.controller.dialogs.StateDialog;
 import com.salle.android.sallefy.controller.fragments.PlaylistSongFragment;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.model.DownloadFile;
 import com.salle.android.sallefy.model.Follow;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Playlist;
@@ -37,6 +38,8 @@ import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.controller.download.Downloader;
+import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.utils.Session;
 
 import java.io.Serializable;
@@ -91,6 +94,8 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
 
     //Button click control
     private long lastClick;
+
+    private StateDialog stateDialog;
 
     private static PlaylistMainComunication playlistMainComunication;
     public static void setPlaylistMainComunication(PlaylistMainComunication callback){
@@ -583,6 +588,24 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 Intent intent = new Intent(this, EditSongActivity.class);
                 intent.putExtra(Constants.INTENT_EXTRAS.CURRENT_TRACK, track.getTrack());
                 startActivityForResult(intent, Constants.EDIT_CONTENT.TRACK_EDITING_FINISHED);
+                break;
+            case "download":
+                Log.d(TAG, "onButtonClicked: DOWNLOAD");
+                String url = track.getTrack().getUrl();
+                Downloader downloader = new Downloader(PlaylistActivity.this);
+                downloader.downloadCloudinaryAudio(track.getTrack().getUrl());
+                stateDialog = StateDialog.getInstance(this);
+                stateDialog.showStateDialog(false);
+                while(!downloader.isFinished()){
+                    Log.d(TAG, "Download in progress");
+                }
+                stateDialog.close();
+                DownloadFile trackFile = new DownloadFile(
+                        track.getTrack().getId(),
+                        track.getTrack().getUrl(),
+                        downloader.getDownloadedFile());
+                ObjectBox.getInstance().addTrack(track.getTrack(), trackFile);
+                System.out.println("Download finished");
                 break;
         }
     }

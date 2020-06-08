@@ -33,17 +33,21 @@ import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog.BottomMenuDialogInterf;
+import com.salle.android.sallefy.controller.dialogs.StateDialog;
 import com.salle.android.sallefy.controller.music.MusicCallback;
 import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.callback.isLikedCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
+import com.salle.android.sallefy.model.DownloadFile;
 import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.controller.download.Downloader;
+import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 
 //Mirar https://developer.android.com/guide/components/bound-services?hl=es-419
@@ -54,6 +58,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
     private boolean trackWasEdited;
     private SurfaceView videoThumbnail;
     private int videoPositionBeforeFullScreen;
+    private StateDialog stateDialog;
 
 
 
@@ -948,6 +953,24 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
             case "delete":
                 Log.d(TAG, "onButtonClicked: DELETE");
                 deleteTrack(track.getTrack());
+                break;
+            case "download":
+                Log.d(TAG, "onButtonClicked: DOWNLOAD");
+                String url = track.getTrack().getUrl();
+                Downloader downloader = new Downloader(MusicPlayerActivity.this);
+                downloader.downloadCloudinaryAudio(track.getTrack().getUrl());
+                stateDialog = StateDialog.getInstance(this);
+                stateDialog.showStateDialog(false);
+                while(!downloader.isFinished()){
+                    Log.d(TAG, "Download in progress");
+                }
+                stateDialog.close();
+                DownloadFile trackFile = new DownloadFile(
+                        track.getTrack().getId(),
+                        track.getTrack().getUrl(),
+                        downloader.getDownloadedFile());
+                ObjectBox.getInstance().addTrack(track.getTrack(), trackFile);
+                System.out.println("Download finished");
                 break;
         }
     }

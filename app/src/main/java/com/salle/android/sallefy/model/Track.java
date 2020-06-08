@@ -1,11 +1,15 @@
 package com.salle.android.sallefy.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
+import com.google.gson.reflect.TypeToken;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 
 import java.io.Serializable;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
 
@@ -15,10 +19,10 @@ import io.objectbox.annotation.Id;
 import io.objectbox.converter.PropertyConverter;
 import io.objectbox.relation.ToOne;
 
-//@Entity
+@Entity
 public class Track implements Serializable, Comparable<Track> {
 
-    //@Id long idOB;
+    @Id long idOB;
 
     @SerializedName("color")
     private String color;
@@ -26,6 +30,7 @@ public class Track implements Serializable, Comparable<Track> {
     @SerializedName("duration")
     private Integer duration;
 
+    @Convert(converter = GenreConverter.class, dbType = String.class)
     @SerializedName("genres")
     private List<Genre> genres = null;
 
@@ -35,7 +40,7 @@ public class Track implements Serializable, Comparable<Track> {
     @SerializedName("name")
     private String name;
 
-   // @Convert(converter = UserConverter.class, dbType = String.class)
+    @Convert(converter = UserConverter.class, dbType = String.class)
     @SerializedName("owner")
     private User user;
 
@@ -198,6 +203,8 @@ public class Track implements Serializable, Comparable<Track> {
         isDeleted = deleted;
     }
 
+    public long getIdOB() { return idOB; }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -216,25 +223,56 @@ public class Track implements Serializable, Comparable<Track> {
         return (reproductions < track.reproductions) ? 1 : -1;
     }
 
-  /*  public static class UserConverter implements PropertyConverter<User, String> {
+    public static class UserConverter implements PropertyConverter<User, String> {
 
         @Override
         public User convertToEntityProperty(String databaseValue) {
             if (databaseValue == null) {
                 return null;
             }
-           /* UserManager.getInstance(this).getUserData(databaseValue, new UserCallback() {
 
-            });*/
-         /*   User user = new User();
-            user.setLogin(databaseValue);
+            User user = new User();
+            Gson gson = new GsonBuilder().create();
+            user = gson.fromJson(databaseValue, User.class);
             return user;
         }
 
         @Override
         public String convertToDatabaseValue(User entityProperty) {
-            return entityProperty == null ? null : entityProperty.getLogin();
+            return entityProperty == null ? null : convertUserToJSON(entityProperty);
         }
-    }*/
+
+        public String convertUserToJSON(User user){
+            Gson gson = new GsonBuilder().create();
+            return gson.toJson(user, User.class);
+        }
+    }
+
+    public static class GenreConverter implements PropertyConverter<List<Genre>, String> {
+
+        @Override
+        public List<Genre> convertToEntityProperty(String databaseValue) {
+            if (databaseValue == null) {
+                return null;
+            }
+
+            Gson gson = new GsonBuilder().create();
+            Type type = new TypeToken<List<Genre>>(){}.getType();
+            List<Genre> genreList = gson.fromJson(databaseValue, type);
+            return genreList;
+        }
+
+        @Override
+        public String convertToDatabaseValue(List<Genre> entityProperty) {
+            return entityProperty == null ? null : convertGenresToJSON(entityProperty);
+        }
+
+        public String convertGenresToJSON(List<Genre> genres){
+            Gson gson = new GsonBuilder().create();
+            Type type = new TypeToken<List<Genre>>(){}.getType();
+            String genresJSON = gson.toJson(genres, type);
+            return genresJSON;
+        }
+    }
 }
 

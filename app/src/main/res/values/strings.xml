@@ -153,6 +153,7 @@
     <string name="RemoveFromPlaylistBottomMenu">Remove from playlist</string>
     <string name="EditBottomMenu">Edit</string>
     <string name="ShareBottomMenu">Share</string>
+    <string name="DownloadBottomMenu">Download</string>
     <string name="home_new_playlists_title">Popular Playlists</string>
     <string name="default_home_songs_title">Popular Tracks</string>
     <string name="title_activity_settings">Settings</string>

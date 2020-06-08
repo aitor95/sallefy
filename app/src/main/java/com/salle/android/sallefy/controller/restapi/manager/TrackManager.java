@@ -10,6 +10,7 @@ import com.salle.android.sallefy.controller.restapi.service.TrackService;
 import com.salle.android.sallefy.model.LatLong;
 import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Track;
+import com.salle.android.sallefy.controller.download.ObjectBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -246,6 +247,7 @@ public class TrackManager extends BaseManager{
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 int code = response.code();
                 if (response.isSuccessful()) {
+                    ObjectBox.getInstance().removeTrack(track);
                     trackCallback.onTrackDeleted(track);
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);

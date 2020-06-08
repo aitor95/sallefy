@@ -35,6 +35,7 @@ import com.salle.android.sallefy.controller.callbacks.PermissionsCallback;
 import com.salle.android.sallefy.controller.callbacks.PlaylistMainComunication;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.dialogs.ErrorDialog;
+import com.salle.android.sallefy.controller.dialogs.StateDialog;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
@@ -47,6 +48,7 @@ import com.salle.android.sallefy.controller.restapi.callback.UserLogInAndRegiste
 import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
+import com.salle.android.sallefy.model.DownloadFile;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
@@ -54,6 +56,8 @@ import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
+import com.salle.android.sallefy.controller.download.Downloader;
+import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
 import com.salle.android.sallefy.utils.UpdatableFragment;
@@ -68,7 +72,6 @@ import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.MUSIC_PLAYE
 import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_MP_DELETE;
 import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_PA_DELETE;
 import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.RESULT_PA_USER;
-import static com.salle.android.sallefy.utils.Constants.EDIT_CONTENT.USER_EDIT_FINISHED;
 
 public class MainActivity extends FragmentActivity implements AdapterClickCallback, MusicCallback, TrackCallback, BottomMenuDialog.BottomMenuDialogInterf, UserLogInAndRegisterCallback, PlaylistMainComunication, PermissionsCallback {
 
@@ -120,6 +123,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     //Track edit
     private static TrackViewPack mTrackViewPack;
+
+    StateDialog stateDialog;
 
     private long lastClick;
 
@@ -588,6 +593,8 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         if(System.currentTimeMillis() - lastClick <= TIME_BETWEEN_CLICKS)
             return;
 
+        //List<DownloadFile> dFile = fileBox.query().equal(DownloadFile_.id, track.getId()).build().find();
+
         lastClick = System.currentTimeMillis();
 
         Intent intent = new Intent(this, MusicPlayerActivity.class);
@@ -860,6 +867,25 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             case "delete":
                 Log.d(TAG, "onButtonClicked: DELETE");
                 deleteSong(track.getTrack());
+                break;
+
+            case "download":
+                Log.d(TAG, "onButtonClicked: DOWNLOAD");
+                String url = track.getTrack().getUrl();
+                Downloader downloader = new Downloader(MainActivity.this);
+                downloader.downloadCloudinaryAudio(track.getTrack().getUrl());
+                stateDialog = StateDialog.getInstance(this);
+                stateDialog.showStateDialog(false);
+                while(!downloader.isFinished()){
+                    Log.d(TAG, "Download in progress");
+                }
+                 stateDialog.close();
+                DownloadFile trackFile = new DownloadFile(
+                        track.getTrack().getId(),
+                        track.getTrack().getUrl(),
+                        downloader.getDownloadedFile());
+                ObjectBox.getInstance().addTrack(track.getTrack(), trackFile);
+                System.out.println("Download finished");
                 break;
         }
     }

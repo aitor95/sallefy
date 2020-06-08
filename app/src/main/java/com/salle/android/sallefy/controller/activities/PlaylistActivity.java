@@ -29,6 +29,7 @@ import com.salle.android.sallefy.controller.callbacks.PlaylistMainComunication;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.dialogs.StateDialog;
 import com.salle.android.sallefy.controller.download.Downloader;
+import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.controller.fragments.PlaylistSongFragment;
 import com.salle.android.sallefy.controller.restapi.callback.PlaylistCallback;
 import com.salle.android.sallefy.controller.restapi.manager.PlaylistManager;
@@ -595,7 +596,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 System.out.println("Download finished");
                 break;
             case "removeLocally":
-                ObjectBox.getInstance().removeTrack(track.getTrack());
+                ObjectBox.getInstance(this).removeTrack(track.getTrack());
                 break;
         }
     }

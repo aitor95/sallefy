@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.activities.MainActivity;
 import com.salle.android.sallefy.controller.adapters.PlaylistListHorizontalAdapter;
 import com.salle.android.sallefy.controller.adapters.TrackListVerticalAdapter;
 import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
@@ -249,6 +250,8 @@ public class HomeFragment extends Fragment implements  TrackCallback, PlaylistCa
         rvSongs.setAdapter(tracksAdapter);
 
         this.mTracks = (ArrayList<Track>) tracks;
+        ((MainActivity)getActivity()).sharedMedia();
+
     }
 
     @Override

@@ -39,6 +39,7 @@ import com.salle.android.sallefy.controller.callbacks.PlaylistMainComunication;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.dialogs.ErrorDialog;
 import com.salle.android.sallefy.controller.download.Downloader;
+import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
@@ -246,19 +247,22 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 return changeFragmentBasedOnDirection(direction);
             }
         });
+        requestAudioPermissions();
 
+        enterHomeFragment();
 
-     /*   if (getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.USER_ID) != null) {
+    }
+
+    public void sharedMedia(){
+        if (getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.USER_ID) != null) {
             String userId = (String) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.USER_ID);
+            getIntent().removeExtra(Constants.INTENT_EXTRAS.USER_ID);
             UserManager.getInstance(this).getUserData(userId,this);
         }else if(getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.TRACK_ID) != null){
             int trackId = (int) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.TRACK_ID);
+            getIntent().removeExtra(Constants.INTENT_EXTRAS.TRACK_ID);
             TrackManager.getInstance(this).getTrack(this, trackId);
-        }else {
-            enterHomeFragment();
-        }*/
-        enterHomeFragment();
-        requestAudioPermissions();
+        }
     }
 
     private void initViewsMiniMultimedia() {
@@ -882,7 +886,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 Downloader.download(track.getTrack(),this, getScreenWidth(),getScreenHeight());
                 break;
             case "removeLocally":
-                ObjectBox.getInstance().removeTrack(track.getTrack());
+                ObjectBox.getInstance(this).removeTrack(track.getTrack());
                 break;
         }
     }

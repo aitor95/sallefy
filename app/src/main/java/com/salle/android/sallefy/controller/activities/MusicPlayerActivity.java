@@ -35,6 +35,7 @@ import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog.BottomMenuDialogInterf;
 import com.salle.android.sallefy.controller.dialogs.StateDialog;
 import com.salle.android.sallefy.controller.download.Downloader;
+import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.controller.music.MusicCallback;
 import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
@@ -957,7 +958,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
                 Downloader.download(track.getTrack(),this,getScreenWidth(),getScreenHeight());
                 break;
             case "removeLocally":
-                ObjectBox.getInstance().removeTrack(track.getTrack());
+                ObjectBox.getInstance(this).removeTrack(track.getTrack());
                 break;
         }
     }

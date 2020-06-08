@@ -122,8 +122,16 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
                 }
             });
         }else{
-            tDownload.setTextAppearance(R.style.primaryTextDisabled);
-            ((ImageView) v.findViewById(R.id.bottom_menu_a_download_img)).setImageResource(R.drawable.ic_baseline_arrow_downward_24_grey);
+            //tDownload.setTextAppearance(R.style.primaryTextDisabled);
+            tDownload.setText(R.string.RemoveLocallyBottomMenu);
+            download.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mListener.onButtonClicked(track, "removeLocally");
+                    dismiss();
+                }
+            });
+            //((ImageView) v.findViewById(R.id.bottom_menu_a_download_img)).setImageResource(R.drawable.ic_baseline_arrow_downward_24_grey);
         }
 
         LinearLayout delete = v.findViewById(R.id.bottom_menu_a_deleteSong);

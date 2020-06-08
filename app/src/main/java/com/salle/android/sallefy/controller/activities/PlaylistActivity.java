@@ -607,6 +607,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 ObjectBox.getInstance().addTrack(track.getTrack(), trackFile);
                 System.out.println("Download finished");
                 break;
+            case "removeLocally":
+                ObjectBox.getInstance().removeTrack(track.getTrack());
+                break;
         }
     }
 

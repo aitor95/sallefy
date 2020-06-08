@@ -887,6 +887,9 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 ObjectBox.getInstance().addTrack(track.getTrack(), trackFile);
                 System.out.println("Download finished");
                 break;
+            case "removeLocally":
+                ObjectBox.getInstance().removeTrack(track.getTrack());
+                break;
         }
     }
     /*PELIGROSO PER EMOSIONANTE.*/

@@ -972,6 +972,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
                 ObjectBox.getInstance().addTrack(track.getTrack(), trackFile);
                 System.out.println("Download finished");
                 break;
+            case "removeLocally":
+                ObjectBox.getInstance().removeTrack(track.getTrack());
+                break;
         }
     }
 

@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import androidx.annotation.Nullable;
 import com.salle.android.sallefy.R;
@@ -13,7 +12,8 @@ import com.salle.android.sallefy.R;
 
 public class GraphView extends View{
 
-    public static final float TOTAL_DURATION = 1000f;
+    public static final float TOTAL_BAR_DURATION = 1000f;
+    public static final float TOTAL_TIME_DURATION = 3000f;
 
     private int WIDTH = 0;
     private int HEIGHT = 0;
@@ -219,21 +219,43 @@ public class GraphView extends View{
     }
 
     private void printDots(Canvas canvas, int[] values) {
-        int lastx = 0, lasty = 0;
+        double lastx = 0, lasty = 0;
         double maxv = maxValue;
         double spacing = (WIDTH - 3.0 * MARGINS) / Math.max(values.length - 1f, 1f);
 
+        float delta = TOTAL_TIME_DURATION / (values.length + 1f);
+        long time = System.currentTimeMillis() - timeRef;
+
         for (int i = 0; i < values.length; i++) {
-            int v = values[i];
-            int x = (int) (2f * MARGINS + spacing * i);
-            int y = (int) (HEIGHT - ((v / maxv) * (HEIGHT - 3.0 * MARGINS) + 2.0 * MARGINS));
+            double v = values[i];
+            double x = (int) (2f * MARGINS + spacing * i);
+            double y = (int) (HEIGHT - ((v / maxv) * (HEIGHT - 3.0 * MARGINS) + 2.0 * MARGINS));
 
-            if (i != 0) canvas.drawLine(x, y, lastx, lasty, linesColor);
+            if (i != 0) {
+                if (time > (delta * i)) {
+                    canvas.drawLine((float) x, (float) y, (float) lastx, (float) lasty, linesColor);
+                } else if (time < (delta * i) && time > (delta * (i-1))) {
+                    double m = ((y - lasty) / (x - lastx));
+                    double n = y - m * x;
 
-            canvas.drawCircle(x, y, (int) (WIDTH * 0.01), dotsColor);
+                    double inx = lastx + spacing + ((time - delta * i) / delta) * spacing;
+                    double iny = m * inx + n;
+
+                    canvas.drawLine((float) inx, (float) iny, (float) lastx, (float) lasty, linesColor);
+                }
+            }
+
+            if (time > (delta * i)) {
+                canvas.drawCircle((float) x, (float) y, (int) (WIDTH * 0.01), dotsColor);
+            } else {
+                canvas.drawCircle((float) x, (float) y, (float) (WIDTH * 0.01) * ((time - delta * (i-1)) / delta), dotsColor);
+                break;
+            }
+
             lastx = x;
             lasty = y;
         }
+        if ((System.currentTimeMillis() - timeRef) > TOTAL_TIME_DURATION) finished = true;
     }
 
     private void printTimeGraphAxis(Canvas canvas) {
@@ -279,6 +301,8 @@ public class GraphView extends View{
         float sep = MARGINS / 2;
         float H = ((HEIGHT - 3f * MARGINS - 1f * sep) / values.length) - sep;
 
+        long actualTime = System.currentTimeMillis() - timeRef;
+
         for (int v: values) if (maxv < v) maxv = v;
 
         if (MARGINS > (H - sep)) {
@@ -294,11 +318,11 @@ public class GraphView extends View{
             float left = 2f * MARGINS + 1f * sep;
             float bottom = top + H;
             float right = 2f * MARGINS + 1f * sep + (WIDTH - 3f * MARGINS - 2f * sep) * (float) (v / maxv);
-            float factor = ((float) (System.currentTimeMillis() - timeRef) / TOTAL_DURATION);
-            float aux = (float) Math.sqrt(1f - Math.pow(1f - factor, 2f));
+            float aux = ((float) actualTime / TOTAL_BAR_DURATION);
+            float factor = (float) Math.sqrt(1f - Math.pow(1f - aux, 2f));
 
-            if ((System.currentTimeMillis() - timeRef) < TOTAL_DURATION)
-                right = 2f * MARGINS + 1f * sep + (WIDTH - 3f * MARGINS - 2f * sep) * (float) (v / maxv) * aux;
+            if (actualTime < TOTAL_BAR_DURATION)
+                right = 2f * MARGINS + 1f * sep + (WIDTH - 3f * MARGINS - 2f * sep) * (float) (v / maxv) * factor;
             else finished = true;
 
             canvas.drawRect(left, top, right, bottom, barColor);
@@ -332,7 +356,6 @@ public class GraphView extends View{
 
             canvas.drawText("" + (int) ((i / 5f) * maxv), hx, hy, smallTextColor);
         }
-
     }
 
     @Override

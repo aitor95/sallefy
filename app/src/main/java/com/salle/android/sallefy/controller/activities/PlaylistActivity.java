@@ -594,6 +594,9 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 Downloader.download(track.getTrack(),this, getScreenWidth(), getScreenHeight());
                 System.out.println("Download finished");
                 break;
+            case "removeLocally":
+                ObjectBox.getInstance().removeTrack(track.getTrack());
+                break;
         }
     }
 

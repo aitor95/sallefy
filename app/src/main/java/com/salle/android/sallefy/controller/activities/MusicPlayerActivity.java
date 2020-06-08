@@ -956,6 +956,9 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
                 Log.d(TAG, "onButtonClicked: DOWNLOAD");
                 Downloader.download(track.getTrack(),this,getScreenWidth(),getScreenHeight());
                 break;
+            case "removeLocally":
+                ObjectBox.getInstance().removeTrack(track.getTrack());
+                break;
         }
     }
 

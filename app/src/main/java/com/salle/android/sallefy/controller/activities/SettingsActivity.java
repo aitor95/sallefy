@@ -10,8 +10,6 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,16 +17,16 @@ import androidx.preference.PreferenceFragmentCompat;
 
 import com.bumptech.glide.Glide;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.callbacks.AdapterClickCallback;
 import com.salle.android.sallefy.controller.dialogs.DeleteDialogFragment;
-import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.music.MusicService;
 import com.salle.android.sallefy.controller.restapi.callback.UserCallback;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
-import com.salle.android.sallefy.model.ChangePassword;
+import com.salle.android.sallefy.model.Genre;
+import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserPublicInfo;
-import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
@@ -37,7 +35,7 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SettingsActivity extends AppCompatActivity implements DeleteDialogFragment.DeleteDialogListener, UserCallback {
+public class SettingsActivity extends AppCompatActivity implements DeleteDialogFragment.DeleteDialogListener, UserCallback, AdapterClickCallback {
 
     public static final String TAG = SettingsActivity.class.getName();
 
@@ -48,6 +46,7 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
     private ImageButton backoption;
     private CircleImageView user_img;
     private RelativeLayout optionModify;
+    private RelativeLayout optionDownloaded;
     private RelativeLayout optionDelete;
     private Button optionLogOut;
     private String updated_user;
@@ -71,6 +70,7 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
         intent = new Intent(this, MusicService.class);
         bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -120,11 +120,15 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
             startActivity(intent);
         });
 
-
         backoption.setOnClickListener(view -> {
             goBack();
         });
 
+        optionDownloaded.setOnClickListener(view -> {
+            Intent intent = new Intent(this, DownloadSongsActivity.class);
+            intent.putExtra("FULL_OFFLINE", false);
+            startActivity(intent);
+        });
     }
 
     private void openDialog() {
@@ -139,6 +143,7 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
         optionModify = findViewById(R.id.settings_modify_user);
         optionDelete = findViewById(R.id.settings_option_deleteAccount);
         optionLogOut = findViewById(R.id.btn_settings_logout);
+        optionDownloaded = findViewById(R.id.settings_option_downloaded_songs);
     }
 
     @Override
@@ -234,6 +239,26 @@ public class SettingsActivity extends AppCompatActivity implements DeleteDialogF
 
     @Override
     public void onFailure(Throwable throwable) {
+
+    }
+
+    @Override
+    public void onTrackClicked(Track track, Playlist playlist) {
+
+    }
+
+    @Override
+    public void onPlaylistClick(Playlist playlist) {
+
+    }
+
+    @Override
+    public void onUserClick(User user) {
+
+    }
+
+    @Override
+    public void onGenreClick(Genre genre) {
 
     }
 

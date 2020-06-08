@@ -7,6 +7,7 @@ import com.salle.android.sallefy.model.DownloadFile_;
 import com.salle.android.sallefy.model.MyObjectBox;
 import com.salle.android.sallefy.model.Track;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.objectbox.Box;
@@ -30,7 +31,6 @@ public class ObjectBox {
         fileBox  = get().boxFor(DownloadFile.class);
     }
 
-
     public static ObjectBox getInstance(Context c) {
         if (sObjectBox == null) {
             sObjectBox = new ObjectBox(c);
@@ -38,22 +38,9 @@ public class ObjectBox {
         return sObjectBox;
     }
 
-/*
-    public static void init(Context context){
-        boxStore = MyObjectBox.builder()
-                .androidContext(context.getApplicationContext())
-                .build();
-    }
-*/
-
     public BoxStore get() {
         return boxStore;
     }
-
-//    public void createBoxes(){
-//        trackBox = ObjectBox.getInstance().get().boxFor(Track.class);
-//        fileBox = ObjectBox.getInstance().get().boxFor(DownloadFile.class);
-//    }
 
     public byte[] getFile(Integer trackId,boolean fullScreen){
         List<DownloadFile> dFile = fileBox.query().equal(DownloadFile_.id, trackId).build().find();
@@ -63,6 +50,10 @@ public class ObjectBox {
     public void addTrack(Track track, DownloadFile downloadFile){
         trackBox.put(track);
         fileBox.put(downloadFile);
+    }
+
+    public ArrayList<Track> getAllDlownloadedTracks() {
+        return (ArrayList<Track>) trackBox.query().build().find();
     }
 
     public void removeTrack(Track track){

@@ -899,6 +899,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 break;
             case "removeLocally":
                 ObjectBox.getInstance(this).removeTrack(track.getTrack());
+                //ObjectBox.getInstance(getApplicationContext()).removeTrack(track.getTrack());
                 break;
         }
     }

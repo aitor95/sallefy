@@ -20,6 +20,7 @@
 
     <color name="colorPurpleButtons">#803DEE</color>
     <color name="colorBgStatistics">#FEEFEC</color>
+    <color name="colorBgStatistics2">#E5FFDE</color>
     <color name="colorBgDeleteAccount">#FFE6E6</color>
     <color name="colorBgEditAccount">#EFE8FA</color>
 

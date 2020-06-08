@@ -1,6 +1,8 @@
 package com.salle.android.sallefy.controller.activities;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -97,22 +99,29 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
         }
     }
 
+    private boolean isNetworkConnected() {
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnected();
+    }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        ObjectBox.getInstance(this).init(this);
-//        ObjectBox.getInstance(this).createBoxes();
-
         //Uncomment this line to reset autologin data saved.
         //PreferenceUtils.resetValues(this);
 
-        if (checkExistingPreferences()) {
-            showSplash();
+        if (isNetworkConnected()) {
+            if (checkExistingPreferences()) {
+                showSplash();
+            } else {
+                //User credentials not available. Show login.
+                showLogin();
+            }
         } else {
-            //User credentials not available. Show login.
-            showLogin();
+            Intent intent = new Intent(this, DownloadSongsActivity.class);
+            intent.putExtra("FULL_OFFLINE", true);
+            startActivity(intent);
         }
 
         handleIntent(getIntent());

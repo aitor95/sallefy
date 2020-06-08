@@ -24,7 +24,6 @@
     <string name="me_add_playlist">Create playlist</string>
 
 
-
     <!-- FRAGMENTS (LABELS) -->
     <string name="fragment_playlists">Playlists</string>
     <string name="fragment_songs">Songs</string>
@@ -199,5 +198,7 @@
     <string name="User_has_no_songs">User don\'t have songs</string>
     <string name="label_choose_graph_button">Choose another graph</string>
     <string name="UserDontFollowAnyone">This user don\'t follow any user.</string>
+    <string name="optionViewDownloaded">Downloaded tracks</string>
+    <string name="downloaded_songs_list">Downloaded songs</string>
 
 </resources>

@@ -959,6 +959,7 @@ public class MusicPlayerActivity extends AppCompatActivity implements SurfaceHol
                 break;
             case "removeLocally":
                 ObjectBox.getInstance(this).removeTrack(track.getTrack());
+                //ObjectBox.getInstance(getApplicationContext()).removeTrack(track.getTrack());
                 break;
         }
     }

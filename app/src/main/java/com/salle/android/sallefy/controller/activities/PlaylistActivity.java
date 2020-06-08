@@ -597,6 +597,7 @@ public class PlaylistActivity extends AppCompatActivity implements PlaylistCallb
                 break;
             case "removeLocally":
                 ObjectBox.getInstance(this).removeTrack(track.getTrack());
+                //ObjectBox.getInstance(getApplicationContext()).removeTrack(track.getTrack());
                 break;
         }
     }

@@ -321,13 +321,16 @@ public class MusicService extends Service {
 
                             try {
                                 mCallback.onMusicPlayerPrepared();
-
                             }catch (Exception e){
                                 e.printStackTrace();
                                 //Ignoramos. Simplemente la activity del callback ya no existe.
                             }
 
-                            mCallbackMini.onMusicPlayerPrepared();
+                            try {
+                                mCallbackMini.onMusicPlayerPrepared();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
 
                         }
                     }

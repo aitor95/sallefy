@@ -77,6 +77,7 @@
             android:textAlignment="textStart"
             style="@style/formLabel"
             android:ellipsize="end"
+            android:drawableRight="@android:drawable/arrow_down_float"
             android:maxLines="1"
             android:drawableTint="@color/colorDarkGrey"
             android:textSize="24sp"/>

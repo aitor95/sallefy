@@ -15,10 +15,10 @@ import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.salle.android.sallefy.R;
+import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.model.DownloadFile;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.TrackViewPack;
-import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.utils.Session;
 
 import io.objectbox.Box;
@@ -113,7 +113,7 @@ public class BottomMenuDialog extends BottomSheetDialogFragment {
 
         LinearLayout download = v.findViewById(R.id.bottom_menu_a_download);
         TextView tDownload = v.findViewById(R.id.bottom_menu_a_download_text);
-        if(!ObjectBox.getInstance().checkIfFileExists(track.getTrack())){
+        if(!ObjectBox.getInstance(getContext()).checkIfFileExists(track.getTrack())){
             download.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

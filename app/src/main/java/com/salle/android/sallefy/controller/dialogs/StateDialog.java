@@ -3,6 +3,7 @@ package com.salle.android.sallefy.controller.dialogs;
 import android.app.ActivityManager;
 import android.app.Dialog;
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -74,7 +75,9 @@ public class StateDialog {
         }
 
         if(runningactivities.contains("ComponentInfo{com.salle.sallefy/com.salle.android.sallefy.controller.activities.EditSongActivity}") ||
-                runningactivities.contains("ComponentInfo{com.salle.sallefy/com.salle.android.sallefy.controller.activities.UploadSongActivity}")){
+                runningactivities.contains("ComponentInfo{com.salle.sallefy/com.salle.android.sallefy.controller.activities.UploadSongActivity}") ||
+                runningactivities.contains("ComponentInfo{com.salle.sallefy/com.salle.android.sallefy.controller.download.Downloader}")){
+            Log.d(TAG, "showStateDialog: Showing state dialog.");
             mDialog.show();
         }
     }

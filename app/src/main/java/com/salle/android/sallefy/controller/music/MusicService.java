@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import com.salle.android.sallefy.controller.activities.MusicPlayerActivity;
+import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.controller.location.UserLocation;
 import com.salle.android.sallefy.controller.notifications.CustomNotification;
 import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
@@ -19,6 +20,9 @@ import com.salle.android.sallefy.model.LatLong;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -66,6 +70,10 @@ public class MusicService extends Service {
     private boolean isVideoFullScreen;
     private int screenWidth;
     private int screenHeight;
+
+
+    //Local file helper
+    FileInputStream fis;
 
     public int getPlaylistSize() {
         return mTracks != null ? mTracks.size() : 0;
@@ -270,17 +278,36 @@ public class MusicService extends Service {
             }
 
 
-            String dataSource = null;
-            if(track.getUrl().toLowerCase().contains("mp4")) {
-                if (!isVideoFullScreen)
-                    dataSource = CloudinaryManager.getInstance(this).createVideoThumbnail(track.getUrl());
-                else
-                    dataSource = CloudinaryManager.getInstance(this).createVideoThumbnailFullScreen(track.getUrl(), screenWidth, screenHeight);
+            if(ObjectBox.getInstance(this).checkIfFileExists(track)){
+                //File is local.
+                byte[] binaryTrack = ObjectBox.getInstance(this).getFile(track.getId(),isVideoFullScreen);
+
+                //Create local temp file
+                File tempMp3 = File.createTempFile("kurchina", "mp3", getCacheDir());
+                tempMp3.deleteOnExit();
+                FileOutputStream fos = new FileOutputStream(tempMp3);
+                fos.write(binaryTrack);
+                fos.close();
+
+                fis = new FileInputStream(tempMp3);
+                mediaPlayer.setDataSource(fis.getFD());
+                Log.d(TAG, "loadSong: REPRODUCIING SONG OFFLINE");
+
             }else{
-                dataSource = track.getUrl();
+                String dataSource = null;
+
+                if(track.getUrl().toLowerCase().contains("mp4")) {
+                    if (!isVideoFullScreen)
+                        dataSource = CloudinaryManager.getInstance(this).createVideoThumbnail(track.getUrl());
+                    else
+                        dataSource = CloudinaryManager.getInstance(this).createVideoThumbnailFullScreen(track.getUrl(), screenWidth, screenHeight);
+                }else{
+                    dataSource = track.getUrl();
+                }
+                Log.d(TAG, "loadSong: REPRODUCIING SONGS ONLINE");
+                mediaPlayer.setDataSource(dataSource);
             }
 
-            mediaPlayer.setDataSource(dataSource);
             mediaPlayer.prepare();
 
             //Como no existia el player, define el onPrepared listener.

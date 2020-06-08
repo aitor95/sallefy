@@ -52,19 +52,20 @@ public class UserLocation {
     }
 
     public LatLong getLocation() {
-        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
-        Criteria crit = new Criteria();
-        crit.setAccuracy(Criteria.ACCURACY_MEDIUM);
-        crit.setPowerRequirement(Criteria.POWER_MEDIUM);
+        try {
+            LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+            Criteria crit = new Criteria();
+            crit.setAccuracy(Criteria.ACCURACY_MEDIUM);
+            crit.setPowerRequirement(Criteria.POWER_MEDIUM);
 
-        String provider = locationManager.getBestProvider(crit,true);
-
-        if (provider != null && locationManager.isProviderEnabled(provider)) {
+            String provider = locationManager.getBestProvider(crit, true);
+            
+            if (provider != null && locationManager.isProviderEnabled(provider)) {
 
                 @SuppressLint("MissingPermission") android.location.Location locationGPS = locationManager.getLastKnownLocation(provider);
                 if (locationGPS != null) {
                     //Si la nueva posicion es mala, usa la anterior.
-                    if(!isBetterLocation(locationGPS,lastLocation)){
+                    if (!isBetterLocation(locationGPS, lastLocation)) {
                         locationGPS = lastLocation;
                     }
 
@@ -73,12 +74,16 @@ public class UserLocation {
                     //Log.d(TAG, "getLocation:Your Location: " + "\n" + "Latitude: " + locationGPS.getLatitude() + "\n" + "Longitude: " +  locationGPS.getLongitude());
                     return new LatLong(locationGPS.getLatitude(), locationGPS.getLongitude());
                 }
-        }
-        //No data obtained. Return last postion obtained.
+            }
+            //No data obtained. Return last postion obtained.
 
-        Log.d(TAG, "getLocation: USING LAST LOCATION. WE CANT GET NEW DATA.");
-        if(lastLocation == null) return new LatLong();
-        return new LatLong(lastLocation.getLatitude(),lastLocation.getLongitude());
+            Log.d(TAG, "getLocation: USING LAST LOCATION. WE CANT GET NEW DATA.");
+            if (lastLocation == null) return new LatLong();
+            return new LatLong(lastLocation.getLatitude(), lastLocation.getLongitude());
+        }catch (Exception e){
+            if (lastLocation == null) return new LatLong();
+            return new LatLong(lastLocation.getLatitude(), lastLocation.getLongitude());
+        }
     }
 
     /** Determines whether one Location reading is better than the current Location fix

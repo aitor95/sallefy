@@ -11,12 +11,15 @@ public class DownloadFile {
 
     private Integer id;
     private String url;
-    private byte[] trackFile;
 
-    public DownloadFile(Integer id, String url, byte[] tf) {
+    private byte[] trackFile;
+    private byte[] trackFileFullScreen;
+
+    public DownloadFile(Integer id, String urlBase, byte[] tf, byte[] tfFullScreen) {
         this.id = id;
-        this.url = url;
+        this.url = urlBase;
         this.trackFile = tf;
+        this.trackFileFullScreen = tfFullScreen;
     }
 
 
@@ -28,7 +31,15 @@ public class DownloadFile {
 
     public void setUrl(String url) { this.url = url; }
 
-    public byte[] getTrackFile() { return trackFile; }
+    public byte[] getTrackFile(){
+        return trackFile;
+    }
+    public byte[] getTrackFileFullScreen(){
+        return trackFileFullScreen;
+    }
+    public byte[] getTrackFile(boolean fullScreen) {
+        return fullScreen ? trackFileFullScreen : trackFile;
+    }
 
     public void setTrackFile(byte[] trackFile) { this.trackFile = trackFile; }
 

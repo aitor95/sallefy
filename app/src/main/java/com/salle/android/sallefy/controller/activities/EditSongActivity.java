@@ -156,7 +156,7 @@ public class EditSongActivity extends AppCompatActivity implements TrackCallback
                 m.deleteAudioFile(mTrack.getUrl());
                 m.deleteCoverImage(mTrack.getThumbnail(),true);
 
-                TrackManager.getInstance(EditSongActivity.this).deleteTrack(mTrack,EditSongActivity.this);
+                TrackManager.getInstance(EditSongActivity.this).deleteTrack(mTrack,EditSongActivity.this, getApplicationContext());
             }
         });
 

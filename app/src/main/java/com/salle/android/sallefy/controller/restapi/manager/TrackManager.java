@@ -3,6 +3,7 @@ package com.salle.android.sallefy.controller.restapi.manager;
 import android.content.Context;
 import android.util.Log;
 
+import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.controller.restapi.callback.LikeCallback;
 import com.salle.android.sallefy.controller.restapi.callback.TrackCallback;
 import com.salle.android.sallefy.controller.restapi.callback.isLikedCallback;
@@ -10,7 +11,6 @@ import com.salle.android.sallefy.controller.restapi.service.TrackService;
 import com.salle.android.sallefy.model.LatLong;
 import com.salle.android.sallefy.model.Like;
 import com.salle.android.sallefy.model.Track;
-import com.salle.android.sallefy.controller.download.ObjectBox;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -239,7 +239,7 @@ public class TrackManager extends BaseManager{
     /**
      * DELETES THE TRACK
      */
-    public void deleteTrack(Track track, final TrackCallback trackCallback) {
+    public void deleteTrack(Track track, final TrackCallback trackCallback, Context context) {
 
         Call<ResponseBody> call = mTrackService.deleteTrack(track.getId());
         call.enqueue(new Callback<ResponseBody>() {
@@ -247,7 +247,9 @@ public class TrackManager extends BaseManager{
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 int code = response.code();
                 if (response.isSuccessful()) {
-                    ObjectBox.getInstance().removeTrack(track);
+
+                    ObjectBox.getInstance(context).removeTrack(track);
+
                     trackCallback.onTrackDeleted(track);
                 } else {
                     Log.d(TAG, "Error Not Successful: " + code);

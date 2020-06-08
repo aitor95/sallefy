@@ -523,7 +523,7 @@ public class SearchFragment extends Fragment implements PlaylistCallback, UserCa
         mTracksView.setAdapter(adapter);
         this.mTracks = tracks;
 
-        ///TODO: CHANGE THIS: THIS IS A BUG, it can really be null and crash the app! !!!!!!
+        ///TODO: CHANGE THIS: THIS IS A BUG, it can really be null and crash the app!!!!!!!
         TextView tvSeeAllTracks = getView().findViewById(R.id.SeeAllSearchedSongs);
         if(this.mTracks.isEmpty()){
             tvSeeAllTracks.setVisibility(View.INVISIBLE);

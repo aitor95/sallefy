@@ -19,12 +19,11 @@ import com.salle.android.sallefy.controller.restapi.manager.UserManager;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
-import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.utils.PreferenceUtils;
 import com.salle.android.sallefy.utils.Session;
 
-import java.util.List;
 import java.util.Arrays;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements UserLogInAndRegisterCallback {
 
@@ -102,8 +101,10 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ObjectBox.getInstance().init(this);
-        ObjectBox.getInstance().createBoxes();
+
+//        ObjectBox.getInstance(this).init(this);
+//        ObjectBox.getInstance(this).createBoxes();
+
         //Uncomment this line to reset autologin data saved.
         //PreferenceUtils.resetValues(this);
 

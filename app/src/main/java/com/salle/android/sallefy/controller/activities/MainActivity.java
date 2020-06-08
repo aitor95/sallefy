@@ -5,10 +5,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,7 +38,7 @@ import com.salle.android.sallefy.controller.callbacks.PermissionsCallback;
 import com.salle.android.sallefy.controller.callbacks.PlaylistMainComunication;
 import com.salle.android.sallefy.controller.dialogs.BottomMenuDialog;
 import com.salle.android.sallefy.controller.dialogs.ErrorDialog;
-import com.salle.android.sallefy.controller.dialogs.StateDialog;
+import com.salle.android.sallefy.controller.download.Downloader;
 import com.salle.android.sallefy.controller.fragments.HomeFragment;
 import com.salle.android.sallefy.controller.fragments.MeFragment;
 import com.salle.android.sallefy.controller.fragments.SearchFragment;
@@ -48,7 +51,6 @@ import com.salle.android.sallefy.controller.restapi.callback.UserLogInAndRegiste
 import com.salle.android.sallefy.controller.restapi.manager.CloudinaryManager;
 import com.salle.android.sallefy.controller.restapi.manager.TrackManager;
 import com.salle.android.sallefy.controller.restapi.manager.UserManager;
-import com.salle.android.sallefy.model.DownloadFile;
 import com.salle.android.sallefy.model.Genre;
 import com.salle.android.sallefy.model.Playlist;
 import com.salle.android.sallefy.model.Track;
@@ -56,8 +58,6 @@ import com.salle.android.sallefy.model.TrackViewPack;
 import com.salle.android.sallefy.model.User;
 import com.salle.android.sallefy.model.UserToken;
 import com.salle.android.sallefy.utils.Constants;
-import com.salle.android.sallefy.controller.download.Downloader;
-import com.salle.android.sallefy.controller.download.ObjectBox;
 import com.salle.android.sallefy.utils.OnSwipeListener;
 import com.salle.android.sallefy.utils.Session;
 import com.salle.android.sallefy.utils.UpdatableFragment;
@@ -124,8 +124,6 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
     //Track edit
     private static TrackViewPack mTrackViewPack;
 
-    StateDialog stateDialog;
-
     private long lastClick;
 
 
@@ -163,9 +161,17 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         //linearLayoutMiniplayer.setVisibility(View.GONE);
     }
 
+    public static String getApplicationName(Context context) {
+        ApplicationInfo applicationInfo = context.getApplicationInfo();
+        int stringId = applicationInfo.labelRes;
+        return stringId == 0 ? applicationInfo.nonLocalizedLabel.toString() : context.getString(stringId);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+
+        Log.d(TAG, "onResume: getApplicationName is " + getApplicationName(this));
 
         //Volvemos del reproductor, actualizamos el mini reproductor.
         Log.d(TAG, "onResume: Volviendo a la main activity");
@@ -525,6 +531,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
                 Intent intent = new Intent(Intent.ACTION_MAIN);
                 intent.addCategory(Intent.CATEGORY_HOME);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
                 startActivity(intent);
             } else {
                 if(!isMeUserTheOwner) {
@@ -540,7 +547,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         } else {
             if(tagFragmentActivado.equals(SearchFragment.TAG)){
                 SearchFragment sf = (SearchFragment)mFragmentManager.findFragmentByTag(SearchFragment.TAG);
-                if(sf != null)sf.onSeeAllClosed();
+                if(sf != null) sf.onSeeAllClosed();
             }
 
             getSupportFragmentManager().popBackStack();
@@ -788,7 +795,7 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
     @Override
     public void deleteSong(Track track) {
-        TrackManager.getInstance(this).deleteTrack(track, this);
+        TrackManager.getInstance(this).deleteTrack(track, this, this);
     }
 
     @Override
@@ -871,24 +878,42 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
 
             case "download":
                 Log.d(TAG, "onButtonClicked: DOWNLOAD");
-                String url = track.getTrack().getUrl();
-                Downloader downloader = new Downloader(MainActivity.this);
-                downloader.downloadCloudinaryAudio(track.getTrack().getUrl());
-                stateDialog = StateDialog.getInstance(this);
-                stateDialog.showStateDialog(false);
-                while(!downloader.isFinished()){
-                    Log.d(TAG, "Download in progress");
-                }
-                 stateDialog.close();
-                DownloadFile trackFile = new DownloadFile(
-                        track.getTrack().getId(),
-                        track.getTrack().getUrl(),
-                        downloader.getDownloadedFile());
-                ObjectBox.getInstance().addTrack(track.getTrack(), trackFile);
-                System.out.println("Download finished");
+
+                Downloader.download(track.getTrack(),this, getScreenWidth(),getScreenHeight());
                 break;
         }
     }
+
+
+    //Fer classe apart.
+    public int getScreenWidth(){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
+    }
+
+    public int getScreenHeight(){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+
+        return displayMetrics.heightPixels + getNavigationBarHeight();
+    }
+
+    private int getNavigationBarHeight() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(metrics);
+            int usableHeight = metrics.heightPixels;
+            getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+            int realHeight = metrics.heightPixels;
+            if (realHeight > usableHeight)
+                return realHeight - usableHeight;
+            else
+                return 0;
+        }
+        return 0;
+    }
+
     /*PELIGROSO PER EMOSIONANTE.*/
     @Override
     protected void onSaveInstanceState(Bundle outState) {

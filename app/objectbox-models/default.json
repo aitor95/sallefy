@@ -96,7 +96,7 @@
     },
     {
       "id": "2:1054882324187373777",
-      "lastPropertyId": "4:3393115402586411886",
+      "lastPropertyId": "5:8817752254230574404",
       "name": "DownloadFile",
       "properties": [
         {
@@ -119,6 +119,11 @@
         {
           "id": "4:3393115402586411886",
           "name": "trackFile",
+          "type": 23
+        },
+        {
+          "id": "5:8817752254230574404",
+          "name": "trackFileFullScreen",
           "type": 23
         }
       ],

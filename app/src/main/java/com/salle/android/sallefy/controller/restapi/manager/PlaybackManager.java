@@ -40,9 +40,8 @@ public class PlaybackManager extends BaseManager{
 
     public synchronized void getPlaybacksByUser(final PlaybackCallback playbackCallback) {
 
-        //TODO: Quan no sigui testing, posar la linia comentada (ja que ara mateix no hi ha info dels nostres users)
-        //Call<List<Playback>> call = mService.getPlaybacksByUser(Session.getInstance(mContext).getUser().getLogin());
-        Call<List<Playback>> call = mService.getPlaybacksByUser("test");
+        Call<List<Playback>> call = mService.getPlaybacksByUser(Session.getInstance(mContext).getUser().getLogin());
+        //Call<List<Playback>> call = mService.getPlaybacksByUser("test");
 
         call.enqueue(new Callback<List<Playback>>() {
             @Override

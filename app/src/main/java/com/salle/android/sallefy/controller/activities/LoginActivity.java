@@ -265,7 +265,7 @@ public class LoginActivity extends AppCompatActivity implements UserLogInAndRegi
                     startActivity(userIntent);
                     break;
                 case PLAYLIST:
-                    Intent playlistIntent = new Intent(this, PlaylistActivity.class);
+                    Intent playlistIntent = new Intent(this, MainActivity.class);
                     playlistIntent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID, sharedId);
                     startActivity(playlistIntent);
                     break;

@@ -222,6 +222,12 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
         }else if(getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.TRACK_ID) != null){
             int trackId = (int) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.TRACK_ID);
             TrackManager.getInstance(this).getTrack(this, trackId);
+        }else if(getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID) != null) {
+            int playlistId = (int) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
+            getIntent().removeExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
+            Intent playlistIntent = new Intent(this, PlaylistActivity.class);
+            playlistIntent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID, playlistId);
+            startActivity(playlistIntent);
         }else {
             enterHomeFragment();
         }
@@ -262,6 +268,12 @@ public class MainActivity extends FragmentActivity implements AdapterClickCallba
             int trackId = (int) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.TRACK_ID);
             getIntent().removeExtra(Constants.INTENT_EXTRAS.TRACK_ID);
             TrackManager.getInstance(this).getTrack(this, trackId);
+        }else if(getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID) != null){
+            int playlistId = (int) getIntent().getSerializableExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
+            getIntent().removeExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID);
+            Intent playlistIntent = new Intent(this, PlaylistActivity.class);
+            playlistIntent.putExtra(Constants.INTENT_EXTRAS.PLAYLIST_ID, playlistId);
+            startActivity(playlistIntent);
         }
     }
 

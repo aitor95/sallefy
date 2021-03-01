@@ -9,8 +9,7 @@
 
 ## Cuenta Cloudinary
 * Email: aitor.ble@gmail.com
-* Usuario: dpoc4
-* contraseña: Dpodpoc4!
+
 
 ## Como proceder en caso de error por "ID de Objectbox"
 * Eliminar fichero app/objectbox-models/default.json
